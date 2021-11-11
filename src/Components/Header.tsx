@@ -1,23 +1,42 @@
-import React, {FC}  from 'react'
+import React, {FC, ReactChild, ReactChildren, ReactNode}  from 'react'
+import { Link } from 'react-router-dom'
 
-const Header: FC = ():React.ReactElement  => {
+import HeaderSubList from './HeaderSubList'
+
+import logo from '../images/logo.svg'
+import search from '../images/icons/search.svg'
+import wishlist from '../images/icons/wishlist.svg'
+import bag from '../images/icons/bag.svg'
+import profile from '../images/icons/profile.svg'
+import etc from '../images/icons/etc.svg'
+
+import '../scss/_header.scss'
+
+interface IHeaderProps {
+  showHeaderTop?: boolean
+  childen?: ReactChild | ReactNode
+  items: Array<string>
+}
+
+const Header: FC<IHeaderProps> = ({ showHeaderTop, items }): React.ReactElement => {
 
   return (
     <header className="header">
-      <div className="header__top">
+      {
+        showHeaderTop && <div className="header__top">
         <div className="container">
           <div className="header__top-inner">
             <nav className="header__nav">
               <ul className="header__list">
-                <li className="header__list-item">
-                  <a className="header__list-link" href="main.html">Главная</a>
-                </li>
-                <li className="header__list-item">
-                  <a className="header__list-link" href="about.html">О нас</a>
-                </li>
-                <li className="header__list-item">
-                  <a className="header__list-link" href="contacts.html">Контакты</a>
-                </li>
+                {
+                  items.map((text, idx) => {
+                    return (
+                      <li key={`${text}_${idx}`} className="header__list-item">
+                        <a className="header__list-link" href="main.html">{text}</a>
+                      </li>
+                    )
+                  })
+                }
               </ul>
             </nav>
             <div className="header__connect">
@@ -27,6 +46,8 @@ const Header: FC = ():React.ReactElement  => {
           </div>
         </div>
       </div>
+      }
+
       <div className="container">
         <div className="header__mid">
           <div className="menu-btn">
@@ -36,12 +57,12 @@ const Header: FC = ():React.ReactElement  => {
           </div>
 
           <a className="logo" href="main.html">
-            <img src="images/logo.svg" alt="logo" />
+            <img src={logo} alt="logo" />
           </a>
           <form className="header__form" action="">
             <input className="header__input" type="text" placeholder="Поиск" />
             <button className="header__search" type="submit">
-              <img src="images/icons/search.svg" alt="search" />
+              <img src={search} alt="search" />
             </button>
           </form>
           <div className="header__connect header__connect--mid">
@@ -50,13 +71,13 @@ const Header: FC = ():React.ReactElement  => {
           </div>
           <div className="header__user user-header">
             <a className="user-header__link" href="cart.html">
-              <img src="images/icons/wishlist.svg" alt="wishlist" />
+              <img src={wishlist} alt="wishlist" />
             </a>
             <a className="user-header__link" href="cart.html">
-              <img src="images/icons/bag.svg" alt="bag" />
+              <img src={bag} alt="bag" />
             </a>
             <a className="user-header__link" href="profile.html">
-              <img src="images/icons/profile.svg" alt="profile" />
+              <img src={profile} alt="profile" />
             </a>
           </div>
         </div>
@@ -80,7 +101,6 @@ const Header: FC = ():React.ReactElement  => {
                 <a className="categories__link" href="catalog.html">Новинки</a>
               </li>
 
-
               <li className="categories__item">
                 <a className="categories__item-img" href="catalog.html">
                   <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,37 +115,17 @@ const Header: FC = ():React.ReactElement  => {
                   </svg>  
                 </a>
                 <a className="categories__link" href="catalog.html">Кухни</a>
-                <ul className="sub-list">
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Модульные кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Барная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Кухонные уголки</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Обеденная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Столешницы</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Стеновые панели</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Мойки, сушилки, 
-                      смесители для кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Дополнительная 
-                      фурнитура</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Бытовыя техника</a>
-                  </li>
-                </ul>
+                <HeaderSubList items={[
+                  'Модульные кухни',
+                  'Барная зона',
+                  'Кухонные уголки',
+                  'Обеденная зона',
+                  'Столешницы',
+                  'Стеновые панели',
+                  'Мойки, сушилки, смесители для кухни',
+                  'Дополнительная фурнитура',
+                  'Бытовыя техника'
+                ]}></HeaderSubList>
               </li>
               <li className="categories__item">
                 <a className="categories__item-img" href="catalog.html">
@@ -135,37 +135,14 @@ const Header: FC = ():React.ReactElement  => {
                     </svg>  
                   </a>
                 <a className="categories__link" href="catalog.html">Спальни</a>
-                <ul className="sub-list">
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Модульные кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Барная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Кухонные уголки</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Обеденная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Столешницы</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Стеновые панели</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Мойки, сушилки, 
-                      смесители для кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Дополнительная 
-                      фурнитура</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Бытовыя техника</a>
-                  </li>
-                </ul>
+                <HeaderSubList items={[
+                  'Модульные кухни',
+                  'Барная зона',
+                  'Кухонные уголки',
+                  'Обеденная зона',
+                  'Столешницы',
+                  'Стеновые панели',
+                ]}></HeaderSubList>
               </li>
               <li className="categories__item">
                 <a className="categories__item-img" href="catalog.html">
@@ -176,37 +153,13 @@ const Header: FC = ():React.ReactElement  => {
                   </svg>  
                 </a>
                 <a className="categories__link" href="catalog.html">Гостинные</a>
-                <ul className="sub-list">
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Модульные кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Барная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Кухонные уголки</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Обеденная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Столешницы</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Стеновые панели</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Мойки, сушилки, 
-                      смесители для кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Дополнительная 
-                      фурнитура</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Бытовыя техника</a>
-                  </li>
-                </ul>
+                <HeaderSubList items={[
+                  'Столешницы',
+                  'Стеновые панели',
+                  'Мойки, сушилки, смесители для кухни',
+                  'Дополнительная фурнитура',
+                  'Бытовыя техника'
+                ]}></HeaderSubList>
               </li>
               <li className="categories__item">
                 <a className="categories__item-img" href="catalog.html">
@@ -217,37 +170,14 @@ const Header: FC = ():React.ReactElement  => {
                   </svg>  
                 </a>
                 <a className="categories__link" href="catalog.html">Прихожие</a>
-                <ul className="sub-list">
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Модульные кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Барная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Кухонные уголки</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Обеденная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Столешницы</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Стеновые панели</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Мойки, сушилки, 
-                      смесители для кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Дополнительная 
-                      фурнитура</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Бытовыя техника</a>
-                  </li>
-                </ul>
+                <HeaderSubList items={[
+                  'Барная зона',
+                  'Кухонные уголки',
+                  'Стеновые панели',
+                  'Мойки, сушилки, смесители для кухни',
+                  'Дополнительная фурнитура',
+                  'Бытовыя техника'
+                ]}></HeaderSubList>
               </li>
               <li className="categories__item">
                 <a className="categories__item-img" href="catalog.html">
@@ -258,37 +188,17 @@ const Header: FC = ():React.ReactElement  => {
                     </svg>  
                   </a>
                 <a className="categories__link" href="catalog.html">Офисная мебель</a>
-                <ul className="sub-list">
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Модульные кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Барная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Кухонные уголки</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Обеденная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Столешницы</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Стеновые панели</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Мойки, сушилки, 
-                      смесители для кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Дополнительная 
-                      фурнитура</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Бытовыя техника</a>
-                  </li>
-                </ul>
+                <HeaderSubList items={[
+                  'Модульные кухни',
+                  'Барная зона',
+                  'Кухонные уголки',
+                  'Обеденная зона',
+                  'Столешницы',
+                  'Стеновые панели',
+                  'Мойки, сушилки, смесители для кухни',
+                  'Дополнительная фурнитура',
+                  'Бытовыя техника'
+                ]}></HeaderSubList>
               </li>
               <li className="categories__item">
                 <a className="categories__item-img" href="catalog.html">
@@ -302,62 +212,28 @@ const Header: FC = ():React.ReactElement  => {
                     </svg>  
                   </a>
                 <a className="categories__link" href="catalog.html">Детская</a>
-                <ul className="sub-list">
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Модульные кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Барная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Кухонные уголки</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Обеденная зона</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Столешницы</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Стеновые панели</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Мойки, сушилки, 
-                      смесители для кухни</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a href="catalog.html" className="sub-list__link">Дополнительная 
-                      фурнитура</a>
-                  </li>
-                  <li className="sub-list__item">
-                    <a className="sub-list__link" href="catalog.html">Бытовыя техника</a>
-                  </li>
-                </ul>
+                <HeaderSubList items={[
+                  'Барная зона',
+                  'Кухонные уголки',
+                  'Дополнительная фурнитура',
+                  'Бытовыя техника'
+                ]}></HeaderSubList>
               </li>
             </ul>
           </div>
-
           <div className="header__promo">
             <a className="header__promo-link" href="#">Акция</a>
-            <ul className="sub-list">
-              <li className="sub-list__item">
-                <a href="catalog.html" className="sub-list__link">Новинки</a>
-              </li>
-              <li className="sub-list__item">
-                <a href="catalog.html" className="sub-list__link">Шкафы</a>
-              </li>
-              <li className="sub-list__item">
-                <a href="catalog.html" className="sub-list__link">Матрасы</a>
-              </li>
-              <li className="sub-list__item">
-                <a href="catalog.html" className="sub-list__link">Мягкая мебель</a>
-              </li>
-            </ul>
+            <HeaderSubList items={[
+                  'Новинки',
+                  'Шкафы',
+                  'Матрасы',
+                  'Мягкая мебель',
+              ]}></HeaderSubList>
 
           </div>
 
           <a className="header__more" href="#">
-            <img src="images/icons/etc.svg" alt="etc"/>
+            <img src={etc} alt="etc"/>
           </a>
         </div>
 

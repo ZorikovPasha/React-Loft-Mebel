@@ -1,5 +1,8 @@
 import React, { FC } from "react";
 
+import '../scss/_footer.scss'
+
+import logo from '../images/icons/footer-logo.svg'
 
 const Footer: FC = (): React.ReactElement => {
 
@@ -66,7 +69,7 @@ const Footer: FC = (): React.ReactElement => {
             </div>
             <div className="footer__column footer__column--common">
               <div className="footer__logo">
-                <img src="images/icons/footer-logo.svg" alt="logo" />
+                <img src={logo} alt="logo" />
               </div>
               <p className="footer__address">
                 г. Анапа, Анапское шоссе, 30 Ж/К Черное море

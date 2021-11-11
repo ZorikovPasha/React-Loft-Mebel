@@ -2,10 +2,20 @@ import React, { FC, ReactElement } from "react";
 
 import { Header, Footer, MobMenu, Top, Sales } from "../Components";
 
+import '../scss/_reset.scss'
+import '../scss/_global.scss'
+import '../scss/main.scss'
+
+
+
 const Main: FC = (): ReactElement => {
   return (
     <div className="wrapper">
-      <Header></Header>
+      <Header showHeaderTop items={[
+        'Главная',
+        'О нас',
+        'Контакты',
+      ]}></Header>
 
       <main className="main">
         <MobMenu></MobMenu>

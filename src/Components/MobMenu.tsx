@@ -1,5 +1,7 @@
 import React, { FC } from "react";
 
+import '../scss/_mobile.scss'
+
 const MobMenu: FC = (): React.ReactElement => {
   return (
     <div className="mob-menu">

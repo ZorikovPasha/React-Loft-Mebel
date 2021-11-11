@@ -2,6 +2,10 @@ import React, { FC, ReactElement } from "react";
 
 import { Header, Footer, MobMenu } from "../Components";
 
+import '../scss/_reset.scss'
+import '../scss/_global.scss'
+import '../scss/catalog.scss'
+
 const Catalog: FC = (): ReactElement => {
   return (
     <div className="wrapper">
