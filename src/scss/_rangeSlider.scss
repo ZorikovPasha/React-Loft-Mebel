@@ -1,0 +1,87 @@
+.irs--flat .irs-max, .irs--flat .irs-min {
+  display: none;
+}
+
+.irs--flat .irs-line {
+  top: 2px;
+  background: #ECECEC;
+  border-radius: 3px;
+}
+
+.irs--flat .irs-bar {
+  top: 2px;
+  background: #245462;
+  border-radius: 3px;
+}
+
+.irs--flat .irs-handle>i:first-child {
+  display: none;
+}
+
+.irs--flat .irs-handle {
+  top: 1px;
+  width: 14px;
+  height: 14px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  border: 3px solid #245462;
+  cursor: pointer;
+}
+
+.irs--flat {
+  position: relative;
+  height: 53px;
+
+  &::after {
+    position: absolute;
+    content: '';
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 19px;
+    height: 2px;
+    background: $text;
+  }
+}
+
+.irs--flat .irs-from, .irs--flat .irs-single, .irs--flat .irs-to {
+  top: 28px;
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 15px;
+  color: $text;
+
+  text-shadow: none;
+  padding: 7px 22px;
+  background: #F8F8F8;
+  border-radius: 3px;
+}
+
+.irs--flat .irs-from:before, .irs--flat .irs-single:before, .irs--flat .irs-to:before {  position: static;
+  display: none;
+ }
+
+ .irs-from {
+   left: 0 !important;
+   &::after {
+     content: ' ₽';
+   }
+ }
+
+ .irs-to {
+  left: auto !important;
+  right: 0;
+  &::after {
+    content: ' ₽';
+  }
+}
+
+.irs--flat .irs-single {
+  display: none;
+}
+
+.irs--flat .irs-from, .irs--flat .irs-to {
+  visibility: visible !important;
+}
