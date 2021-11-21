@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 import '../scss/_mobile.scss'
 
-const MobMenu: FC = (): React.ReactElement => {
+const MobMenu: FC = () => {
   return (
     <div className="mob-menu">
       <div className="mob-menu__body">

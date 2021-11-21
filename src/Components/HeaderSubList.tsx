@@ -1,10 +1,10 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC } from "react";
 
 interface IHeaderSubList {
   items: Array<string>;
 }
 
-const HeaderSubList: FC<IHeaderSubList> = ({ items }): ReactElement => {
+const HeaderSubList: FC<IHeaderSubList> = ({ items }) => {
   return (
     <ul className="sub-list">
       {items.map((text) => (

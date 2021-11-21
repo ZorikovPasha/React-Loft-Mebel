@@ -5,12 +5,11 @@
   // .top__slider
 
   &__slider {
-    box-shadow: 0px 5px 11px 2px rgba(0, 0, 0, 0.09);
 
     .slick-btn {
       position: absolute;
       top: 50%;
-      z-index: 4;
+      z-index: 1;
       transform: translate(0px, -50%);
       cursor: pointer;
 
@@ -33,10 +32,10 @@
 
   &__slider-item {
     padding: 100px 0 140px;
-    background-image: url('../images/top-bg.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    box-shadow: 0px 5px 11px 2px rgba(0, 0, 0, 0.09);
   }
 
   &__slider-box {
@@ -343,9 +342,6 @@
     font-size: 12px;
     line-height: 16px;
   }
-  .top__slider-item {
-    padding: 55px 0 55px;
-  }
 
   .top__slider {
 
@@ -390,19 +386,9 @@
     }
   }
   .top__slider-item {
-    padding: 37px 0 32px;
     background-position: right center;
   }
-  .top__slider-box {
-    max-width: 160px;
-  }
-  .top__title {
-    font-size: 16px;
-    line-height: 16px;
-  }
   .top__subtitle {
-    font-size: 10px;
-    line-height: 11px;
     margin-bottom: 0;
   }
   .top__btn {

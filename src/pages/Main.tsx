@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC } from "react";
 
 import { Header, Footer, MobMenu, Top, Sales } from "../Components";
 
@@ -8,7 +8,7 @@ import '../scss/main.scss'
 
 
 
-const Main: FC = (): ReactElement => {
+const Main: FC = () => {
   return (
     <div className="wrapper">
       <Header showHeaderTop items={[

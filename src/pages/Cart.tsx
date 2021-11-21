@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC } from 'react';
 
 import {Header, Footer, MobMenu} from '../Components'
 
@@ -6,7 +6,7 @@ import '../scss/_reset.scss'
 import '../scss/_global.scss'
 import '../scss/cart.scss'
 
-const Cart: FC = (): ReactElement => {
+const Cart: FC = () => {
 
   return (
 

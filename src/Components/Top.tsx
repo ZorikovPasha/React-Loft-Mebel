@@ -1,39 +1,30 @@
 import React, { FC } from "react";
 
-const Top: FC = (): React.ReactElement => {
+import TopSlider from "./TopSlider";
+
+import topImg_1 from "../images/top-bg-1.jpg";
+import topImg_2 from "../images/top-bg-2.jpg";
+import topImg_3 from "../images/top-bg-3.jpg";
+
+const Top: FC = () => {
+
+  const texts = [
+    { title: 'loft мебель', subtitle: 'Современная и удобная мебель в Анапе', button: 'СМОТРЕТЬ КАТАЛОГ', imageUrl: topImg_1 },
+    { title: 'loft мебель', subtitle: 'Новые поступления в наш магазин', button: 'СМОТРЕТЬ КАТАЛОГ', imageUrl: topImg_2 },
+    { title: 'loft мебель', subtitle: 'Большие скидки в связи с открытием магазина в Краснодаре', button: 'СМОТРЕТЬ КАТАЛОГ', imageUrl: topImg_3 }
+  ]
+
+  const [ slidersTexts, setSlidersTexts ] = React.useState([]);
+
+  const getSlidersTexts = () => {
+
+
+  }
 
   return (
     <section className="top">
       <div className="container">
-        <div className="top__slider animate__animated animate__fadeIn animate__delay-1s">
-          <div className="top__slider-item">
-            <div className="top__slider-box">
-              <h1 className="top__title animate__animated animate__fadeIn animate__delay-2s">loft мебель</h1>
-              <p className="top__subtitle animate__animated animate__fadeIn animate__delay-3s">Современная и удобная мебель в Анапе</p>
-              <a className="top__btn animate__animated animate__fadeIn animate__delay-3s" href="catalog.html">
-                СМОТРЕТЬ КАТАЛОГ
-              </a>
-            </div>
-          </div>
-          <div className="top__slider-item">
-            <div className="top__slider-box">
-              <h1 className="top__title">loft мебель</h1>
-              <p className="top__subtitle">Современная и удобная мебель в Анапе</p>
-              <a className="top__btn" href="catalog.html">
-                СМОТРЕТЬ КАТАЛОГ
-              </a>
-            </div>
-          </div>
-          <div className="top__slider-item">
-            <div className="top__slider-box">
-              <h1 className="top__title">loft мебель</h1>
-              <p className="top__subtitle">Современная и удобная мебель в Анапе</p>
-              <a className="top__btn" href="catalog.html">
-                СМОТРЕТЬ КАТАЛОГ
-              </a>
-            </div>
-          </div>
-        </div>
+        <TopSlider items={texts}></TopSlider>
       </div>
     </section>
   );

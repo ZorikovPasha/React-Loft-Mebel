@@ -1,12 +1,13 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC } from 'react';
 
-import { Header, Footer, MobMenu} from '../Components'
+import { Header, Footer, MobMenu} from '../Components';
 
-import '../scss/_reset.scss'
-import '../scss/_global.scss'
-import '../scss/product.scss'
+import "../../node_modules/slick-carousel/slick/slick.css";
+import '../scss/_reset.scss';
+import '../scss/_global.scss';
+import '../scss/product.scss';
 
-const Product: FC = (): ReactElement => {
+const Product: FC = () => {
 
 return (
   <div className="wrapper">

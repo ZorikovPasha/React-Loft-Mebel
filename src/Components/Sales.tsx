@@ -1,11 +1,11 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC } from "react";
 
 import furniture_1 from "../images/sales/1.png"
 import furniture_2 from "../images/sales/2.png"
 import furniture_3 from "../images/sales/3.png"
 import furniture_4 from "../images/sales/4.png"
 
-const Sales: FC = (): ReactElement => {
+const Sales: FC = () => {
   return (
     <section className="sales">
       <div className="container">

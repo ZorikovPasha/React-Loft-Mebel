@@ -1,12 +1,11 @@
-import React, { FC, ReactElement } from 'react'
+import React, { FC } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 import { Main, Catalog, Product, Cart } from './pages'
 
-const App: FC = (): ReactElement => {
+const App: FC = () => {
   return (
     <BrowserRouter>
-
       <Route path="/" component={Main} exact></Route>
       <Route path="/catalog" component={Catalog} exact></Route>
       <Route path="/product" component={Product} exact></Route>
