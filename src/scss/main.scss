@@ -120,10 +120,6 @@
     }
   }
 
-  &.hovered {
-    box-shadow: 0px 1px 9px rgba(0, 0, 0, 0.11);
-  }
-
   // .item-sales__like
 
   &__like {
@@ -301,6 +297,19 @@
     color: #fff;
     background: #245462;
   }
+
+  &:hover {
+    box-shadow: 0px 1px 9px rgba(0, 0, 0, 0.11);
+  }
+
+  &:hover {
+    .item-sales__bottom {
+      z-index: 10;
+      transform: translate(0, 0);
+      opacity: 1;
+      box-shadow: 0px 1px 9px rgba(0, 0, 0, 0.11);
+    }
+  }
 }
 
 .label-sales__body {
@@ -409,15 +418,5 @@
   .item-sales__title {
     font-size: 13px;
     line-height: 15px;
-  }
-}
-
-@media (min-width:540px) {
-    
-  .item-sales__bottom.appeared {
-    z-index: 10;
-    transform: translate(0, 0);
-    opacity: 1;
-    box-shadow: 0px 1px 9px rgba(0, 0, 0, 0.11);
   }
 }

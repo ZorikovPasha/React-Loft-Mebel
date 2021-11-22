@@ -1,17 +1,19 @@
 import React, { FC } from "react";
+import { Link } from "react-router-dom";
 
 interface IHeaderSubList {
-  items: Array<string>;
+  items: string[];
 }
 
-const HeaderSubList: FC<IHeaderSubList> = ({ items }) => {
+const HeaderSubList: FC<IHeaderSubList> = ({ items }) => {  
+  
   return (
     <ul className="sub-list">
-      {items.map((text) => (
+      {items && items.map((text) => (
         <li key={text} className="sub-list__item">
-          <a href="catalog.html" className="sub-list__link">
+          <Link to="/catalog" className="sub-list__link">
             {text}
-          </a>
+          </Link>
         </li>
       ))}
     </ul>

@@ -1,0 +1,317 @@
+{
+  "furniture": [
+    {
+      "id": 0,
+      "imageUrl": "images/sales/1.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Валенсия Beige Валенсия Beige Валенсия Beige",
+      "type": "Барные стулья",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": "25%"
+    },
+    {
+      "id": 1,
+      "imageUrl": "images/sales/2.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Толикс-2 White Gloss",
+      "type": "Барные стулья",
+      "priceOld": "10 210",
+      "priceNew": "1 900",
+      "dimensions": {
+        "width": 433,
+        "length": 433,
+        "height": 727
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 2,
+      "imageUrl": "images/sales/3.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Валенсия Beige",
+      "type": "Диваны",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 220,
+        "length": 43,
+        "height": 110
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": "15%"
+    },
+
+
+    {
+      "id": 3,
+      "imageUrl": "images/sales/1.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Кускен Navy Blue",
+      "type": "Диваны",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 4,
+      "imageUrl": "images/sales/1.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Валенсия Beige Валенсия Beige Валенсия Beige",
+      "type": "Барные стулья",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": "25%"
+    },
+    {
+      "id": 5,
+      "imageUrl": "images/sales/2.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Толикс-2 White Gloss",
+      "type": "Барные стулья",
+      "priceOld": "10 210",
+      "priceNew": "1 900",
+      "dimensions": {
+        "width": 433,
+        "length": 433,
+        "height": 727
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 6,
+      "imageUrl": "images/sales/3.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Валенсия Beige",
+      "type": "Диваны",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 220,
+        "length": 43,
+        "height": 110
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": "15%"
+    },
+
+
+    {
+      "id": 7,
+      "imageUrl": "images/sales/1.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Кускен Navy Blue",
+      "type": "Диваны",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 8,
+      "imageUrl": "images/sales/1.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Валенсия Beige Валенсия Beige Валенсия Beige",
+      "type": "Барные стулья",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": "25%"
+    },
+    {
+      "id": 9,
+      "imageUrl": "images/sales/2.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Толикс-2 White Gloss",
+      "type": "Барные стулья",
+      "priceOld": "10 210",
+      "priceNew": "1 900",
+      "dimensions": {
+        "width": 433,
+        "length": 433,
+        "height": 727
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 10,
+      "imageUrl": "images/sales/3.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Валенсия Beige",
+      "type": "Диваны",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 220,
+        "length": 43,
+        "height": 110
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": "15%"
+    },
+
+
+    {
+      "id": 11,
+      "imageUrl": "images/sales/1.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Кускен Navy Blue",
+      "type": "Диваны",
+      "priceOld": null,
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    }
+  ],
+  "slider": [
+    { "title": "loft мебель", "subtitle": "Современная и удобная мебель в Анапе" , "imageUrl": "images/top-bg-1.jpg" },
+    { "title": "loft мебель", "subtitle": "Новые поступления в наш магазин",  "imageUrl": "images/top-bg-2.jpg" },
+    { "title": "loft мебель", "subtitle": "Большие скидки в связи с открытием магазина в Краснодаре", "imageUrl": "images/top-bg-3.jpg" }
+  ],
+  "subLists": [
+    ["Модульные кухни", "Барная зона", "Кухонные уголки", "Обеденная зона", "Столешницы", "Стеновые панели", "Мойки, сушилки, смесители для кухни", "Дополнительная фурнитура", "Бытовыя техника"],
+    ["Модульные кухни", "Барная зона", "Кухонные уголки", "Обеденная зона", "Столешницы", "Стеновые панели"],
+    ["Столешницы", "Стеновые панели", "Мойки, сушилки, смесители для кухни", "Дополнительная фурнитура", "Бытовыя техника"],
+    ["Барная зона", "Кухонные уголки", "Стеновые панели", "Мойки, сушилки, смесители для кухни", "Дополнительная фурнитура", "Бытовыя техника"],
+    ["Модульные кухни", "Барная зона", "Кухонные уголки", "Обеденная зона", "Столешницы", "Стеновые панели", "Мойки, сушилки, смесители для кухни", "Дополнительная фурнитура", "Бытовыя техника"],
+    ["Барная зона", "Кухонные уголки", "Дополнительная фурнитура", "Бытовыя техника"],
+    ["Новинки", "Шкафы", "Матрасы", "Мягкая мебель"]
+  ],
+  "FooterLists": [
+    ["Кухни", "Спальни", "Гостинные"],
+    ["Прихожие", "Офисная мебель", "Детская"],
+    ["Шкафы", "Матрасы", "Мягкая мебель"]
+  ]
+}
