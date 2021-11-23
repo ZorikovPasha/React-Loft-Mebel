@@ -1,35 +1,56 @@
-import React, { FC, ReactChild, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactChild, ReactNode, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import HeaderSubList from "./HeaderSubList";
 import HeaderSearchForm from "./HeaderSearchForm";
+import { fetchItems } from "../redux/api";
+import { MobMenu } from ".";
 
 import logo from "../images/logo.svg";
 import wishlist from "../images/icons/wishlist.svg";
 import bag from "../images/icons/bag.svg";
 import profile from "../images/icons/profile.svg";
 import etc from "../images/icons/etc.svg";
-import { fetchItems } from '../redux/api';
-
-import "../scss/_header.scss";
 
 interface IHeaderProps {
+  items: Array<string>;
+  headerMidTaller?: boolean;
   showHeaderTop?: boolean;
   childen?: ReactChild | ReactNode;
-  items: Array<string>;
 }
+
 
 type SubListsType = Array<string[]>;
 
-const Header: FC<IHeaderProps> = ({ showHeaderTop, items }): React.ReactElement => {
+const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): React.ReactElement => {
+
+  const menuBtnRef = useRef(null);
+
   const [subLists, setSubLists] = useState<SubListsType>([]);
 
   useEffect(() => {
-    fetchItems('subLists', setSubLists);
+    fetchItems("subLists", setSubLists);
   }, []);
 
+  const [isMobMenuOpen, setIsMobMenuOpen] = useState(false);
+
+  const onMobMenuBtnClick = () => {
+    setIsMobMenuOpen(true);
+    document.body.classList.add("lock");
+  }
+
+  const onMobMenuCloseClick = () => {
+    setIsMobMenuOpen(false)
+    document.body.classList.remove("lock");
+  }
+    
   return (
     <header className="header">
+       {isMobMenuOpen && <MobMenu 
+        onMobMenuCloseClick={onMobMenuCloseClick}
+        isMobMenuOpen={isMobMenuOpen}
+        ></MobMenu> }
+
       {showHeaderTop && (
         <div className="header__top">
           <div className="container">
@@ -61,38 +82,86 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, items }): React.ReactElement 
       )}
 
       <div className="container">
-        <div className="header__mid">
-          <div className="menu-btn">
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+        {headerMidTaller ? (
+          <div className="header__mid header__mid--taller">
+            <div className="menu-btn" onClick={onMobMenuBtnClick} ref={menuBtnRef}>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
 
-          <Link to="/" className="logo">
-            <img src={logo} alt="logo" />
-          </Link>
+            <Link to="/" className="logo">
+              <img src={logo} alt="logo" />
+            </Link>
+            <nav className="header__nav">
+              <ul className="header__list">
+                {items.map((text, idx) => {
+                  return (
+                    <li key={`${text}_${idx}`} className="header__list-item">
+                      <Link to="/" className="header__list-link">
+                        {text}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+            <HeaderSearchForm inputSpec></HeaderSearchForm>
+            <div className="header__connect">
+              <a className="header__phone header__phone--black" href="tel:89648999119">
+                8 (964) 89 99 119
+              </a>
+              <a className="header__delivery header__delivery--black" href="#">
+                Доставка
+              </a>
+            </div>
+            <div className="header__user user-header">
+              <Link to="/cart" className="user-header__link">
+                <img src={wishlist} alt="wishlist" />
+              </Link>
+              <Link to="/cart" className="user-header__link">
+                <img src={bag} alt="bag" />
+              </Link>
+              <Link to="/cart" className="user-header__link">
+                <img src={profile} alt="profile" />
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="header__mid">
+            <div className="menu-btn" onClick={onMobMenuBtnClick}>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
 
-          <HeaderSearchForm />
-          <div className="header__connect header__connect--mid">
-            <a className="header__phone header__phone--black" href="tel:89648999119">
-              8 (964) 89 99 119
-            </a>
-            <Link to="/catalog" className="header__delivery header__delivery--black">
-              Доставка
+            <Link to="/" className="logo">
+              <img src={logo} alt="logo" />
             </Link>
+
+            <HeaderSearchForm />
+            <div className="header__connect header__connect--mid">
+              <a className="header__phone header__phone--black" href="tel:89648999119">
+                8 (964) 89 99 119
+              </a>
+              <Link to="/catalog" className="header__delivery header__delivery--black">
+                Доставка
+              </Link>
+            </div>
+            <div className="header__user user-header">
+              <Link to="/cart" className="user-header__link">
+                <img src={wishlist} alt="wishlist" />
+              </Link>
+              <Link to="/cart" className="user-header__link">
+                <img src={bag} alt="bag" />
+              </Link>
+              <Link to="/cart" className="user-header__link">
+                <img src={profile} alt="profile" />
+              </Link>
+            </div>
           </div>
-          <div className="header__user user-header">
-            <Link to="/cart" className="user-header__link">
-              <img src={wishlist} alt="wishlist" />
-            </Link>
-            <Link to="/cart" className="user-header__link">
-              <img src={bag} alt="bag" />
-            </Link>
-            <Link to="/cart" className="user-header__link">
-              <img src={profile} alt="profile" />
-            </Link>
-          </div>
-        </div>
+        )}
+
         <div className="header__bottom">
           <div className="header__categories categories">
             <ul className="categories__list">

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Header, Footer, MobMenu} from '../Components';
+import { Header, Footer} from '../Components';
 
 import "../../node_modules/slick-carousel/slick/slick.css";
 import '../scss/_reset.scss';
@@ -12,12 +12,11 @@ const Product: FC = () => {
 return (
   <div className="wrapper">
     
-    <Header showHeaderTop items={[
+    <Header headerMidTaller items={[
         'Главная',
         'О нас',
         'Контакты'
       ]}></Header>
-  <MobMenu></MobMenu>
 
   <main className="main">
     <div className="breadcrumbs">

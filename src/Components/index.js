@@ -5,4 +5,6 @@ import Top from './Top';
 import Sales from './Sales';
 import HeaderSubList from "./HeaderSubList";
 import HeaderSearchForm from './HeaderSearchForm';
-export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, HeaderSearchForm };
+import SortPopup from './SortPopup';
+import SalesItem from './SalesItem';
+export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, HeaderSearchForm, SortPopup, SalesItem };

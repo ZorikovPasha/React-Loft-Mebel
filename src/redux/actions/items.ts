@@ -1,7 +1,7 @@
 import { ThunkAction } from 'redux-thunk';
 
 import { ActionsTypes } from '../types';
-import { fetchItemsActionCreatorType } from '../types';
+import { fetchItemsActionType } from '../types';
 import { initialStateType } from '../reducers/itemsReducer';
 import { fetchItemsThunk } from '../api';
 
@@ -29,7 +29,7 @@ export const fetchItemsThunkCreator = (): ThunkAction<void, initialStateType, un
 }
 
 
-const fetchItemsAtionCreator = (items: []): fetchItemsActionCreatorType => ({
+const fetchItemsAtionCreator = (items: []): fetchItemsActionType => ({
   type: CONST.FETCH_PRODUCTS,
   payload: items
 });

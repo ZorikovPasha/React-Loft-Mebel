@@ -2,13 +2,13 @@ import { ThunkAction } from 'redux-thunk';
 
 import { ActionsTypes } from '../types';
 import { SlidesType } from '../types';
-import { fetchSlidesActionCreatorType } from '../types';
+import { fetchSlidesActionType } from '../types';
 import { initialStateType } from '../reducers/slidesReducer';
 import { fetchItemsThunk } from '../api';
 
 import { CONST } from '../types';
 
-const fetchSlidesActionCreator = (slides: SlidesType[]): fetchSlidesActionCreatorType => ({
+const fetchSlidesActionCreator = (slides: SlidesType[]): fetchSlidesActionType => ({
   type: CONST.FETCH_SLIDES,
   payload: slides
 });

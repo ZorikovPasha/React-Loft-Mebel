@@ -2,7 +2,11 @@ import React from "react";
 
 import search from "../images/icons/search.svg";
 
-const HeaderSearchForm: React.FC = () => {
+interface IHeaderSearchFormProps {
+  inputSpec?: boolean
+}
+
+const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
 
   const [searchValue, setSearchValue] = React.useState('');
 
@@ -13,7 +17,7 @@ const HeaderSearchForm: React.FC = () => {
   return (
     <form className="header__form" action="">
       <input 
-        className="header__input"
+        className={inputSpec ? 'header__input header__input--spec' : 'header__input'}
         type="text"
         placeholder="Поиск"
         value={searchValue}

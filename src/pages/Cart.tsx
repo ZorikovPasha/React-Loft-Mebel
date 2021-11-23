@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
-import {Header, Footer, MobMenu} from '../Components'
+import {Header, Footer, MobMenu} from '../Components';
 
-import '../scss/_reset.scss'
-import '../scss/_global.scss'
-import '../scss/cart.scss'
+import '../scss/_reset.scss';
+import '../scss/_global.scss';
+import '../scss/cart.scss';
 
 const Cart: FC = () => {
 
@@ -12,14 +12,12 @@ const Cart: FC = () => {
 
     <div className="wrapper">
       
-      <Header showHeaderTop items={[
+      <Header items={[
         'Главная',
         'О нас',
         'Контакты'
       ]}></Header>
       
-      <MobMenu></MobMenu>
-
       <main className="main">
         <div className="breadcrumbs">
           <div className="container">

@@ -1,0 +1,83 @@
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import { RootState } from "../redux/store";
+import { favoritesActionCreator } from '../redux/actions/favorites';
+
+type productType = {
+  id: number;
+  imageUrl: string;
+  name: string;
+  type: string;
+  priceOld: string | null;
+  priceNew: string;
+  dimensions: { width: number; length: number; height: number };
+  colors: string[];
+  sale: string;
+};
+
+interface ISalesItemProps {
+  product: productType;
+}
+
+const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
+  const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale } = product;
+
+  const dispatch = useDispatch();
+  const favorites: number[] = useSelector((state: RootState) => state.favoritesReducer.favorites)
+
+  const onBtnLikeClick = () => {
+    dispatch(favoritesActionCreator(id));
+  }
+
+  return (
+    <div className="sales__item item-sales" key={id}>
+      {sale && (
+        <div className="item-sales__label label-sales">
+          <div className="label-sales__body">-{sale}</div>
+        </div>
+      )}
+
+      <button 
+        className={ favorites && favorites.includes(id) ? "item-sales__like active" : "item-sales__like"} 
+        onClick={onBtnLikeClick}
+      ></button>
+      <div className="item-sales__box">
+        <div className="item-sales__img">
+          <img src={imageUrl} alt="furniture" />
+        </div>
+        <Link to="product" className="item-sales__title">
+          {name}
+        </Link>
+        <Link to="catalog" className="item-sales__type">
+          {type}
+        </Link>
+        <div className="item-sales__price">
+          <p className="item-sales__price-new">{priceNew} ₽</p>
+          <p className="item-sales__price-old">{priceOld && priceOld + " ₽"}</p>
+        </div>
+        <div className="item-sales__bottom">
+          <p className="item-sales__text">Размеры</p>
+          <div className="item-sales__line">
+            <div className="item-sales__size">
+              <p className="item-sales__val">ШИРИНА</p>
+              <p className="item-sales__num">{dimensions.width} СМ</p>
+            </div>
+            <div className="item-sales__size">
+              <p className="item-sales__val">ГЛУБИНА</p>
+              <p className="item-sales__num">{dimensions.length} СМ</p>
+            </div>
+            <div className="item-sales__size">
+              <p className="item-sales__val">ВЫСОТА</p>
+              <p className="item-sales__num">{dimensions.height} СМ</p>
+            </div>
+          </div>
+          <button className="item-sales__tocart">Добавить в корзину</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SalesItem;

@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 
-import { Header, Footer, MobMenu, Top, Sales } from "../Components";
+import { Header, Footer, Top, Sales } from "../Components";
 
-import '../scss/_reset.scss'
-import '../scss/_global.scss'
-import '../scss/main.scss'
-
-
+import '../scss/_reset.scss';
+import '../scss/_global.scss';
+import "../scss/_header.scss";
+import '../scss/main.scss';
+import '../scss/_mobile.scss';
 
 const Main: FC = () => {
   return (
@@ -18,7 +18,6 @@ const Main: FC = () => {
       ]}></Header>
 
       <main className="main">
-        <MobMenu></MobMenu>
         <Top></Top>
         <Sales></Sales>
       </main>
