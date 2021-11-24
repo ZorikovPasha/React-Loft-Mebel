@@ -15,7 +15,7 @@ export type ProductType = {
   thumbsUrls: string[],
   name: string,
   type: string,
-  priceOld: string | null,
+  priceOld: string,
   priceNew: string,
   dimensions: { width: number, length: number, height: number },
   colors: string[],

@@ -15,7 +15,7 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
   const dispatch = useDispatch();
 
   const onRemoveItemClick = () => {
-    dispatch(removeItemActionCreator(cartItem.id))
+    dispatch(removeItemActionCreator(cartItem))
   }  
 
   return (
