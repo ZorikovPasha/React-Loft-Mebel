@@ -3,33 +3,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { RootState } from "../redux/store";
-import { favoritesActionCreator } from '../redux/actions/favorites';
-
-type productType = {
-  id: number;
-  imageUrl: string;
-  name: string;
-  type: string;
-  priceOld: string | null;
-  priceNew: string;
-  dimensions: { width: number; length: number; height: number };
-  colors: string[];
-  sale: string;
-};
+import { favoritesActionCreator } from "../redux/actions/favorites";
+import { cartItemsActionCreator } from "../redux/actions/cartItems";
+import { ProductType } from "../redux/types";
 
 interface ISalesItemProps {
-  product: productType;
+  product: ProductType;
 }
 
 const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale } = product;
 
   const dispatch = useDispatch();
-  const favorites: number[] = useSelector((state: RootState) => state.favoritesReducer.favorites)
+  const favorites: number[] = useSelector((state: RootState) => state.favoritesReducer.favorites);
 
   const onBtnLikeClick = () => {
     dispatch(favoritesActionCreator(id));
-  }
+  };
+
+
+
+  const onAddToCartClick = () => {
+    dispatch(cartItemsActionCreator({
+        id: id,
+        colors: [1, 0, 0],
+        quintity: 1,
+        dimensions: {
+          width: dimensions.width,
+          length: dimensions.length,
+          height: dimensions.height,
+        },
+        price: priceNew
+      })
+    );
+  };
 
   return (
     <div className="sales__item item-sales" key={id}>
@@ -39,10 +46,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
         </div>
       )}
 
-      <button 
-        className={ favorites && favorites.includes(id) ? "item-sales__like active" : "item-sales__like"} 
-        onClick={onBtnLikeClick}
-      ></button>
+      <button className={favorites && favorites.includes(id) ? "item-sales__like active" : "item-sales__like"} onClick={onBtnLikeClick}></button>
       <div className="item-sales__box">
         <div className="item-sales__img">
           <img src={imageUrl} alt="furniture" />
@@ -73,7 +77,9 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
               <p className="item-sales__num">{dimensions.height} СМ</p>
             </div>
           </div>
-          <button className="item-sales__tocart">Добавить в корзину</button>
+          <button className="item-sales__tocart" onClick={onAddToCartClick}>
+            Добавить в корзину
+          </button>
         </div>
       </div>
     </div>

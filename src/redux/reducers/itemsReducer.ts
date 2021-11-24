@@ -1,9 +1,9 @@
-import { ActionsTypes } from '../types';
+import { ActionsTypes, ProductType } from '../types';
 
 import { CONST } from '../types';
 
 export type initialStateType = {
-  items: Object[]
+  items: ProductType[]
 }
 
 const initialState = {

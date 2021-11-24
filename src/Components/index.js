@@ -7,4 +7,6 @@ import HeaderSubList from "./HeaderSubList";
 import HeaderSearchForm from './HeaderSearchForm';
 import SortPopup from './SortPopup';
 import SalesItem from './SalesItem';
-export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, HeaderSearchForm, SortPopup, SalesItem };
+import Aside from './Aside';
+import CartItem from './CartItem';
+export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem };

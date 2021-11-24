@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { ProductType } from "../redux/actions/items";
+import { ProductType } from "../redux/types";
 
 import {SalesItem} from '../Components';
 

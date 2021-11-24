@@ -1,13 +1,10 @@
-import React, { FC, ReactElement, useState } from "react";
+import React, { FC, forwardRef, ReactElement, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Header, Footer } from "../Components";
+import { Header, Footer, Aside, SortPopup, SalesItem } from "../Components";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 import { RootState } from "../redux/store";
-import { ProductType } from "../redux/actions/items";
-import Aside from "../Components/Aside";
-import { SortPopup } from "../Components";
-import { SalesItem } from "../Components";
+import { ProductType } from "../redux/types";
 
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
@@ -23,6 +20,8 @@ const Catalog: FC = (): ReactElement => {
   const items = useSelector((state: RootState) => state.itemsReducer.items);
 
   const [isAsideVisible, toggleAsideVisibility] = useState(false);
+
+  const asideToggleRef = useRef(null);
 
   const onBtnClick = () => {
     toggleAsideVisibility(true);
@@ -74,7 +73,7 @@ const Catalog: FC = (): ReactElement => {
 
               <div className="catalog__body">
                 <div className="catalog__controls controls">
-                  <button className="controls__toggle-aside" onClick={onBtnClick}>
+                  <button className="controls__toggle-aside" onClick={onBtnClick} ref={asideToggleRef}>
                     Фильтр
                   </button>
                   <SortPopup></SortPopup>

@@ -1,11 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import "../scss/_mobile.scss";
-
 interface IMobMenuProps {
   onMobMenuCloseClick: () => void;
   isMobMenuOpen: boolean;
+  ref: any;
 }
 
 const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
