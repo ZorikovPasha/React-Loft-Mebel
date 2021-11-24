@@ -23,7 +23,6 @@ type SubListsType = Array<string[]>;
 
 const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): React.ReactElement => {
   const menuBtnRef = useRef(null);
-  const mobMenuRef = useRef(null);
 
   const [subLists, setSubLists] = useState<SubListsType>([]);
 
@@ -38,8 +37,8 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): Re
     document.body.classList.add("lock");
   };
 
-  document.body.onclick = function (e: any) {
-    if ( isMobMenuOpen && !e.path.includes(mobMenuRef.current) && !e.path.includes(menuBtnRef.current) ) {
+  document.body.onclick =  function(e: any) {
+    if ( isMobMenuOpen && !e.path.includes(menuBtnRef.current)  ) {
       setIsMobMenuOpen(false);
       document.body.classList.remove("lock");
     }
@@ -52,7 +51,7 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): Re
 
   return (
     <header className="header">
-      {<MobMenu ref={mobMenuRef} onMobMenuCloseClick={onMobMenuCloseClick} isMobMenuOpen={isMobMenuOpen}></MobMenu>}
+      {<MobMenu onMobMenuCloseClick={onMobMenuCloseClick} isMobMenuOpen={isMobMenuOpen}></MobMenu>}
 
       {showHeaderTop && (
         <div className="header__top">

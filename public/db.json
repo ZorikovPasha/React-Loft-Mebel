@@ -11,9 +11,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Валенсия Beige Валенсия Beige Валенсия Beige",
+      "name": "Шерона Barhat Grey",
       "type": "Барные стулья",
-      "priceOld": null,
+      "priceOld": "2 800",
       "priceNew": "2 300",
       "dimensions": {
         "width": 43,
@@ -37,7 +37,7 @@
       ],
       "name": "Толикс-2 White Gloss",
       "type": "Барные стулья",
-      "priceOld": "10 210",
+      "priceOld": "",
       "priceNew": "1 900",
       "dimensions": {
         "width": 433,
@@ -59,10 +59,10 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Валенсия Beige",
+      "name": "Динс Velvet Yellow",
       "type": "Диваны",
-      "priceOld": null,
-      "priceNew": "2 300",
+      "priceOld": "1 800",
+      "priceNew": "1 300",
       "dimensions": {
         "width": 220,
         "length": 43,
@@ -87,7 +87,7 @@
       ],
       "name": "Кускен Navy Blue",
       "type": "Диваны",
-      "priceOld": null,
+      "priceOld": "",
       "priceNew": "2 300",
       "dimensions": {
         "width": 43,
@@ -100,7 +100,7 @@
     },
     {
       "id": 4,
-      "imageUrl": "images/sales/1.png",
+      "imageUrl": "images/sales/5.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -109,9 +109,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Валенсия Beige Валенсия Beige Валенсия Beige",
+      "name": "Шерона Barhat Grey",
       "type": "Барные стулья",
-      "priceOld": null,
+      "priceOld": "",
       "priceNew": "2 300",
       "dimensions": {
         "width": 43,
@@ -120,11 +120,11 @@
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
       "rating": 4,
-      "sale": "25%"
+      "sale": ""
     },
     {
       "id": 5,
-      "imageUrl": "images/sales/2.png",
+      "imageUrl": "images/sales/6.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -133,9 +133,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Толикс-2 White Gloss",
+      "name": "Шерона Barhat Grey",
       "type": "Барные стулья",
-      "priceOld": "10 210",
+      "priceOld": "",
       "priceNew": "1 900",
       "dimensions": {
         "width": 433,
@@ -148,7 +148,7 @@
     },
     {
       "id": 6,
-      "imageUrl": "images/sales/3.png",
+      "imageUrl": "images/sales/7.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -157,9 +157,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Валенсия Beige",
+      "name": "Авиньон-1",
       "type": "Диваны",
-      "priceOld": null,
+      "priceOld": "2 500",
       "priceNew": "2 300",
       "dimensions": {
         "width": 220,
@@ -174,7 +174,7 @@
 
     {
       "id": 7,
-      "imageUrl": "images/sales/4.png",
+      "imageUrl": "images/sales/8.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -183,9 +183,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Кускен Navy Blue",
+      "name": "Стелла Дуб Сонома",
       "type": "Диваны",
-      "priceOld": null,
+      "priceOld": "",
       "priceNew": "2 300",
       "dimensions": {
         "width": 43,
@@ -198,7 +198,7 @@
     },
     {
       "id": 8,
-      "imageUrl": "images/sales/1.png",
+      "imageUrl": "images/sales/9.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -207,9 +207,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Валенсия Beige Валенсия Beige Валенсия Beige",
+      "name": "Равенна-1 Light",
       "type": "Барные стулья",
-      "priceOld": null,
+      "priceOld": "",
       "priceNew": "2 300",
       "dimensions": {
         "width": 43,
@@ -218,11 +218,11 @@
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
       "rating": 4,
-      "sale": "25%"
+      "sale": ""
     },
     {
       "id": 9,
-      "imageUrl": "images/sales/2.png",
+      "imageUrl": "images/sales/10.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -231,9 +231,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Толикс-2 White Gloss",
+      "name": "Бенфлит Grey",
       "type": "Барные стулья",
-      "priceOld": "10 210",
+      "priceOld": "",
       "priceNew": "1 900",
       "dimensions": {
         "width": 433,
@@ -246,7 +246,105 @@
     },
     {
       "id": 10,
-      "imageUrl": "images/sales/3.png",
+      "imageUrl": "images/sales/11.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Тиффани Вудлайн Крем",
+      "type": "Диваны",
+      "priceOld": "",
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 220,
+        "length": 43,
+        "height": 110
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+
+
+    {
+      "id": 11,
+      "imageUrl": "images/sales/12.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Лайт-3-170-240 Белый",
+      "type": "Диваны",
+      "priceOld": "",
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 12,
+      "imageUrl": "images/sales/13.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Вилли Pink",
+      "type": "Диваны",
+      "priceOld": "",
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 13,
+      "imageUrl": "images/sales/14.png",
+      "thumbsUrls": [
+        "images/product/thumbs/1.png",
+        "images/product/thumbs/2.png",
+        "images/product/thumbs/3.png",
+        "images/product/thumbs/4.png",
+        "images/product/thumbs/5.png",
+        "images/product/thumbs/1.png"
+      ],
+      "name": "Сан-Паулу Velvet Brown",
+      "type": "Диваны",
+      "priceOld": "",
+      "priceNew": "2 300",
+      "dimensions": {
+        "width": 43,
+        "length": 43,
+        "height": 77
+      },
+      "colors": ["Темно-синий", "Красный", "Желтый"],
+      "rating": 4,
+      "sale": ""
+    },
+    {
+      "id": 14,
+      "imageUrl": "images/sales/15.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -257,22 +355,20 @@
       ],
       "name": "Валенсия Beige",
       "type": "Диваны",
-      "priceOld": null,
+      "priceOld": "",
       "priceNew": "2 300",
       "dimensions": {
-        "width": 220,
+        "width": 43,
         "length": 43,
-        "height": 110
+        "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
       "rating": 4,
-      "sale": "15%"
+      "sale": ""
     },
-
-
     {
-      "id": 11,
-      "imageUrl": "images/sales/4.png",
+      "id": 15,
+      "imageUrl": "images/sales/16.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
@@ -281,9 +377,9 @@
         "images/product/thumbs/5.png",
         "images/product/thumbs/1.png"
       ],
-      "name": "Кускен Navy Blue",
+      "name": "Валенсия Beige",
       "type": "Диваны",
-      "priceOld": null,
+      "priceOld": "",
       "priceNew": "2 300",
       "dimensions": {
         "width": 43,
@@ -294,6 +390,7 @@
       "rating": 4,
       "sale": ""
     }
+
   ],
   "slider": [
     { "title": "loft мебель", "subtitle": "Современная и удобная мебель в Анапе" , "imageUrl": "images/top-bg-1.jpg" },

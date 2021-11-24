@@ -14,7 +14,7 @@ export const initialState = {
   totalCost: 0
 };
 
-const cartItemsReducer = (state = initialState, action: (cartItemsActionType)) => {
+const cartItemsReducer = (state = initialState, action: cartItemsActionType) => {
   switch (action.type) {
     case CONST.CART_ITEMS:
       let isEqual = false;
@@ -22,7 +22,7 @@ const cartItemsReducer = (state = initialState, action: (cartItemsActionType)) =
         quintity: 1
       }
       state.cartItems.length &&
-        state.cartItems.map((item: any) => {
+        state.cartItems.map((item: CartItemType) => {
           if ( lodash.isEqual({ ...item, ...obj},  { ...action.payload, ...obj }) ) {
             item.quintity += 1;
             isEqual = true;
@@ -31,20 +31,20 @@ const cartItemsReducer = (state = initialState, action: (cartItemsActionType)) =
       if (isEqual) {
         return {
           ...state,
-          quintity: state.cartItems.reduce((partialSum, obj: any) => partialSum + obj.quintity, 0),
+          quintity: state.cartItems.reduce((partialSum, obj: CartItemType) => partialSum + obj.quintity, 0),
           totalCost: state.cartItems.reduce((partialCost, obj: CartItemType) => partialCost + obj.quintity * Number(obj.price.split(' ').join('')), 0)
         }
       } else {
         return {
           ...state,
           cartItems: [...state.cartItems, action.payload],
-          quintity: [...state.cartItems, action.payload].reduce((partialSum, a: any) => partialSum + a.quintity, 0),
+          quintity: [...state.cartItems, action.payload].reduce((partialSum, a: CartItemType) => partialSum + a.quintity, 0),
           totalCost: [...state.cartItems, action.payload].reduce((partialCost, item) => partialCost + item.quintity * Number(item.price.split(' ').join('')), 0)
         };
       }
       case CONST.REMOVE_CART_ITEM:
-        const remainingCartItems = state.cartItems.filter((item: any) => item.id !== action.payload);
-        const remainingQuintity = state.cartItems.filter((item: any) => item.id !== action.payload).reduce((partialSum, a: any) => partialSum + a.quintity, 0);
+        const remainingCartItems = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id);
+        const remainingQuintity = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id).reduce((partialSum, a: CartItemType) => partialSum + a.quintity, 0);
 
         return {
           ...state,

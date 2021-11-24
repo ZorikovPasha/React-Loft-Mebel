@@ -9,6 +9,7 @@ import { ProductType } from "../redux/types";
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
 import "../scss/catalog.scss";
+import arrBack from "../images/icons/arrow-back.svg";
 
 const Catalog: FC = (): ReactElement => {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const Catalog: FC = (): ReactElement => {
               </li>
               <li className="breadcrumbs__item">
                 <a className="breadcrumbs__item-back" href="catalog.html">
-                  <img src="images/icons/arrow-back.svg" alt="back" />
+                  <img src={arrBack} alt="back" />
                 </a>
                 <span className="breadcrumbs__link">Диваны</span>
               </li>

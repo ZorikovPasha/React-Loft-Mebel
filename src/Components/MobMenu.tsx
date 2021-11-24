@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 interface IMobMenuProps {
   onMobMenuCloseClick: () => void;
   isMobMenuOpen: boolean;
-  ref: any;
 }
 
 const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {

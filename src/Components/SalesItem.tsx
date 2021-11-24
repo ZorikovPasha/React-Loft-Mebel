@@ -21,8 +21,6 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
     dispatch(favoritesActionCreator(id));
   };
 
-
-
   const onAddToCartClick = () => {
     dispatch(cartItemsActionCreator({
         id: id,
