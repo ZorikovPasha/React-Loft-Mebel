@@ -1,8 +1,7 @@
-// import { ThunkAction } from "redux-thunk";
-// import { ActionsTypes } from "./types";
+
 
 export const fetchItems = (keyName: string, useStateFunc: React.Dispatch<React.SetStateAction<any>>): void => {
-  fetch("http://localhost:3000/db.json")
+  fetch("https://distracted-clarke-2debdf.netlify.app/db.json")
     .then((response) => {
       return response.json();
     })
@@ -12,7 +11,7 @@ export const fetchItems = (keyName: string, useStateFunc: React.Dispatch<React.S
 };
 
 export const fetchItemsThunk = (keyName: string, dispatchFunc: any, ActionCreator: (arr: []) => void) => {
-  fetch("http://localhost:3000/db.json")
+  fetch("https://distracted-clarke-2debdf.netlify.app/db.json")
     .then((response) => {
       return response.json();
     })
