@@ -24,7 +24,7 @@ const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
   const [mobMenu, setMobMenu] = useState<mobMenuType>();
 
   useEffect(() => {
-    fetch("http://localhost:3000/db.json")
+    fetch("https://distracted-clarke-2debdf.netlify.app/db.json")
       .then((response) => {
         return response.json();
       })
