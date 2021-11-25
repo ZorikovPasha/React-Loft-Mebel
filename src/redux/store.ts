@@ -6,7 +6,9 @@ export interface RootState {
   itemsReducer: { items: [] },
   slidesReducer: { slides: [] }, 
   favoritesReducer: { favorites: [] },
-  cartItemsReducer: { cartItems: [], quintity: 0, totalCost: 0 }
+  cartItemsReducer: { cartItems: [], quintity: 0, totalCost: 0 },
+  removeReducer: { cartItems: [], quintity: 0, totalCost: 0 },
+  currentProductReducer: { id: 0 }
 }
 
 const composeEnhancer = (window && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) as typeof compose || compose;

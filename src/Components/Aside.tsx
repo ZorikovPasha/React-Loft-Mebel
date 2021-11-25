@@ -26,7 +26,6 @@ const Aside: React.FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => 
           <div className="aside__filter filter">
             <h6 className="filter__title">Раздел</h6>
             <button className="aside__close" onClick={onAsideCloseClick}>
-              <img src="images/mob-menu/close.svg" alt="close" />
             </button>
 
             <select className="filter__select select">

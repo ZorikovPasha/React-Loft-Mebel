@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import crossImg from "../images/icons/cross.svg";
+import { currentProductActionCreator } from "../redux/actions/currentProduct";
 import { removeItemActionCreator } from "../redux/actions/removeItemAction";
 import { CartItemType } from "../redux/types";
 
@@ -18,6 +19,10 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
     dispatch(removeItemActionCreator(cartItem))
   }  
 
+  const onProductLinkClick = () => {
+    dispatch(currentProductActionCreator(item.id))
+  }
+
   return (
     <div className="cart__item item">
       <div className="item__box">
@@ -25,7 +30,11 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
         <div className="item__info">
           <div className="item__info-top">
             <h4 className="item__info-name">
-              <Link to="/product">{item.name}</Link>
+              <Link
+                to="/product" 
+                onClick={onProductLinkClick}>
+                  {item.name}
+                </Link>
             </h4>
             <div className="item__info-nums">
               <p className="item__info-price">{item.priceNew ? Number(item.priceNew.split(' ').join('')) * cartItem.quintity : Number(item.priceOld.split(' ').join('')) * cartItem.quintity}</p>

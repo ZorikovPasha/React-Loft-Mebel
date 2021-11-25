@@ -3,13 +3,13 @@
     {
       "id": 0,
       "imageUrl": "images/sales/1.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Шерона Barhat Grey",
       "type": "Барные стулья",
@@ -27,13 +27,13 @@
     {
       "id": 1,
       "imageUrl": "images/sales/2.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Толикс-2 White Gloss",
       "type": "Барные стулья",
@@ -45,19 +45,19 @@
         "height": 727
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.2,
       "sale": ""
     },
     {
       "id": 2,
       "imageUrl": "images/sales/3.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Динс Velvet Yellow",
       "type": "Диваны",
@@ -69,7 +69,7 @@
         "height": 110
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.3,
       "sale": "15%"
     },
 
@@ -77,13 +77,13 @@
     {
       "id": 3,
       "imageUrl": "images/sales/4.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Кускен Navy Blue",
       "type": "Диваны",
@@ -95,19 +95,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.1,
       "sale": ""
     },
     {
       "id": 4,
       "imageUrl": "images/sales/5.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Шерона Barhat Grey",
       "type": "Барные стулья",
@@ -119,19 +119,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.8,
       "sale": ""
     },
     {
       "id": 5,
       "imageUrl": "images/sales/6.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Шерона Barhat Grey",
       "type": "Барные стулья",
@@ -143,19 +143,19 @@
         "height": 727
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.4,
       "sale": ""
     },
     {
       "id": 6,
       "imageUrl": "images/sales/7.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Авиньон-1",
       "type": "Диваны",
@@ -167,7 +167,7 @@
         "height": 110
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.8,
       "sale": "15%"
     },
 
@@ -175,13 +175,13 @@
     {
       "id": 7,
       "imageUrl": "images/sales/8.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Стелла Дуб Сонома",
       "type": "Диваны",
@@ -193,19 +193,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.6,
       "sale": ""
     },
     {
       "id": 8,
       "imageUrl": "images/sales/9.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Равенна-1 Light",
       "type": "Барные стулья",
@@ -217,19 +217,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 3.5,
       "sale": ""
     },
     {
       "id": 9,
       "imageUrl": "images/sales/10.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Бенфлит Grey",
       "type": "Барные стулья",
@@ -241,19 +241,19 @@
         "height": 727
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.0,
       "sale": ""
     },
     {
       "id": 10,
       "imageUrl": "images/sales/11.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Тиффани Вудлайн Крем",
       "type": "Диваны",
@@ -265,7 +265,7 @@
         "height": 110
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 3.8,
       "sale": ""
     },
 
@@ -273,13 +273,13 @@
     {
       "id": 11,
       "imageUrl": "images/sales/12.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Лайт-3-170-240 Белый",
       "type": "Диваны",
@@ -291,19 +291,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 3.7,
       "sale": ""
     },
     {
       "id": 12,
       "imageUrl": "images/sales/13.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Вилли Pink",
       "type": "Диваны",
@@ -315,19 +315,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 2.9,
       "sale": ""
     },
     {
       "id": 13,
       "imageUrl": "images/sales/14.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Сан-Паулу Velvet Brown",
       "type": "Диваны",
@@ -339,19 +339,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.0,
       "sale": ""
     },
     {
       "id": 14,
       "imageUrl": "images/sales/15.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Валенсия Beige",
       "type": "Диваны",
@@ -363,19 +363,19 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 3.7,
       "sale": ""
     },
     {
       "id": 15,
       "imageUrl": "images/sales/16.png",
+      "bigImageUrl": "images/product/1.png",
       "thumbsUrls": [
         "images/product/thumbs/1.png",
         "images/product/thumbs/2.png",
         "images/product/thumbs/3.png",
         "images/product/thumbs/4.png",
-        "images/product/thumbs/5.png",
-        "images/product/thumbs/1.png"
+        "images/product/thumbs/5.png"
       ],
       "name": "Валенсия Beige",
       "type": "Диваны",
@@ -387,7 +387,7 @@
         "height": 77
       },
       "colors": ["Темно-синий", "Красный", "Желтый"],
-      "rating": 4,
+      "rating": 4.2,
       "sale": ""
     }
 

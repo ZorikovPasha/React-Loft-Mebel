@@ -24,7 +24,7 @@ const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
   const [mobMenu, setMobMenu] = useState<mobMenuType>();
 
   useEffect(() => {
-    fetch("https://distracted-clarke-2debdf.netlify.app/db.json")
+    fetch("http://localhost:3000/db.json")
       .then((response) => {
         return response.json();
       })
@@ -38,9 +38,7 @@ const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
       <div className={isMobMenuOpen ? "mob-menu__body opened" : "mob-menu__body"}>
         <div className="mob-menu__top">
           <h5 className="mob-menu__title">Меню</h5>
-          <button className="mob-menu__close" onClick={onMobMenuCloseClick}>
-            <img src="images/mob-menu/close.svg" alt="close" />
-          </button>
+          <button className="mob-menu__close" onClick={onMobMenuCloseClick}></button>
         </div>
         <ul className="mob-menu__list">
           {mobMenu &&

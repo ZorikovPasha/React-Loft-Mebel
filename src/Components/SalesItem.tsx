@@ -6,6 +6,7 @@ import { RootState } from "../redux/store";
 import { favoritesActionCreator } from "../redux/actions/favorites";
 import { cartItemsActionCreator } from "../redux/actions/cartItems";
 import { ProductType } from "../redux/types";
+import { currentProductActionCreator } from "../redux/actions/currentProduct";
 
 interface ISalesItemProps {
   product: ProductType;
@@ -20,6 +21,10 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   const onBtnLikeClick = () => {
     dispatch(favoritesActionCreator(id));
   };
+
+  const onProductLinkClick = () => {
+    dispatch(currentProductActionCreator(id))
+  }
 
   const onAddToCartClick = () => {
     dispatch(cartItemsActionCreator({
@@ -49,7 +54,11 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
         <div className="item-sales__img">
           <img src={imageUrl} alt="furniture" />
         </div>
-        <Link to="product" className="item-sales__title">
+        <Link 
+          to="product"
+          className="item-sales__title"
+          onClick={onProductLinkClick}
+          >
           {name}
         </Link>
         <Link to="catalog" className="item-sales__type">
