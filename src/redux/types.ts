@@ -6,12 +6,14 @@ export const CONST = {
   CART_ITEMS: "CART_ITEMS",
   QUINTITY: "QUINTITY",
   REMOVE_CART_ITEM: "REMOVE_CART_ITEM",
-  CALC_TOTAL_COST: "CALC_TOTAL_COST"
+  CALC_TOTAL_COST: "CALC_TOTAL_COST",
+  CURRENT_PRODUCT: "CURRENT_PRODUCT"
 }
 
 export type ProductType = {
   id: number,
   imageUrl: string,
+  bigImageUrl: string,
   thumbsUrls: string[],
   name: string,
   type: string,
@@ -68,7 +70,11 @@ export type quintityActionType = {
 export type removeItemActionType = {
   type: typeof CONST.REMOVE_CART_ITEM,
   payload: number
+}
 
+export type currentProductActionType = {
+  type: typeof CONST.CURRENT_PRODUCT,
+  payload: number
 }
 
 export type ActionsTypes = fetchItemsActionType | fetchSlidesActionType | favoritesActionType | cartItemsActionType;

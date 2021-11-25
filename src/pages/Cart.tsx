@@ -53,13 +53,13 @@ const Cart: FC = () => {
               </p>
             </div>
             {cartItems && cartItems.map((cartItem: CartItemType) => (
-              <CartItem key={cartItem.id} cartItem={cartItem} item={items.find(obj => obj.id === cartItem.id)}></CartItem>
+              <CartItem key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} cartItem={cartItem} item={items.find(obj => obj.id === cartItem.id)}></CartItem>
             ))}
 
             <div className="cart__bottom">
               <p className="cart__bottom-total">
                 Итоговая стоимость:
-                <span>{total}</span>
+                <span> {total} P</span>
               </p>
               <button className="cart__bottom-btn">Оформить заказ</button>
             </div>
@@ -70,7 +70,7 @@ const Cart: FC = () => {
           <div className="container">
             <h3 className="sales__title">Вам может понравиться</h3>
             <div className="sales__items sales__items--cart">
-              {items.map((product: ProductType) => (
+              {items.filter((item: ProductType) => item.id < 4).map((product: ProductType) => (
                 <SalesItem key={product.id} product={product}></SalesItem>
               ))}
             </div>

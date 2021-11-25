@@ -9,4 +9,5 @@ import SortPopup from './SortPopup';
 import SalesItem from './SalesItem';
 import Aside from './Aside';
 import CartItem from './CartItem';
-export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem };
+import ProductCard from './ProductCard';
+export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem, ProductCard };

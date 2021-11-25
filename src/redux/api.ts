@@ -1,7 +1,7 @@
 
 
 export const fetchItems = (keyName: string, useStateFunc: React.Dispatch<React.SetStateAction<any>>): void => {
-  fetch("https://distracted-clarke-2debdf.netlify.app/db.json")
+  fetch("http://localhost:3000/db.json")
     .then((response) => {
       return response.json();
     })
@@ -11,7 +11,7 @@ export const fetchItems = (keyName: string, useStateFunc: React.Dispatch<React.S
 };
 
 export const fetchItemsThunk = (keyName: string, dispatchFunc: any, ActionCreator: (arr: []) => void) => {
-  fetch("https://distracted-clarke-2debdf.netlify.app/db.json")
+  fetch("http://localhost:3000/db.json")
     .then((response) => {
       return response.json();
     })
