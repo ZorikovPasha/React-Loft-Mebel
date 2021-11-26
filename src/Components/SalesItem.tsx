@@ -18,15 +18,15 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   const dispatch = useDispatch();
   const favorites: number[] = useSelector((state: RootState) => state.favoritesReducer.favorites);
 
-  const onBtnLikeClick = () => {
+  const onBtnLikeClick = (): void => {
     dispatch(favoritesActionCreator(id));
   };
 
-  const onProductLinkClick = () => {
+  const onProductLinkClick = (): void => {
     dispatch(currentProductActionCreator(id))
   }
 
-  const onAddToCartClick = () => {
+  const onAddToCartClick = (): void => {
     dispatch(cartItemsActionCreator({
         id: id,
         colors: [1, 0, 0],

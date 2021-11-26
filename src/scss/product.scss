@@ -22,9 +22,9 @@
   // .product__slider-item
 
   &__slider-item {
-
     position: relative;
     padding-bottom: 50%;
+
     img {
       position: absolute;
       top: 0;
@@ -38,7 +38,6 @@
   // .product__thumbs
 
   &__thumbs {
-
     padding: 0 28px;
 
     .slick-btn {
@@ -158,6 +157,15 @@
     padding: 12px 50px;
     background: #245462;
     margin-right: 20px;
+    transition: all .2s;
+    opacity: 1;
+
+    &:hover {
+      opacity: .8;
+    }
+    &:active {
+      opacity: .6;
+    }
   }
 
   // .shop__wish

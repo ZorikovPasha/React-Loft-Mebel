@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, MouseEventHandler, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 interface IMobMenuProps {
-  onMobMenuCloseClick: () => void;
+  onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement>;
   isMobMenuOpen: boolean;
 }
 
@@ -17,7 +17,7 @@ const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
     body: Array<mobMenuItemType>;
   };
 
-  const onMobMenuItemClick = () => {
+  const onMobMenuItemClick = (): void => {
     document.body.classList.remove("lock");
   }
 

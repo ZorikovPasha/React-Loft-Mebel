@@ -10,7 +10,7 @@ const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
 
   const [searchValue, setSearchValue] = React.useState('');
 
-  const onSearchValChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const onSearchValChange: React.ChangeEventHandler<HTMLInputElement> = (e): void => {
     setSearchValue(e.target.value);
   }
 

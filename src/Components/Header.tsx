@@ -1,4 +1,4 @@
-import React, { FC, ReactChild, ReactNode, useEffect, useRef, useState } from "react";
+import React, { FC, MouseEventHandler, ReactChild, ReactNode, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import HeaderSubList from "./HeaderSubList";
@@ -32,19 +32,19 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): Re
 
   const [isMobMenuOpen, setIsMobMenuOpen] = useState(false);
 
-  const onMobMenuBtnClick = () => {
+  const onMobMenuBtnClick: MouseEventHandler<HTMLDivElement> = (): void => {
     setIsMobMenuOpen(true);
     document.body.classList.add("lock");
   };
 
-  document.body.onclick =  function(e: any) {
+  document.body.onclick =  function(e: any): void {
     if ( isMobMenuOpen && !e.path.includes(menuBtnRef.current)  ) {
       setIsMobMenuOpen(false);
       document.body.classList.remove("lock");
     }
   };
 
-  const onMobMenuCloseClick = () => {
+  const onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement> = (): void => {
     setIsMobMenuOpen(false);
     document.body.classList.remove("lock");
   };

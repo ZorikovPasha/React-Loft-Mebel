@@ -20,7 +20,7 @@ const Product: FC = () => {
 
   const currentId = useSelector((state: RootState) => state.currentProductReducer.id);
   const items = useSelector((state: RootState) => state.itemsReducer.items);
-  const [currentProduct] = items.filter((item: ProductType) => item.id === currentId )
+  const [ currentProduct ] = items.filter((item: ProductType) => item.id === currentId )
   
   return (
     <div className="wrapper">
@@ -55,7 +55,7 @@ const Product: FC = () => {
           </div>
         </div>
         {currentProduct && <ProductCard product={currentProduct}></ProductCard>}
-        {currentProduct &&         <section className="product-tabs">
+        {currentProduct && <section className="product-tabs">
           <div className="container">
             <div className="product-tabs__inner">
               <div className="product-tabs__toggle">

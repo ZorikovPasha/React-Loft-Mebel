@@ -4,18 +4,18 @@ const SortPopup: React.FC = () => {
   const [isSortPopupVisible, toggleSortPopupVisibility] = useState(false);
   const [activeCat, setActiveCat] = useState<string | null>(null);
 
+  const popupRef = useRef(null);
+
   const onSortBtnClick = () => {
     toggleSortPopupVisibility(!isSortPopupVisible);
   };
 
-  const onListItemClick = (e: any) => {
+  const onListItemClick = (e: any): void => {
     setActiveCat(e.target.attributes.value.textContent);
     toggleSortPopupVisibility(false);
   };
 
-  const popupRef = useRef(null);
-
-  const hadleOutsidePopupClick = (e: any) => {
+  const hadleOutsidePopupClick = (e: any): void => {
     if (!e.path.includes(popupRef.current)) {
       toggleSortPopupVisibility(false);
     }

@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler, useEffect, useRef, useState } from "react";
+import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import Slider from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -66,12 +66,12 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
   const selectQuintityRef: any = useRef(null);
   const selectColorRef: any = useRef(null);
 
-  const onAddToFavoriteClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const onAddToFavoriteClick: MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
     dispatch(favoritesActionCreator(id));
   };
 
-  const onBuyClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const onBuyClick: MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
     const productColors: number[] = [];
 

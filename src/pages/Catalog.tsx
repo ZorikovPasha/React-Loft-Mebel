@@ -29,7 +29,7 @@ const Catalog: FC = (): ReactElement => {
     document.body.classList.add("lock");
   };
 
-  const onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+  const onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
     toggleAsideVisibility(false);
     document.body.classList.remove("lock");

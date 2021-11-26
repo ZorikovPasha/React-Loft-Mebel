@@ -1,11 +1,12 @@
-import React, { FC } from "react";
+import React, { FC, MouseEventHandler } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import crossImg from "../images/icons/cross.svg";
 import { currentProductActionCreator } from "../redux/actions/currentProduct";
 import { removeItemActionCreator } from "../redux/actions/removeItemAction";
 import { CartItemType } from "../redux/types";
+
+import crossImg from "../images/icons/cross.svg";
 
 interface ICartItemProps {
   cartItem: CartItemType;
@@ -15,11 +16,11 @@ interface ICartItemProps {
 const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
   const dispatch = useDispatch();
 
-  const onRemoveItemClick = () => {
+  const onRemoveItemClick: MouseEventHandler<HTMLDivElement> = (): void => {
     dispatch(removeItemActionCreator(cartItem))
   }  
 
-  const onProductLinkClick = () => {
+  const onProductLinkClick: MouseEventHandler<HTMLAnchorElement> = (): void => {
     dispatch(currentProductActionCreator(item.id))
   }
 

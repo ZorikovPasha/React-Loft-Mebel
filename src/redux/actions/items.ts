@@ -7,8 +7,6 @@ import { fetchItemsThunk } from '../api';
 
 import { CONST } from '../types';
 
-
-
 export const fetchItemsThunkCreator = (): ThunkAction<void, initialStateType, unknown, ActionsTypes> => {
   return dispatch => {
     fetchItemsThunk('furniture', dispatch, fetchItemsAtionCreator)
