@@ -52,7 +52,8 @@ const Cart: FC = () => {
                 <span className="cart__top-num">предметов {quintity}</span>
               </p>
             </div>
-            {cartItems && cartItems.map((cartItem: CartItemType) => (
+            {cartItems && 
+              cartItems.map((cartItem: CartItemType) => (
               <CartItem key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} cartItem={cartItem} item={items.find(obj => obj.id === cartItem.id)}></CartItem>
             ))}
 

@@ -241,27 +241,6 @@
 
   &__option {
   }
-
-  .jq-selectbox__select-text {
-    width: 30px !important;
-    height: 30px;
-    padding: 0;
-    font-size: 0;
-  }
-  .jq-selectbox li {
-    font-size: 0;
-    line-height: 0;
-  }
-  .jq-selectbox__dropdown li {
-    padding: 2px 4px;
-    width: 30px;
-    height: 30px;
-    font-size: 0;
-    line-height: 0;
-  }
-  .jq-selectbox__dropdown {
-    width: auto;
-  }
 }
 
 .quintity-select {

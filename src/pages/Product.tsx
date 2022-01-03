@@ -12,7 +12,6 @@ import "../scss/_global.scss";
 import "../scss/product.scss";
 
 const Product: FC = () => {
-
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
@@ -25,7 +24,6 @@ const Product: FC = () => {
   return (
     <div className="wrapper">
       <Header headerMidTaller items={["Главная", "О нас", "Контакты"]}></Header>
-
       <main className="main">
         <div className="breadcrumbs">
           <div className="container">
@@ -54,8 +52,10 @@ const Product: FC = () => {
             </ul>
           </div>
         </div>
-        {currentProduct && <ProductCard product={currentProduct}></ProductCard>}
-        {currentProduct && <section className="product-tabs">
+        {currentProduct && 
+          <ProductCard product={currentProduct}></ProductCard>}
+        {currentProduct && 
+          <section className="product-tabs">
           <div className="container">
             <div className="product-tabs__inner">
               <div className="product-tabs__toggle">
@@ -431,7 +431,3 @@ const Product: FC = () => {
 };
 
 export default Product;
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
-

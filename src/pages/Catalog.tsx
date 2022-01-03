@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, ReactElement, useRef, useState } from "react";
+import React, { FC, MouseEventHandler, ReactElement, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Header, Footer, Aside, SortPopup, SalesItem } from "../Components";
@@ -24,7 +24,7 @@ const Catalog: FC = (): ReactElement => {
 
   const asideToggleRef = useRef(null);
 
-  const onBtnClick = () => {
+  const onBtnClick: MouseEventHandler<HTMLButtonElement> = (): void => {
     toggleAsideVisibility(true);
     document.body.classList.add("lock");
   };
@@ -34,6 +34,9 @@ const Catalog: FC = (): ReactElement => {
     toggleAsideVisibility(false);
     document.body.classList.remove("lock");
   };
+
+  const onSortTypeClick = (cat: string): void => {
+  }
 
   return (
     <div className="wrapper">
@@ -70,18 +73,24 @@ const Catalog: FC = (): ReactElement => {
         <section className="catalog">
           <div className="container">
             <div className="catalog__inner">
-              {<Aside isAsideVisible={isAsideVisible} onAsideCloseClick={onAsideCloseClick}></Aside>}
-
+              {<Aside 
+                isAsideVisible={isAsideVisible}
+                onAsideCloseClick={onAsideCloseClick}>
+              </Aside>}
               <div className="catalog__body">
                 <div className="catalog__controls controls">
                   <button className="controls__toggle-aside" onClick={onBtnClick} ref={asideToggleRef}>
                     Фильтр
                   </button>
-                  <SortPopup></SortPopup>
+                  <SortPopup onSortTypeClick={onSortTypeClick}></SortPopup>
                 </div>
                 <div className="catalog__items">
                   {items.map((product: ProductType) => (
-                    <SalesItem key={product.id} product={product}></SalesItem>
+                    <SalesItem 
+                      key={product.id} 
+                      product={product}
+                      >
+                    </SalesItem>
                   ))}
                 </div>
               </div>

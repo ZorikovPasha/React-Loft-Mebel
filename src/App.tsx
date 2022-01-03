@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 
-import store, { RootState } from "./redux/store";
+import store from "./redux/store";
 import { Main, Catalog, Product, Cart } from "./pages";
 
 const App: FC = () => {

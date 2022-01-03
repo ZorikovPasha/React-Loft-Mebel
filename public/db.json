@@ -72,8 +72,6 @@
       "rating": 4.3,
       "sale": "15%"
     },
-
-
     {
       "id": 3,
       "imageUrl": "images/sales/4.png",
@@ -170,8 +168,6 @@
       "rating": 4.8,
       "sale": "15%"
     },
-
-
     {
       "id": 7,
       "imageUrl": "images/sales/8.png",
@@ -268,8 +264,6 @@
       "rating": 3.8,
       "sale": ""
     },
-
-
     {
       "id": 11,
       "imageUrl": "images/sales/12.png",
@@ -390,7 +384,6 @@
       "rating": 4.2,
       "sale": ""
     }
-
   ],
   "slider": [
     { "title": "loft мебель", "subtitle": "Современная и удобная мебель в Анапе" , "imageUrl": "images/top-bg-1.jpg" },

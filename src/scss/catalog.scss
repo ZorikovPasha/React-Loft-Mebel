@@ -84,6 +84,11 @@
     padding: 7px 30px;
   }
 }
+
+.css-b62m3t-container {
+  margin-bottom: 20px;
+}
+
 .filter {
 
   margin-bottom: 20px;
@@ -114,34 +119,6 @@
   // .filter__colors
 
   &__colors {
-  }
-
-
-  .jq-selectbox {
-    display: block;
-    cursor: pointer;
-    background: #F8F8F8;
-    border-radius: 3px;
-  }
-  .jq-selectbox__select-text {
-    font-size: 12px;
-    line-height: 14px;
-    color: #686868;
-
-    margin-right: 0;
-    padding: 7px 20px 7px 10px;
-    box-shadow: none;
-  }
-  .jq-selectbox__trigger {
-    right: 12px;
-  }
-  .jq-selectbox li {
-    font-size: 12px;
-    line-height: 14px;
-    color: #686868;
-  }
-  .jq-selectbox li + li {
-    padding-top: 6px;
   }
 }
 .colors {
@@ -283,7 +260,7 @@
   right: 0;
 
   min-width: 170px;
-  background: #FFFFFF;
+  background: #FEFEFE;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.07);
   padding: 20px;
   text-align: left;

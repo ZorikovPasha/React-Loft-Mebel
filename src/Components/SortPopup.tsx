@@ -1,6 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
-const SortPopup: React.FC = () => {
+interface ISortPopupProps {
+  onSortTypeClick: (cat: string) => void
+}
+
+const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
   const [isSortPopupVisible, toggleSortPopupVisibility] = useState(false);
   const [activeCat, setActiveCat] = useState<string | null>(null);
 
@@ -13,6 +17,9 @@ const SortPopup: React.FC = () => {
   const onListItemClick = (e: any): void => {
     setActiveCat(e.target.attributes.value.textContent);
     toggleSortPopupVisibility(false);
+
+    alert(e.target.attributes.value);
+    onSortTypeClick(e.target.attributes.value);
   };
 
   const hadleOutsidePopupClick = (e: any): void => {
@@ -46,7 +53,9 @@ const SortPopup: React.FC = () => {
       {isSortPopupVisible && (
         <ul className="sort-list">
           {items.map((obj) => (
-            <li className={activeCat === obj.value ? "sort-list__item active" : "sort-list__item"} onClick={onListItemClick} value={obj.value} key={obj.value}>
+            <li 
+              className={activeCat === obj.value ? "sort-list__item active" : "sort-list__item"} 
+              onClick={onListItemClick} value={obj.value} key={obj.value}>
               {obj.text}
             </li>
           ))}

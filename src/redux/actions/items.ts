@@ -9,12 +9,11 @@ import { CONST } from '../types';
 
 export const fetchItemsThunkCreator = (): ThunkAction<void, initialStateType, unknown, ActionsTypes> => {
   return dispatch => {
-    fetchItemsThunk('furniture', dispatch, fetchItemsAtionCreator)
+    fetchItemsThunk('furniture', dispatch, fetchItemsActionCreator )
   }
 }
 
-
-const fetchItemsAtionCreator = (items: []): fetchItemsActionType => ({
+const fetchItemsActionCreator = (items: []): fetchItemsActionType => ({
   type: CONST.FETCH_PRODUCTS,
   payload: items
 });
