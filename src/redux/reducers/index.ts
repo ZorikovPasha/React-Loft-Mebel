@@ -8,12 +8,12 @@ import removeReducer from './removeReducer';
 import currentProductReducer from './currentProductReducer';
 
 const rootReducer = combineReducers({
-  itemsReducer,
-  slidesReducer,
-  favoritesReducer,
-  cartItemsReducer,
-  removeReducer,
-  currentProductReducer
+  items: itemsReducer,
+  slides: slidesReducer,
+  favorites: favoritesReducer,
+  cartItems: cartItemsReducer,
+  remove: removeReducer,
+  currentProduct: currentProductReducer,
 })
 
 export default rootReducer;

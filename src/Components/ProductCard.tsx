@@ -1,11 +1,12 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
-import Slider from "react-slick";
+import Slider, { Settings } from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ProductType } from "../redux/types";
 import { favoritesActionCreator } from "../redux/actions/favorites";
 import { RootState } from "../redux/store";
 import { cartItemsActionCreator } from "../redux/actions/cartItems";
+
+import { ProductType } from "../types";
 
 interface IProductCardProps {
   product: ProductType;
@@ -31,40 +32,40 @@ const SliderNextArrow: FC = () => {
   );
 };
 
+const slider1Settings: Settings = {
+  arrows: false,
+  fade: true,
+  swipe: false,
+};
+
+const slider2Settings: Settings = {
+  variableWidth: true,
+  infinite: false,
+  focusOnSelect: true,
+  prevArrow: <SliderPrevArrow />,
+  nextArrow: <SliderNextArrow />,
+  responsive: [
+    {
+      breakpoint: 511,
+      settings: {
+        arrows: false,
+      },
+    },
+  ],
+};
+
 const ProuctCard: FC<IProductCardProps> = ({ product }) => {
   const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product;
-  const favorites: number[] = useSelector((state: RootState) => state.favoritesReducer.favorites);
 
-  const slider1Settings = {
-    arrows: false,
-    fade: true,
-    swipe: false,
-  };
-
-  const slider2Settings = {
-    variableWidth: true,
-    infinite: false,
-    focusOnSelect: true,
-    prevArrow: <SliderPrevArrow />,
-    nextArrow: <SliderNextArrow />,
-    responsive: [
-      {
-        breakpoint: 511,
-        settings: {
-          arrows: false,
-        },
-      },
-    ],
-  };
-
+  const favorites = useSelector((state: RootState) => state.favorites.favorites);
   const dispatch = useDispatch();
 
-  const [nav1, setNav1] = useState();
-  const [nav2, setNav2] = useState();
+  const [nav1, setNav1] = useState<Slider>();
+  const [nav2, setNav2] = useState<Slider>();
 
-  const favoriteBtnRef = useRef(null);
-  const selectQuintityRef: any = useRef(null);
-  const selectColorRef: any = useRef(null);
+  const favoriteBtnRef = useRef<HTMLButtonElement>(null);
+  const selectQuintityRef = useRef<HTMLSelectElement>(null);
+  const selectColorRef = useRef<HTMLSelectElement>(null);
 
   const onAddToFavoriteClick: MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
@@ -76,7 +77,7 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
     const productColors: number[] = [];
 
     colors.map((_, index) => {
-      if (selectColorRef.current.selectedIndex === index) {
+      if (selectColorRef?.current?.selectedIndex === index) {
         productColors.push(1);
       } else {
         productColors.push(0);
@@ -87,7 +88,7 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
       cartItemsActionCreator({
         id: id,
         colors: [...productColors],
-        quintity: Number(selectQuintityRef.current.options[selectQuintityRef.current.selectedIndex].value),
+        quintity: Number(selectQuintityRef?.current?.options[selectQuintityRef.current.selectedIndex].value),
         dimensions: {
           width: dimensions.width,
           length: dimensions.length,
@@ -103,14 +104,22 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
       <div className="container">
         <div className="product__inner">
           <div className="product__images">
-            <Slider className="product__slider" asNavFor={nav2} ref={(slider1: any) => setNav1(slider1)} {...slider1Settings}>
+            <Slider 
+              className="product__slider" 
+              asNavFor={nav2} 
+              ref={(slider1: Slider) => setNav1(slider1)}
+              {...slider1Settings}>
               {thumbsUrls.map((url) => (
                 <div className="product__slider-item" key={url}>
                   <img src={imageUrl} alt="furniture" />
                 </div>
               ))}
             </Slider>
-            <Slider className="product__thumbs" asNavFor={nav1} ref={(slider2: any) => setNav2(slider2)} {...slider2Settings}>
+            <Slider 
+              className="product__thumbs" 
+              asNavFor={nav1} 
+              ref={(slider2: Slider) => setNav2(slider2)} 
+              {...slider2Settings}>
               {thumbsUrls.map((url) => (
                 <div className="product__thumb" key={url}>
                   <img src={imageUrl} alt="furniture thumb" />
@@ -125,17 +134,25 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
             <form action="">
               <div className="info__shop shop">
                 <p className="shop__price">{priceNew} P</p>
-                <button className="shop__btn" type="submit" onClick={onBuyClick}>
+                <button 
+                  className="shop__btn" 
+                  type="submit" 
+                  onClick={onBuyClick}>
                   Купить
                 </button>
-                <button className={favorites && favorites.includes(id) ? "shop__wish active" : "shop__wish"} ref={favoriteBtnRef} onClick={onAddToFavoriteClick}>
+                <button 
+                  className={favorites && favorites.includes(id) ? "shop__wish active" : "shop__wish"} 
+                  ref={favoriteBtnRef} 
+                  onClick={onAddToFavoriteClick}>
                   Добавить в желаемое
                 </button>
               </div>
               <div className="info__features features">
                 <div className="features__col features__col--color">
                   <p className="features__title">Цвет</p>
-                  <select className="features__select-color color-select select" ref={selectColorRef}>
+                  <select 
+                    className="features__select-color color-select select" 
+                    ref={selectColorRef}>
                     {colors.map((color) => (
                       <option className="color-select__option" value={color} key={color}>
                         {color}
@@ -143,10 +160,11 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
                     ))}
                   </select>
                 </div>
-
                 <div className="features__col features__col--quintity">
                   <p className="features__title">Количество</p>
-                  <select className="features__select-quintity quintity-select select" ref={selectQuintityRef}>
+                  <select 
+                    className="features__select-quintity quintity-select select" 
+                    ref={selectQuintityRef}>
                     <option className="quintity-select__option" value="1">
                       1
                     </option>

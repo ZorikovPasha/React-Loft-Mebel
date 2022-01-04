@@ -1,8 +1,6 @@
-import { CONST } from '../types';
-
-import { favoritesActionType } from '../types';
+import { favoritesActionType, ActionsTypes } from '../../types';
 
 export const favoritesActionCreator = (favorites: number): favoritesActionType => ({
-  type: CONST.FAVORITES,
+  type: ActionsTypes.FAVORITES,
   payload: favorites
 })

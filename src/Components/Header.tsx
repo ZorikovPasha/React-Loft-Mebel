@@ -1,10 +1,10 @@
-import React, { FC, MouseEventHandler, ReactChild, ReactNode, useEffect, useRef, useState } from "react";
+import React, { FC, MouseEventHandler, ReactChild, ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import HeaderSubList from "./HeaderSubList";
 import HeaderSearchForm from "./HeaderSearchForm";
-import { fetchItems } from "../redux/api";
-import { MobMenu } from ".";
+import { fetchItems } from "../api";
+import MobMenu from "./MobMenu";
 
 import logo from "../images/logo.svg";
 import wishlist from "../images/icons/wishlist.svg";
@@ -22,15 +22,15 @@ interface IHeaderProps {
 type SubListsType = Array<string[]>;
 
 const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): React.ReactElement => {
-  const menuBtnRef = useRef(null);
+  const menuBtnRef = React.useRef(null);
 
-  const [subLists, setSubLists] = useState<SubListsType>([]);
+  const [subLists, setSubLists] = React.useState<SubListsType>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchItems("subLists", setSubLists);
   }, []);
 
-  const [isMobMenuOpen, setIsMobMenuOpen] = useState(false);
+  const [isMobMenuOpen, setIsMobMenuOpen] = React.useState(false);
 
   const onMobMenuBtnClick: MouseEventHandler<HTMLDivElement> = (): void => {
     setIsMobMenuOpen(true);
@@ -43,6 +43,13 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): Re
       document.body.classList.remove("lock");
     }
   };
+
+  // document.body.onclick = function(e: MouseEvent): void {
+  //   if ( isMobMenuOpen && !e.path.includes(menuBtnRef.current)  ) {
+  //     setIsMobMenuOpen(false);
+  //     document.body.classList.remove("lock");
+  //   }
+  // };
 
   const onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement> = (): void => {
     setIsMobMenuOpen(false);

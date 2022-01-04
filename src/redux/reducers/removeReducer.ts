@@ -1,13 +1,24 @@
-import { CONST, removeItemActionType } from "../types";
-import { initialState } from "./cartItemsReducer";
+import { ActionsTypes, CartItemType, removeItemActionType } from "../../types";
 
-const removeReducer = (state = initialState, action: removeItemActionType) => {
+export type stateType = {
+  cartItems: CartItemType[],
+  quintity: number,
+  totalCost: number,
+}
+
+const initialState: stateType = {
+  cartItems: [],
+  quintity: 0,
+  totalCost: 0,
+};
+
+const removeReducer = (state = initialState, action: removeItemActionType): stateType => {
   
   switch (action.type) {
-    case CONST.REMOVE_CART_ITEM:
+    case ActionsTypes.REMOVE_CART_ITEM:
       return {
         ...state,
-        cartItems: state.cartItems.filter((item: any) => item.id !== action.payload)
+        cartItems: state.cartItems.filter((item) => item.id !== action.payload)
       }
     default:
       return state;

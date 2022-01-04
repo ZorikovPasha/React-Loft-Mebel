@@ -1,5 +1,5 @@
-import { CONST } from '../types';
+import { ActionsTypes } from '../../types';
 
 export const quintityActionCreator = () => ({
-  type: CONST.QUINTITY,
+  type: ActionsTypes.QUINTITY,
 });

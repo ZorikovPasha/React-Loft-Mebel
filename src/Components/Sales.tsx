@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { ProductType } from "../redux/types";
 
-import {SalesItem} from '../Components';
+import { ProductType } from "../types";
+
+import {SalesItem} from '../components';
 
 const Sales: FC = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Sales: FC = () => {
     dispatch(fetchItemsThunkCreator());
   }, []);
 
-  const items = useSelector((state: RootState) => state.itemsReducer.items);
+  const items = useSelector((state: RootState) => state.items.items);
 
   return (
     <section className="sales">

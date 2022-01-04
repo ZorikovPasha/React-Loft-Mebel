@@ -3,14 +3,14 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { currentProductActionCreator } from "../redux/actions/currentProduct";
-import { removeItemActionCreator } from "../redux/actions/removeItemAction";
-import { CartItemType } from "../redux/types";
+import { removeItemActionCreator } from "../redux/actions/removeItem";
+import { CartItemType, ProductType } from "../types";
 
 import crossImg from "../images/icons/cross.svg";
 
 interface ICartItemProps {
   cartItem: CartItemType;
-  item: any;
+  item: ProductType;
 }
 
 const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {

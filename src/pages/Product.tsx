@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 
 import { RootState } from "../redux/store";
-import { ProductType } from "../redux/types";
+import { ProductType } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { Header, Footer, SalesItem, ProductCard } from "../Components";
+import { Header, Footer, SalesItem, ProductCard } from "../components";
 
 import "../../node_modules/slick-carousel/slick/slick.css";
 import "../scss/_reset.scss";
@@ -17,8 +17,8 @@ const Product: FC = () => {
     dispatch(fetchItemsThunkCreator());
   }, []);
 
-  const currentId = useSelector((state: RootState) => state.currentProductReducer.id);
-  const items = useSelector((state: RootState) => state.itemsReducer.items);
+  const currentId = useSelector((state: RootState) => state.currentProduct.id);
+  const items = useSelector((state: RootState) => state.items.items);
   const [ currentProduct ] = items.filter((item: ProductType) => item.id === currentId )
   
   return (

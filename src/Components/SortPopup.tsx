@@ -1,14 +1,14 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC } from "react";
 
 interface ISortPopupProps {
   onSortTypeClick: (cat: string) => void
 }
 
 const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
-  const [isSortPopupVisible, toggleSortPopupVisibility] = useState(false);
-  const [activeCat, setActiveCat] = useState<string | null>(null);
+  const [isSortPopupVisible, toggleSortPopupVisibility] = React.useState(false);
+  const [activeCat, setActiveCat] = React.useState<string | null>(null);
 
-  const popupRef = useRef(null);
+  const popupRef = React.useRef(null);
 
   const onSortBtnClick = () => {
     toggleSortPopupVisibility(!isSortPopupVisible);
@@ -18,18 +18,18 @@ const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
     setActiveCat(e.target.attributes.value.textContent);
     toggleSortPopupVisibility(false);
 
-    alert(e.target.attributes.value);
-    onSortTypeClick(e.target.attributes.value);
+    console.log(e.target.attributes.value.textContent);
+    // onSortTypeClick(e.target.attributes.value);
   };
 
-  const hadleOutsidePopupClick = (e: any): void => {
+  const handleOutsidePopupClick = (e: any): void => {
     if (!e.path.includes(popupRef.current)) {
       toggleSortPopupVisibility(false);
     }
   };
 
-  useEffect(() => {
-    document.body.addEventListener("click", hadleOutsidePopupClick);
+  React.useEffect(() => {
+    document.body.addEventListener("click", handleOutsidePopupClick);
   }, []);
 
   const items = [

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Header, Footer, Top, Sales } from "../Components";
+import { Header, Footer, Top, Sales } from "../components";
 
 import "../scss/style.scss";
 

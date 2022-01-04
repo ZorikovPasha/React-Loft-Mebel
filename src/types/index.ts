@@ -1,13 +1,12 @@
-
-export const CONST = {
-  FETCH_PRODUCTS: "FETCH_PRODUCTS",
-  FETCH_SLIDES: "FETCH_SLIDES",
-  FAVORITES: "FAVORITES",
-  CART_ITEMS: "CART_ITEMS",
-  QUINTITY: "QUINTITY",
-  REMOVE_CART_ITEM: "REMOVE_CART_ITEM",
-  CALC_TOTAL_COST: "CALC_TOTAL_COST",
-  CURRENT_PRODUCT: "CURRENT_PRODUCT"
+export enum ActionsTypes {
+  FETCH_PRODUCTS = "FETCH_PRODUCTS",
+  FETCH_SLIDES = "FETCH_SLIDES",
+  FAVORITES = "FAVORITES",
+  CART_ITEMS = "CART_ITEMS",
+  QUINTITY = "QUINTITY",
+  REMOVE_CART_ITEM = "REMOVE_CART_ITEM",
+  CALC_TOTAL_COST = "CALC_TOTAL_COST",
+  CURRENT_PRODUCT = "CURRENT_PRODUCT"
 }
 
 export type ProductType = {
@@ -44,37 +43,35 @@ export type CartItemType = {
 }
 
 export type fetchItemsActionType = {
-  type: typeof CONST.FETCH_PRODUCTS,
-  payload: []
+  type: ActionsTypes.FETCH_PRODUCTS,
+  payload: ProductType[]
 };
 
 export type fetchSlidesActionType = {
-  type: typeof CONST.FETCH_SLIDES,
+  type: ActionsTypes.FETCH_SLIDES,
   payload: SlidesType[]
 };
 
 export type favoritesActionType = {
-  type: typeof CONST.FAVORITES,
+  type: ActionsTypes.FAVORITES,
   payload: number
 };
 
 export type cartItemsActionType = {
-  type: typeof CONST.CART_ITEMS,
+  type: ActionsTypes.CART_ITEMS,
   payload: CartItemType
 }
 
 export type quintityActionType = {
-  type: typeof CONST.QUINTITY,
+  type: ActionsTypes.QUINTITY,
 }
 
 export type removeItemActionType = {
-  type: typeof CONST.REMOVE_CART_ITEM,
+  type: ActionsTypes.REMOVE_CART_ITEM,
   payload: number
 }
 
 export type currentProductActionType = {
-  type: typeof CONST.CURRENT_PRODUCT,
+  type: ActionsTypes.CURRENT_PRODUCT,
   payload: number
 }
-
-export type ActionsTypes = fetchItemsActionType | fetchSlidesActionType | favoritesActionType | cartItemsActionType;

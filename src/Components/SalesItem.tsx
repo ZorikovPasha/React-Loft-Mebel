@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { RootState } from "../redux/store";
 import { favoritesActionCreator } from "../redux/actions/favorites";
 import { cartItemsActionCreator } from "../redux/actions/cartItems";
-import { ProductType } from "../redux/types";
 import { currentProductActionCreator } from "../redux/actions/currentProduct";
+
+import { ProductType } from "../types";
 
 interface ISalesItemProps {
   product: ProductType;
@@ -16,7 +17,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale } = product;
 
   const dispatch = useDispatch();
-  const favorites: number[] = useSelector((state: RootState) => state.favoritesReducer.favorites);
+  const favorites: number[] = useSelector((state: RootState) => state.favorites.favorites);
 
   const onBtnLikeClick = (): void => {
     dispatch(favoritesActionCreator(id));

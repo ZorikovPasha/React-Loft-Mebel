@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import { RootState } from "../redux/store";
 import { fetchSlidesThunkCreator } from '../redux/actions/slides';
 
-import { SlidesType } from '../redux/types';
+import { SlidesType } from '../types';
 
 const SliderPrevArrow: FC = () => {
   return (
@@ -54,11 +54,11 @@ const TopSlider: FC = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(fetchSlidesThunkCreator());
   }, []);
 
-  const slides: SlidesType[] = useSelector(({ slidesReducer }: RootState) => slidesReducer.slides );
+  const slides: SlidesType[] = useSelector(({ slides }: RootState) => slides.slides );
   
   return (
     <Slider {...settings} className="top__slider">
@@ -68,7 +68,7 @@ const TopSlider: FC = () => {
             <div className="top__slider-box">
               <h1 className="top__title">{slide.title}</h1>
               <p className="top__subtitle">{slide.subtitle}</p>
-              <Link className="top__btn" to="/catalog">Смотреть катаог</Link>
+              <Link className="top__btn" to="/catalog">Смотреть каталог</Link>
             </div>
           </div>
         </div>

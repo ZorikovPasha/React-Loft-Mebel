@@ -1,14 +1,18 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { fetchItems } from '../redux/api';
+import { fetchItems } from '../api';
 
 import "../scss/_footer.scss";
 import logo from "../images/icons/footer-logo.svg";
 
-const Footer: FC = () => {
-  const [footerLists, setFooterLists] = useState([]);
+type footerListsType = [
+  string[]
+];
 
-  useEffect(() => {
+const Footer: FC = () => {
+  const [footerLists, setFooterLists] = React.useState<footerListsType>();
+
+  React.useEffect(() => {
     fetchItems('FooterLists', setFooterLists);
   }, []);
 

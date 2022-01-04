@@ -1,18 +1,16 @@
-import { ActionsTypes } from '../types';
+import { fetchSlidesActionType, SlidesType, ActionsTypes } from '../../types';
 
-import { CONST } from '../types';
-
-export type initialStateType = {
-  slides: Object[]
+export type stateType = {
+  slides: Array<SlidesType>
 };
 
-const initialState = {
+const initialState: stateType = {
   slides: []
 }
 
-const slidesReducer = (state: initialStateType = initialState, action: ActionsTypes ) => {
+const slidesReducer = (state = initialState, action: fetchSlidesActionType ): stateType => {
   switch (action.type) {
-    case CONST.FETCH_SLIDES:
+    case ActionsTypes.FETCH_SLIDES:
       return {
         ...state,
         slides: action.payload,

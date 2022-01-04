@@ -1,19 +1,17 @@
 import { ThunkAction } from 'redux-thunk';
+import { Dispatch } from 'redux';
 
-import { ActionsTypes } from '../types';
-import { fetchItemsActionType } from '../types';
-import { initialStateType } from '../reducers/itemsReducer';
-import { fetchItemsThunk } from '../api';
+import { ActionsTypes, fetchItemsActionType } from '../../types';
+import { stateType } from '../reducers/itemsReducer';
+import { fetchItemsThunk } from '../../api';
 
-import { CONST } from '../types';
-
-export const fetchItemsThunkCreator = (): ThunkAction<void, initialStateType, unknown, ActionsTypes> => {
-  return dispatch => {
+export const fetchItemsThunkCreator = (): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
+  return (dispatch: Dispatch<fetchItemsActionType>) => {
     fetchItemsThunk('furniture', dispatch, fetchItemsActionCreator )
   }
 }
 
 const fetchItemsActionCreator = (items: []): fetchItemsActionType => ({
-  type: CONST.FETCH_PRODUCTS,
+  type: ActionsTypes.FETCH_PRODUCTS,
   payload: items
 });

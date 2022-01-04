@@ -1,10 +1,10 @@
 import React, { FC, MouseEventHandler, ReactElement, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Header, Footer, Aside, SortPopup, SalesItem } from "../Components";
+import { Header, Footer, Aside, SortPopup, SalesItem } from "../components";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 import { RootState } from "../redux/store";
-import { ProductType } from "../redux/types";
+import { ProductType } from "../types";
 
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
@@ -18,7 +18,7 @@ const Catalog: FC = (): ReactElement => {
     dispatch(fetchItemsThunkCreator());
   }, []);
 
-  const items = useSelector((state: RootState) => state.itemsReducer.items);
+  const items = useSelector((state: RootState) => state.items.items);
 
   const [isAsideVisible, toggleAsideVisibility] = useState(false);
 

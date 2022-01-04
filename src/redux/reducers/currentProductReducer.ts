@@ -1,18 +1,16 @@
-import { currentProductActionType } from '../types';
+import { currentProductActionType, ActionsTypes } from '../../types';
 
-import { CONST } from '../types';
-
-export type initialStateType = {
+export type stateType = {
   id: number | null
 }
 
-const initialState = {
+const initialState: stateType = {
   id: null
 }
 
-const currentProductReducer = (state: initialStateType = initialState, action: currentProductActionType ) => {
+const currentProductReducer = (state = initialState, action: currentProductActionType ): stateType => {
   switch (action.type) {
-    case CONST.CURRENT_PRODUCT:
+    case ActionsTypes.CURRENT_PRODUCT:
       return {
         ...state,
         id: action.payload,

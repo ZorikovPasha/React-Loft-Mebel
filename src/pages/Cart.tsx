@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Header, Footer, SalesItem, CartItem } from "../Components";
+import { Header, Footer, SalesItem, CartItem } from "../components";
+
 import { RootState } from "../redux/store";
-import { CartItemType, ProductType } from "../redux/types";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 
 import "../scss/_reset.scss";
@@ -17,10 +17,10 @@ const Cart: FC = () => {
     dispatch(fetchItemsThunkCreator());
   }, []);
 
-  const cartItems = useSelector((state: RootState) => state.cartItemsReducer.cartItems);
-  const quintity = useSelector((state: RootState) => state.cartItemsReducer.quintity);
-  const total = useSelector((state: RootState) => state.cartItemsReducer.totalCost);
-  const items: ProductType[] = useSelector((state: RootState) => state.itemsReducer.items);
+  const cartItems = useSelector((state: RootState) => state.cartItems.cartItems);
+  const quintity = useSelector((state: RootState) => state.cartItems.quintity);
+  const total = useSelector((state: RootState) => state.cartItems.totalCost);
+  const items = useSelector((state: RootState) => state.items.items);
 
   return (
     <div className="wrapper">
@@ -53,10 +53,18 @@ const Cart: FC = () => {
               </p>
             </div>
             {cartItems && 
-              cartItems.map((cartItem: CartItemType) => (
-              <CartItem key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} cartItem={cartItem} item={items.find(obj => obj.id === cartItem.id)}></CartItem>
-            ))}
-
+              cartItems.map((cartItem) => {
+                const currItem = items.find(item => item.id === cartItem.id);
+                if (currItem) {
+                  return (
+                    <CartItem 
+                    key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
+                    cartItem={cartItem} 
+                    item={currItem}>
+                    </CartItem>
+                  )
+                }
+              })}
             <div className="cart__bottom">
               <p className="cart__bottom-total">
                 Итоговая стоимость:
@@ -71,7 +79,7 @@ const Cart: FC = () => {
           <div className="container">
             <h3 className="sales__title">Вам может понравиться</h3>
             <div className="sales__items sales__items--cart">
-              {items.filter((item: ProductType) => item.id < 4).map((product: ProductType) => (
+              {items.filter((item) => item.id < 4).map((product) => (
                 <SalesItem key={product.id} product={product}></SalesItem>
               ))}
             </div>
