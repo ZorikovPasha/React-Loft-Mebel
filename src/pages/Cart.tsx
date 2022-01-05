@@ -13,14 +13,14 @@ import "../scss/cart.scss";
 const Cart: FC = () => {
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    dispatch(fetchItemsThunkCreator());
-  }, []);
-
   const cartItems = useSelector((state: RootState) => state.cartItems.cartItems);
   const quintity = useSelector((state: RootState) => state.cartItems.quintity);
   const total = useSelector((state: RootState) => state.cartItems.totalCost);
   const items = useSelector((state: RootState) => state.items.items);
+
+  React.useEffect(() => {
+    dispatch(fetchItemsThunkCreator());
+  }, []);
 
   return (
     <div className="wrapper">

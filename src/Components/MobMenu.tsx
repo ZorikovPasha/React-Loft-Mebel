@@ -1,40 +1,27 @@
-import React, { FC, MouseEventHandler, useEffect, useState } from "react";
+import React, { FC, MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
+
+import { mobMenuType } from "../types";
+import { getDataByName } from "../api";
 
 interface IMobMenuProps {
   onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement>;
   isMobMenuOpen: boolean;
-}
+};
 
 const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
-  type mobMenuItemType = {
-    imgLink: string;
-    mobMenuItem: string;
-  };
+  const [mobMenu, setMobMenu] = React.useState<mobMenuType>();
 
-  type mobMenuType = {
-    top: Array<mobMenuItemType>;
-    body: Array<mobMenuItemType>;
-  };
+  React.useEffect(() => {
+    const promise = getDataByName('mobMenu');
+    promise.then((data) => {
+      setMobMenu(data);
+    });
+  }, []);
 
   const onMobMenuItemClick = (): void => {
     document.body.classList.remove("lock");
   }
-
-  const [mobMenu, setMobMenu] = useState<mobMenuType>();
-
-  useEffect(() => {
-    try {
-      fetch("http://localhost:3000/db.json")
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          setMobMenu(data.mobMenu);
-        });
-    } catch (error) {
-    }
-  }, []);
 
   return (
     <div className={isMobMenuOpen ? "mob-menu opened" : "mob-menu"}>

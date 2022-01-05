@@ -26,8 +26,8 @@ const Sales: FC = () => {
           {items.map((product: ProductType) => (
               <SalesItem 
                 product={product} 
-                key={product.id}
-              ></SalesItem>
+                key={product.id}>
+              </SalesItem>
           ))}
         </div>
       </div>

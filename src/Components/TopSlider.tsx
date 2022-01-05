@@ -34,24 +34,24 @@ export type Text = {
   imageUrl: string;
 };
 
-const TopSlider: FC = () => {
-  const settings = {
-    fade: true,
-    infinite: true,
-    autoplay: true,
-    prevArrow: <SliderPrevArrow />,
-    nextArrow: <SliderNextArrow />,
+const settings = {
+  fade: true,
+  infinite: true,
+  autoplay: true,
+  prevArrow: <SliderPrevArrow />,
+  nextArrow: <SliderNextArrow />,
 
-    responsive: [
-      {
-        breakpoint: 511,
-        settings: {
-          arrows: false,
-        },
+  responsive: [
+    {
+      breakpoint: 511,
+      settings: {
+        arrows: false,
       },
-    ],
-  };
+    },
+  ],
+};
 
+const TopSlider: FC = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -61,7 +61,9 @@ const TopSlider: FC = () => {
   const slides: SlidesType[] = useSelector(({ slides }: RootState) => slides.slides );
   
   return (
-    <Slider {...settings} className="top__slider">
+    <Slider 
+      {...settings} 
+      className="top__slider">
       {slides.map((slide, _) => (
         <div key={_}>
           <div className="top__slider-item" style={{ backgroundImage: `url(${slide.imageUrl})` }}>

@@ -1,19 +1,20 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { fetchItems } from '../api';
+
+import { ListsType } from "../types";
+import { getDataByName } from '../api';
 
 import "../scss/_footer.scss";
 import logo from "../images/icons/footer-logo.svg";
 
-type footerListsType = [
-  string[]
-];
-
 const Footer: FC = () => {
-  const [footerLists, setFooterLists] = React.useState<footerListsType>();
+  const [footerLists, setFooterLists] = React.useState<ListsType>();
 
   React.useEffect(() => {
-    fetchItems('FooterLists', setFooterLists);
+    const promise = getDataByName('FooterLists');
+    promise.then((data) => {
+      setFooterLists(data);
+    });
   }, []);
 
   return (
