@@ -1,6 +1,6 @@
 import React from "react";
 
-import search from "../images/icons/search.svg";
+import search from "../../images/icons/search.svg";
 
 interface IHeaderSearchFormProps {
   inputSpec?: boolean

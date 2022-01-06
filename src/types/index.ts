@@ -70,7 +70,7 @@ export type favoritesActionType = {
 };
 
 export type cartItemsActionType = {
-  type: ActionsTypes.CART_ITEMS;
+  type: ActionsTypes.CART_ITEMS | ActionsTypes.REMOVE_CART_ITEM;
   payload: CartItemType;
 }
 
@@ -78,12 +78,12 @@ export type quintityActionType = {
   type: ActionsTypes.QUINTITY;
 }
 
-export type removeItemActionType = {
-  type: ActionsTypes.REMOVE_CART_ITEM;
-  payload: number;
-}
-
 export type currentProductActionType = {
   type: ActionsTypes.CURRENT_PRODUCT;
   payload: number;
+}
+
+export interface IPageProps {
+  isMobMenuOpen: boolean;
+  setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

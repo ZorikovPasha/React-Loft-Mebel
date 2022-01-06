@@ -1,15 +1,15 @@
 import React, { FC, MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 
-import { mobMenuType } from "../types";
-import { getDataByName } from "../api";
+import { mobMenuType } from "../../types";
+import { getDataByName } from "../../api";
 
 interface IMobMenuProps {
-  onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement>;
-  isMobMenuOpen: boolean;
+  isMobMenuOpen: Boolean;
+  setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
+const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const [mobMenu, setMobMenu] = React.useState<mobMenuType>();
 
   React.useEffect(() => {
@@ -23,18 +23,31 @@ const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
     document.body.classList.remove("lock");
   }
 
+  const onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement> = (): void => {
+    setMobMenuOpen(false);
+    document.body.classList.remove("lock");
+  };
+
   return (
     <div className={isMobMenuOpen ? "mob-menu opened" : "mob-menu"}>
       <div className={isMobMenuOpen ? "mob-menu__body opened" : "mob-menu__body"}>
         <div className="mob-menu__top">
           <h5 className="mob-menu__title">Меню</h5>
-          <button className="mob-menu__close" onClick={onMobMenuCloseClick}></button>
+          <button 
+            className="mob-menu__close" 
+            onClick={onMobMenuCloseClick}
+          >
+          </button>
         </div>
         <ul className="mob-menu__list">
           {mobMenu &&
             mobMenu.top.map((obj) => (
               <li className="mob-menu__list-item" key={obj.mobMenuItem}>
-                <Link to="/catalog" className="mob-menu__link" onClick={onMobMenuItemClick}>
+                <Link 
+                  to="/" 
+                  className="mob-menu__link" 
+                  onClick={onMobMenuItemClick}
+                >
                   <span>
                     <img src={obj.imgLink} alt="" />
                   </span>
@@ -48,7 +61,11 @@ const MobMenu: FC<IMobMenuProps> = ({ onMobMenuCloseClick, isMobMenuOpen }) => {
           {mobMenu &&
             mobMenu.body.map((obj) => (
               <li className="mob-menu__list-item" key={obj.mobMenuItem}>
-                <Link to="/catalog" className="mob-menu__link" onClick={onMobMenuItemClick}>
+                <Link 
+                  to="/catalog" 
+                  className="mob-menu__link" 
+                  onClick={onMobMenuItemClick}
+                >
                   <span>
                     <img src={obj.imgLink} alt="" />
                   </span>

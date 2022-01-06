@@ -1,17 +1,21 @@
 import React, { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Header, SalesItem, ProductCard } from "../components";
 
 import { RootState } from "../redux/store";
-import { ProductType } from "../types";
-import { useDispatch, useSelector } from "react-redux";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { Header, Footer, SalesItem, ProductCard } from "../components";
+
+import { ProductType, IPageProps } from "../types";
 
 import "../../node_modules/slick-carousel/slick/slick.css";
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
 import "../scss/product.scss";
 
-const Product: FC = () => {
+interface IProductProps extends IPageProps {};
+
+const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
@@ -19,11 +23,17 @@ const Product: FC = () => {
 
   const currentId = useSelector((state: RootState) => state.currentProduct.id);
   const items = useSelector((state: RootState) => state.items.items);
-  const [ currentProduct ] = items.filter((item: ProductType) => item.id === currentId )
+
+  const [ currentProduct ] = items.filter((item: ProductType) => item.id === currentId );
   
   return (
-    <div className="wrapper">
-      <Header headerMidTaller items={["Главная", "О нас", "Контакты"]}></Header>
+    <>
+      <Header 
+        isMobMenuOpen={isMobMenuOpen}
+        setMobMenuOpen={setMobMenuOpen}
+        headerMidTaller 
+        >
+        </Header>
       <main className="main">
         <div className="breadcrumbs">
           <div className="container">
@@ -425,8 +435,7 @@ const Product: FC = () => {
         </section>
       </main>
 
-      <Footer></Footer>
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
-import { CartItemType, ActionsTypes } from '../../types';
+import { CartItemType, ActionsTypes, cartItemsActionType } from '../../types';
 
-export const removeItemActionCreator = (obj: CartItemType) => ({
+export const removeItemActionCreator = (obj: CartItemType): cartItemsActionType => ({
   type: ActionsTypes.REMOVE_CART_ITEM,
   payload: obj
 });

@@ -2,11 +2,11 @@ import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 
-import { favoritesActionCreator } from "../redux/actions/favorites";
-import { RootState } from "../redux/store";
-import { cartItemsActionCreator } from "../redux/actions/cartItems";
+import { favoritesActionCreator } from "../../redux/actions/favorites";
+import { RootState } from "../../redux/store";
+import { cartItemsActionCreator } from "../../redux/actions/cartItems";
 
-import { ProductType } from "../types";
+import { ProductType } from "../../types";
 
 interface IProductCardProps {
   product: ProductType;
@@ -54,7 +54,7 @@ const slider2Settings: Settings = {
   ],
 };
 
-const ProuctCard: FC<IProductCardProps> = ({ product }) => {
+const ProductCard: FC<IProductCardProps> = ({ product }) => {
   const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product;
 
   const favorites = useSelector((state: RootState) => state.favorites.favorites);
@@ -84,8 +84,7 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
       }
     });
 
-    dispatch(
-      cartItemsActionCreator({
+    dispatch(cartItemsActionCreator({
         id: id,
         colors: [...productColors],
         quintity: Number(selectQuintityRef?.current?.options[selectQuintityRef.current.selectedIndex].value),
@@ -201,4 +200,4 @@ const ProuctCard: FC<IProductCardProps> = ({ product }) => {
   );
 };
 
-export default ProuctCard;
+export default ProductCard;

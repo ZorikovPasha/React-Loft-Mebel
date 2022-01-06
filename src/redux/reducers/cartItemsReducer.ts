@@ -42,16 +42,16 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
           totalCost: [...state.cartItems, action.payload].reduce((partialCost, item) => partialCost + item.quintity * Number(item.price.split(' ').join('')), 0)
         };
       }
-    // case ActionsTypes.REMOVE_CART_ITEM:
-    //   const remainingCartItems = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id);
-    //   const remainingQuintity = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id).reduce((partialSum, a: CartItemType) => partialSum + a.quintity, 0);
+    case ActionsTypes.REMOVE_CART_ITEM:
+      const remainingCartItems = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id);
+      const remainingQuintity = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id).reduce((partialSum, a: CartItemType) => partialSum + a.quintity, 0);
 
-    //   return {
-    //     ...state,
-    //     cartItems: remainingCartItems,
-    //     quintity: remainingQuintity,
-    //     totalCost: remainingCartItems.reduce((partialCost, item: CartItemType) => partialCost + item.quintity * Number(item.price.split(' ').join('')), 0)
-    //   }
+      return {
+        ...state,
+        cartItems: remainingCartItems,
+        quintity: remainingQuintity,
+        totalCost: remainingCartItems.reduce((partialCost, item: CartItemType) => partialCost + item.quintity * Number(item.price.split(' ').join('')), 0)
+      }
     default:
       return state;
   }

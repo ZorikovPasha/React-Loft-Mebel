@@ -1,16 +1,19 @@
 import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Header, Footer, SalesItem, CartItem } from "../components";
+import { Header, SalesItem, CartItem } from "../components";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
+import { IPageProps } from "../types"; 
 
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
 import "../scss/cart.scss";
 
-const Cart: FC = () => {
+interface ICartProps extends IPageProps {};
+
+const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
 
   const cartItems = useSelector((state: RootState) => state.cartItems.cartItems);
@@ -23,8 +26,12 @@ const Cart: FC = () => {
   }, []);
 
   return (
-    <div className="wrapper">
-      <Header items={["Главная", "О нас", "Контакты"]}></Header>
+    <>
+      <Header 
+        isMobMenuOpen={isMobMenuOpen}
+        setMobMenuOpen={setMobMenuOpen}
+      >
+      </Header>
 
       <main className="main">
         <div className="breadcrumbs">
@@ -62,8 +69,7 @@ const Cart: FC = () => {
                     cartItem={cartItem} 
                     item={currItem}>
                     </CartItem>
-                  )
-                }
+                  )}
               })}
             <div className="cart__bottom">
               <p className="cart__bottom-total">
@@ -86,9 +92,7 @@ const Cart: FC = () => {
           </div>
         </section>
       </main>
-
-      <Footer></Footer>
-    </div>
+    </>
   );
 };
 

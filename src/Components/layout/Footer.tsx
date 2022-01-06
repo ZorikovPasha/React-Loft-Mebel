@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 
-import { ListsType } from "../types";
-import { getDataByName } from '../api';
+import { ListsType } from "../../types";
+import { getDataByName } from '../../api';
 
-import "../scss/_footer.scss";
-import logo from "../images/icons/footer-logo.svg";
+import "../../scss/_footer.scss";
+import logo from "../../images/icons/footer-logo.svg";
 
 const Footer: FC = () => {
   const [footerLists, setFooterLists] = React.useState<ListsType>();

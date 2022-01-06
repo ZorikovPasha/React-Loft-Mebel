@@ -1,12 +1,10 @@
 import React, { FC } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
-import { RootState } from "../redux/store";
-import { fetchSlidesThunkCreator } from '../redux/actions/slides';
+import { getDataByName } from "../../api";
 
-import { SlidesType } from '../types';
+import { SlidesType } from '../../types';
 
 const SliderPrevArrow: FC = () => {
   return (
@@ -52,25 +50,34 @@ const settings = {
 };
 
 const TopSlider: FC = () => {
-  const dispatch = useDispatch();
+  const [slides, setSlides] = React.useState<SlidesType[]>();
 
   React.useEffect(() => {
-    dispatch(fetchSlidesThunkCreator());
+    const promise = getDataByName('slider');
+    promise.then((slides) => {
+      setSlides(slides);
+    });
   }, []);
-
-  const slides: SlidesType[] = useSelector(({ slides }: RootState) => slides.slides );
   
   return (
     <Slider 
       {...settings} 
-      className="top__slider">
-      {slides.map((slide, _) => (
-        <div key={_}>
-          <div className="top__slider-item" style={{ backgroundImage: `url(${slide.imageUrl})` }}>
+      className="top__slider"
+      >
+      {slides && slides.map((slide, idx) => (
+        <div key={idx}>
+          <div 
+            className="top__slider-item" 
+            style={{ backgroundImage: `url(${slide.imageUrl})` }}
+            >
             <div className="top__slider-box">
               <h1 className="top__title">{slide.title}</h1>
               <p className="top__subtitle">{slide.subtitle}</p>
-              <Link className="top__btn" to="/catalog">Смотреть каталог</Link>
+              <Link 
+                className="top__btn" 
+                to="/catalog"
+                >
+                  Смотреть каталог</Link>
             </div>
           </div>
         </div>

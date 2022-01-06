@@ -3,59 +3,50 @@ import { Link } from "react-router-dom";
 
 import HeaderSubList from "./HeaderSubList";
 import HeaderSearchForm from "./HeaderSearchForm";
-import MobMenu from "./MobMenu";
 
-import { ListsType } from "../types";
-import { getDataByName } from "../api";
+import { IPageProps, ListsType } from "../../types";
+import { getDataByName } from "../../api";
 
-import logo from "../images/logo.svg";
-import wishlist from "../images/icons/wishlist.svg";
-import bag from "../images/icons/bag.svg";
-import profile from "../images/icons/profile.svg";
-import etc from "../images/icons/etc.svg";
+import logo from "../../images/logo.svg";
+import wishlist from "../../images/icons/wishlist.svg";
+import bag from "../../images/icons/bag.svg";
+import profile from "../../images/icons/profile.svg";
+import etc from "../../images/icons/etc.svg";
 
-interface IHeaderProps {
-  items: Array<string>;
+interface IHeaderProps extends IPageProps {
   headerMidTaller?: boolean;
   showHeaderTop?: boolean;
   childen?: ReactChild | ReactNode;
 }
 
-const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): React.ReactElement => {
+const Header: FC<IHeaderProps> = ({ showHeaderTop, headerMidTaller, isMobMenuOpen, setMobMenuOpen }): React.ReactElement => {
   const menuBtnRef = React.useRef(null);
 
   const [subLists, setSubLists] = React.useState<ListsType>([]);
 
   React.useEffect(() => {
+    document.body.onclick =  function(e: any): void {
+      if ( isMobMenuOpen && !e.path.includes(menuBtnRef.current)  ) {
+        setMobMenuOpen(false);
+        document.body.classList.remove("lock");
+      }
+    };
+
     const promise = getDataByName('subLists');
     promise.then((data) => {
       setSubLists(data);
     });
   }, []);
 
-  const [isMobMenuOpen, setIsMobMenuOpen] = React.useState(false);
-
   const onMobMenuBtnClick: MouseEventHandler<HTMLDivElement> = (): void => {
-    setIsMobMenuOpen(true);
+    setMobMenuOpen(true);
     document.body.classList.add("lock");
   };
 
-  document.body.onclick =  function(e: any): void {
-    if ( isMobMenuOpen && !e.path.includes(menuBtnRef.current)  ) {
-      setIsMobMenuOpen(false);
-      document.body.classList.remove("lock");
-    }
-  };
-
-  const onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement> = (): void => {
-    setIsMobMenuOpen(false);
-    document.body.classList.remove("lock");
-  };
+  const items = ["Главная", "О нас", "Контакты"];
 
   return (
     <header className="header">
-      {<MobMenu onMobMenuCloseClick={onMobMenuCloseClick} isMobMenuOpen={isMobMenuOpen}></MobMenu>}
-
       {showHeaderTop && (
         <div className="header__top">
           <div className="container">
@@ -89,7 +80,11 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): Re
       <div className="container">
         {headerMidTaller ? (
           <div className="header__mid header__mid--taller">
-            <div className="menu-btn" onClick={onMobMenuBtnClick} ref={menuBtnRef}>
+            <div 
+              className="menu-btn" 
+              onClick={onMobMenuBtnClick} 
+              ref={menuBtnRef}
+            >
               <div></div>
               <div></div>
               <div></div>
@@ -139,11 +134,9 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, items, headerMidTaller }): Re
               <div></div>
               <div></div>
             </div>
-
             <Link to="/" className="logo">
               <img src={logo} alt="logo" />
             </Link>
-
             <HeaderSearchForm />
             <div className="header__connect header__connect--mid">
               <a className="header__phone header__phone--black" href="tel:89648999119">

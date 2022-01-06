@@ -22,14 +22,18 @@ const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
     // onSortTypeClick(e.target.attributes.value);
   };
 
-  const handleOutsidePopupClick = (e: any): void => {
+  const handleOutsidePopupClick = React.useCallback((e: any): void => {
     if (!e.path.includes(popupRef.current)) {
       toggleSortPopupVisibility(false);
     }
-  };
+  } ,[]);
 
   React.useEffect(() => {
     document.body.addEventListener("click", handleOutsidePopupClick);
+
+    return function removeListener () {
+      document.body.removeEventListener("click", handleOutsidePopupClick);
+    }
   }, []);
 
   const items = [
@@ -48,14 +52,19 @@ const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
   ];
 
   return (
-    <button className="controls__sort" onClick={onSortBtnClick} ref={popupRef}>
+    <button 
+      className="controls__sort" 
+      onClick={onSortBtnClick} 
+      ref={popupRef}
+      >
       Сортировать
       {isSortPopupVisible && (
         <ul className="sort-list">
           {items.map((obj) => (
             <li 
               className={activeCat === obj.value ? "sort-list__item active" : "sort-list__item"} 
-              onClick={onListItemClick} value={obj.value} key={obj.value}>
+              onClick={onListItemClick} value={obj.value} key={obj.value}
+              >
               {obj.text}
             </li>
           ))}

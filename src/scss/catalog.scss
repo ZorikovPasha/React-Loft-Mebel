@@ -282,6 +282,34 @@
   }
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+
+  &__list {
+    display: flex;
+  }
+
+  &__item {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  &__item + &__item {
+    margin-left: 15px;
+  }
+
+  &__item--active {
+    font-weight: 700;
+    color: #245462;
+  }
+
+  &__link {
+    display: inline-block;
+    padding: 10px;
+  }
+}
 
 
 @media (max-width:992px) {

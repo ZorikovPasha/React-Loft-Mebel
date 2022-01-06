@@ -1,13 +1,14 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
 
-import { RootState } from "../redux/store";
-import { favoritesActionCreator } from "../redux/actions/favorites";
-import { cartItemsActionCreator } from "../redux/actions/cartItems";
-import { currentProductActionCreator } from "../redux/actions/currentProduct";
+import { RootState } from "../../redux/store";
+import { favoritesActionCreator } from "../../redux/actions/favorites";
+import { cartItemsActionCreator } from "../../redux/actions/cartItems";
+import { currentProductActionCreator } from "../../redux/actions/currentProduct";
 
-import { ProductType } from "../types";
+import { ProductType } from "../../types";
 
 interface ISalesItemProps {
   product: ProductType;
@@ -19,12 +20,15 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   const dispatch = useDispatch();
   const favorites: number[] = useSelector((state: RootState) => state.favorites.favorites);
 
-  const onBtnLikeClick = (): void => {
+  const router = useHistory();
+
+  const onLikeProductClick = (): void => {
     dispatch(favoritesActionCreator(id));
   };
 
   const onProductLinkClick = (): void => {
-    dispatch(currentProductActionCreator(id))
+    dispatch(currentProductActionCreator(id));
+    router.push(`/products/${id}`);
   }
 
   const onAddToCartClick = (): void => {
@@ -49,19 +53,20 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
           <div className="label-sales__body">-{sale}</div>
         </div>
       )}
-
-      <button className={favorites && favorites.includes(id) ? "item-sales__like active" : "item-sales__like"} onClick={onBtnLikeClick}></button>
+      <button 
+        className={favorites && favorites.includes(id) ? "item-sales__like active" : "item-sales__like"} 
+        onClick={onLikeProductClick}>
+        </button>
       <div className="item-sales__box">
         <div className="item-sales__img">
           <img src={imageUrl} alt="furniture" />
         </div>
-        <Link 
-          to="product"
+        <h5
           className="item-sales__title"
           onClick={onProductLinkClick}
           >
           {name}
-        </Link>
+        </h5>
         <Link to="catalog" className="item-sales__type">
           {type}
         </Link>
