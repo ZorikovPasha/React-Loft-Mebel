@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Header, SalesItem, CartItem } from "../components";
+import { Header, SalesItem, CartItem, Breadcrumbs } from "../components";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
@@ -21,6 +21,11 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const total = useSelector((state: RootState) => state.cartItems.totalCost);
   const items = useSelector((state: RootState) => state.items.items);
 
+  const links = [
+    { name:"Главная", href:"/", isLink:true },
+    { name:"Корзина", href:"", isLink:false }
+  ];
+
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
   }, []);
@@ -30,45 +35,27 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       <Header 
         isMobMenuOpen={isMobMenuOpen}
         setMobMenuOpen={setMobMenuOpen}
-      >
-      </Header>
-
+      ></Header>
       <main className="main">
-        <div className="breadcrumbs">
-          <div className="container">
-            <ul className="breadcrumbs__list">
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__link" href="#">
-                  Главная
-                </a>
-              </li>
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__item-back" href="catalog.html">
-                  <img src="images/icons/arrow-back.svg" alt="back" />
-                </a>
-                <span className="breadcrumbs__link">Корзина</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <Breadcrumbs links={links}></Breadcrumbs>
         <section className="cart">
           <div className="container">
             <div className="cart__top">
               <p>Ваша корзина</p>
               <p>
-                <span className="cart__top-num">предметов {quintity}</span>
+                <span className="cart__top-num">Предметов: {quintity}</span>
               </p>
             </div>
             {cartItems && 
-              cartItems.map((cartItem) => {
+              cartItems.forEach(cartItem => {
                 const currItem = items.find(item => item.id === cartItem.id);
                 if (currItem) {
                   return (
                     <CartItem 
                     key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
                     cartItem={cartItem} 
-                    item={currItem}>
-                    </CartItem>
+                    item={currItem}
+                    ></CartItem>
                   )}
               })}
             <div className="cart__bottom">
@@ -86,7 +73,10 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
             <h3 className="sales__title">Вам может понравиться</h3>
             <div className="sales__items sales__items--cart">
               {items.filter((item) => item.id < 4).map((product) => (
-                <SalesItem key={product.id} product={product}></SalesItem>
+                <SalesItem 
+                  key={product.id} 
+                  product={product}
+                  ></SalesItem>
               ))}
             </div>
           </div>

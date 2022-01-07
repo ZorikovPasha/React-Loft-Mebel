@@ -76,7 +76,7 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
     e.preventDefault();
     const productColors: number[] = [];
 
-    colors.map((_, index) => {
+    colors.forEach((_, index) => {
       if (selectColorRef?.current?.selectedIndex === index) {
         productColors.push(1);
       } else {
@@ -107,10 +107,17 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
               className="product__slider" 
               asNavFor={nav2} 
               ref={(slider1: Slider) => setNav1(slider1)}
-              {...slider1Settings}>
+              {...slider1Settings}
+              >
               {thumbsUrls.map((url) => (
-                <div className="product__slider-item" key={url}>
-                  <img src={imageUrl} alt="furniture" />
+                <div 
+                  className="product__slider-item" 
+                  key={url}
+                  >
+                  <img 
+                    src={imageUrl} 
+                    alt="furniture" 
+                    />
                 </div>
               ))}
             </Slider>
@@ -118,16 +125,23 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
               className="product__thumbs" 
               asNavFor={nav1} 
               ref={(slider2: Slider) => setNav2(slider2)} 
-              {...slider2Settings}>
+              {...slider2Settings}
+              >
               {thumbsUrls.map((url) => (
-                <div className="product__thumb" key={url}>
-                  <img src={imageUrl} alt="furniture thumb" />
+                <div 
+                  className="product__thumb" 
+                  key={url}
+                  >
+                  <img 
+                    src={imageUrl} 
+                    alt="furniture thumb" 
+                    />
                 </div>
               ))}
             </Slider>
           </div>
           <div className="product__info info">
-            <div className="info__star" data-rateyo-rating="4"></div>
+            <div className="info__star"></div>
             <h1 className="info__title">{name}</h1>
             <p className="info__category">{type}</p>
             <form action="">
@@ -136,13 +150,15 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                 <button 
                   className="shop__btn" 
                   type="submit" 
-                  onClick={onBuyClick}>
+                  onClick={onBuyClick}
+                  >
                   Купить
                 </button>
                 <button 
                   className={favorites && favorites.includes(id) ? "shop__wish active" : "shop__wish"} 
                   ref={favoriteBtnRef} 
-                  onClick={onAddToFavoriteClick}>
+                  onClick={onAddToFavoriteClick}
+                  >
                   Добавить в желаемое
                 </button>
               </div>
@@ -151,9 +167,14 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                   <p className="features__title">Цвет</p>
                   <select 
                     className="features__select-color color-select select" 
-                    ref={selectColorRef}>
+                    ref={selectColorRef}
+                    >
                     {colors.map((color) => (
-                      <option className="color-select__option" value={color} key={color}>
+                      <option 
+                        className="color-select__option" 
+                        value={color} 
+                        key={color}
+                        >
                         {color}
                       </option>
                     ))}
@@ -164,19 +185,34 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                   <select 
                     className="features__select-quintity quintity-select select" 
                     ref={selectQuintityRef}>
-                    <option className="quintity-select__option" value="1">
+                    <option
+                      className="quintity-select__option" 
+                      value="1"
+                      >
                       1
                     </option>
-                    <option className="quintity-select__option" value="2">
+                    <option
+                      className="quintity-select__option" 
+                      value="2"
+                      >
                       2
                     </option>
-                    <option className="quintity-select__option" value="3">
+                    <option
+                      className="quintity-select__option" 
+                      value="3"
+                      >
                       3
                     </option>
-                    <option className="quintity-select__option" value="4">
+                    <option
+                      className="quintity-select__option" 
+                      value="4"
+                      >
                       4
                     </option>
-                    <option className="quintity-select__option" value="5">
+                    <option
+                      className="quintity-select__option" 
+                      value="5"
+                      >
                       5
                     </option>
                   </select>
@@ -184,7 +220,10 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                 <div className="features__col features__col--size">
                   <p className="features__title">Размер (Д × Ш × В)</p>
                   <select className="size-select select">
-                    <option className="size-select__option" value="218-95-90">
+                    <option 
+                      className="size-select__option" 
+                      value="218-95-90"
+                      >
                       {dimensions.width} CM × {dimensions.length} CM × {dimensions.height} CM
                     </option>
                   </select>
@@ -192,7 +231,10 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
               </div>
             </form>
             <p className="info__text-title">Описание</p>
-            <p className="info__text">Лаконичные линии и простые формы, безупречный стиль и индивидуальность – все это диван «Динс». Сдержанный скандинавский дизайн украсит любую современную обстановку. Элегантность, комфорт и функциональность, собранные воедино – «Динс» просто создан для размеренного отдыха в кругу семьи или компании друзей!</p>
+            <p className="info__text">
+              Лаконичные линии и простые формы, безупречный стиль и индивидуальность – все это диван «Динс». 
+              Сдержанный скандинавский дизайн украсит любую современную обстановку. 
+              Элегантность, комфорт и функциональность, собранные воедино – «Динс» просто создан для размеренного отдыха в кругу семьи или компании друзей!</p>
           </div>
         </div>
       </div>

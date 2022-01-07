@@ -1,12 +1,12 @@
-import React from "react";
+import React, { FC } from "react";
 
-import search from "../../images/icons/search.svg";
+import search from "../../../images/icons/search.svg";
 
 interface IHeaderSearchFormProps {
   inputSpec?: boolean
 }
 
-const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
+const HeaderSearchForm: FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
 
   const [searchValue, setSearchValue] = React.useState('');
 
@@ -21,9 +21,16 @@ const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
         type="text"
         placeholder="Поиск"
         value={searchValue}
-        onChange={onSearchValChange} />
-      <button className="header__search" type="submit">
-        <img src={search} alt="search" />
+        onChange={onSearchValChange} 
+        />
+      <button 
+        className="header__search" 
+        type="submit"
+        >
+        <img 
+          src={search} 
+          alt="search" 
+          />
       </button>
     </form>
   );

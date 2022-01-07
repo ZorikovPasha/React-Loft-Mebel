@@ -47,7 +47,10 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   };
 
   return (
-    <div className="sales__item item-sales" key={id}>
+    <div 
+      className="sales__item item-sales" 
+      key={id}
+      >
       {sale && (
         <div className="item-sales__label label-sales">
           <div className="label-sales__body">-{sale}</div>
@@ -55,11 +58,15 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
       )}
       <button 
         className={favorites && favorites.includes(id) ? "item-sales__like active" : "item-sales__like"} 
-        onClick={onLikeProductClick}>
+        onClick={onLikeProductClick}
+        >
         </button>
       <div className="item-sales__box">
         <div className="item-sales__img">
-          <img src={imageUrl} alt="furniture" />
+          <img 
+            src={imageUrl} 
+            alt="furniture" 
+            />
         </div>
         <h5
           className="item-sales__title"
@@ -67,7 +74,10 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
           >
           {name}
         </h5>
-        <Link to="catalog" className="item-sales__type">
+        <Link 
+          to="catalog" 
+          className="item-sales__type"
+          >
           {type}
         </Link>
         <div className="item-sales__price">
@@ -90,7 +100,10 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
               <p className="item-sales__num">{dimensions.height} СМ</p>
             </div>
           </div>
-          <button className="item-sales__tocart" onClick={onAddToCartClick}>
+          <button 
+            className="item-sales__tocart" 
+            onClick={onAddToCartClick}
+            >
             Добавить в корзину
           </button>
         </div>

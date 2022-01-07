@@ -42,14 +42,20 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         <ul className="mob-menu__list">
           {mobMenu &&
             mobMenu.top.map((obj) => (
-              <li className="mob-menu__list-item" key={obj.mobMenuItem}>
+              <li 
+                className="mob-menu__list-item" 
+                key={obj.mobMenuItem}
+                >
                 <Link 
                   to="/" 
                   className="mob-menu__link" 
                   onClick={onMobMenuItemClick}
                 >
                   <span>
-                    <img src={obj.imgLink} alt="" />
+                    <img 
+                      src={obj.imgLink} 
+                      alt="" 
+                      />
                   </span>
                   {obj.mobMenuItem}
                 </Link>

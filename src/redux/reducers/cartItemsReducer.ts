@@ -22,7 +22,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         quintity: 1
       }
       state.cartItems.length &&
-        state.cartItems.map((item: CartItemType) => {
+        state.cartItems.forEach((item: CartItemType) => {
           if ( _.isEqual({ ...item, ...obj},  { ...action.payload, ...obj }) ) {
             item.quintity += 1;
             isEqual = true;

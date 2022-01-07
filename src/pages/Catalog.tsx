@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Header, Aside, SortPopup, SalesItem } from "../components";
+import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination } from "../components";
 
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 import { RootState } from "../redux/store";
@@ -10,7 +10,6 @@ import { ProductType, IPageProps } from "../types";
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
 import "../scss/catalog.scss";
-import arrBack from "../images/icons/arrow-back.svg";
 
 interface ICatalogProps extends IPageProps {};
 
@@ -23,6 +22,13 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   }, []);
 
   const items = useSelector((state: RootState) => state.items.items);
+
+  const links = [
+    { name:"Главная", href:"/", isLink:true },
+    { name:"Гостинные", href:"/catalog", isLink:true },
+    { name:"Мягкая мебель", href:"/catalog", isLink:true },
+    { name:"Диваны", href:"", isLink:false }
+  ];
 
   const [isAsideVisible, toggleAsideVisibility] = useState(false);
 
@@ -47,47 +53,24 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       <Header 
         isMobMenuOpen={isMobMenuOpen}
         setMobMenuOpen={setMobMenuOpen}
-        headerMidTaller 
+        headerMiddleTall 
         ></Header>
       <main className="main">
-        <div className="breadcrumbs">
-          <div className="container">
-            <ul className="breadcrumbs__list">
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__link" href="#">
-                  Главная
-                </a>
-              </li>
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__link" href="#">
-                  Гостинные
-                </a>
-              </li>
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__link" href="#">
-                  Мягкая мебель
-                </a>
-              </li>
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__item-back" href="catalog.html">
-                  <img src={arrBack} alt="back" />
-                </a>
-                <span className="breadcrumbs__link">Диваны</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
+        <Breadcrumbs links={links}></Breadcrumbs>
         <section className="catalog">
           <div className="container">
             <div className="catalog__inner">
               {<Aside 
                 isAsideVisible={isAsideVisible}
-                onAsideCloseClick={onAsideCloseClick}>
-              </Aside>}
+                onAsideCloseClick={onAsideCloseClick}
+                ></Aside>}
               <div className="catalog__body">
                 <div className="catalog__controls controls">
-                  <button className="controls__toggle-aside" onClick={onBtnClick} ref={asideToggleRef}>
+                  <button 
+                    className="controls__toggle-aside" 
+                      onClick={onBtnClick} 
+                      ref={asideToggleRef}
+                      >
                     Фильтр
                   </button>
                   <SortPopup onSortTypeClick={onSortTypeClick}></SortPopup>
@@ -101,28 +84,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                     </SalesItem>
                   ))}
                 </div>
-                <div className="catalog__pagination pagination">
-                  <ul className="pagination__list">
-                    <li className="pagination__item pagination__item--active">
-                      <a className="pagination__link" href="#">1</a>
-                    </li>
-                    <li className="pagination__item">
-                      <a className="pagination__link" href="#">2</a>
-                    </li>
-                    <li className="pagination__item">
-                      <a className="pagination__link" href="#">3</a>
-                    </li>
-                    <li className="pagination__item">
-                      <a className="pagination__link" href="#">4</a>
-                    </li>
-                    <li className="pagination__item">
-                      <a className="pagination__link" href="#">5</a>
-                    </li>
-                    <li className="pagination__item">
-                      <a className="pagination__link" href="#">6</a>
-                    </li>
-                  </ul>
-                </div>
+                <Pagination></Pagination>
               </div>
             </div>
           </div>
