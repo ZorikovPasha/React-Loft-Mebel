@@ -20,7 +20,7 @@ const AppRouter: React.FC = () => {
             setMobMenuOpen={setMobMenuOpen}
           ></Main>
         </Route>
-        <Route path="/catalog" exact>
+        <Route path="/catalog/:room/:kind">
           <Catalog
             isMobMenuOpen={isMobMenuOpen}
             setMobMenuOpen={setMobMenuOpen}

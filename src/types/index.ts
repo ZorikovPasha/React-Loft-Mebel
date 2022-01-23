@@ -42,11 +42,22 @@ export type CartItemType = {
   price: string;
 }
 
-export type ListsType = Array<string[]>;
+type ListItemType = {
+  text: string;
+  link: string;
+};
+
+export type ListsType = ListItemType[];
 
 type mobMenuItemType = {
   imgLink: string;
   mobMenuItem: string;
+};
+
+export type BreadcrumbsLinkType = {
+  name: string;
+  href: string;
+  isLink: boolean;
 };
 
 export type mobMenuType = {

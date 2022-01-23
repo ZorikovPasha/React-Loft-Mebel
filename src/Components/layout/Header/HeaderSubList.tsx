@@ -1,18 +1,24 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 
+import { ListsType } from "../../../types";
+
 interface IHeaderSubList {
-  items: string[];
+  items: ListsType;
+  parentDir: string;
 }
 
-const HeaderSubList: FC<IHeaderSubList> = ({ items }) => {  
+const HeaderSubList: FC<IHeaderSubList> = ({ items, parentDir }) => {  
   
   return (
     <ul className="sub-list">
-      {items && items.map((text) => (
-        <li key={text} className="sub-list__item">
-          <Link to="/catalog" className="sub-list__link">
-            {text}
+      {items && items.map((item) => (
+        <li key={item.link} className="sub-list__item">
+          <Link 
+            to={`${parentDir}/${item.link}`} 
+            className="sub-list__link"
+            >
+            {item.text}
           </Link>
         </li>
       ))}

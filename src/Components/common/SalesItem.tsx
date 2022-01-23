@@ -41,7 +41,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
           length: dimensions.length,
           height: dimensions.height,
         },
-        price: priceNew
+        price: priceNew,
       })
     );
   };
@@ -75,7 +75,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
           {name}
         </h5>
         <Link 
-          to="catalog" 
+          to="/catalog" 
           className="item-sales__type"
           >
           {type}

@@ -24,7 +24,7 @@ const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const currentId = useSelector((state: RootState) => state.currentProduct.id);
   const items = useSelector((state: RootState) => state.items.items);
 
-  const links = [
+  const breadcrumbs = [
     { name:"Главная", href:"/", isLink:true },
     { name:"Гостинные", href:"/catalog", isLink:true },
     { name:"Мягкая мебель", href:"/catalog", isLink:true },
@@ -41,7 +41,7 @@ const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         headerMiddleTall 
         ></Header>
       <main className="main">
-        <Breadcrumbs links={links}></Breadcrumbs>
+        <Breadcrumbs breadcrumbs={breadcrumbs}></Breadcrumbs>
         {currentProduct && 
           <ProductCard product={currentProduct}></ProductCard>}
         {currentProduct && <ProductTabs></ProductTabs>}

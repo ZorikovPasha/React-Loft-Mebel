@@ -8,7 +8,7 @@ import "../../scss/_footer.scss";
 import logo from "../../images/icons/footer-logo.svg";
 
 const Footer: FC = () => {
-  const [footerLists, setFooterLists] = React.useState<ListsType>();
+  const [footerLists, setFooterLists] = React.useState<string[][]>();
 
   React.useEffect(() => {
     const promise = getDataByName('FooterLists');
@@ -26,7 +26,7 @@ const Footer: FC = () => {
               <p className="footer__title">НАВИГАЦИЯ</p>
               <div className="footer__box">
                 {footerLists &&
-                  footerLists.map((list: string[]) => (
+                  footerLists.map((list) => (
                     <ul 
                       className="footer__list" 
                       key={list[0]}

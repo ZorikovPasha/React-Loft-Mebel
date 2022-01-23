@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Link } from "react-router-dom";
 
 import arrBack from "../../images/icons/arrow-back.svg";
 
@@ -9,31 +10,31 @@ type BreadcrumbsLinkType = {
 };
 
 interface IBreadcrumbsProps {
-  links: Array<BreadcrumbsLinkType>
+  breadcrumbs: Array<BreadcrumbsLinkType>
 }
 
-const Breadcrumbs: FC<IBreadcrumbsProps> = ({ links }) => {
+const Breadcrumbs: FC<IBreadcrumbsProps> = ({ breadcrumbs }) => {
 
   return (
     <div className="breadcrumbs">
       <div className="container">
         <ul className="breadcrumbs__list">
-          {links && links.map((link, idx) => (
+          {breadcrumbs && breadcrumbs.map((link, idx) => (
             <li 
               className="breadcrumbs__item"
               key={link.name}
               >
               {
-                idx === links.length - 1
-                  ? <a 
+                idx === breadcrumbs.length - 1
+                  ? <Link 
                       className="breadcrumbs__item-back" 
-                      href="catalog.html"
+                      to="/catalog"
                       >
                       <img 
                         src={arrBack} 
                         alt="back" 
                         />
-                    </a>
+                    </Link>
                   : ''
               }
               {

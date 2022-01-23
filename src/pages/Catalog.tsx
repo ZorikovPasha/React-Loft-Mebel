@@ -1,10 +1,13 @@
-import React, { FC, MouseEventHandler, useRef, useState } from "react";
+import React, { FC, MouseEventHandler } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
 import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination } from "../components";
 
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 import { RootState } from "../redux/store";
+import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
+
 import { ProductType, IPageProps } from "../types";
 
 import "../scss/_reset.scss";
@@ -13,26 +16,22 @@ import "../scss/catalog.scss";
 
 interface ICatalogProps extends IPageProps {};
 
-
 const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
+
+  const asideToggleRef = React.useRef(null);
+
+  const items = useSelector((state: RootState) => state.items.items);
+
+  const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
+
+  const router = useHistory();
+  const points = router.location.pathname.split('/');
+  const breadcrumbs = useBreadcrumbs(points);
 
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
   }, []);
-
-  const items = useSelector((state: RootState) => state.items.items);
-
-  const links = [
-    { name:"Главная", href:"/", isLink:true },
-    { name:"Гостинные", href:"/catalog", isLink:true },
-    { name:"Мягкая мебель", href:"/catalog", isLink:true },
-    { name:"Диваны", href:"", isLink:false }
-  ];
-
-  const [isAsideVisible, toggleAsideVisibility] = useState(false);
-
-  const asideToggleRef = useRef(null);
 
   const onBtnClick: MouseEventHandler<HTMLButtonElement> = (): void => {
     toggleAsideVisibility(true);
@@ -56,7 +55,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         headerMiddleTall 
         ></Header>
       <main className="main">
-        <Breadcrumbs links={links}></Breadcrumbs>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         <section className="catalog">
           <div className="container">
             <div className="catalog__inner">

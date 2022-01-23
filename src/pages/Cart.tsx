@@ -1,10 +1,13 @@
 import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 
 import { Header, SalesItem, CartItem, Breadcrumbs } from "../components";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
+import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
+
 import { IPageProps } from "../types"; 
 
 import "../scss/_reset.scss";
@@ -15,20 +18,19 @@ interface ICartProps extends IPageProps {};
 
 const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
+  const router = useHistory();
+  const points = router.location.pathname.split('/');
 
   const cartItems = useSelector((state: RootState) => state.cartItems.cartItems);
   const quintity = useSelector((state: RootState) => state.cartItems.quintity);
   const total = useSelector((state: RootState) => state.cartItems.totalCost);
   const items = useSelector((state: RootState) => state.items.items);
 
-  const links = [
-    { name:"Главная", href:"/", isLink:true },
-    { name:"Корзина", href:"", isLink:false }
-  ];
-
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
   }, []);
+
+  const breadcrumbs = useBreadcrumbs(points);
 
   return (
     <>
@@ -37,7 +39,7 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         setMobMenuOpen={setMobMenuOpen}
       ></Header>
       <main className="main">
-        <Breadcrumbs links={links}></Breadcrumbs>
+        <Breadcrumbs breadcrumbs={breadcrumbs}></Breadcrumbs>
         <section className="cart">
           <div className="container">
             <div className="cart__top">
@@ -47,14 +49,14 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
               </p>
             </div>
             {cartItems && 
-              cartItems.forEach(cartItem => {
+              cartItems.map(cartItem => {
                 const currItem = items.find(item => item.id === cartItem.id);
                 if (currItem) {
                   return (
                     <CartItem 
-                    key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
-                    cartItem={cartItem} 
-                    item={currItem}
+                      key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
+                      cartItem={cartItem} 
+                      item={currItem}
                     ></CartItem>
                   )}
               })}
