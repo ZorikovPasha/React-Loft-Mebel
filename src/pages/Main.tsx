@@ -1,31 +1,27 @@
 import React, { FC } from "react";
 
-import { Header, Footer, Top, Sales } from "../Components";
+import { Header, Top, Sales } from "../components";
+import { IPageProps } from "../types";
 
-import '../scss/_reset.scss';
-import '../scss/_global.scss';
-import '../scss/_mobile.scss';
-import "../scss/_header.scss";
-import '../scss/_select.scss'; 
-import '../scss/_rangeSlider.scss'; 
-import '../scss/main.scss';
+import "../scss/style.scss";
 
-const Main: FC = () => {
+interface IMainProps extends IPageProps {};
+
+const Main: FC<IMainProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+  
   return (
-    <div className="wrapper">
-      <Header showHeaderTop items={[
-        'Главная',
-        'О нас',
-        'Контакты',
-      ]}></Header>
-
+    <> 
+      <Header 
+        showHeaderTop 
+        isMobMenuOpen={isMobMenuOpen}
+        setMobMenuOpen={setMobMenuOpen}
+      >
+      </Header>
       <main className="main">
-        <Top></Top>
-        <Sales></Sales>
+        <Top />
+        <Sales />
       </main>
-
-      <Footer></Footer>
-    </div>
+    </>
   );
 };
 

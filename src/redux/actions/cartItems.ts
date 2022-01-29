@@ -1,6 +1,6 @@
-import { CartItemType, cartItemsActionType, CONST } from '../types';
+import { CartItemType, cartItemsActionType, ActionsTypes } from '../../types';
 
 export const cartItemsActionCreator = (item: CartItemType ): cartItemsActionType => ({
-  type: CONST.CART_ITEMS,
+  type: ActionsTypes.CART_ITEMS,
   payload: item
 });

@@ -1,17 +1,16 @@
-import { CONST } from "../types";
-import { favoritesActionType } from "../types";
+import { favoritesActionType, ActionsTypes } from "../../types";
 
-type initialStateType = {
+type stateType = {
   favorites: number[];
 };
 
-const initialState: initialStateType = {
+const initialState: stateType = {
   favorites: [],
 };
 
-export const favoritesReducer = (state = initialState, action: favoritesActionType) => {
+export const favoritesReducer = (state = initialState, action: favoritesActionType): stateType => {
   switch (action.type) {
-    case CONST.FAVORITES:
+    case ActionsTypes.FAVORITES:
       if (state.favorites.includes(action.payload)) {
         const arr = [...state.favorites].filter(item => item !== action.payload)
         return {

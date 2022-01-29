@@ -1,20 +1,16 @@
 import React, { FC } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 
-import store, { RootState } from "./redux/store";
-import { Main, Catalog, Product, Cart } from "./pages";
+import store from "./redux/store";
+
+
+import AppRouter from "./router/AppRouter";
 
 const App: FC = () => {
 
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <Route path="/" component={Main} exact></Route>
-        <Route path="/catalog" component={Catalog} exact></Route>
-        <Route path="/product" component={Product} exact></Route>
-        <Route path="/cart" component={Cart} exact></Route>
-      </BrowserRouter>
+        <AppRouter></AppRouter>
     </Provider>
   );
 };

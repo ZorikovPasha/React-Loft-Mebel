@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
+import Select from 'react-select';
 
 interface IAsideProps {
   isAsideVisible: boolean;
   onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const Aside: React.FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => {
+const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => {
   const [isInput1Checked, toggleColor1] = useState(false);
   const [isInput2Checked, toggleColor2] = useState(false);
   const [isInput3Checked, toggleColor3] = useState(false);
@@ -19,6 +20,25 @@ const Aside: React.FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => 
   const [isBrand4Checked, toggleBrand4] = useState(false);
   const [isBrand5Checked, toggleBrand5] = useState(false);
 
+  const roomSelectOptions = [
+    {value: "living", label: "Гостинные"},
+    {value: "kitchen", label: "Кухни"},
+    {value: "bedroom", label: "Спальные"},
+    {value: "children", label: "Детские"}
+  ]
+
+  const catSelectOptions = [
+    {value: "soft", label: "Мягкая мебель"},
+    {value: "hard", label: "Твердая мебель"},
+    {value: "wood", label: "Деревянная мебель"},
+  ]
+
+  const furnitureSelectOptions = [
+    {value: "coach", label: "Диваны"},
+    {value: "bed", label: "Кровати"},
+    {value: "table", label: "Столы"},
+  ]
+
   return (
     <aside className={isAsideVisible ? "catalog__aside aside opened" : "catalog__aside aside"}>
       <div className={isAsideVisible ? "aside__box opened" : "aside__box"}>
@@ -27,25 +47,9 @@ const Aside: React.FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => 
             <h6 className="filter__title">Раздел</h6>
             <button className="aside__close" onClick={onAsideCloseClick}>
             </button>
-
-            <select className="filter__select select">
-              <option value="living">Гостинные</option>
-              <option value="kitchen">Кухни</option>
-              <option value="bedroom">Спальные</option>
-              <option value="cheldrens">Детские</option>
-            </select>
-            <select className="filter__select select">
-              <option value="living">Мягкая мебель</option>
-              <option value="kitchen">Мягкая мебель</option>
-              <option value="bedroom">Мягкая мебель</option>
-              <option value="cheldrens">Мягкая мебель</option>
-            </select>
-            <select className="filter__select select">
-              <option value="living">Диваны</option>
-              <option value="kitchen">Кровати</option>
-              <option value="bedroom">Тумбочки</option>
-              <option value="cheldrens">Столы</option>
-            </select>
+            <Select options={roomSelectOptions}></Select>
+            <Select options={catSelectOptions}></Select>
+            <Select options={furnitureSelectOptions}></Select>
           </div>
 
           <div className="aside__filter filter">

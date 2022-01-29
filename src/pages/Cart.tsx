@@ -1,61 +1,70 @@
 import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 
-import { Header, Footer, SalesItem, CartItem } from "../Components";
+import { Header, SalesItem, CartItem, Breadcrumbs } from "../components";
+
 import { RootState } from "../redux/store";
-import { CartItemType, ProductType } from "../redux/types";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
+import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
+
+import { IPageProps } from "../types"; 
 
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
 import "../scss/cart.scss";
 
-const Cart: FC = () => {
+interface ICartProps extends IPageProps {};
+
+const getCartItems = (state: RootState) => state.cartItems.cartItems;
+const getQuintity = (state: RootState) => state.cartItems.quintity;
+const getTotalCost = (state: RootState) => state.cartItems.totalCost;
+const getProducts = (state: RootState) => state.items.items;
+
+const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
+  const router = useHistory();
+  const points = router.location.pathname.split('/');
+
+  const cartItems = useSelector(getCartItems);
+  const quintity = useSelector(getQuintity);
+  const total = useSelector(getTotalCost);
+  const items = useSelector(getProducts);
 
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
   }, []);
 
-  const cartItems = useSelector((state: RootState) => state.cartItemsReducer.cartItems);
-  const quintity = useSelector((state: RootState) => state.cartItemsReducer.quintity);
-  const total = useSelector((state: RootState) => state.cartItemsReducer.totalCost);
-  const items: ProductType[] = useSelector((state: RootState) => state.itemsReducer.items);
+  const breadcrumbs = useBreadcrumbs(points);
 
   return (
-    <div className="wrapper">
-      <Header items={["Главная", "О нас", "Контакты"]}></Header>
-
+    <>
+      <Header 
+        isMobMenuOpen={isMobMenuOpen}
+        setMobMenuOpen={setMobMenuOpen}
+       />
       <main className="main">
-        <div className="breadcrumbs">
-          <div className="container">
-            <ul className="breadcrumbs__list">
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__link" href="#">
-                  Главная
-                </a>
-              </li>
-              <li className="breadcrumbs__item">
-                <a className="breadcrumbs__item-back" href="catalog.html">
-                  <img src="images/icons/arrow-back.svg" alt="back" />
-                </a>
-                <span className="breadcrumbs__link">Корзина</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         <section className="cart">
           <div className="container">
             <div className="cart__top">
               <p>Ваша корзина</p>
               <p>
-                <span className="cart__top-num">предметов {quintity}</span>
+                <span className="cart__top-num">Предметов: {quintity}</span>
               </p>
             </div>
-            {cartItems && cartItems.map((cartItem: CartItemType) => (
-              <CartItem key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} cartItem={cartItem} item={items.find(obj => obj.id === cartItem.id)}></CartItem>
-            ))}
-
+            {cartItems && 
+              cartItems.map(cartItem => {
+                const currItem = items.find(item => item.id === cartItem.id);
+                if (currItem) {
+                  return (
+                    <CartItem 
+                      key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
+                      cartItem={cartItem} 
+                      item={currItem}
+                    />
+                  )}
+              })}
             <div className="cart__bottom">
               <p className="cart__bottom-total">
                 Итоговая стоимость:
@@ -70,16 +79,17 @@ const Cart: FC = () => {
           <div className="container">
             <h3 className="sales__title">Вам может понравиться</h3>
             <div className="sales__items sales__items--cart">
-              {items.filter((item: ProductType) => item.id < 4).map((product: ProductType) => (
-                <SalesItem key={product.id} product={product}></SalesItem>
+              {items.filter((item) => item.id < 4).map((product) => (
+                <SalesItem 
+                  key={product.id} 
+                  product={product}
+                  />
               ))}
             </div>
           </div>
         </section>
       </main>
-
-      <Footer></Footer>
-    </div>
+    </>
   );
 };
 

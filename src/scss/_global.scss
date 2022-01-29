@@ -29,6 +29,11 @@ body {
   }
 }
 
+#root {
+  min-height: 100%;
+  display: flex;
+}
+
 .container {
   max-width: 1170px;
   margin: 0 auto;
@@ -49,6 +54,7 @@ button {
   flex-direction: column;
   min-height: 100%;
   overflow-x: hidden;
+  flex-grow: 1;
 }
 
 .main {
@@ -57,11 +63,6 @@ button {
 
 .footer {
   flex: 0 0 auto;
-}
-
-
-.select.opened .jq-selectbox__trigger-arrow {
-  transform: rotate(180deg);
 }
 
 .breadcrumbs {
