@@ -14,11 +14,13 @@ interface ISalesItemProps {
   product: ProductType;
 }
 
+const getFavorites = (state: RootState) => state.favorites.favorites;
+
 const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale } = product;
 
   const dispatch = useDispatch();
-  const favorites: number[] = useSelector((state: RootState) => state.favorites.favorites);
+  const favorites = useSelector(getFavorites);
 
   const router = useHistory();
 

@@ -20,7 +20,7 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ headerMiddleTall, isMobMenuOpen,
 
   React.useEffect(() => {
     document.body.onclick =  function(e: any): void {
-      if ( isMobMenuOpen && !e.path.includes(menuBtnRef.current)  ) {
+      if ( isMobMenuOpen && !e.path.includes(menuBtnRef.current) ) {
         setMobMenuOpen(false);
         document.body.classList.remove("lock");
       }
@@ -71,7 +71,7 @@ return (
             })}
           </ul>
         </nav>
-        <HeaderSearchForm inputSpec></HeaderSearchForm>
+        <HeaderSearchForm inputSpec />
         <div className="header__connect">
           <a 
             className="header__phone header__phone--black" 

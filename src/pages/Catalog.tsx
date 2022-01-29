@@ -8,7 +8,7 @@ import { fetchItemsThunkCreator } from "../redux/actions/items";
 import { RootState } from "../redux/store";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
-import { ProductType, IPageProps } from "../types";
+import { IPageProps } from "../types";
 
 import "../scss/_reset.scss";
 import "../scss/_global.scss";
@@ -16,12 +16,14 @@ import "../scss/catalog.scss";
 
 interface ICatalogProps extends IPageProps {};
 
+const getProducts = (state: RootState) => state.items.items;
+
 const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
 
   const asideToggleRef = React.useRef(null);
 
-  const items = useSelector((state: RootState) => state.items.items);
+  const items = useSelector(getProducts);
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
 
@@ -53,7 +55,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         isMobMenuOpen={isMobMenuOpen}
         setMobMenuOpen={setMobMenuOpen}
         headerMiddleTall 
-        ></Header>
+      />
       <main className="main">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <section className="catalog">
@@ -62,7 +64,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
               {<Aside 
                 isAsideVisible={isAsideVisible}
                 onAsideCloseClick={onAsideCloseClick}
-                ></Aside>}
+                />}
               <div className="catalog__body">
                 <div className="catalog__controls controls">
                   <button 
@@ -72,18 +74,17 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                       >
                     Фильтр
                   </button>
-                  <SortPopup onSortTypeClick={onSortTypeClick}></SortPopup>
+                  <SortPopup onSortTypeClick={onSortTypeClick} />
                 </div>
                 <div className="catalog__items">
-                  {items.map((product: ProductType) => (
+                  {items.map((product) => (
                     <SalesItem 
                       key={product.id} 
                       product={product}
-                      >
-                    </SalesItem>
+                      />
                   ))}
                 </div>
-                <Pagination></Pagination>
+                <Pagination />
               </div>
             </div>
           </div>

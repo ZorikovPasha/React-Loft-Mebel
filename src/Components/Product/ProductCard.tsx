@@ -54,10 +54,13 @@ const slider2Settings: Settings = {
   ],
 };
 
+
+const getFavorites = (state: RootState) => state.favorites.favorites;
+
 const ProductCard: FC<IProductCardProps> = ({ product }) => {
   const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product;
 
-  const favorites = useSelector((state: RootState) => state.favorites.favorites);
+  const favorites = useSelector(getFavorites);
   const dispatch = useDispatch();
 
   const [nav1, setNav1] = useState<Slider>();
@@ -152,14 +155,14 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                   type="submit" 
                   onClick={onBuyClick}
                   >
-                  Купить
+                    Купить
                 </button>
                 <button 
                   className={favorites && favorites.includes(id) ? "shop__wish active" : "shop__wish"} 
                   ref={favoriteBtnRef} 
                   onClick={onAddToFavoriteClick}
                   >
-                  Добавить в желаемое
+                    Добавить в желаемое
                 </button>
               </div>
               <div className="info__features features">

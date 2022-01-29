@@ -18,8 +18,8 @@ const Main: FC<IMainProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       >
       </Header>
       <main className="main">
-        <Top></Top>
-        <Sales></Sales>
+        <Top />
+        <Sales />
       </main>
     </>
   );

@@ -15,14 +15,17 @@ import "../scss/product.scss";
 
 interface IProductProps extends IPageProps {};
 
+const getCurrentProductId = (state: RootState) => state.currentProduct.id;
+const getProducts = (state: RootState) => state.items.items;
+
 const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
   }, []);
 
-  const currentId = useSelector((state: RootState) => state.currentProduct.id);
-  const items = useSelector((state: RootState) => state.items.items);
+  const currentId = useSelector(getCurrentProductId);
+  const items = useSelector(getProducts);
 
   const breadcrumbs = [
     { name:"Главная", href:"/", isLink:true },
@@ -39,29 +42,28 @@ const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         isMobMenuOpen={isMobMenuOpen}
         setMobMenuOpen={setMobMenuOpen}
         headerMiddleTall 
-        ></Header>
+        />
       <main className="main">
-        <Breadcrumbs breadcrumbs={breadcrumbs}></Breadcrumbs>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         {currentProduct && 
-          <ProductCard product={currentProduct}></ProductCard>}
-        {currentProduct && <ProductTabs></ProductTabs>}
+          <ProductCard product={currentProduct} />}
+        {currentProduct && <ProductTabs />}
 
         <section className="sales">
           <div className="container">
             <h3 className="sales__title">Хиты продаж</h3>
             <div className="sales__items sales__items--product">
-            {items.filter((item: ProductType) => item.rating > 4.1)
-              .map((product: ProductType) => (
+            {items.filter((item) => item.rating > 4.1)
+              .map((product) => (
                 <SalesItem 
                   key={product.id} 
                   product={product}
-                  ></SalesItem>
+                  />
               ))}
             </div>
           </div>
         </section>
       </main>
-
     </>
   );
 };

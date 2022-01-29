@@ -16,15 +16,20 @@ import "../scss/cart.scss";
 
 interface ICartProps extends IPageProps {};
 
+const getCartItems = (state: RootState) => state.cartItems.cartItems;
+const getQuintity = (state: RootState) => state.cartItems.quintity;
+const getTotalCost = (state: RootState) => state.cartItems.totalCost;
+const getProducts = (state: RootState) => state.items.items;
+
 const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
   const router = useHistory();
   const points = router.location.pathname.split('/');
 
-  const cartItems = useSelector((state: RootState) => state.cartItems.cartItems);
-  const quintity = useSelector((state: RootState) => state.cartItems.quintity);
-  const total = useSelector((state: RootState) => state.cartItems.totalCost);
-  const items = useSelector((state: RootState) => state.items.items);
+  const cartItems = useSelector(getCartItems);
+  const quintity = useSelector(getQuintity);
+  const total = useSelector(getTotalCost);
+  const items = useSelector(getProducts);
 
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
@@ -37,9 +42,9 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       <Header 
         isMobMenuOpen={isMobMenuOpen}
         setMobMenuOpen={setMobMenuOpen}
-      ></Header>
+       />
       <main className="main">
-        <Breadcrumbs breadcrumbs={breadcrumbs}></Breadcrumbs>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
         <section className="cart">
           <div className="container">
             <div className="cart__top">
@@ -57,7 +62,7 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                       key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
                       cartItem={cartItem} 
                       item={currItem}
-                    ></CartItem>
+                    />
                   )}
               })}
             <div className="cart__bottom">
@@ -78,7 +83,7 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                 <SalesItem 
                   key={product.id} 
                   product={product}
-                  ></SalesItem>
+                  />
               ))}
             </div>
           </div>

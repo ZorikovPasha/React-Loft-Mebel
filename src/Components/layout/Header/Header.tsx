@@ -16,15 +16,15 @@ const Header: FC<IHeaderProps> = ({ showHeaderTop, headerMiddleTall, isMobMenuOp
 
   return (
     <header className="header">
-      {showHeaderTop && <HeaderTop items={items}></HeaderTop>}
+      {showHeaderTop && <HeaderTop items={items} />}
       <div className="container">
         <HeaderMiddle
           headerMiddleTall={headerMiddleTall}
           isMobMenuOpen={isMobMenuOpen}
           setMobMenuOpen={setMobMenuOpen}
           items={items}
-        ></HeaderMiddle>
-        <HeaderBottom></HeaderBottom>
+        />
+        <HeaderBottom />
       </div>
     </header>
   );
