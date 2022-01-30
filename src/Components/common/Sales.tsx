@@ -6,7 +6,6 @@ import { fetchItemsThunkCreator } from "../../redux/actions/items";
 
 import { SalesItem } from "..";
 
-
 const getProducts = (state: RootState) => state.items.items;
 
 const Sales: FC = () => {

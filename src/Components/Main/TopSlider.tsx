@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
-import { getDataByName } from "../../api";
+import { getSlidesItems } from "../../api";
 
 import { SlidesType } from '../../types';
 
@@ -53,10 +53,7 @@ const TopSlider: FC = () => {
   const [slides, setSlides] = React.useState<SlidesType[]>();
 
   React.useEffect(() => {
-    const promise = getDataByName('slider');
-    promise.then((slides) => {
-      setSlides(slides);
-    });
+    getSlidesItems().then(slides => setSlides(slides));
   }, []);
   
   return (

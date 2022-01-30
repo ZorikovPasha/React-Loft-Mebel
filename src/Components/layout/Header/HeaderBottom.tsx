@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import HeaderSubList from "./HeaderSubList";
 
 import { ListsType } from "../../../types";
-import { getDataByName } from "../../../api";
+import { getDataByName, getNavMenuSublists } from "../../../api";
 
 import etc from "../../../images/icons/etc.svg";
 
@@ -12,10 +12,11 @@ const HeaderBottom: FC = () => {
   const [subLists, setSubLists] = React.useState<Array<ListsType>>([]);
 
   React.useEffect(() => {
-    const promise = getDataByName('subLists');
-    promise.then((data) => {
-      setSubLists(data);
-    });
+    getNavMenuSublists()
+    // const promise = getDataByName('subLists');
+    // promise.then((data) => {
+    //   setSubLists(data);
+    // });
   }, []);
 
   return (
