@@ -3,20 +3,146 @@ import { Link } from "react-router-dom";
 
 import HeaderSubList from "./HeaderSubList";
 
-import { ListsType } from "../../../types";
-import { getDataByName } from "../../../api";
-
 import etc from "../../../images/icons/etc.svg";
 
 const HeaderBottom: FC = () => {
-  const [subLists, setSubLists] = React.useState<Array<ListsType>>([]);
 
-  React.useEffect(() => {
-    const promise = getDataByName('subLists');
-    promise.then((data) => {
-      setSubLists(data);
-    });
-  }, []);
+  const subLists = React.useRef([
+    [
+      {
+        "text": "Кухонные уголки",
+        "link": "corners"
+      },
+      {
+        "text": "Модульные кухни",
+        "link": "modular"
+      },
+      {
+        "text": "Обеденная зона",
+        "link": "dinner"
+      },
+      {
+        "text": "Столешницы",
+        "link": "Countertops"
+      },
+      {
+        "text": "Стеновые панели",
+        "link": "panels"
+      },
+      {
+        "text": "Мойки, сушилки, смесители для кухни",
+        "link": "sinks"
+      }
+    ],
+    [
+      {
+        "text": "Зеркала для спальни",
+        "link": "mirrors"
+      },
+      {
+        "text": "Мебель для спальни",
+        "link": "furniture"
+      },
+      {
+        "text": "Спальные гарнитуры",
+        "link": "sets"
+      },
+      {
+        "text": "Тумбы прикроватные",
+        "link": "bedsideTables"
+      }
+    ],
+    [
+      {
+        "text": "Мини-стенки",
+        "link": "miniwalls"
+      },
+      {
+        "text": "Модульные гостиные",
+        "link": "modularLiv"
+      },
+      {
+        "text": "Полки",
+        "link": "Shelves"
+      },
+      {
+        "text": "Стеллажи",
+        "link": "Shelving"
+      },
+      {
+        "text": "Стенки в гостинную",
+        "link": "walls"
+      }
+    ],
+    [
+      {
+        "text": "Вешалки для одежды",
+        "link": "Hangers"
+      },
+      {
+        "text": "Зеркала в прихожую",
+        "link": "mirrors"
+      },
+      {
+        "text": "Обувницы",
+        "link": "shoeRacks"
+      },
+      {
+        "text": "Шкафы в прихожую",
+        "link": "cabinets"
+      }
+    ],
+    [
+      {
+        "text": "Компьютерные кресла",
+        "link": "chairs"
+      },
+      {
+        "text": "Компьютерные столы",
+        "link": "tables"
+      },
+      {
+        "text": "Столы для офиса",
+        "link": "officeTables"
+      }
+    ],
+    [
+      {
+        "text": "Детские кровати",
+        "link": "beds"
+      },
+      {
+        "text": "Детская мягкая мебель",
+        "link": "upholsteredKid"
+      },
+      {
+        "text": "Детские комоды",
+        "link": "dressers"
+      },
+      {
+        "text": "Детские столики",
+        "link": "tables"
+      }
+    ],
+    [
+      {
+        "text": "Новинки",
+        "link": "new"
+      },
+      {
+        "text": "Шкафы",
+        "link": "Cabinets"
+      },
+      {
+        "text": "Матрасы",
+        "link": "Mattresses"
+      },
+      {
+        "text": "Мягкая мебель",
+        "link": "upholstered"
+      }
+    ]
+  ]);
 
   return (
     <div className="header__bottom">
@@ -78,7 +204,7 @@ const HeaderBottom: FC = () => {
             Кухни
           </Link>
           {subLists && <HeaderSubList 
-            items={subLists[0]}
+            items={subLists.current[0]}
             parentDir={'/catalog/kitchens'}
             />}
         </li>
@@ -102,7 +228,7 @@ const HeaderBottom: FC = () => {
           {subLists && 
             <HeaderSubList
               parentDir={'/catalog/bedroom'}
-              items={subLists[1]} />}
+              items={subLists.current[1]} />}
         </li>
 
         <li className="categories__item">
@@ -125,7 +251,7 @@ const HeaderBottom: FC = () => {
           {subLists && 
             <HeaderSubList
               parentDir={'/catalog/living'}
-              items={subLists[2]} />}
+              items={subLists.current[2]} />}
         </li>
 
         <li className="categories__item">
@@ -148,7 +274,7 @@ const HeaderBottom: FC = () => {
           {subLists && 
             <HeaderSubList
               parentDir={'/catalog/hall'}
-              items={subLists[3]}
+              items={subLists.current[3]}
               />}
         </li>
 
@@ -172,7 +298,7 @@ const HeaderBottom: FC = () => {
           {subLists && 
             <HeaderSubList
               parentDir={'/catalog/office'}
-              items={subLists[4]}
+              items={subLists.current[4]}
               />}
         </li>
 
@@ -199,7 +325,7 @@ const HeaderBottom: FC = () => {
           {subLists && 
             <HeaderSubList
               parentDir={'/catalog/children'}
-              items={subLists[5]}
+              items={subLists.current[5]}
               />}
         </li>
       </ul>
@@ -214,11 +340,11 @@ const HeaderBottom: FC = () => {
       {subLists && 
         <HeaderSubList
           parentDir={'/catalog/promo'}
-          items={subLists[6]}
+          items={subLists.current[6]}
           />}
     </div>
     <Link 
-      to="/catalog" 
+      to="/catalog/kitchens" 
       className="header__more"
       >
       <img 

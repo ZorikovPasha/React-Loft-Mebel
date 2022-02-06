@@ -223,9 +223,25 @@
   justify-content: space-between;
   align-items: center;
   min-width: 112px;
+  
   // .user-header__link
 
   &__link {
+  }
+
+  &__link--dot {
+    position: relative;
+
+    &::after{
+      content: "";
+      position: absolute;
+      top: 4px;
+      right: 0psx;
+      width: 10px;
+      height: 10px;
+      background-color: orange;
+      border-radius: 50%;
+    }
   }
 
   &__link + &__link {

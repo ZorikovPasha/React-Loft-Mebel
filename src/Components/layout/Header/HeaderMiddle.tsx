@@ -1,7 +1,10 @@
 import React, { FC, MouseEventHandler } from 'react';
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 import HeaderSearchForm from "./HeaderSearchForm";
+
+import { RootState } from "../../../redux/store";
 
 import { IPageProps } from "../../../types";
 
@@ -15,8 +18,11 @@ interface IHeaderMiddleProps extends IPageProps {
   items: string[];
 };
 
+const getCartItemsQuintity = (state: RootState) => state.cartItems.quintity;
+
 const HeaderMiddle: FC<IHeaderMiddleProps> = ({ headerMiddleTall, isMobMenuOpen, setMobMenuOpen, items }) => {
   const menuBtnRef = React.useRef(null);
+  const quintity = useSelector(getCartItemsQuintity);
 
   React.useEffect(() => {
     document.body.onclick =  function(e: any): void {
@@ -147,7 +153,7 @@ return (
           </Link>
           <Link 
             to="/cart" 
-            className="user-header__link"
+            className={quintity ? 'user-header__link user-header__link--dot': 'user-header__link'}
             >
             <img src={bag} alt="bag" />
           </Link>

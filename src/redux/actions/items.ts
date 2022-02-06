@@ -3,11 +3,11 @@ import { Dispatch } from 'redux';
 
 import { ActionsTypes, fetchItemsActionType, ProductType } from '../../types';
 import { stateType } from '../reducers/itemsReducer';
-import { getDataByName } from '../../api';
+import { getFurnitureItems } from '../../api';
 
 export const fetchItemsThunkCreator = (): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {
-    const furniture = await getDataByName('furniture');
+    const furniture = await getFurnitureItems();
     dispatch(fetchItemsActionCreator(furniture));
   }
 }
