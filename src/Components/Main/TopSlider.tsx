@@ -4,7 +4,7 @@ import Slider from "react-slick";
 
 import { getSlidesItems } from "../../api";
 
-import { SlidesType } from '../../types';
+import { SlideType } from '../../types';
 
 const SliderPrevArrow: FC = () => {
   return (
@@ -50,7 +50,7 @@ const settings = {
 };
 
 const TopSlider: FC = () => {
-  const [slides, setSlides] = React.useState<SlidesType[]>();
+  const [slides, setSlides] = React.useState<SlideType[]>();
 
   React.useEffect(() => {
     getSlidesItems().then(slides => setSlides(slides));

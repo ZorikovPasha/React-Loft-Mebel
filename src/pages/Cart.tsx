@@ -79,7 +79,7 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
           <div className="container">
             <h3 className="sales__title">Вам может понравиться</h3>
             <div className="sales__items sales__items--cart">
-              {items.filter((item) => item.id < 4).map((product) => (
+              {items && items.filter((item) => item.id < 4).map((product) => (
                 <SalesItem 
                   key={product.id} 
                   product={product}

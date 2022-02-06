@@ -1,6 +1,6 @@
 import React, { FC, MouseEventHandler } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 
 import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination } from "../components";
 
@@ -30,6 +30,10 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const router = useHistory();
   const points = router.location.pathname.split('/');
   const breadcrumbs = useBreadcrumbs(points);
+
+  const params = useParams();
+  console.log(params, 'params');
+
 
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
@@ -77,7 +81,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                   <SortPopup onSortTypeClick={onSortTypeClick} />
                 </div>
                 <div className="catalog__items">
-                  {items.map((product) => (
+                  {items && items.map((product) => (
                     <SalesItem 
                       key={product.id} 
                       product={product}

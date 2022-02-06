@@ -24,11 +24,13 @@ export type ProductType = {
   sale: string;
 }
 
-export type SlidesType = {
+export type SlideType = {
   title: string;
   subtitle: string;
   imageUrl: string;
 }
+
+export type SlideItemsType = Array<SlideType>;
 
 export type CartItemType = {
   id: number;
@@ -72,7 +74,7 @@ export type fetchItemsActionType = {
 
 export type fetchSlidesActionType = {
   type: ActionsTypes.FETCH_SLIDES;
-  payload: SlidesType[];
+  payload: SlideType[];
 };
 
 export type favoritesActionType = {

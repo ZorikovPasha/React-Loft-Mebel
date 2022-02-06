@@ -22,7 +22,7 @@ const Sales: FC = () => {
       <div className="container">
         <h3 className="sales__title">Хиты продаж</h3>
         <div className="sales__items">
-          {items.map((product) => (
+          {items && items.map((product) => (
             <SalesItem 
               product={product} 
               key={product.id}
