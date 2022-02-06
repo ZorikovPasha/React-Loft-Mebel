@@ -10,7 +10,6 @@ const matchingPoints = [
   { link: "children", name: "Детская" },
   { link: "promo", name: "Акция" },
   { link: "cart", name: "Корзина" },
-  { link: "", name: "Главная" },
   { link: "corners", name: "Кухонные уголки" },
   { link: "modular", name: "Модульные кухни" },
   { link: "dinner", name: "Обеденная зона" },
@@ -46,6 +45,7 @@ const matchingPoints = [
   { link: "Cabinets", name: "Шкафы" },
   { link: "Mattresses", name: "Матрасы" },
   { link: "upholstered", name: "Мягкая мебель" },
+  { link: "products", name: "Товары" },
 ];
 
 export const useBreadcrumbs = (points: string[]) => {
@@ -58,9 +58,7 @@ export const useBreadcrumbs = (points: string[]) => {
         return;
       }
       let routeToPoint = points.slice(0, idx + 1).join('/');
-      if (routeToPoint === '') {
-        routeToPoint = '/';
-      }
+
       buffer.push({ 
         name: matchingPoint.name, 
         href: idx !== points.length - 1 ? routeToPoint: '', 

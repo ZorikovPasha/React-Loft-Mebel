@@ -180,8 +180,9 @@
     &::after{
       content: "";
       position: absolute;
-      top: -3px;
+      top: 50%;
       left: 0;
+      transform: translate(0, -50%);
       width: 24px;
       height: 22px;
       background-image: url('../images/icons/wish.svg');
@@ -298,7 +299,7 @@
   &__title {
     padding-bottom: 10px;
     position: relative;
-
+    cursor: pointer;
     color: #686868;
 
     &.active {

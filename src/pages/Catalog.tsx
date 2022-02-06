@@ -1,6 +1,6 @@
 import React, { FC, MouseEventHandler } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 
 import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination } from "../components";
 
@@ -16,6 +16,7 @@ import "../scss/catalog.scss";
 
 interface ICatalogProps extends IPageProps {};
 
+const getFavorites = (state: RootState) => state.favorites.favorites;
 const getProducts = (state: RootState) => state.items.items;
 
 const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
@@ -24,16 +25,13 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const asideToggleRef = React.useRef(null);
 
   const items = useSelector(getProducts);
+  const favorites = useSelector(getFavorites);
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
 
   const router = useHistory();
   const points = router.location.pathname.split('/');
   const breadcrumbs = useBreadcrumbs(points);
-
-  const params = useParams();
-  console.log(params, 'params');
-
 
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
@@ -85,10 +83,12 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                     <SalesItem 
                       key={product.id} 
                       product={product}
+                      baseDir={'../../'}
+                      isFavorite={favorites.includes(product.id)}
                       />
                   ))}
                 </div>
-                <Pagination />
+                {/* <Pagination /> */}
               </div>
             </div>
           </div>

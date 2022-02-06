@@ -1,4 +1,4 @@
-import { ProductType, SlideItemsType, ListsType, mobMenuType } from "../types";
+import { ProductType, SlideItemsType, mobMenuType } from "../types";
 
 const http = async (request: string) => {
   try {
@@ -16,10 +16,6 @@ export const getFurnitureItems = (): Promise<ProductType[]> => {
 
 export const getSlidesItems = (): Promise<SlideItemsType> => {
   return http('/api/slides');
-};
-
-export const getNavMenuSublists = (): Promise<ListsType> => {
-  return http('/api/headerNavMenuSublists');
 };
 
 export const getMobMenuItems = (): Promise<mobMenuType[]> => {

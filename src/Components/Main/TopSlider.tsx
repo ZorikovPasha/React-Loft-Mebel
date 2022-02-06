@@ -72,7 +72,7 @@ const TopSlider: FC = () => {
               <p className="top__subtitle">{slide.subtitle}</p>
               <Link 
                 className="top__btn" 
-                to="/catalog"
+                to="/catalog/kitchens"
                 >
                   Смотреть каталог</Link>
             </div>

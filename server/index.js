@@ -28,15 +28,9 @@ start();
 
 const furnitureRoute = require('./routes/furniture');
 const slidesRoute = require('./routes/slider');
-const navMenuSublistsRoute = require('./routes/headerNavMenuSublist');
 const mobMenuRoute = require('./routes/mobMenu');
 
 
 app.use('/api/furniture', furnitureRoute)
 app.use('/api/slides', slidesRoute)
-app.use('/api/headerNavMenuSublists', navMenuSublistsRoute)
 app.use('/api/mobMenu', mobMenuRoute)
-
-
-app.get('/api/mobMenu', (req, res) => {
-})

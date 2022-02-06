@@ -41,7 +41,7 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
           <div className="item__info-top">
             <h4 className="item__info-name">
               <Link
-                to="/product" 
+                to={`/products/${cartItem.id}`}
                 onClick={onProductLinkClick}
                 >
                   {item.name}

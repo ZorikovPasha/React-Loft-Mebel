@@ -1,12 +1,14 @@
 import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
-import { Header, SalesItem, ProductCard, Breadcrumbs, ProductTabs } from "../components";
+import { Header, ProductCard, Breadcrumbs, ProductTabs, Related } from "../components";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 
-import { ProductType, IPageProps } from "../types";
+import { IPageProps } from "../types";
+import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
 import "../../node_modules/slick-carousel/slick/slick.css";
 import "../scss/_reset.scss";
@@ -27,14 +29,11 @@ const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const currentId = useSelector(getCurrentProductId);
   const items = useSelector(getProducts);
 
-  const breadcrumbs = [
-    { name:"Главная", href:"/", isLink:true },
-    { name:"Гостинные", href:"/catalog", isLink:true },
-    { name:"Мягкая мебель", href:"/catalog", isLink:true },
-    { name:"Диваны", href:"", isLink:false }
-  ];
+  const router = useHistory();
+  const points = router.location.pathname.split('/');
+  const breadcrumbs = useBreadcrumbs(points);
 
-  const [ currentProduct ] = items.filter((item: ProductType) => item.id === currentId );
+  const [ currentProduct ] = items.filter((item) => item.id === currentId );
   
   return (
     <>
@@ -52,15 +51,7 @@ const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         <section className="sales">
           <div className="container">
             <h3 className="sales__title">Хиты продаж</h3>
-            <div className="sales__items sales__items--product">
-            {items.filter((item) => item.rating > 4.1)
-              .map((product) => (
-                <SalesItem 
-                  key={product.id} 
-                  product={product}
-                  />
-              ))}
-            </div>
+            <Related />
           </div>
         </section>
       </main>

@@ -1,9 +1,8 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 
-import { RootState } from "../../redux/store";
 import { favoritesActionCreator } from "../../redux/actions/favorites";
 import { cartItemsActionCreator } from "../../redux/actions/cartItems";
 import { currentProductActionCreator } from "../../redux/actions/currentProduct";
@@ -12,16 +11,14 @@ import { ProductType } from "../../types";
 
 interface ISalesItemProps {
   product: ProductType;
+  baseDir: string,
+  isFavorite: boolean,
 }
 
-const getFavorites = (state: RootState) => state.favorites.favorites;
-
-const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
+const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) => {
   const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale } = product;
 
   const dispatch = useDispatch();
-  const favorites = useSelector(getFavorites);
-
   const router = useHistory();
 
   const onLikeProductClick = (): void => {
@@ -59,14 +56,14 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
         </div>
       )}
       <button 
-        className={favorites && favorites.includes(id) ? "item-sales__like active" : "item-sales__like"} 
+        className={isFavorite ? "item-sales__like active" : "item-sales__like"} 
         onClick={onLikeProductClick}
         >
         </button>
       <div className="item-sales__box">
         <div className="item-sales__img">
           <img 
-            src={imageUrl} 
+            src={baseDir + imageUrl} 
             alt="furniture" 
             />
         </div>
@@ -114,4 +111,4 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product }) => {
   );
 };
 
-export default SalesItem;
+export default React.memo(SalesItem);
