@@ -9,14 +9,21 @@ import Loader from "../common/Loader";
 
 const getFavorites = (state: RootState) => state.favorites.favorites;
 const getProducts = (state: RootState) => state.items.items;
+const getIsLoaded = (state: RootState) => state.items.isLoaded;
+
 
 const Sales: FC = () => {
   const [isLoading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
 
   const favorites = useSelector(getFavorites);
+  const areItemsLoaded = useSelector(getIsLoaded);
 
   React.useEffect(() => {
+    if (areItemsLoaded) {
+      return;
+    }
+
     setLoading(true);
     dispatch(fetchItemsThunkCreator());
     setLoading(false);

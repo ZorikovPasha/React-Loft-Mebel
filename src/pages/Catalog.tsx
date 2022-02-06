@@ -2,9 +2,9 @@ import React, { FC, MouseEventHandler } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination } from "../components";
+import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination, Loader } from "../components";
 
-import { fetchItemsThunkCreator } from "../redux/actions/items";
+import { fetchItemsThunkCreator, sortASCActionCreator, sortDESCActionCreator, sortPOPActionCreator } from "../redux/actions/items";
 import { RootState } from "../redux/store";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
@@ -14,27 +14,38 @@ import "../scss/_reset.scss";
 import "../scss/_global.scss";
 import "../scss/catalog.scss";
 
+
 interface ICatalogProps extends IPageProps {};
 
 const getFavorites = (state: RootState) => state.favorites.favorites;
 const getProducts = (state: RootState) => state.items.items;
+const getIsLoaded = (state: RootState) => state.items.isLoaded;
 
 const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
 
   const asideToggleRef = React.useRef(null);
 
-  const items = useSelector(getProducts);
-  const favorites = useSelector(getFavorites);
-
+  const [isLoading, setLoading] = React.useState(false);
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
+
+  const favorites = useSelector(getFavorites);
+  const products = useSelector(getProducts);
+  const areItemsLoaded = useSelector(getIsLoaded);
 
   const router = useHistory();
   const points = router.location.pathname.split('/');
   const breadcrumbs = useBreadcrumbs(points);
 
   React.useEffect(() => {
+
+    if (areItemsLoaded) {
+      return;
+    }
+
+    setLoading(true);
     dispatch(fetchItemsThunkCreator());
+    setLoading(false);
   }, []);
 
   const onBtnClick: MouseEventHandler<HTMLButtonElement> = (): void => {
@@ -49,6 +60,17 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   };
 
   const onSortTypeClick = (cat: string): void => {
+    switch(cat) {
+      case 'asc':
+        dispatch(sortASCActionCreator());
+        break;
+      case 'desc':
+        dispatch(sortDESCActionCreator());
+        break;
+      case 'pop':
+        dispatch(sortPOPActionCreator());
+        break;
+    }
   }
 
   return (
@@ -78,16 +100,22 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                   </button>
                   <SortPopup onSortTypeClick={onSortTypeClick} />
                 </div>
-                <div className="catalog__items">
-                  {items && items.map((product) => (
-                    <SalesItem 
-                      key={product.id} 
-                      product={product}
-                      baseDir={'../../'}
-                      isFavorite={favorites.includes(product.id)}
-                      />
-                  ))}
-                </div>
+                {
+                  isLoading 
+                  ? <Loader />
+                  : (
+                    <div className="catalog__items">
+                      {products && products.map((product) => (
+                        <SalesItem 
+                          key={product.id} 
+                          product={product}
+                          baseDir={'../../'}
+                          isFavorite={favorites.includes(product.id)}
+                          />
+                      ))}
+                  </div>
+                  )
+                }
                 {/* <Pagination /> */}
               </div>
             </div>

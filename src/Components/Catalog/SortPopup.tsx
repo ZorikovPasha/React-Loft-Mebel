@@ -18,8 +18,7 @@ const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
     setActiveCat(e.target.attributes.value.textContent);
     toggleSortPopupVisibility(false);
 
-    console.log(e.target.attributes.value.textContent);
-    // onSortTypeClick(e.target.attributes.value);
+    onSortTypeClick(e.target.attributes.value.textContent);
   };
 
   const handleOutsidePopupClick = React.useCallback((e: any): void => {
@@ -31,7 +30,7 @@ const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
   React.useEffect(() => {
     document.body.addEventListener("click", handleOutsidePopupClick);
 
-    return function removeListener () {
+    return () => {
       document.body.removeEventListener("click", handleOutsidePopupClick);
     }
   }, []);

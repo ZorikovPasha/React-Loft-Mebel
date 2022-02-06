@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { Header, ProductCard, Breadcrumbs, ProductTabs, Related } from "../components";
+import { Header, ProductCard, Breadcrumbs, ProductTabs, Related, Loader } from "../components";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
@@ -19,13 +19,12 @@ interface IProductProps extends IPageProps {};
 
 const getCurrentProductId = (state: RootState) => state.currentProduct.id;
 const getProducts = (state: RootState) => state.items.items;
+const getIsLoaded = (state: RootState) => state.items.isLoaded;
 
 const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
-  React.useEffect(() => {
-    dispatch(fetchItemsThunkCreator());
-  }, []);
 
+  const areItemsLoaded = useSelector(getIsLoaded);
   const currentId = useSelector(getCurrentProductId);
   const items = useSelector(getProducts);
 
@@ -33,8 +32,21 @@ const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const points = router.location.pathname.split('/');
   const breadcrumbs = useBreadcrumbs(points);
 
+  const [isLoading, setLoading] = React.useState(false);
+
   const [ currentProduct ] = items.filter((item) => item.id === currentId );
   
+  React.useEffect(() => {
+    if (areItemsLoaded) {
+      return;
+    }
+
+    setLoading(true);
+    dispatch(fetchItemsThunkCreator());
+    setLoading(false);
+  }, []);
+
+
   return (
     <>
       <Header 
@@ -51,7 +63,11 @@ const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         <section className="sales">
           <div className="container">
             <h3 className="sales__title">Хиты продаж</h3>
-            <Related />
+            {
+              isLoading
+                ? <Loader />
+                : <Related />
+            }
           </div>
         </section>
       </main>

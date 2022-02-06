@@ -6,7 +6,10 @@ export enum ActionsTypes {
   QUINTITY = "QUINTITY",
   REMOVE_CART_ITEM = "REMOVE_CART_ITEM",
   CALC_TOTAL_COST = "CALC_TOTAL_COST",
-  CURRENT_PRODUCT = "CURRENT_PRODUCT"
+  CURRENT_PRODUCT = "CURRENT_PRODUCT",
+  SORT_ASC = 'SORT_ASC',
+  SORT_DESC = 'SORT_DESC',
+  SORT_POP = 'SORT_POP'
 }
 
 export type ProductType = {
@@ -71,6 +74,11 @@ export type fetchItemsActionType = {
   type: ActionsTypes.FETCH_PRODUCTS;
   payload: ProductType[];
 };
+
+export type sortItemsActionType = {
+  type: ActionsTypes.SORT_ASC | ActionsTypes.SORT_DESC | ActionsTypes.SORT_POP;
+};
+
 
 export type fetchSlidesActionType = {
   type: ActionsTypes.FETCH_SLIDES;
