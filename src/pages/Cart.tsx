@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
-import { Header, SalesItem, CartItem, Breadcrumbs } from "../components";
+import { Header, SalesItem, CartItem, Breadcrumbs } from "../Components";
 
 import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";

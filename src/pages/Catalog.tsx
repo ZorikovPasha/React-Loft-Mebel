@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination, Loader } from "../components";
+import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination, Loader } from "../Components";
 
 import { fetchItemsThunkCreator, sortASCActionCreator, sortDESCActionCreator, sortPOPActionCreator } from "../redux/actions/items";
 import { RootState } from "../redux/store";
