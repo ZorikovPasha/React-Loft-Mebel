@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 
 import { mobMenuType } from "../../types";
-import { getDataByName } from "../../api";
+import { getMobMenuItems } from "../../api";
 
 interface IMobMenuProps {
   isMobMenuOpen: Boolean;
@@ -10,13 +10,10 @@ interface IMobMenuProps {
 };
 
 const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
-  const [mobMenu, setMobMenu] = React.useState<mobMenuType>();
+  const [mobMenu, setMobMenu] = React.useState<mobMenuType[]>();
 
   React.useEffect(() => {
-    const promise = getDataByName('mobMenu');
-    promise.then((data) => {
-      setMobMenu(data);
-    });
+    getMobMenuItems().then(items => setMobMenu(items));
   }, []);
 
   const onMobMenuItemClick = (): void => {
@@ -41,7 +38,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         </div>
         <ul className="mob-menu__list">
           {mobMenu &&
-            mobMenu.top.map((obj) => (
+            mobMenu[0].top.map((obj) => (
               <li 
                 className="mob-menu__list-item" 
                 key={obj.mobMenuItem}
@@ -65,7 +62,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         <p className="mob-menu__subtitle">Категории</p>
         <ul className="mob-menu__list">
           {mobMenu &&
-            mobMenu.body.map((obj) => (
+            mobMenu[0].body.map((obj) => (
               <li className="mob-menu__list-item" key={obj.mobMenuItem}>
                 <Link 
                   to="/catalog" 

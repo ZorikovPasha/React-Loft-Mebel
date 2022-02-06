@@ -2,12 +2,12 @@ import React, { FC, MouseEventHandler } from 'react';
 import { Link } from "react-router-dom";
 
 import HeaderSearchForm from "./HeaderSearchForm";
+import Bag from "../../common/Bag";
 
 import { IPageProps } from "../../../types";
 
 import logo from "../../../images/logo.svg";
 import wishlist from "../../../images/icons/wishlist.svg";
-import bag from "../../../images/icons/bag.svg";
 import profile from "../../../images/icons/profile.svg";
 
 interface IHeaderMiddleProps extends IPageProps {
@@ -93,12 +93,7 @@ return (
             >
             <img src={wishlist} alt="wishlist" />
           </Link>
-          <Link 
-            to="/cart" 
-            className="user-header__link"
-            >
-            <img src={bag} alt="bag" />
-          </Link>
+          <Bag />
           <Link 
             to="/cart" 
             className="user-header__link"
@@ -145,12 +140,7 @@ return (
             >
             <img src={wishlist} alt="wishlist" />
           </Link>
-          <Link 
-            to="/cart" 
-            className="user-header__link"
-            >
-            <img src={bag} alt="bag" />
-          </Link>
+          <Bag />
           <Link 
             to="/cart" 
             className="user-header__link"

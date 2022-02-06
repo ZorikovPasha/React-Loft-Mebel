@@ -20,6 +20,7 @@ const getCartItems = (state: RootState) => state.cartItems.cartItems;
 const getQuintity = (state: RootState) => state.cartItems.quintity;
 const getTotalCost = (state: RootState) => state.cartItems.totalCost;
 const getProducts = (state: RootState) => state.items.items;
+const getFavorites = (state: RootState) => state.favorites.favorites;
 
 const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const quintity = useSelector(getQuintity);
   const total = useSelector(getTotalCost);
   const items = useSelector(getProducts);
+  const favorites = useSelector(getFavorites);
 
   React.useEffect(() => {
     dispatch(fetchItemsThunkCreator());
@@ -79,10 +81,12 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
           <div className="container">
             <h3 className="sales__title">Вам может понравиться</h3>
             <div className="sales__items sales__items--cart">
-              {items.filter((item) => item.id < 4).map((product) => (
+              {items && items.filter((item) => item.id < 4).map((product) => (
                 <SalesItem 
                   key={product.id} 
                   product={product}
+                  baseDir={'../../../'}
+                  isFavorite={favorites.includes(product.id)}
                   />
               ))}
             </div>

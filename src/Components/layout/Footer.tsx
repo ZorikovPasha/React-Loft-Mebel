@@ -1,21 +1,16 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 
-import { ListsType } from "../../types";
-import { getDataByName } from '../../api';
-
 import "../../scss/_footer.scss";
 import logo from "../../images/icons/footer-logo.svg";
 
 const Footer: FC = () => {
-  const [footerLists, setFooterLists] = React.useState<string[][]>();
 
-  React.useEffect(() => {
-    const promise = getDataByName('FooterLists');
-    promise.then((data) => {
-      setFooterLists(data);
-    });
-  }, []);
+  const FooterListsRef = React.useRef([
+    ["Кухни", "Спальни", "Гостинные"],
+    ["Прихожие", "Офисная мебель", "Детская"],
+    ["Шкафы", "Матрасы", "Мягкая мебель"]
+  ]);
 
   return (
     <footer className="footer">
@@ -25,8 +20,7 @@ const Footer: FC = () => {
             <div className="footer__column">
               <p className="footer__title">НАВИГАЦИЯ</p>
               <div className="footer__box">
-                {footerLists &&
-                  footerLists.map((list) => (
+                {FooterListsRef.current?.map((list: string[]) => (
                     <ul 
                       className="footer__list" 
                       key={list[0]}

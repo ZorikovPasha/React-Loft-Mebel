@@ -16,6 +16,7 @@ import "../scss/catalog.scss";
 
 interface ICatalogProps extends IPageProps {};
 
+const getFavorites = (state: RootState) => state.favorites.favorites;
 const getProducts = (state: RootState) => state.items.items;
 
 const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
@@ -24,6 +25,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const asideToggleRef = React.useRef(null);
 
   const items = useSelector(getProducts);
+  const favorites = useSelector(getFavorites);
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
 
@@ -77,14 +79,16 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                   <SortPopup onSortTypeClick={onSortTypeClick} />
                 </div>
                 <div className="catalog__items">
-                  {items.map((product) => (
+                  {items && items.map((product) => (
                     <SalesItem 
                       key={product.id} 
                       product={product}
+                      baseDir={'../../'}
+                      isFavorite={favorites.includes(product.id)}
                       />
                   ))}
                 </div>
-                <Pagination />
+                {/* <Pagination /> */}
               </div>
             </div>
           </div>

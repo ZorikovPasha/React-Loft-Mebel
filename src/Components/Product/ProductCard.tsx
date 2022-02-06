@@ -1,9 +1,10 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import Slider, { Settings } from "react-slick";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import Select from 'react-select';
 
-import { favoritesActionCreator } from "../../redux/actions/favorites";
-import { RootState } from "../../redux/store";
+import AddToFavorite from "../common/AddToFavorite";
+
 import { cartItemsActionCreator } from "../../redux/actions/cartItems";
 
 import { ProductType } from "../../types";
@@ -54,28 +55,27 @@ const slider2Settings: Settings = {
   ],
 };
 
+type ColorOptionType = {
+  value: string,
+  label: string
+};
 
-const getFavorites = (state: RootState) => state.favorites.favorites;
 
 const ProductCard: FC<IProductCardProps> = ({ product }) => {
   const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product;
 
-  const favorites = useSelector(getFavorites);
   const dispatch = useDispatch();
 
   const [nav1, setNav1] = useState<Slider>();
   const [nav2, setNav2] = useState<Slider>();
 
-  const favoriteBtnRef = useRef<HTMLButtonElement>(null);
   const selectQuintityRef = useRef<HTMLSelectElement>(null);
   const selectColorRef = useRef<HTMLSelectElement>(null);
 
-  const onAddToFavoriteClick: MouseEventHandler<HTMLButtonElement> = (e): void => {
-    e.preventDefault();
-    dispatch(favoritesActionCreator(id));
-  };
+  const colorsPrepared: ColorOptionType[] = [];
+  colors.forEach((color, idx) => colorsPrepared[idx] = {value: color, label: color} );
 
-  const onBuyClick: MouseEventHandler<HTMLButtonElement> = (e): void => {
+  const onBuyClick: MouseEventHandler = (e): void => {
     e.preventDefault();
     const productColors: number[] = [];
 
@@ -118,7 +118,7 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                   key={url}
                   >
                   <img 
-                    src={imageUrl} 
+                    src={'../../../' + imageUrl} 
                     alt="furniture" 
                     />
                 </div>
@@ -136,7 +136,7 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                   key={url}
                   >
                   <img 
-                    src={imageUrl} 
+                    src={'../../../' + imageUrl} 
                     alt="furniture thumb" 
                     />
                 </div>
@@ -157,79 +157,23 @@ const ProductCard: FC<IProductCardProps> = ({ product }) => {
                   >
                     Купить
                 </button>
-                <button 
-                  className={favorites && favorites.includes(id) ? "shop__wish active" : "shop__wish"} 
-                  ref={favoriteBtnRef} 
-                  onClick={onAddToFavoriteClick}
-                  >
-                    Добавить в желаемое
-                </button>
+                <AddToFavorite id={id}/>
               </div>
               <div className="info__features features">
                 <div className="features__col features__col--color">
                   <p className="features__title">Цвет</p>
-                  <select 
-                    className="features__select-color color-select select" 
-                    ref={selectColorRef}
-                    >
-                    {colors.map((color) => (
-                      <option 
-                        className="color-select__option" 
-                        value={color} 
-                        key={color}
-                        >
-                        {color}
-                      </option>
-                    ))}
-                  </select>
+                  <Select options={colorsPrepared} />
                 </div>
                 <div className="features__col features__col--quintity">
                   <p className="features__title">Количество</p>
-                  <select 
-                    className="features__select-quintity quintity-select select" 
-                    ref={selectQuintityRef}>
-                    <option
-                      className="quintity-select__option" 
-                      value="1"
-                      >
-                      1
-                    </option>
-                    <option
-                      className="quintity-select__option" 
-                      value="2"
-                      >
-                      2
-                    </option>
-                    <option
-                      className="quintity-select__option" 
-                      value="3"
-                      >
-                      3
-                    </option>
-                    <option
-                      className="quintity-select__option" 
-                      value="4"
-                      >
-                      4
-                    </option>
-                    <option
-                      className="quintity-select__option" 
-                      value="5"
-                      >
-                      5
-                    </option>
-                  </select>
+                  <Select options={[{ value: 1, label: 1 }, { value: 2, label: 2 }, { value: 3, label: 3 }, { value: 4, label: 4 } ]} />
                 </div>
                 <div className="features__col features__col--size">
                   <p className="features__title">Размер (Д × Ш × В)</p>
-                  <select className="size-select select">
-                    <option 
-                      className="size-select__option" 
-                      value="218-95-90"
-                      >
-                      {dimensions.width} CM × {dimensions.length} CM × {dimensions.height} CM
-                    </option>
-                  </select>
+                  <Select options={[ 
+                    {value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
+                    label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`
+                  }]}/>
                 </div>
               </div>
             </form>

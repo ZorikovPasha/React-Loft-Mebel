@@ -47,9 +47,9 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => {
             <h6 className="filter__title">Раздел</h6>
             <button className="aside__close" onClick={onAsideCloseClick}>
             </button>
-            <Select options={roomSelectOptions}></Select>
-            <Select options={catSelectOptions}></Select>
-            <Select options={furnitureSelectOptions}></Select>
+            <Select options={roomSelectOptions} />
+            <Select options={catSelectOptions} />
+            <Select options={furnitureSelectOptions} />
           </div>
 
           <div className="aside__filter filter">
@@ -115,9 +115,6 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => {
               <span className="brands-filter__text">Сайле</span>
             </label>
           </div>
-          <a className="aside__link" href="#">
-            Показать еще
-          </a>
           <button className="aside__btn" type="submit">
             Подобрать
           </button>

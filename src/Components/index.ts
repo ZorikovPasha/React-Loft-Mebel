@@ -17,8 +17,9 @@ import HeaderBottom from "./layout/Header/HeaderBottom";
 import Pagination from "./Catalog/Pagination";
 import ProductTabs from "./Product/ProductTabs";
 import Features from "./Product/Features";
+import Related from "./Product/Related";
 
 export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, 
   HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem, 
   ProductCard, Breadcrumbs, HeaderTop, HeaderMiddle, HeaderBottom, 
-  Pagination, ProductTabs, Features };
+  Pagination, ProductTabs, Features, Related };
