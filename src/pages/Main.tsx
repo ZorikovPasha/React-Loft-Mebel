@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Header, Top, Sales } from "../components";
+import { Header, Top, Sales } from "../Components";
 import { IPageProps } from "../types";
 
 import "../scss/style.scss";
