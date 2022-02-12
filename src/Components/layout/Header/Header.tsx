@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 
 import HeaderMiddle from "./HeaderMiddle";
 import HeaderBottom from "./HeaderBottom";
@@ -11,7 +11,7 @@ interface IHeaderProps extends IPageProps {
   showHeaderTop?: boolean;
 }
 
-const Header: FC<IHeaderProps> = ({ showHeaderTop, headerMiddleTall, isMobMenuOpen, setMobMenuOpen }): React.ReactElement => {
+const Header: React.FC<IHeaderProps> = ({ showHeaderTop, headerMiddleTall, isMobMenuOpen, setMobMenuOpen }): React.ReactElement => {
   const items = ["Главная", "О нас", "Контакты"];
 
   return (

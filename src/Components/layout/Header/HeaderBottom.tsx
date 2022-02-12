@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import HeaderSubList from "./HeaderSubList";
 
 import etc from "../../../images/icons/etc.svg";
 
-const HeaderBottom: FC = () => {
+const HeaderBottom: React.FC = () => {
 
   const subLists = React.useRef([
     [

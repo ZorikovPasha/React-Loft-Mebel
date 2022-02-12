@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 
 import search from "../../../images/icons/search.svg";
 
@@ -6,7 +6,7 @@ interface IHeaderSearchFormProps {
   inputSpec?: boolean
 }
 
-const HeaderSearchForm: FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
+const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
 
   const [searchValue, setSearchValue] = React.useState('');
 

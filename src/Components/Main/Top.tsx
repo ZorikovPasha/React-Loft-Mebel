@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React from "react";
 
 import TopSlider from "./TopSlider";
 
-const Top: FC = () => {
+const Top: React.FC = () => {
 
   return (
     <section className="top">

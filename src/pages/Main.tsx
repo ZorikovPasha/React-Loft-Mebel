@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 
 import { Header, Top, Sales } from "../Components";
 import { IPageProps } from "../types";
@@ -7,7 +7,7 @@ import "../scss/style.scss";
 
 interface IMainProps extends IPageProps {};
 
-const Main: FC<IMainProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+const Main: React.FC<IMainProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   
   return (
     <> 

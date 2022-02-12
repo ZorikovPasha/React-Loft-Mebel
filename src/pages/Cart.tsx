@@ -1,6 +1,5 @@
-import React, { FC } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router";
 
 import { Header, SalesItem, CartItem, Breadcrumbs } from "../Components";
 
@@ -16,10 +15,8 @@ import "../scss/cart.scss";
 
 interface ICartProps extends IPageProps {};
 
-const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+const Cart: React.FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();
-  const router = useHistory();
-  const points = router.location.pathname.split('/');
 
   const cartItems = useSelector(getCartItems);
   const quintity = useSelector(getQuintity);
@@ -31,7 +28,7 @@ const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
     dispatch(fetchItemsThunkCreator());
   }, []);
 
-  const breadcrumbs = useBreadcrumbs(points);
+  const breadcrumbs = useBreadcrumbs();
 
   return (
     <>

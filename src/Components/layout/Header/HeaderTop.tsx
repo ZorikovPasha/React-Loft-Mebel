@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 interface IHeaderTopProps {
   items: string[];
 };
 
-const HeaderTop: FC<IHeaderTopProps> = ({ items }) => {
+const HeaderTop: React.FC<IHeaderTopProps> = ({ items }) => {
 
   return (
     <div className="header__top">

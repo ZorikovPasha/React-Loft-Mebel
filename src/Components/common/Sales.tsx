@@ -1,30 +1,20 @@
-import React, { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 
-import { getFavorites, getIsLoaded, getProducts } from "../../redux/getters";
+import { getFavorites, getProducts } from "../../redux/getters";
 import { fetchItemsThunkCreator } from "../../redux/actions/items";
+import { useLoading } from "../../hooks/useLoading";
 
 import { SalesItem } from "..";
 import Loader from "../common/Loader";
 
-const Sales: FC = () => {
+const Sales: React.FC = () => {
   const [isLoading, setLoading] = React.useState(false);
-  const dispatch = useDispatch();
-
-  const favorites = useSelector(getFavorites);
-  const areItemsLoaded = useSelector(getIsLoaded);
-
-  React.useEffect(() => {
-    if (areItemsLoaded) {
-      return;
-    }
-
-    setLoading(true);
-    dispatch(fetchItemsThunkCreator());
-    setLoading(false);
-  }, []);
 
   const items = useSelector(getProducts);
+  const favorites = useSelector(getFavorites);
+
+  useLoading(fetchItemsThunkCreator, setLoading);
   
   return (
     <section className="sales">

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { ListsType } from "../../../types";
@@ -8,7 +8,7 @@ interface IHeaderSubList {
   parentDir: string;
 }
 
-const HeaderSubList: FC<IHeaderSubList> = ({ items, parentDir }) => {  
+const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir }) => {  
   
   return (
     <ul className="sub-list">

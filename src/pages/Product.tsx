@@ -1,14 +1,15 @@
-import React, { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import React from "react";
+import { useSelector } from "react-redux";
 
 import { Header, ProductCard, Breadcrumbs, ProductTabs, Related, Loader } from "../Components";
 
 import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { getCurrentProductId, getProducts, getIsLoaded } from "../redux/getters";
+import { getCurrentProductId, getProducts } from "../redux/getters";
 
 import { IPageProps } from "../types";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
+import { useLoading } from '../hooks/useLoading';
+
 
 import "../../node_modules/slick-carousel/slick/slick.css";
 import "../scss/_reset.scss";
@@ -17,31 +18,17 @@ import "../scss/product.scss";
 
 interface IProductProps extends IPageProps {};
 
-const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
-  const dispatch = useDispatch();
+const Product: React.FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
-  const areItemsLoaded = useSelector(getIsLoaded);
   const currentId = useSelector(getCurrentProductId);
   const items = useSelector(getProducts);
 
-  const router = useHistory();
-  const points = router.location.pathname.split('/');
-  const breadcrumbs = useBreadcrumbs(points);
+  const breadcrumbs = useBreadcrumbs();
 
   const [isLoading, setLoading] = React.useState(false);
+  useLoading(fetchItemsThunkCreator, setLoading);
 
   const [ currentProduct ] = items.filter((item) => item.id === currentId );
-  
-  React.useEffect(() => {
-    if (areItemsLoaded) {
-      return;
-    }
-
-    setLoading(true);
-    dispatch(fetchItemsThunkCreator());
-    setLoading(false);
-  }, []);
-
 
   return (
     <>

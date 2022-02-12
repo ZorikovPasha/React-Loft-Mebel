@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 
 type ReviewType = {
   id: number;
@@ -8,7 +8,7 @@ type ReviewType = {
 interface IReviewsProps {
   reviews: ReviewType[]
 }
-const Reviews: FC<IReviewsProps> = ({ reviews }) => {
+const Reviews: React.FC<IReviewsProps> = ({ reviews }) => {
   return <div className="product-tabs__content-item product-content">
     {reviews.map((review) => (
       <div
