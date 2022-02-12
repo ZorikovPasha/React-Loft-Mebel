@@ -11,9 +11,7 @@ interface IDeliveryProps {
 const Delivery: React.FC<IDeliveryProps> = ({ deliveryMethods }) => {
   return <div className="product-tabs__content-item product-content">
     {deliveryMethods.map((delivery) => (
-      <div
-        key={delivery.details}
-      >
+      <div key={delivery.details}>
         <span>{delivery.method}: </span>
         {delivery.details}
       </div>

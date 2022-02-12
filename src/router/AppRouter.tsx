@@ -1,8 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 
-import { Main, Catalog, Product, Cart } from "../pages";
-import { Footer, MobMenu } from "../Components";
+import { Main } from "../pages";
+import { Footer, Loader, MobMenu } from "../Components";
+
+const LazyCart = React.lazy(() => import('../pages/Cart'));
+const LazyCatalog = React.lazy(() => import('../pages/Catalog'));
+const LazyProduct = React.lazy(() => import('../pages/Product'));
+
 
 const AppRouter: React.FC = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false);
@@ -21,25 +26,31 @@ const AppRouter: React.FC = () => {
           />
         </Route>
         <Route path="/catalog/:room">
-          <Catalog
-            isMobMenuOpen={isMobMenuOpen}
-            setMobMenuOpen={setMobMenuOpen}
-          />
+          <Suspense fallback={ <Loader />}>
+            <LazyCatalog
+              isMobMenuOpen={isMobMenuOpen}
+              setMobMenuOpen={setMobMenuOpen}
+            />
+          </Suspense>
         </Route>
         <Route path="/products/:id" exact>
-          <Product
-            isMobMenuOpen={isMobMenuOpen}
-            setMobMenuOpen={setMobMenuOpen}
-          />
+        <Suspense fallback={ <Loader />}>
+          <LazyProduct
+              isMobMenuOpen={isMobMenuOpen}
+              setMobMenuOpen={setMobMenuOpen}
+            />
+          </Suspense>
         </Route>
         <Route path="/cart" exact>
-          <Cart
-            isMobMenuOpen={isMobMenuOpen}
-            setMobMenuOpen={setMobMenuOpen}
-          />
+        <Suspense fallback={ <Loader />}>
+          <LazyCart 
+              isMobMenuOpen={isMobMenuOpen}
+              setMobMenuOpen={setMobMenuOpen}
+            />
+          </Suspense>
         </Route>
         <Redirect to="/" />
-        <Footer></Footer>
+        <Footer />
       </div>
     </BrowserRouter>
   );

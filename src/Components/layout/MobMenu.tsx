@@ -16,7 +16,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
     getMobMenuItems()?.then(items => setMobMenu(items));
   }, []);
 
-  const onMobMenuItemClick = (): void => {
+  const onMobMenuItemClick: React.MouseEventHandler<HTMLAnchorElement> = (): void => {
     document.body.classList.remove("lock");
   }
 
@@ -26,8 +26,8 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   };
 
   return (
-    <div className={isMobMenuOpen ? "mob-menu opened" : "mob-menu"}>
-      <div className={isMobMenuOpen ? "mob-menu__body opened" : "mob-menu__body"}>
+    <div className={`mob-menu ${isMobMenuOpen ? 'opened' : ''}`}>
+      <div className={`mob-menu__body ${isMobMenuOpen ? 'opened' : ''}`}>
         <div className="mob-menu__top">
           <h5 className="mob-menu__title">Меню</h5>
           <button 
