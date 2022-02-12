@@ -2,6 +2,29 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+## Это интернет-магазин мебели.
+
+При написании использовались Redux, Redux-thunk, TypeScript.
+Небольшое REST API написано на Express. База данных - mongoDB.
+
+В корне папка server, src - там все клиентское и папка build также для deploy клиента. Изначально не предполагалось, что будет сервеная часть, но в процессе разработки было принято решение сделать.
+
+## Структра проекта стандартна - В папке src:
+
+### Components - компоненты
+Здесь они поделены на типы: название страницы, на которой встречаются,
+common - общие, для нескольких страниц.
+layout - компоненты разметки.
+
+### hooks - свои хуки
+useBreadcrumbs - берет из URL страницы запрос, расзбивает его, и ставит в соответствие каждому элементы понятное слово, из которых составляются хлебные крошки.
+
+### utils - утилиты, там сортировка
+### types - там все типы и константы
+
+Header для каждой страниц разный, поэтому он у каждой страницы свой, а не на одном уровне с Footer.
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -11,13 +34,12 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm serve`
+
+Runs server on port 5000, that supplies client with all data it needs by addressing to server through the REST API written.
 
 ### `npm run build`
 
@@ -27,20 +49,3 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
