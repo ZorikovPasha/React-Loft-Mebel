@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
@@ -6,7 +6,7 @@ import { getSlidesItems } from "../../api";
 
 import { SlideType } from '../../types';
 
-const SliderPrevArrow: FC = () => {
+const SliderPrevArrow: React.FC = () => {
   return (
     <button type="button" className="slick-btn slick-prev">
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,7 +16,7 @@ const SliderPrevArrow: FC = () => {
   );
 };
 
-const SliderNextArrow: FC = () => {
+const SliderNextArrow: React.FC = () => {
   return (
     <button type="button" className="slick-btn slick-next">
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,11 +49,11 @@ const settings = {
   ],
 };
 
-const TopSlider: FC = () => {
+const TopSlider: React.FC = () => {
   const [slides, setSlides] = React.useState<SlideType[]>();
 
   React.useEffect(() => {
-    getSlidesItems().then(slides => setSlides(slides));
+    getSlidesItems()?.then(slides => setSlides(slides));
   }, []);
   
   return (

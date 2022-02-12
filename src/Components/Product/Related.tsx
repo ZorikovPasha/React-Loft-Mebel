@@ -3,10 +3,7 @@ import { useSelector } from "react-redux";
 
 import { SalesItem } from "../";
 
-import { RootState } from "../../redux/store";
-
-const getProducts = (state: RootState) => state.items.items;
-const getFavorites = (state: RootState) => state.favorites.favorites;
+import { getProducts, getFavorites } from "../../redux/getters";
 
 const Related: React.FC = () => {
 

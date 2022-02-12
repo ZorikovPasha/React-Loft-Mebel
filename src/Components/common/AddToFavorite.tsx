@@ -1,11 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "../../redux/store";
+import { getFavorites } from "../../redux/getters";
 
 import { favoritesActionCreator } from "../../redux/actions/favorites";
-
-const getFavorites = (state: RootState) => state.favorites.favorites;
 
 interface IProps {
   id: number

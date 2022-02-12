@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 
 type DeliveryType = {
   method: string;
@@ -8,7 +8,7 @@ type DeliveryType = {
 interface IDeliveryProps {
   deliveryMethods: DeliveryType[]
 }
-const Delivery: FC<IDeliveryProps> = ({ deliveryMethods }) => {
+const Delivery: React.FC<IDeliveryProps> = ({ deliveryMethods }) => {
   return <div className="product-tabs__content-item product-content">
     {deliveryMethods.map((delivery) => (
       <div

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import arrBack from "../../images/icons/arrow-back.svg";
@@ -13,7 +13,7 @@ interface IBreadcrumbsProps {
   breadcrumbs: Array<BreadcrumbsLinkType>
 }
 
-const Breadcrumbs: FC<IBreadcrumbsProps> = ({ breadcrumbs }) => {
+const Breadcrumbs: React.FC<IBreadcrumbsProps> = ({ breadcrumbs }) => {
 
   return (
     <div className="breadcrumbs">

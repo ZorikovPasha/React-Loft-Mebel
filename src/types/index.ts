@@ -33,8 +33,6 @@ export type SlideType = {
   imageUrl: string;
 }
 
-export type SlideItemsType = Array<SlideType>;
-
 export type CartItemType = {
   id: number;
   colors: number[];
@@ -78,7 +76,6 @@ export type fetchItemsActionType = {
 export type sortItemsActionType = {
   type: ActionsTypes.SORT_ASC | ActionsTypes.SORT_DESC | ActionsTypes.SORT_POP;
 };
-
 
 export type fetchSlidesActionType = {
   type: ActionsTypes.FETCH_SLIDES;

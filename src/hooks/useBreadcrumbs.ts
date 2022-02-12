@@ -1,4 +1,5 @@
 import { BreadcrumbsLinkType } from '../types';
+import { useHistory } from "react-router";
 
 const matchingPoints = [
   { link: "catalog", name: "Каталог" },
@@ -48,7 +49,10 @@ const matchingPoints = [
   { link: "products", name: "Товары" },
 ];
 
-export const useBreadcrumbs = (points: string[]) => {
+export const useBreadcrumbs = () => {
+  const router = useHistory();
+  const points = router.location.pathname.split('/');
+
   const buffer: Array<BreadcrumbsLinkType> = [];
 
   points.forEach((point, idx) => {
@@ -57,6 +61,7 @@ export const useBreadcrumbs = (points: string[]) => {
       if (point !== matchingPoint.link) {
         return;
       }
+
       let routeToPoint = points.slice(0, idx + 1).join('/');
 
       buffer.push({ 

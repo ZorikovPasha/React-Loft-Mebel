@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 
 type featureItemType = {
   feature: string;
@@ -9,7 +9,7 @@ interface IFeaturesTabProps {
   features: featureItemType[];
 };
 
-const FeaturesTab: FC<IFeaturesTabProps> = ({ features }) => {
+const FeaturesTab: React.FC<IFeaturesTabProps> = ({ features }) => {
   return (
     <div className="product-tabs__content-item product-content">
       <div className="product-content__box">

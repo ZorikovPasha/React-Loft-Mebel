@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import "../../scss/_footer.scss";
 import logo from "../../images/icons/footer-logo.svg";
 
-const Footer: FC = () => {
+const Footer: React.FC = () => {
 
   const FooterListsRef = React.useRef([
     ["Кухни", "Спальни", "Гостинные"],
