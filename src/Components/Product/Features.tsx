@@ -9,7 +9,7 @@ interface IFeaturesTabProps {
   features: featureItemType[];
 };
 
-const FeaturesTab: React.FC<IFeaturesTabProps> = ({ features }) => {
+const FeaturesTab: React.FC<IFeaturesTabProps> = () => {
   return (
     <div className="product-tabs__content-item product-content">
       <div className="product-content__box">

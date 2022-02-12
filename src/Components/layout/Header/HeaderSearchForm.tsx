@@ -17,7 +17,7 @@ const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
   return (
     <form className="header__form" action="">
       <input 
-        className={inputSpec ? 'header__input header__input--spec' : 'header__input'}
+        className={`header__input ${inputSpec ? 'header__input--spec' : ''}`}
         type="text"
         placeholder="Поиск"
         value={searchValue}

@@ -14,7 +14,6 @@ import Breadcrumbs from "./common/Breadcrumbs";
 import HeaderTop from "./layout/Header/HeaderTop";
 import HeaderMiddle from "./layout/Header/HeaderMiddle";
 import HeaderBottom from "./layout/Header/HeaderBottom";
-import Pagination from "./Catalog/Pagination";
 import ProductTabs from "./Product/ProductTabs";
 import Features from "./Product/Features";
 import Related from "./Product/Related";
@@ -23,4 +22,4 @@ import Loader from "./common/Loader";
 export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, 
   HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem, 
   ProductCard, Breadcrumbs, HeaderTop, HeaderMiddle, HeaderBottom, 
-  Pagination, ProductTabs, Features, Related, Loader };
+ ProductTabs, Features, Related, Loader };

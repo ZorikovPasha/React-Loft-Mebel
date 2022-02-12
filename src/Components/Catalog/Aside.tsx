@@ -40,8 +40,8 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => {
   ]
 
   return (
-    <aside className={isAsideVisible ? "catalog__aside aside opened" : "catalog__aside aside"}>
-      <div className={isAsideVisible ? "aside__box opened" : "aside__box"}>
+    <aside className={`catalog__aside aside ${isAsideVisible ? 'opened' : ''}`}>
+      <div className={`aside__box ${isAsideVisible ? 'opened' : ''}`}>
         <form className="aside__form" action="">
           <div className="aside__filter filter">
             <h6 className="filter__title">Раздел</h6>

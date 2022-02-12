@@ -7,7 +7,7 @@ const Top: React.FC = () => {
   return (
     <section className="top">
       <div className="container">
-        <TopSlider></TopSlider>
+        <TopSlider />
       </div>
     </section>
   );

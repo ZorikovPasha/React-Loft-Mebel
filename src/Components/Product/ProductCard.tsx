@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler, useRef, useState } from "react";
+import React, { MouseEventHandler, useRef, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import { useDispatch } from "react-redux";
 import Select from 'react-select';
@@ -13,7 +13,7 @@ interface IProductCardProps {
   product: ProductType;
 }
 
-const SliderPrevArrow: FC = () => {
+const SliderPrevArrow: React.FC = () => {
   return (
     <button className="slick-btn slick-prev">
       <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,7 +23,7 @@ const SliderPrevArrow: FC = () => {
   );
 };
 
-const SliderNextArrow: FC = () => {
+const SliderNextArrow: React.FC = () => {
   return (
     <button className="slick-btn slick-next">
       <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,7 +61,7 @@ type ColorOptionType = {
 };
 
 
-const ProductCard: FC<IProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product;
 
   const dispatch = useDispatch();

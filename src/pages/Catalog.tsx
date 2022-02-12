@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Pagination, Loader } from "../Components";
+import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Loader } from "../Components";
 
 import { fetchItemsThunkCreator, sortASCActionCreator, sortDESCActionCreator, sortPOPActionCreator } from "../redux/actions/items";
 import { getFavorites, getProducts } from "../redux/getters";
@@ -32,10 +32,10 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
   useLoading(fetchItemsThunkCreator, setLoading);
 
-  const onBtnClick: MouseEventHandler<HTMLButtonElement> = (): void => {
+  const onBtnClick: MouseEventHandler<HTMLButtonElement> = React.useCallback((): void => {
     toggleAsideVisibility(true);
     document.body.classList.add("lock");
-  };
+  }, []);
 
   const onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
@@ -43,7 +43,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
     document.body.classList.remove("lock");
   };
 
-  const onSortTypeClick = (cat: string): void => {
+  const onSortTypeClick = React.useCallback((cat: string): void => {
     switch(cat) {
       case 'asc':
         dispatch(sortASCActionCreator());
@@ -55,7 +55,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         dispatch(sortPOPActionCreator());
         break;
     }
-  }
+  }, []);
 
   return (
     <>
@@ -100,7 +100,6 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                   </div>
                   )
                 }
-                {/* <Pagination /> */}
               </div>
             </div>
           </div>
