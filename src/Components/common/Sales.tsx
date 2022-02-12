@@ -1,16 +1,11 @@
 import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "../../redux/store";
+import { getFavorites, getIsLoaded, getProducts } from "../../redux/getters";
 import { fetchItemsThunkCreator } from "../../redux/actions/items";
 
 import { SalesItem } from "..";
 import Loader from "../common/Loader";
-
-const getFavorites = (state: RootState) => state.favorites.favorites;
-const getProducts = (state: RootState) => state.items.items;
-const getIsLoaded = (state: RootState) => state.items.isLoaded;
-
 
 const Sales: FC = () => {
   const [isLoading, setLoading] = React.useState(false);

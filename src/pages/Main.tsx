@@ -15,8 +15,7 @@ const Main: FC<IMainProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         showHeaderTop 
         isMobMenuOpen={isMobMenuOpen}
         setMobMenuOpen={setMobMenuOpen}
-      >
-      </Header>
+      />
       <main className="main">
         <Top />
         <Sales />

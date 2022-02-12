@@ -53,7 +53,7 @@ const TopSlider: FC = () => {
   const [slides, setSlides] = React.useState<SlideType[]>();
 
   React.useEffect(() => {
-    getSlidesItems().then(slides => setSlides(slides));
+    getSlidesItems()?.then(slides => setSlides(slides));
   }, []);
   
   return (

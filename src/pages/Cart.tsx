@@ -4,8 +4,8 @@ import { useHistory } from "react-router";
 
 import { Header, SalesItem, CartItem, Breadcrumbs } from "../Components";
 
-import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
+import { getCartItems, getQuintity, getTotalCost, getFavorites, getProducts } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
 import { IPageProps } from "../types"; 
@@ -15,12 +15,6 @@ import "../scss/_global.scss";
 import "../scss/cart.scss";
 
 interface ICartProps extends IPageProps {};
-
-const getCartItems = (state: RootState) => state.cartItems.cartItems;
-const getQuintity = (state: RootState) => state.cartItems.quintity;
-const getTotalCost = (state: RootState) => state.cartItems.totalCost;
-const getProducts = (state: RootState) => state.items.items;
-const getFavorites = (state: RootState) => state.favorites.favorites;
 
 const Cart: FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();

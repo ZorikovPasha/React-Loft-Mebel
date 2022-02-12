@@ -13,7 +13,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const [mobMenu, setMobMenu] = React.useState<mobMenuType[]>();
 
   React.useEffect(() => {
-    getMobMenuItems().then(items => setMobMenu(items));
+    getMobMenuItems()?.then(items => setMobMenu(items));
   }, []);
 
   const onMobMenuItemClick = (): void => {

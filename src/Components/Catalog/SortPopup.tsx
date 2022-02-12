@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import React from "react";
 
 interface ISortPopupProps {
   onSortTypeClick: (cat: string) => void
 }
 
-const SortPopup: FC<ISortPopupProps> = ({ onSortTypeClick }) => {
+const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
   const [isSortPopupVisible, toggleSortPopupVisibility] = React.useState(false);
   const [activeCat, setActiveCat] = React.useState<string | null>(null);
 

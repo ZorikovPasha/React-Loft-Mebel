@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 
 import { Main, Catalog, Product, Cart } from "../pages";
-import { Footer, MobMenu } from "../components";
+import { Footer, MobMenu } from "../Components";
 
 const AppRouter: React.FC = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false);

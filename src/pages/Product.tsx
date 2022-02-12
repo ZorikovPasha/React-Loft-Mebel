@@ -4,8 +4,8 @@ import { useHistory } from "react-router";
 
 import { Header, ProductCard, Breadcrumbs, ProductTabs, Related, Loader } from "../Components";
 
-import { RootState } from "../redux/store";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
+import { getCurrentProductId, getProducts, getIsLoaded } from "../redux/getters";
 
 import { IPageProps } from "../types";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
@@ -16,10 +16,6 @@ import "../scss/_global.scss";
 import "../scss/product.scss";
 
 interface IProductProps extends IPageProps {};
-
-const getCurrentProductId = (state: RootState) => state.currentProduct.id;
-const getProducts = (state: RootState) => state.items.items;
-const getIsLoaded = (state: RootState) => state.items.isLoaded;
 
 const Product: FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const dispatch = useDispatch();

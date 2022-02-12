@@ -8,7 +8,7 @@ import { getFurnitureItems } from '../../api';
 export const fetchItemsThunkCreator = (): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {
     const furniture = await getFurnitureItems();
-    dispatch(fetchItemsActionCreator(furniture));
+    furniture ? dispatch(fetchItemsActionCreator(furniture)) : '';
   }
 }
 
