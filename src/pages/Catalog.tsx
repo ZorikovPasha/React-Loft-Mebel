@@ -55,7 +55,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         dispatch(sortPOPActionCreator());
         break;
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

@@ -74,7 +74,8 @@ const TopSlider: React.FC = () => {
                 className="top__btn" 
                 to="/catalog/kitchens"
                 >
-                  Смотреть каталог</Link>
+                  Смотреть каталог
+                  </Link>
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
     return () => {
       document.body.removeEventListener("click", handleOutsidePopupClick);
     }
-  }, []);
+  }, [handleOutsidePopupClick]);
 
   const items = [
     {
