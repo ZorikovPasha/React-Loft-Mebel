@@ -28,56 +28,56 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   return (
     <div className={`mob-menu ${isMobMenuOpen ? 'opened' : ''}`}>
       <div className={`mob-menu__body ${isMobMenuOpen ? 'opened' : ''}`}>
-        <div className="mob-menu__top">
-          <h5 className="mob-menu__title">Меню</h5>
-          <button 
-            className="mob-menu__close" 
-            onClick={onMobMenuCloseClick}
-          >
-          </button>
-        </div>
-        <ul className="mob-menu__list">
-          {mobMenu &&
-            mobMenu[0].top.map((obj) => (
-              <li 
-                className="mob-menu__list-item" 
-                key={obj.mobMenuItem}
-                >
-                <Link 
-                  to="/" 
-                  className="mob-menu__link" 
-                  onClick={onMobMenuItemClick}
-                >
-                  <span>
-                    <img 
-                      src={obj.imgLink} 
-                      alt="" 
-                      />
-                  </span>
-                  {obj.mobMenuItem}
-                </Link>
-              </li>
-            ))}
-        </ul>
-        <p className="mob-menu__subtitle">Категории</p>
-        <ul className="mob-menu__list">
-          {mobMenu &&
-            mobMenu[0].body.map((obj) => (
-              <li className="mob-menu__list-item" key={obj.mobMenuItem}>
-                <Link 
-                  to="/catalog" 
-                  className="mob-menu__link" 
-                  onClick={onMobMenuItemClick}
-                >
-                  <span>
-                    <img src={obj.imgLink} alt="" />
-                  </span>
-                  {obj.mobMenuItem}
-                </Link>
-              </li>
-            ))}
-        </ul>
+      <div className="mob-menu__top">
+        <h5 className="mob-menu__title">Меню</h5>
+        <button 
+          className="mob-menu__close" 
+          onClick={onMobMenuCloseClick}
+        >
+        </button>
       </div>
+      <ul className="mob-menu__list">
+        {mobMenu &&
+          mobMenu[0].top.map((obj) => (
+            <li 
+              className="mob-menu__list-item" 
+              key={obj.mobMenuItem}
+              >
+              <Link 
+                to="/" 
+                className="mob-menu__link" 
+                onClick={onMobMenuItemClick}
+              >
+                <span>
+                  <img 
+                    src={obj.imgLink} 
+                    alt="" 
+                    />
+                </span>
+                {obj.mobMenuItem}
+              </Link>
+            </li>
+          ))}
+      </ul>
+      <p className="mob-menu__subtitle">Категории</p>
+      <ul className="mob-menu__list">
+        {mobMenu &&
+          mobMenu[0].body.map((obj) => (
+            <li className="mob-menu__list-item" key={obj.mobMenuItem}>
+              <Link 
+                to="/catalog" 
+                className="mob-menu__link" 
+                onClick={onMobMenuItemClick}
+              >
+                <span>
+                  <img src={obj.imgLink} alt="" />
+                </span>
+                {obj.mobMenuItem}
+              </Link>
+            </li>
+          ))}
+      </ul>
+    </div>
     </div>
   );
 };

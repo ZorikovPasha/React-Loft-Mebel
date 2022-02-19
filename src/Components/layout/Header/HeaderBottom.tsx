@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 
 import HeaderSubList from "./HeaderSubList";
 
-import etc from "../../../images/icons/etc.svg";
-
 const HeaderBottom: React.FC = () => {
 
   const subLists = React.useRef([
@@ -343,15 +341,6 @@ const HeaderBottom: React.FC = () => {
           items={subLists.current[6]}
           />}
     </div>
-    <Link 
-      to="/catalog/kitchens" 
-      className="header__more"
-      >
-      <img 
-        src={etc} 
-        alt="etc" 
-        />
-    </Link>
   </div>
   )
 }
