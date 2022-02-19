@@ -10,7 +10,7 @@ const initialState: stateType = {
 
 export const favoritesReducer = (state = initialState, action: favoritesActionType): stateType => {
   switch (action.type) {
-    case ActionsTypes.FAVORITES:
+    case ActionsTypes.ADD_TO_FAVORITES:
       if (state.favorites.includes(action.payload)) {
         const arr = [...state.favorites].filter(item => item !== action.payload)
         return {

@@ -1,7 +1,7 @@
 export enum ActionsTypes {
   FETCH_PRODUCTS = "FETCH_PRODUCTS",
   FETCH_SLIDES = "FETCH_SLIDES",
-  FAVORITES = "FAVORITES",
+  ADD_TO_FAVORITES = 'ADD_TO_FAVORITES',
   CART_ITEMS = "CART_ITEMS",
   QUINTITY = "QUINTITY",
   REMOVE_CART_ITEM = "REMOVE_CART_ITEM",
@@ -83,7 +83,7 @@ export type fetchSlidesActionType = {
 };
 
 export type favoritesActionType = {
-  type: ActionsTypes.FAVORITES;
+  type: ActionsTypes.ADD_TO_FAVORITES;
   payload: number;
 };
 

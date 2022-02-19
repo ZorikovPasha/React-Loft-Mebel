@@ -10,11 +10,6 @@ import { useLoading } from '../hooks/useLoading';
 
 import { IPageProps } from "../types";
 
-import "../scss/_reset.scss";
-import "../scss/_global.scss";
-import "../scss/catalog.scss";
-
-
 interface ICatalogProps extends IPageProps {};
 
 const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {

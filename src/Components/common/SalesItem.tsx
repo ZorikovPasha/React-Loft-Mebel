@@ -46,10 +46,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
   };
 
   return (
-    <div 
-      className="sales__item item-sales" 
-      key={id}
-      >
+    <div className="sales__item item-sales" >
       {sale && (
         <div className="item-sales__label label-sales">
           <div className="label-sales__body">-{sale}</div>

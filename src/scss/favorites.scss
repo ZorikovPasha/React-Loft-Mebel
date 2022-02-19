@@ -1,0 +1,48 @@
+.favorites {
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 300px;
+    height: 40vh;
+
+    background-image: url(../images/chair.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 15%;
+  }
+
+  &__empty-text {
+    position: relative;
+    z-index: 1;
+
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 42px;
+
+    text-align: center;
+
+    &::before {  
+      transform: scaleX(0);
+      transform-origin: bottom right;
+    }
+    
+    &:hover::before {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+    
+    &::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      inset: 0 0 0 0;
+      background: #F1D152;
+      z-index: -1;
+      transition: transform .3s ease;
+    }
+  }
+}

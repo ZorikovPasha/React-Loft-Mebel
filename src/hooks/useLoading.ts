@@ -7,7 +7,7 @@ import { getIsLoaded } from "../redux/getters";
 import { stateType } from '../redux/reducers/itemsReducer';
 
 export const useLoading = (
-  actionCreator: () => ThunkAction<void, stateType, unknown, fetchItemsActionType>, 
+  thunkCreator: () => ThunkAction<void, stateType, unknown, fetchItemsActionType>, 
   setState: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
 
@@ -22,7 +22,7 @@ export const useLoading = (
     }
 
     setState(true);
-    dispatch(actionCreator());
+    dispatch(thunkCreator());
     setState(false);
   });
 };

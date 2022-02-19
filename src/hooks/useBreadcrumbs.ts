@@ -47,6 +47,7 @@ const matchingPoints = [
   { link: "Mattresses", name: "Матрасы" },
   { link: "upholstered", name: "Мягкая мебель" },
   { link: "products", name: "Товары" },
+  { link: "favorites", name: "Избранное" },
 ];
 
 export const useBreadcrumbs = () => {

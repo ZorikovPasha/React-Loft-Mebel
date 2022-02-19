@@ -18,24 +18,21 @@ const Sales: React.FC = () => {
   
   return (
     <section className="sales">
-      <div className="container">
-        <h3 className="sales__title">Хиты продаж</h3>
-        {
-          isLoading 
-          ? <Loader />
-          : (
-            <div className="sales__items">
-              {items && items.map((product) => (
-              <SalesItem 
-                product={product} 
-                key={product.id}
-                baseDir={''}
-                isFavorite={favorites.includes(product.id)}
-                />
-              ))}
-            </div>
-          )}
-      </div>
+      <h3 className="sales__title">Хиты продаж</h3>
+      {
+        isLoading 
+        ? <Loader />
+        : (<div className="sales__items">
+            {items && items.map((product) => (
+            <SalesItem 
+              product={product} 
+              key={product.id}
+              baseDir={''}
+              isFavorite={favorites.includes(product.id)}
+              />
+            ))}
+          </div>)
+      }
     </section>
   );
 };
