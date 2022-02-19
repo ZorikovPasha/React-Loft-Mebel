@@ -61,7 +61,7 @@ const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
         <ul className="sort-list">
           {items.map((obj) => (
             <li 
-              className={`sort-list__item' ${activeCat === obj.value ? 'active' : ''}`} 
+              className={`sort-list__item ${activeCat === obj.value ? 'active' : ''}`} 
               onClick={onListItemClick} value={obj.value} key={obj.value}
               >
               {obj.text}

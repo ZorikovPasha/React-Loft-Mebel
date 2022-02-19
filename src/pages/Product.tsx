@@ -10,11 +10,7 @@ import { IPageProps } from "../types";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 import { useLoading } from '../hooks/useLoading';
 
-
 import "../../node_modules/slick-carousel/slick/slick.css";
-import "../scss/_reset.scss";
-import "../scss/_global.scss";
-import "../scss/product.scss";
 
 interface IProductProps extends IPageProps {};
 

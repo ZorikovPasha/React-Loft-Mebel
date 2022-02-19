@@ -8,8 +8,6 @@ import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
 import { IPageProps } from "../types"; 
 
-import "../scss/favorites.scss";
-
 interface IFavoritesProps extends IPageProps {};
 
 const Favorites: React.FC<IFavoritesProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
@@ -39,12 +37,10 @@ const Favorites: React.FC<IFavoritesProps> = ({ isMobMenuOpen, setMobMenuOpen })
         </section>
         {
           favorites.length
-            ? (
-              <section className="sales">
+            ? (<section className="sales">
               <div className="container">
                 <div className="sales__items sales__items--cart">
-                  {
-                    favorites && favorites.map(id => {
+                  {favorites && favorites.map(id => {
                       const likedItem = items.find(item => item.id === id);
     
                       if (likedItem) {
@@ -56,17 +52,13 @@ const Favorites: React.FC<IFavoritesProps> = ({ isMobMenuOpen, setMobMenuOpen })
                             isFavorite={true}
                           />
                         )}
-                    })
-                  }
+                    })}
                 </div>
               </div>
-              </section>
-            )
-            : (
-              <div className="container">
+              </section>)
+            : (<div className="container">
                 <FavoritesEmpty />
-              </div>
-            )
+              </div>)
         }
       </main>
     </>

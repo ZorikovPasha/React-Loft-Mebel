@@ -9,10 +9,6 @@ import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
 import { IPageProps } from "../types"; 
 
-import "../scss/_reset.scss";
-import "../scss/_global.scss";
-import "../scss/cart.scss";
-
 interface ICartProps extends IPageProps {};
 
 const Cart: React.FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
