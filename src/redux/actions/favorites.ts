@@ -1,6 +1,6 @@
-import { favoritesActionType, ActionsTypes } from '../../types';
+import { favoritesActionType, CartItemType, ActionsTypes } from '../../types';
 
 export const favoritesActionCreator = (favorites: number): favoritesActionType => ({
-  type: ActionsTypes.FAVORITES,
+  type: ActionsTypes.ADD_TO_FAVORITES,
   payload: favorites
 });

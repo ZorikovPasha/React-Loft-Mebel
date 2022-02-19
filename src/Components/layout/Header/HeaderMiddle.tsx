@@ -1,13 +1,11 @@
 import React, { FC, MouseEventHandler } from 'react';
 import { Link } from "react-router-dom";
 
-import HeaderSearchForm from "./HeaderSearchForm";
-import Bag from "../../common/Bag";
+import { HeaderWishListIcon, HeaderBagIcon, HeaderSearchForm } from '../../index';
 
 import { IPageProps } from "../../../types";
 
 import logo from "../../../images/logo.svg";
-import wishlist from "../../../images/icons/wishlist.svg";
 import profile from "../../../images/icons/profile.svg";
 
 interface IHeaderMiddleProps extends IPageProps {
@@ -34,7 +32,8 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ headerMiddleTall, isMobMenuOpen,
 
 return (
   <>
-    {headerMiddleTall ? (
+    {headerMiddleTall 
+      ? (
       <div className="header__mid header__mid--taller">
         <div 
           className="menu-btn" 
@@ -45,7 +44,6 @@ return (
           <div></div>
           <div></div>
         </div>
-
         <Link 
           to="/" 
           className="logo"
@@ -87,13 +85,8 @@ return (
           </a>
         </div>
         <div className="header__user user-header">
-          <Link 
-            to="/cart" 
-            className="user-header__link"
-            >
-            <img src={wishlist} alt="wishlist" />
-          </Link>
-          <Bag />
+          <HeaderWishListIcon />
+          <HeaderBagIcon />
           <Link 
             to="/cart" 
             className="user-header__link"
@@ -118,6 +111,7 @@ return (
           >
           <img src={logo} alt="logo" />
         </Link>
+
         <HeaderSearchForm />
         <div className="header__connect header__connect--mid">
           <a 
@@ -134,13 +128,8 @@ return (
           </Link>
         </div>
         <div className="header__user user-header">
-          <Link 
-            to="/cart" 
-            className="user-header__link"
-            >
-            <img src={wishlist} alt="wishlist" />
-          </Link>
-          <Bag />
+          <HeaderWishListIcon />
+          <HeaderBagIcon />
           <Link 
             to="/cart" 
             className="user-header__link"

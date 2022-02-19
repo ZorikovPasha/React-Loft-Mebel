@@ -7,6 +7,7 @@ import { Footer, Loader, MobMenu } from "../Components";
 const LazyCart = React.lazy(() => import('../pages/Cart'));
 const LazyCatalog = React.lazy(() => import('../pages/Catalog'));
 const LazyProduct = React.lazy(() => import('../pages/Product'));
+const LazyFavorites = React.lazy(() => import('../pages/Favorites'));
 
 
 const AppRouter: React.FC = () => {
@@ -44,6 +45,14 @@ const AppRouter: React.FC = () => {
         <Route path="/cart" exact>
         <Suspense fallback={ <Loader />}>
           <LazyCart 
+              isMobMenuOpen={isMobMenuOpen}
+              setMobMenuOpen={setMobMenuOpen}
+            />
+          </Suspense>
+        </Route>
+        <Route path="/favorites" exact>
+        <Suspense fallback={ <Loader />}>
+          <LazyFavorites
               isMobMenuOpen={isMobMenuOpen}
               setMobMenuOpen={setMobMenuOpen}
             />

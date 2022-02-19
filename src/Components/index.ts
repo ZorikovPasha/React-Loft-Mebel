@@ -18,8 +18,13 @@ import ProductTabs from "./Product/ProductTabs";
 import Features from "./Product/Features";
 import Related from "./Product/Related";
 import Loader from "./common/Loader";
+import HeaderWishListIcon from '../Components/layout/Header/HeaderWishListIcon';
+import HeaderBagIcon from '../Components/layout/Header/HeaderBagIcon';
+import CartEmpty from '../Components/Cart/CartEmpty';
+import FavoritesEmpty from '../Components/Favorites/FavoritesEmpty';
 
 export { Header, Footer, MobMenu, Top, Sales, HeaderSubList, 
   HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem, 
   ProductCard, Breadcrumbs, HeaderTop, HeaderMiddle, HeaderBottom, 
- ProductTabs, Features, Related, Loader };
+  ProductTabs, Features, Related, Loader, HeaderWishListIcon,
+  HeaderBagIcon, CartEmpty, FavoritesEmpty };

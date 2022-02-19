@@ -1,0 +1,19 @@
+.favorites {
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 300px;
+    height: 40vh;
+  }
+
+  &__empty-text {
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 42px;
+
+    text-align: center;
+  }
+}
