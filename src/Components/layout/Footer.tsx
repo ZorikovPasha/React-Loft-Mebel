@@ -7,9 +7,9 @@ import logo from "../../images/icons/footer-logo.svg";
 const Footer: React.FC = () => {
 
   const FooterListsRef = React.useRef([
-    ["Кухни", "Спальни", "Гостинные"],
-    ["Прихожие", "Офисная мебель", "Детская"],
-    ["Шкафы", "Матрасы", "Мягкая мебель"]
+    [{ name: "Кухни", link: "/catalog/kitchens"}, { name: "Спальни", link: "/catalog/bedroom"}, { name: "Гостинные", link: "/catalog/living"}],
+    [{ name: "Прихожие", link: "/catalog/hall"}, { name: "Офисная мебель", link: "/catalog/office"}, { name: "Детская", link: "/catalog/children"}],
+    [{ name: "Шкафы", link: "/catalog/cabinets"}, { name: "Матрасы", link: "/catalog/mattresses"}, { name: "Мягкая мебель", link: "/catalog/upholstered"}]
   ]);
 
   return (
@@ -20,21 +20,21 @@ const Footer: React.FC = () => {
             <div className="footer__column">
               <p className="footer__title">НАВИГАЦИЯ</p>
               <div className="footer__box">
-                {FooterListsRef.current?.map((list: string[]) => (
+                {FooterListsRef.current?.map(list => (
                     <ul 
                       className="footer__list" 
-                      key={list[0]}
+                      key={list[0].link}
                       >
                       {list.map((listItem) => (
                         <li 
                           className="footer__list-item" 
-                          key={listItem}
+                          key={listItem.link}
                           >
                           <Link 
-                            to="/catalog" 
+                            to={listItem.link} 
                             className="footer__list-link"
                             >
-                            {listItem}
+                            {listItem.name}
                           </Link>
                         </li>
                       ))}
@@ -55,13 +55,13 @@ const Footer: React.FC = () => {
           <div className="footer__bottom bottom-footer">
             <div className="bottom-footer__left">
               <Link 
-                to="/catalog" 
+                to="/catalog/new" 
                 className="bottom-footer__text bottom-footer__text--promo"
                   >
                   Акция
                 </Link>
               <Link 
-                to="/catalog" 
+                to="/catalog/new" 
                 className="bottom-footer__text"
                 >
                   Новинки

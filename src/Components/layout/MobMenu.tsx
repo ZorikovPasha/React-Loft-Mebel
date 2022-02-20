@@ -17,6 +17,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   }, []);
 
   const onMobMenuItemClick: React.MouseEventHandler<HTMLAnchorElement> = (): void => {
+    setMobMenuOpen(false);
     document.body.classList.remove("lock");
   }
 
@@ -38,23 +39,20 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       </div>
       <ul className="mob-menu__list">
         {mobMenu &&
-          mobMenu[0].top.map((obj) => (
+          mobMenu[0].top.map(item => (
             <li 
               className="mob-menu__list-item" 
-              key={obj.mobMenuItem}
+              key={item.mobMenuItem}
               >
               <Link 
-                to="/" 
+                to={item.link} 
                 className="mob-menu__link" 
                 onClick={onMobMenuItemClick}
               >
                 <span>
-                  <img 
-                    src={obj.imgLink} 
-                    alt="" 
-                    />
+                  <img src={item.imgLink} alt="" />
                 </span>
-                {obj.mobMenuItem}
+                {item.mobMenuItem}
               </Link>
             </li>
           ))}
@@ -62,17 +60,17 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       <p className="mob-menu__subtitle">Категории</p>
       <ul className="mob-menu__list">
         {mobMenu &&
-          mobMenu[0].body.map((obj) => (
-            <li className="mob-menu__list-item" key={obj.mobMenuItem}>
+          mobMenu[0].body.map(item => (
+            <li className="mob-menu__list-item" key={item.mobMenuItem}>
               <Link 
-                to="/catalog" 
+                to={item.link} 
                 className="mob-menu__link" 
                 onClick={onMobMenuItemClick}
               >
                 <span>
-                  <img src={obj.imgLink} alt="" />
+                  <img src={item.imgLink} alt="" />
                 </span>
-                {obj.mobMenuItem}
+                {item.mobMenuItem}
               </Link>
             </li>
           ))}

@@ -1,8 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+type ItemType = {
+  name: string,
+  link: string,
+}
+
 interface IHeaderTopProps {
-  items: string[];
+  items: ItemType[];
 };
 
 const HeaderTop: React.FC<IHeaderTopProps> = ({ items }) => {
@@ -13,17 +18,17 @@ const HeaderTop: React.FC<IHeaderTopProps> = ({ items }) => {
         <div className="header__top-inner">
           <nav className="header__nav">
             <ul className="header__list">
-              {items.map((text, idx) => {
+              {items.map((item, idx) => {
                 return (
                   <li 
-                    key={`${text}_${idx}`} 
+                    key={`${item.name}_${idx}`} 
                     className="header__list-item"
                     >
                     <Link 
-                      to="/" 
+                      to={item.link}
                       className="header__list-link"
                       >
-                      {text}
+                      {item.name}
                     </Link>
                   </li>
                 );
@@ -38,7 +43,7 @@ const HeaderTop: React.FC<IHeaderTopProps> = ({ items }) => {
               8 (964) 89 99 119
             </a>
             <Link 
-              to="/catalog" 
+              to="/about" 
               className="header__delivery"
               >
               Доставка

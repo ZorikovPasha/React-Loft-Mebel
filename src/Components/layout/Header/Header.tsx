@@ -12,7 +12,7 @@ interface IHeaderProps extends IPageProps {
 }
 
 const Header: React.FC<IHeaderProps> = ({ showHeaderTop, headerMiddleTall, isMobMenuOpen, setMobMenuOpen }): React.ReactElement => {
-  const items = ["Главная", "О нас", "Контакты"];
+  const items = [ {name: "Главная", link: "/"}, {name: "О нас", link: "about"}, {name: "Контакты", link: "contacts"}];
 
   return (
     <header className="header">

@@ -14,7 +14,9 @@ const start = async () => {
       process.env.DB_CONNECTION,
       {
       useNewUrlParser: true,
-    })
+      }, 
+      () => console.log('connected to database')
+    )
 
     app.listen(PORT, () => {
       console.log('server has been started on port ' + PORT);

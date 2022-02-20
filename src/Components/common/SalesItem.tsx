@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 
 import { favoritesActionCreator } from "../../redux/actions/favorites";
@@ -70,12 +69,9 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
           >
           {name}
         </h5>
-        <Link 
-          to="/catalog" 
-          className="item-sales__type"
-          >
+        <p className="item-sales__type">
           {type}
-        </Link>
+        </p>
         <div className="item-sales__price">
           <p className="item-sales__price-new">{priceNew} ₽</p>
           <p className="item-sales__price-old">{priceOld && priceOld + " ₽"}</p>

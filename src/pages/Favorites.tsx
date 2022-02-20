@@ -1,16 +1,14 @@
 import React from 'react';
 import { useSelector } from "react-redux";
 
-import { Header, SalesItem, Breadcrumbs, FavoritesEmpty } from "../Components";
+import { Header, SalesItem, Breadcrumbs, Empty } from "../Components";
 
 import { getFavorites, getProducts } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
 import { IPageProps } from "../types"; 
 
-interface IFavoritesProps extends IPageProps {};
-
-const Favorites: React.FC<IFavoritesProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+const Favorites: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
   const breadcrumbs = useBreadcrumbs();
 
@@ -57,7 +55,7 @@ const Favorites: React.FC<IFavoritesProps> = ({ isMobMenuOpen, setMobMenuOpen })
               </div>
               </section>)
             : (<div className="container">
-                <FavoritesEmpty />
+                <Empty text="Вам ничего не понравилось("/>
               </div>)
         }
       </main>

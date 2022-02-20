@@ -28,7 +28,7 @@ const Breadcrumbs: React.FC<IBreadcrumbsProps> = ({ breadcrumbs }) => {
                 idx === breadcrumbs.length - 1
                   ? <Link 
                       className="breadcrumbs__item-back" 
-                      to="/catalog"
+                      to="/"
                       >
                       <img 
                         src={arrBack} 

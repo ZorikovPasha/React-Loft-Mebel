@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Header, SalesItem, CartItem, Breadcrumbs, CartEmpty } from "../Components";
+import { Header, SalesItem, CartItem, Breadcrumbs, Empty } from "../Components";
 
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 import { getCartItems, getQuintity, getTotalCost, getFavorites, getProducts } from "../redux/getters";
@@ -65,7 +65,7 @@ const Cart: React.FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                   <button className="cart__bottom-btn">Оформить заказ</button>
                 </div>
               </>
-              : <CartEmpty />
+              : <Empty text="Вы ничего не добавили в корзину(" />
             }
 
           </div>

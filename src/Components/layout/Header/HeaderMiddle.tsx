@@ -8,9 +8,15 @@ import { IPageProps } from "../../../types";
 import logo from "../../../images/logo.svg";
 import profile from "../../../images/icons/profile.svg";
 
+
+type ItemType = {
+  name: string,
+  link: string,
+}
+
 interface IHeaderMiddleProps extends IPageProps {
   headerMiddleTall: boolean | undefined;
-  items: string[];
+  items: ItemType[];
 };
 
 const HeaderMiddle: FC<IHeaderMiddleProps> = ({ headerMiddleTall, isMobMenuOpen, setMobMenuOpen, items }) => {
@@ -52,17 +58,17 @@ return (
         </Link>
         <nav className="header__nav">
           <ul className="header__list">
-            {items.map((text, idx) => {
+            {items.map((item, idx) => {
               return (
                 <li 
-                  key={`${text}_${idx}`} 
+                  key={`${item.name}_${idx}`} 
                   className="header__list-item"
                   >
                   <Link 
-                    to="/" 
+                    to={item.link} 
                     className="header__list-link"
                     >
-                    {text}
+                    {item.name}
                   </Link>
                 </li>
               );
@@ -121,7 +127,7 @@ return (
             8 (964) 89 99 119
           </a>
           <Link 
-            to="/catalog" 
+            to="/about" 
             className="header__delivery header__delivery--black"
             >
             Доставка

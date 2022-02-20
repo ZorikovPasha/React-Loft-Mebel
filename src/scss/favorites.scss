@@ -46,3 +46,10 @@
     }
   }
 }
+
+@media (max-width:767px) {
+  .favorites__empty-text {
+    font-size: 25px;
+    line-height: 31px;
+  }
+}
