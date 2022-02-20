@@ -425,6 +425,10 @@
   .sales__items {
     grid-template-columns: repeat(3, 1fr );
   }
+
+  .gallery__items {
+    grid-gap: 10px 15px;
+  }
 }
 
 @media (max-width:810px) {
@@ -474,6 +478,15 @@
   }
   .sales__items {
     grid-template-columns: repeat(2, 1fr );
+  }
+
+  .gallery__items {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+  }
+
+  .gallery__item:first-child {
+    grid-column: span 1;
   }
 }
 

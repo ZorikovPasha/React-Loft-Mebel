@@ -55,6 +55,7 @@ export type ListsType = ListItemType[];
 type mobMenuItemType = {
   imgLink: string;
   mobMenuItem: string;
+  link: string;
 };
 
 export type BreadcrumbsLinkType = {
@@ -64,8 +65,8 @@ export type BreadcrumbsLinkType = {
 };
 
 export type mobMenuType = {
-  top: Array<mobMenuItemType>;
-  body: Array<mobMenuItemType>;
+  top: mobMenuItemType[];
+  body: mobMenuItemType[];
 };
 
 export type fetchItemsActionType = {

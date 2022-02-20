@@ -43,11 +43,15 @@ const matchingPoints = [
   { link: "tables", name: "Детские столики" },
 
   { link: "new", name: "Новинки" },
-  { link: "Cabinets", name: "Шкафы" },
-  { link: "Mattresses", name: "Матрасы" },
+  { link: "cabinets", name: "Шкафы" },
+  { link: "mattresses", name: "Матрасы" },
   { link: "upholstered", name: "Мягкая мебель" },
+
   { link: "products", name: "Товары" },
   { link: "favorites", name: "Избранное" },
+  { link: "contacts", name: "Контакты" },
+  { link: "about", name: "О нас" },
+  { link: "profile", name: "Личный кабинет" },
 ];
 
 export const useBreadcrumbs = () => {

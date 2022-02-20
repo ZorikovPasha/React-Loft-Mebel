@@ -148,7 +148,7 @@ const HeaderBottom: React.FC = () => {
       <ul className="categories__list">
         <li className="categories__item categories__item--promo">
           <Link 
-            to="/catalog" 
+            to="/catalog/new" 
             className="categories__item-img"
             >
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -156,7 +156,7 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog" 
+            to="/catalog/new" 
             className="categories__link"
             >
             Акция
@@ -164,7 +164,7 @@ const HeaderBottom: React.FC = () => {
         </li>
         <li className="categories__item categories__item--new">
           <Link 
-            to="/catalog" 
+            to="/catalog/new" 
             className="categories__item-img"
             >
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,7 +172,7 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog" 
+            to="/catalog/new" 
             className="categories__link"
             >
             Новинки
@@ -330,14 +330,14 @@ const HeaderBottom: React.FC = () => {
     </div>
     <div className="header__promo">
       <Link 
-        to="/catalog/promo" 
+        to="/catalog/kitchens" 
         className="header__promo-link"
         >
         Акция
       </Link>
       {subLists && 
         <HeaderSubList
-          parentDir={'/catalog/promo'}
+          parentDir={'/catalog'}
           items={subLists.current[6]}
           />}
     </div>
