@@ -10,6 +10,8 @@ const LazyProduct = React.lazy(() => import('../pages/Product'));
 const LazyFavorites = React.lazy(() => import('../pages/Favorites'));
 const LazyAbout = React.lazy(() => import('../pages/About'));
 const LazyContacts = React.lazy(() => import('../pages/Contacts'));
+const LazyLogin = React.lazy(() => import('../pages/Login'));
+const LazySignup = React.lazy(() => import('../pages/SignUp'));
 
 
 const AppRouter: React.FC = () => {
@@ -76,7 +78,23 @@ const AppRouter: React.FC = () => {
               />
             </Suspense>
         </Route>
-        <Redirect to="/" />
+        <Route path="/login" exact>
+          <Suspense fallback={ <Loader />}>
+            <LazyLogin
+                isMobMenuOpen={isMobMenuOpen}
+                setMobMenuOpen={setMobMenuOpen}
+              />
+            </Suspense>
+        </Route>
+        <Route path="/signup" exact>
+          <Suspense fallback={ <Loader />}>
+            <LazySignup
+                isMobMenuOpen={isMobMenuOpen}
+                setMobMenuOpen={setMobMenuOpen}
+              />
+            </Suspense>
+        </Route>
+        {/* <Redirect to="/" /> */}
         <Footer />
       </div>
     </BrowserRouter>

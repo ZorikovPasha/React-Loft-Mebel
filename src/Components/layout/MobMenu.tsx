@@ -39,7 +39,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       </div>
       <ul className="mob-menu__list">
         {mobMenu &&
-          mobMenu[0].top.map(item => (
+          mobMenu[0]?.top.map(item => (
             <li 
               className="mob-menu__list-item" 
               key={item.mobMenuItem}
@@ -60,7 +60,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       <p className="mob-menu__subtitle">Категории</p>
       <ul className="mob-menu__list">
         {mobMenu &&
-          mobMenu[0].body.map(item => (
+          mobMenu[0]?.body.map(item => (
             <li className="mob-menu__list-item" key={item.mobMenuItem}>
               <Link 
                 to={item.link} 

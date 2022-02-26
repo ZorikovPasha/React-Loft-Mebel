@@ -133,8 +133,8 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
               quintity: '1',
               color: colorsPrepared[0].value,
               dimensions: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
-            }}
-            onSubmit={handleSubmit}
+              }}
+              onSubmit={handleSubmit}
             > 
               {({ values, setFieldValue, handleSubmit }) => (
                 <form action="" onSubmit={handleSubmit}>

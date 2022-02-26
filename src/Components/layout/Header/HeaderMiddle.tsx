@@ -111,10 +111,7 @@ return (
           <div></div>
           <div></div>
         </div>
-        <Link 
-          to="/" 
-          className="logo"
-          >
+        <Link to="/" className="logo">
           <img src={logo} alt="logo" />
         </Link>
 
