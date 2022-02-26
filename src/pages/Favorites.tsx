@@ -6,15 +6,23 @@ import { Header, SalesItem, Breadcrumbs, Empty } from "../Components";
 import { getFavorites, getProducts } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 
-import { IPageProps } from "../types"; 
+import { IPageProps, ProductType } from "../types"; 
 
 const Favorites: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
   const breadcrumbs = useBreadcrumbs();
 
   const items = useSelector(getProducts);
-  const favorites = useSelector(getFavorites);
-  
+  const favoriteItemsIds = useSelector(getFavorites);
+  const favorites: ProductType[] = []; 
+
+  favoriteItemsIds.forEach(id => {
+    const item = items.find(item => item.id === id)
+    if (!!item) {
+      favorites.push(item);
+    }
+  })
+
   return (
     <>
       <Header 
@@ -28,29 +36,24 @@ const Favorites: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
             <div className="cart__top">
               <p>Вам понравилось:</p>
               <p>
-                <span className="cart__top-num">Предметов: {favorites?.length}</span>
+                <span className="cart__top-num">Предметов: {favoriteItemsIds?.length}</span>
               </p>
             </div>
           </div>
         </section>
         {
-          favorites.length
+          favoriteItemsIds.length
             ? (<section className="sales">
               <div className="container">
                 <div className="sales__items sales__items--cart">
-                  {favorites && favorites.map(id => {
-                      const likedItem = items.find(item => item.id === id);
-    
-                      if (likedItem) {
-                        return (
-                          <SalesItem 
-                            key={likedItem.id} 
-                            product={likedItem}
-                            baseDir={'../../../'}
-                            isFavorite={true}
-                          />
-                        )}
-                    })}
+                  {favorites && favorites.map(item => (
+                    <SalesItem 
+                      key={item.id} 
+                      product={item}
+                      baseDir={'../../../'}
+                      isFavorite={true}
+                    />
+                  ))}
                 </div>
               </div>
               </section>)

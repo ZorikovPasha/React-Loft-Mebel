@@ -58,7 +58,7 @@ const TopSlider: React.FC = () => {
   return (
     <Slider 
       {...settings} 
-      className="top__slider"
+      className={`top__slider ${!slides ? 'top__slider--fullsize': '' }`}
       >
       {slides && slides.map((slide, idx) => (
         <div key={idx}>

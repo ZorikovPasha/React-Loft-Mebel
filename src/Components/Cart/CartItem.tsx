@@ -2,7 +2,6 @@ import React, { FC, MouseEventHandler } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { currentProductActionCreator } from "../../redux/actions/currentProduct";
 import { removeItemActionCreator } from "../../redux/actions/removeItem";
 import { CartItemType, ProductType } from "../../types";
 
@@ -18,10 +17,6 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
 
   const onRemoveItemClick: MouseEventHandler<HTMLDivElement> = (): void => {
     dispatch(removeItemActionCreator(cartItem))
-  }  
-
-  const onProductLinkClick: MouseEventHandler<HTMLAnchorElement> = (): void => {
-    dispatch(currentProductActionCreator(item.id))
   }
 
   const getTotalCost = React.useMemo(() => {
@@ -40,10 +35,7 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
         <div className="item__info">
           <div className="item__info-top">
             <h4 className="item__info-name">
-              <Link
-                to={`/products/${cartItem.id}`}
-                onClick={onProductLinkClick}
-                >
+              <Link to={`/products/${cartItem.id}`}>
                   {item.name}
                 </Link>
             </h4>

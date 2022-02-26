@@ -14,8 +14,6 @@ router.get('/', async (req, res) => {
     brand: 'brand'
   };
 
-  console.log(req.query);
-
   const findCriteria = Object.keys(req.query).reduce((accum, key) => {
     if (key === 'color' || key === 'sort') return accum;
       return {...accum, [mappedValues[key]]: req.query[key]};

@@ -1,28 +1,23 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-import { Header, ProductCard, Breadcrumbs, ProductTabs, Related, Loader } from "../Components";
+import { Header, ProductCard, Breadcrumbs, ProductTabs, Related } from "../Components";
 
-import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { getCurrentProductId, getProducts } from "../redux/getters";
+import { getProducts } from "../redux/getters";
 
 import { IPageProps } from "../types";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
-import { useLoading } from '../hooks/useLoading';
 
 import "../../node_modules/slick-carousel/slick/slick.css";
 
 const Product: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
-
-  const currentId = useSelector(getCurrentProductId);
   const items = useSelector(getProducts);
 
   const breadcrumbs = useBreadcrumbs();
 
-  const [isLoading, setLoading] = React.useState(false);
-  useLoading(fetchItemsThunkCreator, setLoading);
-
-  const [ currentProduct ] = items.filter((item) => item.id === currentId );
+  const { id } = useParams<{ id: string }>();
+  const currentItem = items.find(item => item.id === Number(id));
 
   return (
     <>
@@ -33,17 +28,13 @@ const Product: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         />
       <main className="main">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        {currentProduct && <ProductCard product={currentProduct} />}
-        {currentProduct && <ProductTabs />}
+        {currentItem && <ProductCard product={currentItem} />}
+        {currentItem && <ProductTabs />}
 
         <section className="sales">
           <div className="container">
             <h3 className="sales__title">Хиты продаж</h3>
-            {
-              isLoading
-                ? <Loader />
-                : <Related />
-            }
+            <Related />
           </div>
         </section>
       </main>

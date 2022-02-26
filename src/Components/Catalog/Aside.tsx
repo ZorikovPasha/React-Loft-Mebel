@@ -38,7 +38,6 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
   ];
 
   const furnitureBrandOptions = [
-    {value: "all", label: "Показать все"},
     {value: "Шерона", label: "Шерона"},
     {value: "Динс", label: "Динс"},
     {value: "Taskany", label: "Taskany"},
@@ -64,7 +63,7 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
           material: 'all',
           type: 'all',
           colorsIds: [] as string[],
-          brandsIds: ['all']
+          brandsIds: [] as string[]
         }}
         onSubmit={handleFiltersSubmit}
         > 
@@ -156,7 +155,6 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
           </form>
           )}
         </Formik>
-
       </div>
     </aside>
   );

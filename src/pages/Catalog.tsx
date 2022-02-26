@@ -19,9 +19,6 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
   const asideToggleRef = React.useRef(null);
 
-  const [isLoading, setLoading] = React.useState(false);
-  const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
-
   const filters = React.useRef({
     room: '',
     material: '',
@@ -31,12 +28,18 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
     sort: 'asc'
   });
 
+  const QueryCache = React.useRef('');
+
+  const [isLoading, setLoading] = React.useState(false);
+  const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
+
+  useLoading(fetchItemsThunkCreator, setLoading, '?sort=asc')
+
+
   const favorites = useSelector(getFavorites);
   const products = useSelector(getProducts);
 
   const breadcrumbs = useBreadcrumbs();
-
-  // useLoading(fetchItemsThunkCreator, setLoading);
 
   const makeQueryParametersFromStringArr = (arr: string[], type: string): string => {
     let query = '';
@@ -69,7 +72,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
     const roomQuery = `${filters.current.room === 'all' ? '' : `&room=${filters.current.room}`}`;
     const materialQuery = `${filters.current.material  === 'all' ? '' : `&material=${filters.current.material}`}`;
-    const typeQuery = `${filters.current.type  === 'all' ? '' : `&material=${filters.current.type}`}`;
+    const typeQuery = `${filters.current.type  === 'all' ? '' : `&type=${filters.current.type}`}`;
     const brandsQuery = makeQueryParametersFromStringArr(filters.current.brands, 'brand');
     const colorsQuery = makeQueryParametersFromStringArr(filters.current.colors, 'color');
     const sortQuery = filters.current.sort ? '&sort=' + filters.current.sort : ''
@@ -84,7 +87,13 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       pathname: '',
       search: searchQuery
     });
-    dispatch(fetchItemsThunkCreator(searchQuery));
+
+
+    if (QueryCache.current !== searchQuery) {
+      dispatch(fetchItemsThunkCreator(searchQuery));
+      QueryCache.current = searchQuery;
+    }
+
     toggleAsideVisibility(false);
   };
 
@@ -99,7 +108,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
     document.body.classList.remove("lock");
   };
 
-  const onSortTypeClick = React.useCallback((cat: string): void => {
+  const onSelectSortType = React.useCallback((cat: string): void => {
     filters.current.sort = cat;
   }, []);
 
@@ -129,7 +138,7 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                     >
                     Фильтр
                   </button>
-                  <SortPopup onSortTypeClick={onSortTypeClick} />
+                  <SortPopup onSelectSortType={onSelectSortType} />
                 </div>
                 {
                   isLoading 

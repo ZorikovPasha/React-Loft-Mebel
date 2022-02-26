@@ -2,7 +2,6 @@ import Header from "./layout/Header/Header";
 import Footer from "./layout/Footer";
 import MobMenu from "./layout/MobMenu";
 import TopSlider from "./Main/TopSlider";
-import Sales from "./common/Sales";
 import HeaderSubList from "./layout/Header/HeaderSubList";
 import HeaderSearchForm from "./layout/Header/HeaderSearchForm";
 import SortPopup from "./Catalog/SortPopup";
@@ -23,7 +22,7 @@ import HeaderBagIcon from '../Components/layout/Header/HeaderBagIcon';
 import Empty from '../Components/common/Empty';
 import CustomSelect from '../Components/common/CustomSelect';
 
-export { Header, Footer, MobMenu, TopSlider, Sales, HeaderSubList, 
+export { Header, Footer, MobMenu, TopSlider, HeaderSubList, 
   HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem, 
   ProductCard, Breadcrumbs, HeaderTop, HeaderMiddle, HeaderBottom, 
   ProductTabs, Features, Related, Loader, HeaderWishListIcon,

@@ -2,12 +2,10 @@ import { fetchItemsActionType, ProductType, ActionsTypes } from '../../types';
 
 export type stateType = {
   items: ProductType[],
-  isLoaded: boolean,
 }
 
 const initialState: stateType = {
   items: [],
-  isLoaded: false
 }
 
 const itemsReducer = (state = initialState, action: fetchItemsActionType ): stateType => {
@@ -15,7 +13,6 @@ const itemsReducer = (state = initialState, action: fetchItemsActionType ): stat
     case ActionsTypes.FETCH_PRODUCTS:
       return {
         ...state,
-        isLoaded: true,
         items: action.payload,
       };
     default:

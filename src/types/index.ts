@@ -38,7 +38,7 @@ export type SlideType = {
 
 export type CartItemType = {
   id: number;
-  colors: number[];
+  colors: string[];
   quintity: number;
   dimensions: {
     width: number;

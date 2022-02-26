@@ -46,7 +46,7 @@ const Cart: React.FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                   </p>
                 </div>
                 {cartItems && 
-                  cartItems.map(cartItem => {
+                  cartItems.forEach(cartItem => {
                     const currItem = items.find(item => item.id === cartItem.id);
                     if (currItem) {
                       return (
