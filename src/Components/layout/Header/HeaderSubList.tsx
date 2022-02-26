@@ -12,7 +12,7 @@ const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir }) => {
   
   return (
     <ul className="sub-list">
-      {items && items.map((item) => (
+      {items && items.map(item => (
         <li key={item.link} className="sub-list__item">
           <Link 
             to={`${parentDir}/${item.link}`} 

@@ -15,7 +15,7 @@ interface ISalesItemProps {
 }
 
 const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) => {
-  const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale } = product;
+  const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale, rating } = product;
 
   const dispatch = useDispatch();
   const router = useHistory();
@@ -52,16 +52,13 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
         </div>
       )}
       <button 
-        className={isFavorite ? "item-sales__like active" : "item-sales__like"} 
+        className={`item-sales__like ${isFavorite ? 'active' : ''}`} 
         onClick={onLikeProductClick}
         >
         </button>
       <div className="item-sales__box">
         <div className="item-sales__img">
-          <img 
-            src={baseDir + imageUrl} 
-            alt="furniture" 
-            />
+          <img src={baseDir + imageUrl} alt="furniture" />
         </div>
         <h5
           className="item-sales__title"
@@ -69,12 +66,11 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
           >
           {name}
         </h5>
-        <p className="item-sales__type">
-          {type}
-        </p>
+        <p className="item-sales__type">{type.label}</p>
         <div className="item-sales__price">
           <p className="item-sales__price-new">{priceNew} ₽</p>
-          <p className="item-sales__price-old">{priceOld && priceOld + " ₽"}</p>
+          <p className="item-sales__price-old">{!!priceOld && priceOld + " ₽"}</p>
+          {rating}
         </div>
         <div className="item-sales__bottom">
           <p className="item-sales__text">Размеры</p>

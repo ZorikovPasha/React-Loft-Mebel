@@ -6,7 +6,7 @@ interface ISortPopupProps {
 
 const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
   const [isSortPopupVisible, toggleSortPopupVisibility] = React.useState(false);
-  const [activeCat, setActiveCat] = React.useState<string | null>(null);
+  const [activeCat, setActiveCat] = React.useState<string>('asc');
 
   const popupRef = React.useRef(null);
 
@@ -56,7 +56,7 @@ const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
       onClick={onSortBtnClick} 
       ref={popupRef}
       >
-      Сортировать
+      Сортировать: <span className="controls__sort-choice">{items.find(item => item.value === activeCat)?.text}</span>
       {isSortPopupVisible && (
         <ul className="sort-list">
           {items.map((obj) => (

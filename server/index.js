@@ -10,11 +10,7 @@ app.use(cors());
 
 const start = async () => {
   try {
-    await mongoose.connect(
-      process.env.DB_CONNECTION,
-      {
-      useNewUrlParser: true,
-      }, 
+    await mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, 
       () => console.log('connected to database')
     )
 

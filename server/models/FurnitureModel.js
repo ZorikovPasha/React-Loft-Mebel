@@ -5,9 +5,12 @@ const furnitureSchema = mongoose.Schema({
     bigImageUrl: String,
     thumbsUrls: [String],
     name: String,
-    type: String,
-    priceOld: String,
-    priceNew: String,
+    type: {
+      label: String,
+      value: String
+    },
+    priceOld: Number,
+    priceNew: Number,
     dimensions: {
       width: Number,
       length: Number,
@@ -15,7 +18,10 @@ const furnitureSchema = mongoose.Schema({
     },
     colors: [String],
     rating: Number,
-    sale: String
+    sale: String,
+    room: String,
+    material: String,
+    brand: String
 });
 
 module.exports = mongoose.model('furniture', furnitureSchema);

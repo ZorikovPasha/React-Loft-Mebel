@@ -1,124 +1,162 @@
-import React, { useState, FC } from "react";
-import Select from 'react-select';
+import React, {FC } from "react";
+import { Formik, FieldArray } from 'formik';
+
+import { CustomSelect } from '../index';
+
+import { submitValuesType } from '../../types';
 
 interface IAsideProps {
   isAsideVisible: boolean;
   onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement>;
+  handleFiltersSubmit: (values: submitValuesType) => void;
 }
 
-const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick }) => {
-  const [isInput1Checked, toggleColor1] = useState(false);
-  const [isInput2Checked, toggleColor2] = useState(false);
-  const [isInput3Checked, toggleColor3] = useState(false);
-  const [isInput4Checked, toggleColor4] = useState(false);
-  const [isInput5Checked, toggleColor5] = useState(false);
-  const [isInput6Checked, toggleColor6] = useState(false);
-
-  const [isBrand1Checked, toggleBrand1] = useState(false);
-  const [isBrand2Checked, toggleBrand2] = useState(false);
-  const [isBrand3Checked, toggleBrand3] = useState(false);
-  const [isBrand4Checked, toggleBrand4] = useState(false);
-  const [isBrand5Checked, toggleBrand5] = useState(false);
-
+const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFiltersSubmit }) => {
   const roomSelectOptions = [
+    {value: "all", label: "Показать все"},
     {value: "living", label: "Гостинные"},
     {value: "kitchen", label: "Кухни"},
     {value: "bedroom", label: "Спальные"},
     {value: "children", label: "Детские"}
-  ]
+  ];
 
   const catSelectOptions = [
+    {value: "all", label: "Показать все"},
     {value: "soft", label: "Мягкая мебель"},
     {value: "hard", label: "Твердая мебель"},
     {value: "wood", label: "Деревянная мебель"},
-  ]
+  ];
 
   const furnitureSelectOptions = [
+    {value: "all", label: "Показать все"},
     {value: "coach", label: "Диваны"},
     {value: "bed", label: "Кровати"},
     {value: "table", label: "Столы"},
-  ]
+    {value: "chair", label: "Стулья"},
+    {value: "set", label: "Серванты"},
+    {value: "bedsideTables", label: "Комоды"},
+  ];
+
+  const furnitureBrandOptions = [
+    {value: "all", label: "Показать все"},
+    {value: "Шерона", label: "Шерона"},
+    {value: "Динс", label: "Динс"},
+    {value: "Taskany", label: "Taskany"},
+    {value: "Бенфлит", label: "Бенфлит"},
+    {value: "Тиффани", label: "Тиффани"},
+    {value: "Лайт", label: "Лайт"},
+    {value: "Вилли", label: "Вилли"},
+  ];
+
+  const colorsCategories = [
+    { id: "E94848", name: "E94848" },
+    { id: "43BF57", name: "43BF57" },
+    { id: "E4E4E4", name: "E4E4E4" },
+    { id: "3E3E3E", name: "3E3E3E" },
+    { id: "675A5A", name: "675A5A" },
+  ];
 
   return (
     <aside className={`catalog__aside aside ${isAsideVisible ? 'opened' : ''}`}>
       <div className={`aside__box ${isAsideVisible ? 'opened' : ''}`}>
-        <form className="aside__form" action="">
-          <div className="aside__filter filter">
-            <h6 className="filter__title">Раздел</h6>
-            <button className="aside__close" onClick={onAsideCloseClick}>
-            </button>
-            <Select options={roomSelectOptions} />
-            <Select options={catSelectOptions} />
-            <Select options={furnitureSelectOptions} />
-          </div>
+        <Formik initialValues={{
+          room: 'all',
+          material: 'all',
+          type: 'all',
+          colorsIds: [] as string[],
+          brandsIds: ['all']
+        }}
+        onSubmit={handleFiltersSubmit}
+        > 
+          {({ values, setFieldValue, handleSubmit }) => (
+            <form className="aside__form" onSubmit={handleSubmit}>
+              <div className="aside__filter filter">
+                <h6 className="filter__title">Раздел</h6>
+                <button className="aside__close" onClick={onAsideCloseClick} />
+                <CustomSelect
+                  value={values.room}
+                  options={roomSelectOptions}
+                  onChange={value => setFieldValue('room', value?.value)}
+                  />
+                <h6 className="filter__title">Материал Мебели</h6>
+                <CustomSelect
+                  value={values.material}
+                  options={catSelectOptions}
+                  onChange={value => setFieldValue('material', value?.value)}
+                  />
+                <h6 className="filter__title">Тип Мебели</h6>
+                <CustomSelect
+                  value={values.type}
+                  options={furnitureSelectOptions}
+                  onChange={value => setFieldValue('type', value?.value)}
+                  />
+              </div>
 
-          <div className="aside__filter filter">
-            <h6 className="filter__title">Цена</h6>
-            {/* <input className="filter__range" type="text" name="my_range" value="" data-type="double" data-min="0" data-max="120000" data-from="2000" data-to="102000" data-grid="false" /> */}
-          </div>
+              {/* <div className="aside__filter filter">
+                <h6 className="filter__title">Цена</h6>
+                <input className="filter__range" type="text" name="my_range" value="" data-type="double" data-min="0" data-max="120000" data-from="2000" data-to="102000" data-grid="false" />
+              </div> */}
 
-          <div className="aside__filter filter">
-            <h6 className="filter__title">Цвет</h6>
-            <div className="filter__colors colors">
-              <label className="colors__item" htmlFor="#E94848">
-                <input className="colors__checkbox-real" id="#E94848" type="checkbox" onChange={() => toggleColor1(!isInput1Checked)} checked={isInput1Checked}></input>
-                <span className="colors__checkbox-fake" style={{ backgroundColor: "E94848" }}></span>
-              </label>
-              <label className="colors__item" htmlFor="#43BF57">
-                <input className="colors__checkbox-real" id="#43BF57" type="checkbox" onChange={() => toggleColor2(!isInput2Checked)} checked={isInput2Checked}></input>
-                <span className="colors__checkbox-fake" style={{ backgroundColor: "#43BF57" }}></span>
-              </label>
-              <label className="colors__item" htmlFor="#E4E4E4">
-                <input className="colors__checkbox-real" id="#E4E4E4" type="checkbox" onChange={() => toggleColor3(!isInput3Checked)} checked={isInput3Checked}></input>
-                <span className="colors__checkbox-fake" style={{ backgroundColor: "#E4E4E4" }}></span>
-              </label>
-              <label className="colors__item" htmlFor="#3E3E3E">
-                <input className="colors__checkbox-real" id="#3E3E3E" type="checkbox" onChange={() => toggleColor4(!isInput4Checked)} checked={isInput4Checked}></input>
-                <span className="colors__checkbox-fake" style={{ backgroundColor: "#3E3E3E" }}></span>
-              </label>
-              <label className="colors__item" htmlFor="#675A5A">
-                <input className="colors__checkbox-real" id="#675A5A" type="checkbox" onChange={() => toggleColor5(!isInput5Checked)} checked={isInput5Checked}></input>
-                <span className="colors__checkbox-fake" style={{ backgroundColor: "#675A5A" }}></span>
-              </label>
-              <label className="colors__item" htmlFor="#864F4F">
-                <input className="colors__checkbox-real" id="#864F4F" type="checkbox" onChange={() => toggleColor6(!isInput6Checked)} checked={isInput6Checked}></input>
-                <span className="colors__checkbox-fake" style={{ backgroundColor: "#864F4F" }}></span>
-              </label>
-            </div>
-          </div>
+              <div className="aside__filter filter">
+                <h6 className="filter__title">Цвет</h6>
+                <FieldArray name="colorsIds" render={arrayHelpers => (
+                  <div className="filter__colors colors">
+                    {colorsCategories.map(color => (
+                      <label className="colors__item" key={color.id}>
+                        <input 
+                          className="colors__checkbox-real" 
+                          id={color.id}
+                          type="checkbox" 
+                          checked={values.colorsIds.includes(color.id)} 
+                          onChange={e => {
+                            if (e.target.checked) arrayHelpers.push(color.id)
+                            else {
+                              const idx = values.colorsIds.indexOf(color.id)
+                              arrayHelpers.remove(idx);
+                            }
+                          }} 
+                          />
+                        <span className="colors__checkbox-fake" style={{ backgroundColor: '#' + color.id }}></span>
+                      </label>
+                    ))}
+                  </div>
+                  )} />
+              </div>
 
-          <div className="aside__filter brands-filter">
-            <h6 className="filter__title">Бренд</h6>
-            <label className="brands-filter__label" htmlFor="Динс">
-              <input className="brands-filter__checkbox-real" id="Динс" type="checkbox" onChange={() => toggleBrand1(!isBrand1Checked)} checked={isBrand1Checked}></input>
-              <span className="brands-filter__checkbox-fake"></span>
-              <span className="brands-filter__text">Динс</span>
-            </label>
-            <label className="brands-filter__label" htmlFor="Кускен">
-              <input className="brands-filter__checkbox-real" id="Кускен" type="checkbox" onChange={() => toggleBrand2(!isBrand2Checked)} checked={isBrand2Checked}></input>
-              <span className="brands-filter__checkbox-fake"></span>
-              <span className="brands-filter__text">Кускен</span>
-            </label>
-            <label className="brands-filter__label" htmlFor="Эби">
-              <input className="brands-filter__checkbox-real" id="Эби" type="checkbox" onChange={() => toggleBrand3(!isBrand3Checked)} checked={isBrand3Checked}></input>
-              <span className="brands-filter__checkbox-fake"></span>
-              <span className="brands-filter__text">Эби</span>
-            </label>
-            <label className="brands-filter__label" htmlFor="Реджио">
-              <input className="brands-filter__checkbox-real" id="Реджио" type="checkbox" onChange={() => toggleBrand4(!isBrand4Checked)} checked={isBrand4Checked}></input>
-              <span className="brands-filter__checkbox-fake"></span>
-              <span className="brands-filter__text">Реджио</span>
-            </label>
-            <label className="brands-filter__label" htmlFor="Сайле">
-              <input className="brands-filter__checkbox-real" id="Сайле" type="checkbox" onChange={() => toggleBrand5(!isBrand5Checked)} checked={isBrand5Checked}></input>
-              <span className="brands-filter__checkbox-fake"></span>
-              <span className="brands-filter__text">Сайле</span>
-            </label>
-          </div>
-          <button className="aside__btn" type="submit">
-            Подобрать
-          </button>
-        </form>
+              <div className="aside__filter brands-filter">
+                <h6 className="filter__title">Бренд</h6>
+                <FieldArray name="brandsIds" render={arrayHelpers => (
+                  <div>
+                    {furnitureBrandOptions.map(brand => (
+                      <label className="brands-filter__label" key={brand.value}>
+                      <input 
+                        className="brands-filter__checkbox-real" 
+                        id={brand.value} 
+                        type="checkbox" 
+                        checked={values.brandsIds.includes(brand.value)} 
+                        onChange={e => {
+                          if (e.target.checked) { 
+                            arrayHelpers.push(brand.value) 
+                          } else {
+                            const idx = values.brandsIds.indexOf(brand.value)
+                            arrayHelpers.remove(idx);
+                          }
+                        }}
+                        />
+                      <span className="brands-filter__checkbox-fake"></span>
+                      <span className="brands-filter__text">{brand.label}</span>
+                    </label>
+                    ))}
+                  </div>
+                  )} />
+              </div>
+              <button className="aside__btn" type="submit">
+                Подобрать
+              </button>
+          </form>
+          )}
+        </Formik>
+
       </div>
     </aside>
   );

@@ -18,11 +18,10 @@ const HeaderTop: React.FC<IHeaderTopProps> = ({ items }) => {
         <div className="header__top-inner">
           <nav className="header__nav">
             <ul className="header__list">
-              {items.map((item, idx) => {
-                return (
+              {items.map((item, idx) => (
                   <li 
-                    key={`${item.name}_${idx}`} 
-                    className="header__list-item"
+                  key={`${item.name}_${idx}`} 
+                  className="header__list-item"
                     >
                     <Link 
                       to={item.link}
@@ -30,9 +29,8 @@ const HeaderTop: React.FC<IHeaderTopProps> = ({ items }) => {
                       >
                       {item.name}
                     </Link>
-                  </li>
-                );
-              })}
+                </li>
+              ))}
             </ul>
           </nav>
           <div className="header__connect">

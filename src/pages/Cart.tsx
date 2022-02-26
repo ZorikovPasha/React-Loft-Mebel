@@ -21,7 +21,7 @@ const Cart: React.FC<ICartProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const favorites = useSelector(getFavorites);
 
   React.useEffect(() => {
-    dispatch(fetchItemsThunkCreator());
+    dispatch(fetchItemsThunkCreator(''));
   }, [dispatch]);
 
   const breadcrumbs = useBreadcrumbs();

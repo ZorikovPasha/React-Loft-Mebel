@@ -32,14 +32,14 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         return {
           ...state,
           quintity: state.cartItems.reduce((partialSum, obj: CartItemType) => partialSum + obj.quintity, 0),
-          totalCost: state.cartItems.reduce((partialCost, obj: CartItemType) => partialCost + obj.quintity * Number(obj.price.split(' ').join('')), 0)
+          totalCost: state.cartItems.reduce((partialCost, obj: CartItemType) => partialCost + obj.quintity * obj.price, 0)
         }
       } else {
         return {
           ...state,
           cartItems: [...state.cartItems, action.payload],
           quintity: [...state.cartItems, action.payload].reduce((partialSum, a: CartItemType) => partialSum + a.quintity, 0),
-          totalCost: [...state.cartItems, action.payload].reduce((partialCost, item) => partialCost + item.quintity * Number(item.price.split(' ').join('')), 0)
+          totalCost: [...state.cartItems, action.payload].reduce((partialCost, item) => partialCost + item.quintity * item.price, 0)
         };
       }
     case ActionsTypes.REMOVE_CART_ITEM:
@@ -50,7 +50,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         ...state,
         cartItems: remainingCartItems,
         quintity: remainingQuintity,
-        totalCost: remainingCartItems.reduce((partialCost, item: CartItemType) => partialCost + item.quintity * Number(item.price.split(' ').join('')), 0)
+        totalCost: remainingCartItems.reduce((partialCost, item: CartItemType) => partialCost + item.quintity * item.price, 0)
       }
     default:
       return state;

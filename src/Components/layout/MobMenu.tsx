@@ -66,7 +66,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                 to={item.link} 
                 className="mob-menu__link" 
                 onClick={onMobMenuItemClick}
-              >
+                >
                 <span>
                   <img src={item.imgLink} alt="" />
                 </span>

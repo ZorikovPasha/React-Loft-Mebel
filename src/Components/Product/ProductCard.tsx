@@ -112,7 +112,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
               ref={(slider1: Slider) => setNav1(slider1)}
               {...slider1Settings}
               >
-              {thumbsUrls.map((url) => (
+              {thumbsUrls.map(url => (
                 <div 
                   className="product__slider-item" 
                   key={url}
@@ -146,7 +146,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
           <div className="product__info info">
             <div className="info__star"></div>
             <h1 className="info__title">{name}</h1>
-            <p className="info__category">{type}</p>
+            <p className="info__category">{type.label}</p>
             <form action="">
               <div className="info__shop shop">
                 <p className="shop__price">{priceNew} P</p>

@@ -44,10 +44,7 @@ const Footer: React.FC = () => {
             </div>
             <div className="footer__column footer__column--common">
               <div className="footer__logo">
-                <img 
-                  src={logo} 
-                  alt="logo" 
-                  />
+                <img src={logo} alt="logo" />
               </div>
               <p className="footer__address">г. Анапа, Анапское шоссе, 30 Ж/К Черное море</p>
             </div>

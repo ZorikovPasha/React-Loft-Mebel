@@ -26,8 +26,8 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
 
   const getTotalCost = React.useMemo(() => {
     return item.priceNew 
-    ? Number(item.priceNew.split(' ').join('')) * cartItem.quintity 
-    : Number(item.priceOld.split(' ').join('')) * cartItem.quintity
+    ? item.priceNew * cartItem.quintity
+    : item.priceOld * cartItem.quintity
   }, [item.priceNew, item.priceOld, cartItem.quintity]);
 
   return (

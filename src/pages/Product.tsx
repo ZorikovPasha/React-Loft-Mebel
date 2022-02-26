@@ -12,9 +12,7 @@ import { useLoading } from '../hooks/useLoading';
 
 import "../../node_modules/slick-carousel/slick/slick.css";
 
-interface IProductProps extends IPageProps {};
-
-const Product: React.FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+const Product: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
   const currentId = useSelector(getCurrentProductId);
   const items = useSelector(getProducts);
@@ -35,8 +33,7 @@ const Product: React.FC<IProductProps> = ({ isMobMenuOpen, setMobMenuOpen }) => 
         />
       <main className="main">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        {currentProduct && 
-          <ProductCard product={currentProduct} />}
+        {currentProduct && <ProductCard product={currentProduct} />}
         {currentProduct && <ProductTabs />}
 
         <section className="sales">

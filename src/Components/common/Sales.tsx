@@ -5,8 +5,7 @@ import { getFavorites, getProducts } from "../../redux/getters";
 import { fetchItemsThunkCreator } from "../../redux/actions/items";
 import { useLoading } from "../../hooks/useLoading";
 
-import { SalesItem } from "..";
-import Loader from "../common/Loader";
+import { SalesItem, Loader } from "../index";
 
 const Sales: React.FC = () => {
   const [isLoading, setLoading] = React.useState(false);

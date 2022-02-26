@@ -12,7 +12,7 @@ const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
 
   const onSearchValChange: React.ChangeEventHandler<HTMLInputElement> = (e): void => {
     setSearchValue(e.target.value);
-  }
+  };
 
   return (
     <form className="header__form" action="">
@@ -27,10 +27,7 @@ const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
         className="header__search" 
         type="submit"
         >
-        <img 
-          src={search} 
-          alt="search" 
-          />
+        <img src={search} alt="search" />
       </button>
     </form>
   );

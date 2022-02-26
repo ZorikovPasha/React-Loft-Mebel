@@ -1,4 +1,6 @@
 import React from "react";
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import { Header, Breadcrumbs } from "../Components";
 
@@ -8,41 +10,94 @@ import { useBreadcrumbs } from "../hooks/useBreadcrumbs";
 const Contacts: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const breadcrumbs = useBreadcrumbs();
 
+
+  const formSchema = yup.object().shape({
+    name: yup.string().required("Пожалуйста, заполните имя"),
+    email: yup.string().email('Введите, корректный email').required('Пожалуйста, заполните email'),
+    message: yup.string().required("Пожалуйста, напишите сообщение"),
+  })
+
   return (
     <>
-      <Header isMobMenuOpen={isMobMenuOpen} setMobMenuOpen={setMobMenuOpen} headerMiddleTall />
+      <Header 
+        isMobMenuOpen={isMobMenuOpen} 
+        setMobMenuOpen={setMobMenuOpen} 
+        headerMiddleTall 
+        />
       <main className="main">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-
         <section className="contacts">
           <div className="container">
             <h4 className="contacts__title">Свяжитесь с нами</h4>
             <div className="contacts__inner">
-              <form className="contacts__form" action="">
-                <div className="contacts__form-line">
-                  <label className="contacts__form-label">
-                    Ваше имя
-                    <input className="contacts__form-input" name="name" type="text" placeholder="Введите ваше имя" required />
-                  </label>
-                  <label className="contacts__form-label">
-                    Ваш e-mail
-                    <input className="contacts__form-input" name="email" type="text" placeholder="Введите ваш e-mail" required />
-                  </label>
-                </div>
-                <label className="contacts__form-label">
-                  Сообщение
-                  <textarea className="contacts__form-area" placeholder="Напишите ваше сообщение" required></textarea>
-                </label>
-                <div className="contacts__form-bottom">
-                  <label className="contacts__form-file form-file">
-                    <input className="form-file__real" type="file" />
-                    <span className="form-file__fake">Прикрепить файл</span>
-                  </label>
-                  <button className="contacts__form-btn" type="submit">
-                    Отправить
-                  </button>
-                </div>
-              </form>
+              <Formik 
+                initialValues={{ name: "", email: "", message: "" }}
+                validationSchema={formSchema}
+                onSubmit={(data) => console.log(data)}
+              >
+                {({ values, errors, touched, handleSubmit, handleChange, handleBlur }) => (
+                  <form className="contacts__form" onSubmit={handleSubmit}>
+                    {errors.name && touched.name && <p>
+                    {errors.name}
+                      </p>}
+                    <div className="contacts__form-line">
+                      <label className="contacts__form-label">
+                        Ваше имя
+                        <input 
+                          value={values.name}
+                          className="contacts__form-input" 
+                          name="name" 
+                          type="text" 
+                          placeholder="Введите ваше имя" 
+                          required 
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          />
+                      </label>
+                      {errors.email && touched.email && <p>
+                        {errors.email}
+                      </p>}
+                      <label className="contacts__form-label">
+                        Ваш e-mail
+                        <input 
+                          value={values.email}
+                          className="contacts__form-input" 
+                          name="email" 
+                          type="text" 
+                          placeholder="Введите ваш e-mail" 
+                          required 
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          />
+                      </label>
+                    </div>
+                    {errors.message && touched.message && 
+                      <p>
+                        {errors.message}
+                      </p>}
+                    <label className="contacts__form-label">
+                      Сообщение
+                      <textarea 
+                        value={values.message}
+                        className="contacts__form-area" 
+                        placeholder="Напишите ваше сообщение" 
+                        required
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        />
+                    </label>
+                    <div className="contacts__form-bottom">
+                      <label className="contacts__form-file form-file">
+                        <input className="form-file__real" type="file" />
+                        <span className="form-file__fake">Прикрепить файл</span>
+                      </label>
+                      <button className="contacts__form-btn" type="submit">
+                        Отправить
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </Formik>
               <div className="contacts__items">
                 <div className="contacts__line">
                   <a className="contacts__tel" href="tel:89648999119">

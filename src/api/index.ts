@@ -7,9 +7,9 @@ const http = async <T>(request: string): Promise<T[]> => {
   return await response.json();
 };
 
-export const getFurnitureItems = () => {
+export const getFurnitureItems = (queryParams: string) => {
   try {
-    return http<ProductType>('/api/furniture');
+    return http<ProductType>('/api/furniture' + queryParams);
   } catch(err) {
     console.log(err);
   }

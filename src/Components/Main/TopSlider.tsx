@@ -32,29 +32,28 @@ export type Text = {
   imageUrl: string;
 };
 
-const settings = {
-  fade: true,
-  infinite: true,
-  autoplay: true,
-  prevArrow: <SliderPrevArrow />,
-  nextArrow: <SliderNextArrow />,
-
-  responsive: [
-    {
-      breakpoint: 511,
-      settings: {
-        arrows: false,
-      },
-    },
-  ],
-};
-
 const TopSlider: React.FC = () => {
   const [slides, setSlides] = React.useState<SlideType[]>();
 
   React.useEffect(() => {
     getSlidesItems()?.then(slides => setSlides(slides));
   }, []);
+  
+  const settings = {
+    fade: true,
+    infinite: true,
+    autoplay: true,
+    prevArrow: <SliderPrevArrow />,
+    nextArrow: <SliderNextArrow />,
+    responsive: [
+      {
+        breakpoint: 511,
+        settings: {
+          arrows: false,
+        },
+      },
+    ],
+  };
   
   return (
     <Slider 
@@ -75,7 +74,7 @@ const TopSlider: React.FC = () => {
                 to="/catalog/kitchens"
                 >
                   Смотреть каталог
-                  </Link>
+              </Link>
             </div>
           </div>
         </div>
