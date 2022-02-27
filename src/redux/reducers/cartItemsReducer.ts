@@ -1,6 +1,7 @@
 import _ from "lodash";
 
-import { cartItemsActionType, CartItemType, ActionsTypes } from "../../types";
+import { cartItemsActionType, ActionsTypes } from "../../types/actionsTypes";
+import { CartItemType } from "../../types";
 
 export type stateType = {
   cartItems: CartItemType[],

@@ -1,13 +1,17 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Formik } from "formik";
 import * as yup from 'yup';
 
-import { Header } from '../Components';
+import { Header, ModalInfo } from '../Components';
 
 import { IPageProps } from "../types"; 
+import { register } from '../services/api';
 
 const SignUp: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
+  const history = useHistory();
+  const [modalSignUp, setModalSignUp] = React.useState(false);
   const initFormValues = {
     name: '',
     email: '',
@@ -24,8 +28,22 @@ const SignUp: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   });
 
 
-  const handleSubmit = ({ name, email, password }: typeof initFormValues) => {
-    console.log(name, email, password);
+  const handleSubmit = async ({ name, email, password }: typeof initFormValues) => {
+    const res = await register(name, email, password);
+
+    if (res.status === 200) {
+      document.body.classList.add("lock");
+      setModalSignUp(true);
+    }
+  };
+
+  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+    history.push({
+      pathname: '/login',
+    });
+    document.body.classList.remove("lock");
+
+    setModalSignUp(false);
   };
 
   return (
@@ -68,7 +86,7 @@ const SignUp: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                       <div className="form-block">
                         <p className="signup__form-label form-label">Электронная почта</p>
                         <input 
-                          type="password" 
+                          type="text" 
                           className={`signup__form-input form-input ${errors.email && touched.email ? 'form-input--error' : ''}`} 
                           value={values.email}
                           name="email" 
@@ -101,7 +119,7 @@ const SignUp: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                             </p>}
 
                       </div>
-                      <button className="signup__form-btn btn">Зарегистрироваться</button>
+                      <button type="submit" className="signup__form-btn btn">Зарегистрироваться</button>
                     </form>
                   )}
                 </ Formik>
@@ -109,6 +127,14 @@ const SignUp: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
             </div>
           </div>
       </main>
+      {modalSignUp && 
+        <ModalInfo 
+          hasButton={true}
+          title="Вы успешно зарегистрировались" 
+          text="Перейти ко входу.." 
+          onModalClose={onModalClose}
+          />
+        }
     </>
   )
 }

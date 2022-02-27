@@ -1,10 +1,11 @@
 import { ThunkAction } from 'redux-thunk';
 import { Dispatch } from 'redux';
 
-import { ActionsTypes, fetchItemsActionType, ProductType } from '../../types';
+import { ActionsTypes, fetchItemsActionType } from '../../types/actionsTypes';
+import { ProductType } from '../../types';
 import { stateType } from '../reducers/itemsReducer';
 
-import { getFurnitureItems } from '../../api';
+import { getFurnitureItems } from '../../services/api';
 
 export const fetchItemsThunkCreator = (queryParams: string): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {

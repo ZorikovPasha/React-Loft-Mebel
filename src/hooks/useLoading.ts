@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from "react-redux";
 import { ThunkAction } from 'redux-thunk';
 
-import { fetchItemsActionType } from '../types';
+import { fetchItemsActionType } from '../types/actionsTypes';
 import { stateType } from '../redux/reducers/itemsReducer';
 
 export const useLoading = (

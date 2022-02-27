@@ -11,7 +11,7 @@ const HeaderWishListIcon: React.FC = () => {
   const favorites = useSelector(getFavorites);
 
   return (
-    <Link to="/favorites" className={`"user-header__link ${favorites.length ? 'user-header__link--dot': ''}`}>
+    <Link to="/favorites" className={`user-header__link user-header__link--hover ${favorites.length ? 'user-header__link--dot': ''}`}>
       <img src={wishlist} alt="wishlist" />
     </Link>
   );

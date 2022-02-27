@@ -6,4 +6,5 @@ export const getQuintity = (state: RootState) => state.cartItems.quintity;
 export const getTotalCost = (state: RootState) => state.cartItems.totalCost;
 export const getFavorites = (state: RootState) => state.favorites.favorites;
 export const getCartItemsQuintity = (state: RootState) => state.cartItems.quintity;
+export const getIsAuth = (state: RootState) => state.auth.isAuth;
 

@@ -1,4 +1,4 @@
-import { favoritesActionType, ActionsTypes } from "../../types";
+import { favoritesActionType, ActionsTypes } from "../../types/actionsTypes";
 
 type stateType = {
   favorites: number[];

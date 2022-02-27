@@ -1,24 +1,37 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import * as yup from 'yup';
 import { Formik } from "formik";
+import { useDispatch } from 'react-redux';
 
-import { Header } from '../Components';
+import { authActionCreator } from '../redux/actions/authAction';
+
+import { Header, ModalInfo } from '../Components';
 
 import { IPageProps } from "../types"; 
+
+import { login } from '../services/api';
 
 import vk from '../images/vk.svg';
 import fb from '../images/fb.svg';
 import google from '../images/google.svg';
 
 const Login: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+  const dispatch = useDispatch();
+
+  const history = useHistory();
+
+  const [modalVisible, setModalVisible] = React.useState(false);
+
+  const loginErrorMessage = React.useRef('');
+
   const initFormValues = {
     email: '',
     password: '',
   };
 
   const formSchema = yup.object().shape({
-    name: yup.string().required("Пожалуйста, заполните имя"),
     email: yup.string().email('Введите, корректный email').required('Пожалуйста, заполните email'),
     password: yup.string()
       .required("Введите пароль")
@@ -26,8 +39,29 @@ const Login: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       .max(32, 'Пароль должен быть длиной не более 32 символов'),
   });
 
-  const handleSubmit = ({ email, password }: typeof initFormValues) => {
-    console.log(email, password);
+  const handleSubmit = async({ email, password }: typeof initFormValues) => {
+    const { token, message } = await login(email, password);
+    console.log('token', token);
+
+    if (message) {
+      loginErrorMessage.current = message;
+      document.body.classList.add("lock");
+      setModalVisible(true);
+    }
+
+    if (token) {
+      localStorage.setItem('token', token);
+      dispatch(authActionCreator(true));
+
+      history.push({
+        pathname: '/',
+      });
+    }
+  };
+
+  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+    setModalVisible(false);
+    document.body.classList.remove("lock");
   };
 
   return (
@@ -37,12 +71,12 @@ const Login: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         setMobMenuOpen={setMobMenuOpen}
         />
       <main className="main">
-      <div className="login">
+        <div className="login">
           <div className="container">
             <div className="login__inner">
               <h1 className="login__title">Авторизация</h1>
-
-                <Formik initialValues={initFormValues}
+                <Formik 
+                  initialValues={initFormValues}
                   validationSchema={formSchema}
                   onSubmit={handleSubmit}
                 > 
@@ -86,21 +120,21 @@ const Login: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
                       <div className="login__link-wrapper">
                         {/* <a href="restore-password.html" className="login__form-reminder">Забыли пароль?</a> */}
                       </div>
-                      <button className="login__form-btn btn">Войти</button>
+                      <button className="login__form-btn btn" type="submit">Войти</button>
                     </form>
                   )}
                 </ Formik>
               <p className="login__text">или авторизоваться через</p>
               <div className="login__socials">
-                <a href="/#" className="login__socials-link">
+                <button className="login__socials-link">
                   <img src={fb} alt="facebook icon" />
-                </a>
-                <a href="/#" className="login__socials-link">
+                </button>
+                <button  className="login__socials-link">
                   <img src={vk} alt="vkontacte icon" />
-                </a>
-                <a href="/#" className="login__socials-link">
+                </button>
+                <button className="login__socials-link">
                   <img src={google} alt="google icon" />
-                </a>
+                </button>
               </div>
             </div>
             <div className="login__bottom">
@@ -110,6 +144,13 @@ const Login: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
           </div>
         </div>
       </main>
+      { modalVisible && 
+        <ModalInfo 
+          title="Оошибка при логине"
+          text={loginErrorMessage.current} 
+          onModalClose={onModalClose}
+          />
+      }
     </>
   )
 };

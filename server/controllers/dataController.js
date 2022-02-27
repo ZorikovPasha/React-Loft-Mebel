@@ -35,7 +35,7 @@ class dataController {
 
       res.json(furnitureItems);
     } catch (e) {
-      ApiError.internal(res, e);
+      return ApiError.internal(res, e);
     }
   }
 
@@ -44,7 +44,7 @@ class dataController {
       const mobMenu = await MobMenu.find();
       res.json(mobMenu);
     } catch (err) {
-      ApiError.internal(res, err);
+      return ApiError.internal(res, err);
     }
   }
 
@@ -53,7 +53,7 @@ class dataController {
       const SlidesItems = await Slides.find();
       res.json(SlidesItems);
     } catch (err) {
-      ApiError.internal(res, err);
+      return ApiError.internal(res, err);
     }
   }
 }

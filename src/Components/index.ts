@@ -21,9 +21,10 @@ import HeaderWishListIcon from '../Components/layout/Header/HeaderWishListIcon';
 import HeaderBagIcon from '../Components/layout/Header/HeaderBagIcon';
 import Empty from '../Components/common/Empty';
 import CustomSelect from '../Components/common/CustomSelect';
+import ModalInfo from '../Components/common/ModalInfo';
 
 export { Header, Footer, MobMenu, TopSlider, HeaderSubList, 
   HeaderSearchForm, SortPopup, SalesItem, Aside, CartItem, 
   ProductCard, Breadcrumbs, HeaderTop, HeaderMiddle, HeaderBottom, 
   ProductTabs, Features, Related, Loader, HeaderWishListIcon,
-  HeaderBagIcon, Empty, CustomSelect };
+  HeaderBagIcon, Empty, CustomSelect, ModalInfo };

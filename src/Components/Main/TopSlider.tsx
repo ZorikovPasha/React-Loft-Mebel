@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
-import { getSlidesItems } from "../../api";
+import { getSlidesItems } from "../../services/api";
 
 import { SlideType } from '../../types';
 
@@ -58,7 +58,7 @@ const TopSlider: React.FC = () => {
   return (
     <Slider 
       {...settings} 
-      className={`top__slider ${slides?.length ? 'top__slider--fullsize': '' }`}
+      className={`top__slider ${!slides?.length ? 'top__slider--fullsize': '' }`}
       >
       {slides?.length && slides?.map((slide, idx) => (
         <div key={idx}>

@@ -1,9 +1,11 @@
 import React, { FC, MouseEventHandler } from 'react';
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 import { HeaderWishListIcon, HeaderBagIcon, HeaderSearchForm } from '../../index';
 
 import { IPageProps } from "../../../types";
+import { getIsAuth } from '../../../redux/getters';
 
 import logo from "../../../images/logo.svg";
 import profile from "../../../images/icons/profile.svg";
@@ -19,7 +21,14 @@ interface IHeaderMiddleProps extends IPageProps {
   items: ItemType[];
 };
 
-const HeaderMiddle: FC<IHeaderMiddleProps> = ({ headerMiddleTall, isMobMenuOpen, setMobMenuOpen, items }) => {
+const HeaderMiddle: FC<IHeaderMiddleProps> = ({ 
+  headerMiddleTall, 
+  isMobMenuOpen, 
+  setMobMenuOpen, 
+  items 
+}) => {
+  const isAuth = useSelector(getIsAuth);
+
   const menuBtnRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -94,7 +103,7 @@ return (
           <HeaderWishListIcon />
           <HeaderBagIcon />
           <Link 
-            to="/cart" 
+            to={isAuth ? '/profile' : '/login'} 
             className="user-header__link"
             >
             <img src={profile} alt="profile" />
@@ -134,8 +143,8 @@ return (
           <HeaderWishListIcon />
           <HeaderBagIcon />
           <Link 
-            to="/cart" 
-            className="user-header__link"
+            to={isAuth ? '/profile' : '/login'} 
+            className="user-header__link user-header__link--hover"
             >
             <img src={profile} alt="profile" />
           </Link>

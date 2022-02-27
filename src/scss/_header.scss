@@ -226,6 +226,7 @@
   // .user-header__link
 
   &__link {
+    transition: hover .2s;
   }
 
   &__link--dot {
@@ -242,6 +243,14 @@
       border-radius: 50%;
     }
   }
+
+  &__link--hover {
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
 
   &__link + &__link {
     margin-left: 25px;

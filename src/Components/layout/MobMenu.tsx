@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 
 import { mobMenuType } from "../../types";
-import { getMobMenuItems } from "../../api";
+import { getMobMenuItems } from "../../services/api";
 
 interface IMobMenuProps {
   isMobMenuOpen: Boolean;
