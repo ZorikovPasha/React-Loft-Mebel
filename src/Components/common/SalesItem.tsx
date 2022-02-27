@@ -4,7 +4,6 @@ import { useHistory } from "react-router";
 
 import { favoritesActionCreator } from "../../redux/actions/favorites";
 import { cartItemsActionCreator } from "../../redux/actions/cartItems";
-import { currentProductActionCreator } from "../../redux/actions/currentProduct";
 
 import { ProductType } from "../../types";
 
@@ -15,7 +14,7 @@ interface ISalesItemProps {
 }
 
 const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) => {
-  const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale } = product;
+  const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale, colors } = product;
 
   const dispatch = useDispatch();
   const router = useHistory();
@@ -25,14 +24,13 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
   };
 
   const onProductLinkClick = (): void => {
-    dispatch(currentProductActionCreator(id));
     router.push(`/products/${id}`);
   }
 
   const onAddToCartClick = (): void => {
     dispatch(cartItemsActionCreator({
         id: id,
-        colors: [1, 0, 0],
+        colors: [colors[0]],
         quintity: 1,
         dimensions: {
           width: dimensions.width,
@@ -52,16 +50,13 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
         </div>
       )}
       <button 
-        className={isFavorite ? "item-sales__like active" : "item-sales__like"} 
+        className={`item-sales__like ${isFavorite ? 'active' : ''}`} 
         onClick={onLikeProductClick}
         >
         </button>
       <div className="item-sales__box">
         <div className="item-sales__img">
-          <img 
-            src={baseDir + imageUrl} 
-            alt="furniture" 
-            />
+          <img src={baseDir + imageUrl} alt="furniture" />
         </div>
         <h5
           className="item-sales__title"
@@ -69,12 +64,10 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
           >
           {name}
         </h5>
-        <p className="item-sales__type">
-          {type}
-        </p>
+        <p className="item-sales__type">{type.label}</p>
         <div className="item-sales__price">
           <p className="item-sales__price-new">{priceNew} ₽</p>
-          <p className="item-sales__price-old">{priceOld && priceOld + " ₽"}</p>
+          <p className="item-sales__price-old">{!!priceOld && priceOld + " ₽"}</p>
         </div>
         <div className="item-sales__bottom">
           <p className="item-sales__text">Размеры</p>

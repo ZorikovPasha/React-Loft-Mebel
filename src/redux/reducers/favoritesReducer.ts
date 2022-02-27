@@ -20,9 +20,7 @@ export const favoritesReducer = (state = initialState, action: favoritesActionTy
       } else {
         return {
           ...state,
-          favorites: state.favorites.length 
-            ? [...state.favorites, action.payload] 
-            : [...state.favorites, action.payload],
+          favorites: [...state.favorites, action.payload]
         };
       }
     default:

@@ -5,9 +5,6 @@
 @import "_header.scss";
 @import "_footer.scss";
 
-@import "_loader.scss";
-@import "_animate.scss";
-
 @import "main.scss";
 @import "home.scss";
 @import "cart.scss";
@@ -16,3 +13,9 @@
 @import "product.scss";
 @import "about.scss";
 @import "contacts.scss";
+@import "login.scss";
+@import "signup.scss";
+
+@import "_loader.scss";
+@import "_form.scss";
+@import "_animate.scss";

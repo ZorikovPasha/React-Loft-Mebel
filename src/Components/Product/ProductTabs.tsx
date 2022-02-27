@@ -38,6 +38,7 @@ const ProductTabs: React.FC = () => {
   };
 
   const onTabClick: MouseEventHandler<HTMLAnchorElement> = (e: any) => {
+    e.preventDefault();
     setActiveTab(Number(e.target.dataset.index));
   };
 
@@ -72,9 +73,10 @@ const ProductTabs: React.FC = () => {
           <div className="product-tabs__toggle">
             {Object.entries(tabsContents)
               .map((tab, idx) => (
-                <a 
+                <a
                   className={`product-tabs__title ${activeTab === idx ? 'active' : ''}`}
                   key={tab[0]}
+                  href="/#"
                   data-index={idx}
                   onClick={onTabClick}
                   >

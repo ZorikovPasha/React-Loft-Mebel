@@ -1,12 +1,12 @@
 import React from "react";
 
 interface ISortPopupProps {
-  onSortTypeClick: (cat: string) => void
+  onSelectSortType: (cat: string) => void
 }
 
-const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
+const SortPopup: React.FC<ISortPopupProps> = ({ onSelectSortType }) => {
   const [isSortPopupVisible, toggleSortPopupVisibility] = React.useState(false);
-  const [activeCat, setActiveCat] = React.useState<string | null>(null);
+  const [activeCat, setActiveCat] = React.useState<string>('asc');
 
   const popupRef = React.useRef(null);
 
@@ -18,7 +18,7 @@ const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
     setActiveCat(e.target.attributes.value.textContent);
     toggleSortPopupVisibility(false);
 
-    onSortTypeClick(e.target.attributes.value.textContent);
+    onSelectSortType(e.target.attributes.value.textContent);
   };
 
   const handleOutsidePopupClick = React.useCallback((e: any): void => {
@@ -56,7 +56,7 @@ const SortPopup: React.FC<ISortPopupProps> = ({ onSortTypeClick }) => {
       onClick={onSortBtnClick} 
       ref={popupRef}
       >
-      Сортировать
+      Сортировать: <span className="controls__sort-choice">{items.find(item => item.value === activeCat)?.text}</span>
       {isSortPopupVisible && (
         <ul className="sort-list">
           {items.map((obj) => (

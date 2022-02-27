@@ -7,9 +7,6 @@ export enum ActionsTypes {
   REMOVE_CART_ITEM = "REMOVE_CART_ITEM",
   CALC_TOTAL_COST = "CALC_TOTAL_COST",
   CURRENT_PRODUCT = "CURRENT_PRODUCT",
-  SORT_ASC = 'SORT_ASC',
-  SORT_DESC = 'SORT_DESC',
-  SORT_POP = 'SORT_POP'
 }
 
 export type ProductType = {
@@ -18,13 +15,19 @@ export type ProductType = {
   bigImageUrl: string;
   thumbsUrls: string[];
   name: string;
-  type: string;
-  priceOld: string;
-  priceNew: string;
+  type: {
+    label: string,
+    value: string
+  },
+  priceOld: number;
+  priceNew: number;
   dimensions: { width: number, length: number, height: number };
   colors: string[];
   rating: number;
   sale: string;
+  room: string,
+  material: string,
+  brand: string
 }
 
 export type SlideType = {
@@ -35,14 +38,14 @@ export type SlideType = {
 
 export type CartItemType = {
   id: number;
-  colors: number[];
+  colors: string[];
   quintity: number;
   dimensions: {
     width: number;
     length: number;
     height: number;
   };
-  price: string;
+  price: number;
 }
 
 type ListItemType = {
@@ -69,13 +72,17 @@ export type mobMenuType = {
   body: mobMenuItemType[];
 };
 
+export type submitValuesType = {
+  brandsIds: string[], 
+  colorsIds: string[], 
+  material: string, 
+  room: string, 
+  type: string
+}
+
 export type fetchItemsActionType = {
   type: ActionsTypes.FETCH_PRODUCTS;
   payload: ProductType[];
-};
-
-export type sortItemsActionType = {
-  type: ActionsTypes.SORT_ASC | ActionsTypes.SORT_DESC | ActionsTypes.SORT_POP;
 };
 
 export type fetchSlidesActionType = {

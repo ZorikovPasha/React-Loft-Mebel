@@ -1,13 +1,14 @@
-import React, { MouseEventHandler, useRef, useState } from "react";
+import React from "react";
 import Slider, { Settings } from "react-slick";
 import { useDispatch } from "react-redux";
-import Select from 'react-select';
+import { Formik } from "formik";
 
 import AddToFavorite from "../common/AddToFavorite";
 
 import { cartItemsActionCreator } from "../../redux/actions/cartItems";
 
 import { ProductType } from "../../types";
+import { CustomSelect } from "..";
 
 interface IProductCardProps {
   product: ProductType;
@@ -60,41 +61,33 @@ type ColorOptionType = {
   label: string
 };
 
+type submitValuesType = {
+  quintity: string;
+  color: string;
+  dimensions: string;
+};
+
 
 const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product;
 
   const dispatch = useDispatch();
 
-  const [nav1, setNav1] = useState<Slider>();
-  const [nav2, setNav2] = useState<Slider>();
-
-  const selectQuintityRef = useRef<HTMLSelectElement>(null);
-  const selectColorRef = useRef<HTMLSelectElement>(null);
+  const [nav1, setNav1] = React.useState<Slider>();
+  const [nav2, setNav2] = React.useState<Slider>();
 
   const colorsPrepared: ColorOptionType[] = [];
   colors.forEach((color, idx) => colorsPrepared[idx] = {value: color, label: color} );
 
-  const onBuyClick: MouseEventHandler = (e): void => {
-    e.preventDefault();
-    const productColors: number[] = [];
-
-    colors.forEach((_, index) => {
-      if (selectColorRef?.current?.selectedIndex === index) {
-        productColors.push(1);
-      } else {
-        productColors.push(0);
-      }
-    });
-
+  const handleSubmit = ({ quintity, color, dimensions }: submitValuesType) => {
     dispatch(cartItemsActionCreator({
         id: id,
-        colors: [...productColors],
-        quintity: Number(selectQuintityRef?.current?.options[selectQuintityRef.current.selectedIndex].value),
+        colors: [color],
+        quintity: Number(quintity), 
         dimensions: {
-          width: dimensions.width,
-          length: dimensions.length,
-          height: dimensions.height,
+          width: parseInt(dimensions.split('×')[0]),
+          length: parseInt(dimensions.split('×')[1]),
+          height: parseInt(dimensions.split('×')[2]),
         },
         price: priceNew,
       })
@@ -112,15 +105,9 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
               ref={(slider1: Slider) => setNav1(slider1)}
               {...slider1Settings}
               >
-              {thumbsUrls.map((url) => (
-                <div 
-                  className="product__slider-item" 
-                  key={url}
-                  >
-                  <img 
-                    src={'../../../' + imageUrl} 
-                    alt="furniture" 
-                    />
+              {thumbsUrls.map(url => (
+                <div className="product__slider-item" key={url}>
+                  <img src={'../../../' + imageUrl} alt="furniture" />
                 </div>
               ))}
             </Slider>
@@ -131,14 +118,8 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
               {...slider2Settings}
               >
               {thumbsUrls.map((url) => (
-                <div 
-                  className="product__thumb" 
-                  key={url}
-                  >
-                  <img 
-                    src={'../../../' + imageUrl} 
-                    alt="furniture thumb" 
-                    />
+                <div className="product__thumb" key={url}>
+                  <img src={'../../../' + imageUrl} alt="furniture thumb" />
                 </div>
               ))}
             </Slider>
@@ -146,37 +127,58 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
           <div className="product__info info">
             <div className="info__star"></div>
             <h1 className="info__title">{name}</h1>
-            <p className="info__category">{type}</p>
-            <form action="">
-              <div className="info__shop shop">
-                <p className="shop__price">{priceNew} P</p>
-                <button 
-                  className="shop__btn" 
-                  type="submit" 
-                  onClick={onBuyClick}
-                  >
-                    Купить
-                </button>
-                <AddToFavorite id={id}/>
-              </div>
-              <div className="info__features features">
-                <div className="features__col features__col--color">
-                  <p className="features__title">Цвет</p>
-                  <Select options={colorsPrepared} />
-                </div>
-                <div className="features__col features__col--quintity">
-                  <p className="features__title">Количество</p>
-                  <Select options={[{ value: 1, label: 1 }, { value: 2, label: 2 }, { value: 3, label: 3 }, { value: 4, label: 4 } ]} />
-                </div>
-                <div className="features__col features__col--size">
-                  <p className="features__title">Размер (Д × Ш × В)</p>
-                  <Select options={[ 
-                    {value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
-                    label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`
-                  }]}/>
-                </div>
-              </div>
-            </form>
+            <p className="info__category">{type.label}</p>
+
+            <Formik initialValues={{
+              quintity: '1',
+              color: colorsPrepared[0].value,
+              dimensions: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
+              }}
+              onSubmit={handleSubmit}
+            > 
+              {({ values, setFieldValue, handleSubmit }) => (
+                <form action="" onSubmit={handleSubmit}>
+                  <div className="info__shop shop">
+                    <p className="shop__price">{priceNew} P</p>
+                    <button 
+                      className="shop__btn" 
+                      type="submit" 
+                      >
+                        Купить
+                    </button>
+                    <AddToFavorite id={id}/>
+                  </div>
+                  <div className="info__features features">
+                    <div className="features__col features__col--color">
+                      <p className="features__title">Цвет</p>
+                      <CustomSelect
+                        value={values.color}
+                        options={colorsPrepared}
+                        onChange={value => setFieldValue('color', value?.value)}
+                        />
+                    </div>
+                    <div className="features__col features__col--quintity">
+                      <p className="features__title">Количество</p>
+                      <CustomSelect
+                        value={values.quintity}
+                        options={[{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }, { value: "4", label: "4" } ]}
+                        onChange={value => setFieldValue('quintity', value?.value)}
+                        />
+                    </div>
+                    <div className="features__col features__col--size">
+                      <p className="features__title">Размер (Д × Ш × В)</p>
+                      <CustomSelect
+                        value={values.dimensions}
+                        options={[ 
+                          { value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
+                          label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM` }]}
+                        onChange={value => setFieldValue('dimensions', value?.value)}
+                        />
+                    </div>
+                  </div>
+                </form>
+              )}
+            </Formik>
             <p className="info__text-title">Описание</p>
             <p className="info__text">
               Лаконичные линии и простые формы, безупречный стиль и индивидуальность – все это диван «Динс». 

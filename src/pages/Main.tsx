@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { Header, TopSlider, Sales } from "../Components";
+import { Header, TopSlider } from "../Components";
 import { IPageProps } from "../types";
 
 import "../scss/style.scss";
@@ -65,7 +65,6 @@ const Main: React.FC<IMainProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
               </div>
             </div>
           </div>
-          <Sales />
         </div>
       </main>
     </>

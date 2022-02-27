@@ -13,7 +13,11 @@ import benefit_4 from "../images/benefits/4.svg";
 const About: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   return (
     <>
-      <Header isMobMenuOpen={isMobMenuOpen} setMobMenuOpen={setMobMenuOpen} headerMiddleTall />
+      <Header 
+        isMobMenuOpen={isMobMenuOpen} 
+        setMobMenuOpen={setMobMenuOpen} 
+        headerMiddleTall 
+        />
       <main className="main">
         <section className="about-top">
           <div className="about-top__container">

@@ -3,18 +3,21 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv/config');
 
+const dataRouter = require('./routes/dataRouter');
+const authRouter = require('./routes/authRouter');
+
 const PORT = process.env.PORT ?? 5000;
 const app = express();
 
 app.use(cors());
+app.use(express.json());
+
+app.use('/auth', authRouter);
+app.use('/api', dataRouter);
 
 const start = async () => {
   try {
-    await mongoose.connect(
-      process.env.DB_CONNECTION,
-      {
-      useNewUrlParser: true,
-      }, 
+    await mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true }, 
       () => console.log('connected to database')
     )
 
@@ -27,12 +30,3 @@ const start = async () => {
   }
 };
 start();
-
-const furnitureRoute = require('./routes/furniture');
-const slidesRoute = require('./routes/slider');
-const mobMenuRoute = require('./routes/mobMenu');
-
-
-app.use('/api/furniture', furnitureRoute)
-app.use('/api/slides', slidesRoute)
-app.use('/api/mobMenu', mobMenuRoute)

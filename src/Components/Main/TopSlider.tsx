@@ -32,23 +32,6 @@ export type Text = {
   imageUrl: string;
 };
 
-const settings = {
-  fade: true,
-  infinite: true,
-  autoplay: true,
-  prevArrow: <SliderPrevArrow />,
-  nextArrow: <SliderNextArrow />,
-
-  responsive: [
-    {
-      breakpoint: 511,
-      settings: {
-        arrows: false,
-      },
-    },
-  ],
-};
-
 const TopSlider: React.FC = () => {
   const [slides, setSlides] = React.useState<SlideType[]>();
 
@@ -56,12 +39,28 @@ const TopSlider: React.FC = () => {
     getSlidesItems()?.then(slides => setSlides(slides));
   }, []);
   
+  const settings = {
+    fade: true,
+    infinite: true,
+    autoplay: true,
+    prevArrow: <SliderPrevArrow />,
+    nextArrow: <SliderNextArrow />,
+    responsive: [
+      {
+        breakpoint: 511,
+        settings: {
+          arrows: false,
+        },
+      },
+    ],
+  };
+  
   return (
     <Slider 
       {...settings} 
-      className="top__slider"
+      className={`top__slider ${slides?.length ? 'top__slider--fullsize': '' }`}
       >
-      {slides && slides.map((slide, idx) => (
+      {slides?.length && slides?.map((slide, idx) => (
         <div key={idx}>
           <div 
             className="top__slider-item" 
@@ -75,7 +74,7 @@ const TopSlider: React.FC = () => {
                 to="/catalog/kitchens"
                 >
                   Смотреть каталог
-                  </Link>
+              </Link>
             </div>
           </div>
         </div>

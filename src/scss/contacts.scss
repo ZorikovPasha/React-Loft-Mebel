@@ -1,5 +1,4 @@
 .contacts {
-
   padding: 20px 0 70px;
 
   // .contacts__title
@@ -22,12 +21,23 @@
     max-width: 457px;
   }
 
+  &__form-block {
+    position: relative;
+    padding-top: 15px;
+  }
   // .contacts__form-line
 
   &__form-line {
     display: flex;
     justify-content: space-between;
+
     margin-bottom: 10px;
+  }
+
+  &__form-error {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   // .contacts__form-label
@@ -63,7 +73,7 @@
     }
   }
 
-  &__form-label + &__form-label {
+  &__form-block + &__form-block {
     margin-left: 10px;
   }
 
@@ -265,10 +275,10 @@
   .contacts__form-line {
     flex-direction: column;
   }
-  .contacts__form-label {
+  .contacts__form-block {
     width: 100%;
   }
-  .contacts__form-label + .contacts__form-label {
+  .contacts__form-block + .contacts__form-block {
     margin-left: 0;
     margin-top: 15px;
   }
