@@ -1,24 +1,14 @@
 import React from "react";
 
-import { Header } from "../Components";
-
-import { IPageProps } from "../types";
-
 import topImg from "../images/about-top.png";
 import benefit_1 from "../images/benefits/1.svg";
 import benefit_2 from "../images/benefits/2.svg";
 import benefit_3 from "../images/benefits/3.svg";
 import benefit_4 from "../images/benefits/4.svg";
 
-const About: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+const About: React.FC = () => {
   return (
     <>
-      <Header 
-        isMobMenuOpen={isMobMenuOpen} 
-        setMobMenuOpen={setMobMenuOpen} 
-        headerMiddleTall 
-        />
-      <main className="main">
         <section className="about-top">
           <div className="about-top__container">
             <div className="container">
@@ -147,7 +137,6 @@ const About: React.FC<IPageProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
             </p>
           </div>
         </div>
-      </main>
     </>
   );
 };

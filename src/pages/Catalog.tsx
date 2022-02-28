@@ -2,18 +2,15 @@ import React, { FC, MouseEventHandler } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
 
-import { Header, Aside, SortPopup, SalesItem, Breadcrumbs, Loader, Empty } from "../Components";
-
+import { Aside, SortPopup, SalesItem, Breadcrumbs, Loader, Empty } from "../Components";
 import { fetchItemsThunkCreator } from "../redux/actions/items";
 import { getFavorites, getProducts } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 import { useLoading } from '../hooks/useLoading';
+import { submitValuesType } from "../types";
 
-import { IPageProps, submitValuesType } from "../types";
 
-interface ICatalogProps extends IPageProps {};
-
-const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+const Catalog: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -114,54 +111,47 @@ const Catalog: FC<ICatalogProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
   return (
     <>
-      <Header 
-        isMobMenuOpen={isMobMenuOpen}
-        setMobMenuOpen={setMobMenuOpen}
-        headerMiddleTall 
-      />
-      <main className="main">
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <section className="catalog">
-          <div className="container">
-            <div className="catalog__inner">
-              {<Aside 
-                isAsideVisible={isAsideVisible}
-                onAsideCloseClick={onAsideCloseClick}
-                handleFiltersSubmit={handleFiltersSubmit}
-                />}
-              <div className="catalog__body">
-                <div className="catalog__controls controls">
-                  <button 
-                    className="controls__toggle-aside" 
-                    onClick={onBtnClick} 
-                    ref={asideToggleRef}
-                    >
-                    Фильтр
-                  </button>
-                  <SortPopup onSelectSortType={onSelectSortType} />
-                </div>
-                {
-                  isLoading 
-                  ? <Loader />
-                  : 
-                    products.length 
-                      ? <div className="catalog__items">
-                          {products.map(product => (
-                            <SalesItem 
-                              key={product.id} 
-                              product={product}
-                              baseDir={'../../'}
-                              isFavorite={favorites.includes(product.id)}
-                              />
-                          ))}
-                        </div>
-                      : <Empty text="Ничего не найдено"/>
-                  }
+      <Breadcrumbs breadcrumbs={breadcrumbs} />
+      <section className="catalog">
+        <div className="container">
+          <div className="catalog__inner">
+            {<Aside 
+              isAsideVisible={isAsideVisible}
+              onAsideCloseClick={onAsideCloseClick}
+              handleFiltersSubmit={handleFiltersSubmit}
+              />}
+            <div className="catalog__body">
+              <div className="catalog__controls controls">
+                <button 
+                  className="controls__toggle-aside" 
+                  onClick={onBtnClick} 
+                  ref={asideToggleRef}
+                  >
+                  Фильтр
+                </button>
+                <SortPopup onSelectSortType={onSelectSortType} />
               </div>
+              {
+                isLoading 
+                ? <Loader />
+                : 
+                  products.length 
+                    ? <div className="catalog__items">
+                        {products.map(product => (
+                          <SalesItem 
+                            key={product.id} 
+                            product={product}
+                            baseDir={'../../'}
+                            isFavorite={favorites.includes(product.id)}
+                            />
+                        ))}
+                      </div>
+                    : <Empty text="Ничего не найдено"/>
+                }
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
     </>
   );
 };

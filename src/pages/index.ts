@@ -7,6 +7,8 @@ import About from "./About";
 import Contacts from "./Contacts";
 import SignUp from "./SignUp";
 import Login from "./Login";
+import Profile from "./Profile";
 
 export { Main, Catalog, Cart, Product, 
-  Favorites, About, Contacts, SignUp, Login };
+  Favorites, About, Contacts, SignUp, Login,
+  Profile };

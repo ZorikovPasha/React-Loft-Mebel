@@ -1,0 +1,416 @@
+.profile {
+
+  padding: 20px 0 170px;
+
+  // .profile__top
+
+  &__top {
+    margin-bottom: 42px;
+  }
+
+  // .profile__names
+
+  &__names {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  // .profile__title
+
+  &__heading {
+    font-weight: 400;
+    margin-right: auto;
+  }
+
+  &__title {
+    font-weight: 400;
+    margin-bottom: 30px;
+  }
+
+
+  // .profile__total
+
+  &__total {
+    font-size: 12px;
+    line-height: 14px;
+    margin-right: 20px;
+
+    span {
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 14px;
+    }
+  }
+
+  // .profile__rules
+
+  &__rules {
+    font-size: 12px;
+    line-height: 14px;
+    color: #245462;
+  }
+
+  // .profile__terms
+
+  &__terms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F8F8F8;
+    padding: 16px;
+  }
+
+  // .profile__term
+
+  &__term {
+    display: flex;
+    align-items: center;
+  }
+
+  &__term + &__term {
+    margin-left: 58px;
+  }
+
+  // .profile__term-text
+
+  &__term-text {
+    font-size: 14px;
+    line-height: 130%;
+    margin-left: 15px;
+
+  }
+
+  // .profile__body
+
+  &__body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  // .profile__box
+
+  &__box {
+    min-width: 40%;
+  }
+
+
+  // .profile__form
+
+  &__form {
+  }
+
+  &__form-block {
+    margin-bottom: 20px;
+  }
+
+  // .profile__form-line
+
+  &__form-line {
+    display: flex;
+    justify-content: space-between;
+
+    & > .profile__form-label {
+      width: calc( (100% - 10px) / 2);
+    }
+  }
+
+  // .profile__form-label
+
+  &__form-label {
+    font-size: 12px;
+    line-height: 14px;
+    color: #969696;
+    display: block;
+    margin-bottom: 10px;
+
+    &.city {
+      width: 207px;
+    }
+
+    &.wide {
+      width: 100%;
+    }
+    &.house {
+      width: 80px;
+      margin-right: 10px;
+    }
+    &.apartment {
+      width: 117px;
+      margin-right: auto;
+    }
+  }
+
+  // .profile__form-input
+
+  &__form-input {
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    background: #FCFCFC;
+    box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.07);
+    padding: 12px;
+    color: #686868;
+    border: none;
+
+    &,
+    &::placeholder {
+      font-family: 'Roboto', sans-serif;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 14px;
+    }
+
+    &::placeholder {
+      color: #969696;
+    }
+  }
+
+  // .profile__form-btn
+
+  &__form-btn {
+    background: #245462;
+    font-size: 13px;
+    line-height: 15px;
+    color: #FFFFFF;
+    margin-top: 20px;
+    margin-left: auto;
+    padding: 12px 20px;
+  }
+
+  // .profile__orders
+
+  &__orders {
+    width: calc( 100% - 320px - 35px );
+    margin-left: 30px;
+
+  }
+}
+
+.orders {
+
+  
+  // .orders__items
+
+  &__items {
+    display: grid;
+    grid-template-columns: minmax(auto, 346px) minmax(66px, auto ) minmax(15%, auto) auto;
+    grid-gap: 1px;
+    margin-bottom: 20px;
+    background-color: #f3f3f3;
+    border: 1px solid #f3f3f3;
+  }
+
+  // .orders__name
+
+  &__name {
+    display: flex;
+    align-items: center;
+    background: #FFFFFF;
+    font-size: 12px;
+    line-height: 147.69%;
+    color: $text;
+    padding: 25px 5px 25px 15px;
+
+    img {
+      display: inline-block;
+      margin-right: 15px;
+    }
+
+    &.heading {
+      padding: 11px 5px 11px 15px;
+      color: #686868;
+    }
+  }
+
+  // .orders__cost
+
+  &__cost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    font-size: 12px;
+    line-height: 147.69%;
+    color: #686868;
+    padding: 0 5px;
+    text-align: center;
+
+    &.heading {
+      padding: 11px 0;
+      color: #686868;
+    }
+  }
+
+  // .orders__date
+
+  &__date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    font-size: 12px;
+    line-height: 147.69%;
+    color: #686868;
+    padding: 0 5px;
+    text-align: center;
+
+    &.heading {
+      padding: 11px 0;
+      color: #686868;
+    }
+  }
+
+  // .orders__status
+
+  &__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    font-size: 12px;
+    line-height: 147.69%;
+    color: #686868;
+    text-align: center;
+    padding: 0 5px;
+
+    &.heading {
+      padding: 11px 0;
+      color: #686868;
+    }
+  }
+
+  // .orders__all
+
+  &__all {
+    font-size: 12px;
+    line-height: 14px;
+    color: #245462;
+    text-align: right;
+  }
+}
+
+
+
+
+@media (max-width:992px) {
+  .profile__box {
+    min-width: 320px;
+  }
+}
+
+@media (max-width:810px) {
+  .profile {
+    padding-bottom: 70px;
+  }
+  .profile__body {
+    flex-direction: column;
+  }
+  .profile__box {
+    margin-left: 30px;
+    margin-bottom: 40px;
+  }
+  .profile__orders {
+    width: auto;
+    flex-grow: 1;
+  }
+}
+
+@media (max-width:766px) {
+  .profile__terms {
+    flex-direction: column;
+  }
+  .profile__term + .profile__term {
+    margin-left: 0;
+    margin-top: 15px;
+  }
+  .profile__names-right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .profile__names {
+    flex-wrap: wrap;
+  }
+  .profile__heading {
+    margin-bottom: 15px;
+  }
+  .profile__terms {
+    padding: 16px 0;
+  }
+}
+
+@media (max-width:510px) {
+  .profile__box {
+    min-width: auto;
+    margin-left: 0;
+  }
+  .profile__orders {
+    margin-left: 0;
+  }
+
+  .orders__items {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: transparent;
+    border: none;
+  }
+  .orders__name.heading {
+    display: none;
+  }
+
+  .orders__cost.heading {
+    display: none;
+
+  }
+
+  .orders__date.heading {
+    display: none;
+
+  }
+
+  .orders__status.heading {
+    display: none;
+
+  }
+  .orders__name {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .orders__date,
+  .orders__cost,
+  .orders__status {
+    width: 32%;
+    display: block;
+    white-space: nowrap;
+    text-align: left;
+    font-size: 10px;
+    line-height: 147.69%;
+    background: #F3F3F3;
+  }
+
+  .orders__date::before {
+    content: 'Дата';
+    margin-right: 4px;
+  }
+  .orders__cost::before {
+    content: 'Цена';
+    margin-right: 4px;
+
+  }
+  .orders__status::before {
+    content: 'Статус';
+    margin-right: 4px;
+
+  }
+}
+
+@media (max-width:450px) {
+  .profile__total,
+  .profile__rules {
+    max-width: 106px;
+  }
+}

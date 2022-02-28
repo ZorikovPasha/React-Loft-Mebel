@@ -72,3 +72,20 @@ export const login = async (
     return { message: 'An error uccured...' }
   }
 };
+
+export const sendFavoriteItem = async (id: number) => {
+  try {
+    const response = await fetch(URL + '/private/favorite', {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      },
+      method: 'POST',
+      body: JSON.stringify({ id })
+    })
+  } catch (e) {
+    console.log(e);
+    return { message: 'An error uccured...' }
+  }
+};

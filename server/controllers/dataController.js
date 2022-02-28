@@ -1,6 +1,7 @@
 const MobMenu = require('../models/mobMenuModel');
 const Furniture = require('../models/FurnitureModel');
 const Slides = require('../models/SliderModel');
+// const User = require('../models/UserModel');
 
 const ApiError = require('../error/ApiError');
 
@@ -55,6 +56,16 @@ class dataController {
     } catch (err) {
       return ApiError.internal(res, err);
     }
+  }
+
+  async writeFavoriteItem(req, res) {
+    const { id } = req.body;
+
+    if (!id) {
+      return ApiError.badRequest(res, 'No id provided');
+    }
+
+    // await User.updateOne({ id: user.id }, { $push: { favorites: id} });
   }
 }
 

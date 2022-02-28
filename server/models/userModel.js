@@ -16,7 +16,8 @@ const UserSchema = new Schema({
     unigue: true,
     required: true
   },
-  roles: [{ type: String, ref: 'Role' }]
+  roles: [{ type: String, ref: 'Role' }],
+  favorites: [String]
 })
 
 module.exports = model('User', UserSchema);

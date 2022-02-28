@@ -1,11 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { favoritesActionCreator } from "../../redux/actions/favorites";
 import { cartItemsActionCreator } from "../../redux/actions/cartItems";
-
+import { setFavoriteFurnitureTolocalStorage } from "../../services/localstorage";
 import { ProductType } from "../../types";
+import { getIsAuth } from "../../redux/getters";
+import { sendFavoriteItem } from "../../services/api";
 
 interface ISalesItemProps {
   product: ProductType;
@@ -18,6 +20,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
 
   const dispatch = useDispatch();
   const router = useHistory();
+  const isAuth = useSelector(getIsAuth);
 
   const onLikeProductClick = (): void => {
     dispatch(favoritesActionCreator(id));
@@ -27,7 +30,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
     router.push(`/products/${id}`);
   }
 
-  const onAddToCartClick = (): void => {
+  const onAddToCartClick = async () => {
     dispatch(cartItemsActionCreator({
         id: id,
         colors: [colors[0]],
@@ -40,6 +43,12 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
         price: priceNew,
       })
     );
+
+    if (!isAuth ) {
+      setFavoriteFurnitureTolocalStorage(id);
+    } else {
+      await sendFavoriteItem(id);
+    }
   };
 
   return (

@@ -68,7 +68,7 @@ export type submitValuesType = {
   room: string, 
   type: string
 }
-export interface IPageProps {
+export interface IHeaderProps {
   isMobMenuOpen: boolean;
   setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
