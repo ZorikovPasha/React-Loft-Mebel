@@ -113,20 +113,6 @@ button {
   }
 }
 
-
-@media (max-width:510px) {
-  .breadcrumbs__item:not(:last-child) {
-    display: none;
-  }
-  .breadcrumbs__item:last-child {
-    display: flex;
-  }
-  .breadcrumbs__item-back {
-    display: block;
-    margin-right: 7px;
-  }
-}
-
 .error {
   font-size: 10px;
   font-weight: 400;
@@ -139,15 +125,28 @@ button {
 
 .btn {
   color: #fff;
-  background: #000000;
+  background: #209CEE;
   border-radius: 5px;
   font-size: 16px;
   display: inline-block;
   cursor: pointer;
   &:hover {
-    background-color: rgba(#000, .9);
+    background-color: rgba(#209CEE, .9);
   }
   &:active {
-    background-color: rgba(#000, .7);
+    background-color: rgba(#209CEE, .7);
+  }
+}
+
+@media (max-width:510px) {
+  .breadcrumbs__item:not(:last-child) {
+    display: none;
+  }
+  .breadcrumbs__item:last-child {
+    display: flex;
+  }
+  .breadcrumbs__item-back {
+    display: block;
+    margin-right: 7px;
   }
 }

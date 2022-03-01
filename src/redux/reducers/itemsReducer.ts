@@ -1,4 +1,5 @@
-import { fetchItemsActionType, ProductType, ActionsTypes } from '../../types';
+import { ProductType} from '../../types';
+import { fetchItemsActionType, ActionsTypes } from '../../types/actionsTypes';
 
 export type stateType = {
   items: ProductType[],

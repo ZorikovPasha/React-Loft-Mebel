@@ -1,6 +1,7 @@
 import _ from "lodash";
 
-import { cartItemsActionType, CartItemType, ActionsTypes } from "../../types";
+import { cartItemsActionType, ActionsTypes } from "../../types/actionsTypes";
+import { CartItemType } from "../../types";
 
 export type stateType = {
   cartItems: CartItemType[],
@@ -51,6 +52,11 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         cartItems: remainingCartItems,
         quintity: remainingQuintity,
         totalCost: remainingCartItems.reduce((partialCost, item: CartItemType) => partialCost + item.quintity * item.price, 0)
+      }
+    case ActionsTypes.RESET_CART:
+      return {
+        ...state,
+        cartItems: [],
       }
     default:
       return state;

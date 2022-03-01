@@ -190,11 +190,11 @@
 
   &__promo {
     position: relative;
-    margin-right: 47px;
     margin-left: 10px;
-    padding: 24px 0 24px 15px;
+    padding: 15px 30px 25px 15px;
+    align-self: center;
 
-    &:hover .sub-list {
+    &:hover .sub-list--rightside {
       display: block;
     }
   }
@@ -217,7 +217,6 @@
 }
 
 .user-header {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -226,6 +225,7 @@
   // .user-header__link
 
   &__link {
+    transition: hover .2s;
   }
 
   &__link--dot {
@@ -242,6 +242,14 @@
       border-radius: 50%;
     }
   }
+
+  &__link--hover {
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
 
   &__link + &__link {
     margin-left: 25px;
@@ -305,8 +313,13 @@
   padding: 25px 5px 25px 25px;
   cursor: default;
 
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
   background-color: #fff;
+
+  &--rightside {
+    left: auto;
+    right: 0;
+  }
 
   // .sub-list__item
 

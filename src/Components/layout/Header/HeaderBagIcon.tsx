@@ -12,7 +12,7 @@ const HeaderBagIcon: React.FC = () => {
   const quintity = useSelector(getCartItemsQuintity);
 
   return (
-    <Link to="/cart" className={`"user-header__link ${quintity ? 'user-header__link--dot': ''}`}>
+    <Link to="/cart" className={`user-header__link user-header__link--hover ${quintity ? 'user-header__link--dot': ''}`}>
       <img src={bag} alt="bag" />
     </Link>
   );
