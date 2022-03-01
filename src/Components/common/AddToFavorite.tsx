@@ -1,29 +1,23 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getFavorites, getIsAuth } from "../../redux/getters";
-import { favoritesActionCreator } from "../../redux/actions/favorites";
-import { setFavoriteFurnitureTolocalStorage } from "../../services/localstorage";
+import { getFavorites } from "../../redux/getters";
+import { addFavoriteActionCreator } from "../../redux/actions/favorites";
+import { HttpClient } from "../../services/api";
 
 interface IProps {
   id: number
 }
 
 const AddToFavorite: React.FC<IProps> = ({ id }) => {
-
   const dispatch = useDispatch();
 
   const favorites = useSelector(getFavorites);
 
-  const isAuth = useSelector(getIsAuth);
-
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
-    dispatch(favoritesActionCreator(id));
-
-    if (!isAuth ) {
-      setFavoriteFurnitureTolocalStorage(id);
-    }
+    dispatch(addFavoriteActionCreator(id));
+    HttpClient.sendFavoriteItem(id);
   };
 
   return (

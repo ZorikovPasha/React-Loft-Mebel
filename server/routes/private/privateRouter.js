@@ -2,8 +2,14 @@ const express = require('express');
 const router = express.Router();
 const protect = require('../../middleware/protect');
 const dataController = require('../../controllers/dataController');
+const authController = require('../../controllers/authController');
 
 router.post('/favorite', protect, dataController.writeFavoriteItem);
-// router.post('/', protect, () => {});
+router.post('/cartItem', protect, dataController.addCartItem);
+router.get('/cartItems', protect, dataController.getCartItems);
+router.get('/favorites', protect, dataController.getFavorites);
+router.get('/check', protect, authController.confirmAuth);
+router.post('/user', protect, authController.writeUserData);
+router.get('/user', protect, authController.getUserData);
 
 module.exports = router;

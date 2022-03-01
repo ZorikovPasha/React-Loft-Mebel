@@ -1,7 +1,20 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
 
+const CartItemSchema = new mongoose.Schema({
+  id: Number,
+  colors: [String],
+  quintity: Number,
+  dimensions: {
+    width: Number,
+    length: Number,
+    height: Number,
+  },
+  price: Number,
+});
 
-const UserSchema = new Schema({
+const UserSchema = mongoose.Schema({
+  name: String,
+  surname: String,
   userName: {
     type: String,
     unigue: true,
@@ -16,8 +29,16 @@ const UserSchema = new Schema({
     unigue: true,
     required: true
   },
+  phone: String,
+  city: String,
+  street: String,
+  house: String,
+  apartment: String,
   roles: [{ type: String, ref: 'Role' }],
-  favorites: [String]
+  favorites: [String],
+  cartItems: [CartItemSchema]
 })
 
-module.exports = model('User', UserSchema);
+
+mongoose.models = {}
+module.exports = mongoose.model('User', UserSchema);

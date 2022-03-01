@@ -1,19 +1,18 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { Footer, Loader, MobMenu, Header } from "../Components";
 import { publicRoutes, authRoutes, initialRoute } from "./routes";
 import { getIsAuth } from "../redux/getters";
-import { useSelector } from "react-redux";
+import { useAuth } from "../hooks/useAuth";
 
 const AppRouter: React.FC = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false);
 
+  useAuth();
+  
   const isAuth = useSelector(getIsAuth);
-
-  React.useEffect(() => {
-    
-  });
 
   return (
     <div className="wrapper">

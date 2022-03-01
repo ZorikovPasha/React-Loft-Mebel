@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
-import { getSlidesItems } from "../../services/api";
+import { HttpClient } from "../../services/api";
 
 import { SlideType } from '../../types';
 
@@ -36,7 +36,7 @@ const TopSlider: React.FC = () => {
   const [slides, setSlides] = React.useState<SlideType[]>();
 
   React.useEffect(() => {
-    getSlidesItems()?.then(slides => setSlides(slides));
+    HttpClient.getSlidesItems()?.then(slides => setSlides(slides));
   }, []);
   
   const settings = {

@@ -53,6 +53,11 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         quintity: remainingQuintity,
         totalCost: remainingCartItems.reduce((partialCost, item: CartItemType) => partialCost + item.quintity * item.price, 0)
       }
+    case ActionsTypes.RESET_CART:
+      return {
+        ...state,
+        cartItems: [],
+      }
     default:
       return state;
   }

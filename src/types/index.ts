@@ -68,6 +68,18 @@ export type submitValuesType = {
   room: string, 
   type: string
 }
+
+export type userFormValuesType = {
+  name: string,
+  email: string,
+  surname: string,
+  phone: string,
+  city: string,
+  street: string,
+  house: string,
+  apartment: string,
+};
+
 export interface IHeaderProps {
   isMobMenuOpen: boolean;
   setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;

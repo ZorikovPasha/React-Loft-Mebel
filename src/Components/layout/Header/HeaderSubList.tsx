@@ -6,16 +6,17 @@ import { ListsType } from "../../../types";
 interface IHeaderSubList {
   items: ListsType;
   parentDir: string;
+  rootElClass?: string;
 }
 
-const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir }) => {  
+const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir, rootElClass }) => {  
   
   return (
-    <ul className="sub-list">
+    <ul className={`sub-list ${rootElClass}`}>
       {items && items.map(item => (
         <li key={item.link} className="sub-list__item">
           <Link 
-            to={`${parentDir}/${item.link}`} 
+            to={`${parentDir}`} 
             className="sub-list__link"
             >
             {item.text}

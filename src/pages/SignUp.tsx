@@ -5,7 +5,7 @@ import * as yup from 'yup';
 
 import { ModalInfo } from '../Components';
 
-import { register } from '../services/api';
+import { HttpClient } from '../services/api';
 
 const SignUp: React.FC = () => {
 
@@ -28,7 +28,7 @@ const SignUp: React.FC = () => {
 
 
   const handleSubmit = async ({ name, email, password }: typeof initFormValues) => {
-    const res = await register(name, email, password);
+    const res = await HttpClient.register(name, email, password);
 
     if (res.status === 200) {
       document.body.classList.add("lock");

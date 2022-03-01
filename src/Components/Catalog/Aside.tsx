@@ -4,6 +4,7 @@ import { Formik, FieldArray } from 'formik';
 import { CustomSelect } from '../index';
 
 import { submitValuesType } from '../../types';
+import { useHistory } from "react-router-dom";
 
 interface IAsideProps {
   isAsideVisible: boolean;
@@ -12,12 +13,16 @@ interface IAsideProps {
 }
 
 const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFiltersSubmit }) => {
+
+  const history = useHistory();
   const roomSelectOptions = [
     {value: "all", label: "Показать все"},
     {value: "living", label: "Гостинные"},
     {value: "kitchen", label: "Кухни"},
     {value: "bedroom", label: "Спальные"},
-    {value: "children", label: "Детские"}
+    {value: "children", label: "Детские"},
+    {value: "hall", label: "Прихожие"},
+    {value: "office", label: "Офисная мебель"}
   ];
 
   const catSelectOptions = [
@@ -55,16 +60,18 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
     { id: "675A5A", name: "675A5A" },
   ];
 
+  const initValues = {
+    room: 'all',
+    material: 'all',
+    type: 'all',
+    colorsIds: [] as string[],
+    brandsIds: [] as string[]
+  }
+
   return (
     <aside className={`catalog__aside aside ${isAsideVisible ? 'opened' : ''}`}>
       <div className={`aside__box ${isAsideVisible ? 'opened' : ''}`}>
-        <Formik initialValues={{
-          room: 'all',
-          material: 'all',
-          type: 'all',
-          colorsIds: [] as string[],
-          brandsIds: [] as string[]
-        }}
+        <Formik initialValues={initValues}
         onSubmit={handleFiltersSubmit}
         > 
           {({ values, setFieldValue, handleSubmit }) => (

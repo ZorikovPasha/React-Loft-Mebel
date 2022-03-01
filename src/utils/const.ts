@@ -1,5 +1,5 @@
 export enum ROUTES {
-  Catalog = '/catalog/:room',
+  Catalog = '/catalog',
   Product = '/products/:id',
   Cart = '/cart',
   Favorites = '/favorites',

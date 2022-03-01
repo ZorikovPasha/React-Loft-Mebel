@@ -29,31 +29,31 @@ const Main: React.FC = () => {
             <div className="gallery__items">
               <div className="gallery__item">
                 <img className="gallery__item-img" src="images/gallery/1.jpg" alt="" />
-                <Link className="gallery__item-link" to="/catalog/bedroom/furniture">
+                <Link className="gallery__item-link" to="/catalog?room=bedroom">
                   Перейти к гостинной мебели
                 </Link>
               </div>
               <div className="gallery__item">
                 <img className="gallery__item-img" src="images/gallery/2.jpg" alt="" />
-                <Link className="gallery__item-link" to="/catalog/office/chairs">
+                <Link className="gallery__item-link" to="/catalog?room=office">
                   Перейти к офисным креслам
                 </Link>
               </div>
               <div className="gallery__item">
                 <img className="gallery__item-img" src="images/gallery/3.jpg" alt="" />
-                <Link className="gallery__item-link" to="/catalog/kitchens/corners">
+                <Link className="gallery__item-link" to="/catalog?room=kitchen">
                   Перейти к кухонным уголкам
                 </Link>
               </div>
               <div className="gallery__item">
                 <img className="gallery__item-img" src="images/gallery/4.jpg" alt="" />
-                <Link className="gallery__item-link" to="/catalog/living/modularLiv">
+                <Link className="gallery__item-link" to="/catalog?room=living">
                   Перейти к модульным гостинным
                 </Link>
               </div>
               <div className="gallery__item">
                 <img className="gallery__item-img" src="images/gallery/5.jpg" alt="" />
-                <Link className="gallery__item-link" to="/catalog/bedroom/sets">
+                <Link className="gallery__item-link" to="/catalog?room=bedroom">
                   Перейти к спальным гарнитурам
                 </Link>
               </div>

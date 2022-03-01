@@ -2,12 +2,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { favoritesActionCreator } from "../../redux/actions/favorites";
+import { addFavoriteActionCreator } from "../../redux/actions/favorites";
 import { cartItemsActionCreator } from "../../redux/actions/cartItems";
-import { setFavoriteFurnitureTolocalStorage } from "../../services/localstorage";
 import { ProductType } from "../../types";
 import { getIsAuth } from "../../redux/getters";
-import { sendFavoriteItem } from "../../services/api";
+import { HttpClient } from "../../services/api";
 
 interface ISalesItemProps {
   product: ProductType;
@@ -22,8 +21,13 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
   const router = useHistory();
   const isAuth = useSelector(getIsAuth);
 
-  const onLikeProductClick = (): void => {
-    dispatch(favoritesActionCreator(id));
+  const onLikeProductClick = () => {
+    dispatch(addFavoriteActionCreator(id));
+
+    if (isAuth ) {
+      HttpClient.sendFavoriteItem(id);
+    } else {
+    }
   };
 
   const onProductLinkClick = (): void => {
@@ -43,12 +47,17 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
         price: priceNew,
       })
     );
-
-    if (!isAuth ) {
-      setFavoriteFurnitureTolocalStorage(id);
-    } else {
-      await sendFavoriteItem(id);
-    }
+    HttpClient.addItemToCart({
+      id: id,
+      colors: [colors[0]],
+      quintity: 1,
+      dimensions: {
+        width: dimensions.width,
+        length: dimensions.length,
+        height: dimensions.height,
+      },
+      price: priceNew,
+    })
   };
 
   return (
@@ -107,3 +116,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
 };
 
 export default React.memo(SalesItem);
+function addItemToCart(arg0: { id: number; colors: string[]; quintity: number; dimensions: { width: number; length: number; height: number; }; price: number; }) {
+  throw new Error("Function not implemented.");
+}
+

@@ -181,7 +181,7 @@ const HeaderBottom: React.FC = () => {
 
         <li className="categories__item">
           <Link 
-            to="/catalog/kitchens" 
+            to="/catalog?room=kitchen" 
             className="categories__item-img"
             >
             <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -196,20 +196,20 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog/kitchens" 
+            to="/catalog?room=kitchen" 
             className="categories__link"
             >
             Кухни
           </Link>
           {subLists && <HeaderSubList 
             items={subLists.current[0]}
-            parentDir={'/catalog/kitchens'}
+            parentDir={'/catalog?room=kitchen'}
             />}
         </li>
 
         <li className="categories__item">
           <Link 
-            to="/catalog/bedroom" 
+            to="/catalog?room=bedroom" 
             className="categories__item-img"
             >
             <svg width="28" height="23" viewBox="0 0 28 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -218,20 +218,20 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog/bedroom" 
+            to="/catalog?room=bedroom" 
             className="categories__link"
             >
             Спальни
           </Link>
           {subLists && 
             <HeaderSubList
-              parentDir={'/catalog/bedroom'}
+              parentDir={'/catalog?room=bedroom'}
               items={subLists.current[1]} />}
         </li>
 
         <li className="categories__item">
           <Link 
-            to="/catalog/living" 
+            to="/catalog?room=living" 
             className="categories__item-img"
             >
             <svg width="30" height="23" viewBox="0 0 30 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -241,20 +241,20 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog/living" 
+            to="/catalog?room=living" 
             className="categories__link"
             >
             Гостинные
           </Link>
           {subLists && 
             <HeaderSubList
-              parentDir={'/catalog/living'}
+              parentDir={'/catalog?room=living'}
               items={subLists.current[2]} />}
         </li>
 
         <li className="categories__item">
           <Link 
-            to="/catalog/hall" 
+            to="/catalog?room=hall" 
             className="categories__item-img"
             >
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -264,21 +264,21 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog/hall" 
+            to="/catalog?room=hall" 
             className="categories__link"
             >
             Прихожие
           </Link>
           {subLists && 
             <HeaderSubList
-              parentDir={'/catalog/hall'}
+              parentDir={'/catalog?room=hall'}
               items={subLists.current[3]}
               />}
         </li>
 
         <li className="categories__item">
           <Link 
-            to="/catalog/office" 
+            to="/catalog?room=office" 
             className="categories__item-img"
             >
             <svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -288,14 +288,14 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog/office" 
+            to="/catalog?room=office" 
             className="categories__link"
             >
             Офисная мебель
           </Link>
           {subLists && 
             <HeaderSubList
-              parentDir={'/catalog/office'}
+              parentDir={'/catalog?room=office'}
               items={subLists.current[4]}
               />}
         </li>
@@ -330,13 +330,14 @@ const HeaderBottom: React.FC = () => {
     </div>
     <div className="header__promo">
       <Link 
-        to="/catalog/kitchens" 
+        to="/catalog/kitchen" 
         className="header__promo-link"
         >
         Акция
       </Link>
       {subLists && 
         <HeaderSubList
+          rootElClass="sub-list--rightside"
           parentDir={'/catalog'}
           items={subLists.current[6]}
           />}

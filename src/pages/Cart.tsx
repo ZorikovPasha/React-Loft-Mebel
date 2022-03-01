@@ -37,7 +37,7 @@ const Cart: React.FC = () => {
                 </p>
               </div>
               {cartItems && 
-                cartItems.forEach(cartItem => {
+                cartItems.map(cartItem => {
                   const currItem = items.find(item => item.id === cartItem.id);
                   if (currItem) {
                     return (

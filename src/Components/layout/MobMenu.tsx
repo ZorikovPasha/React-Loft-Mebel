@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 
 import { mobMenuType } from "../../types";
-import { getMobMenuItems } from "../../services/api";
+import { HttpClient } from "../../services/api";
 
 interface IMobMenuProps {
   isMobMenuOpen: Boolean;
@@ -13,7 +13,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const [mobMenu, setMobMenu] = React.useState<mobMenuType[]>();
 
   React.useEffect(() => {
-    getMobMenuItems()?.then(items => setMobMenu(items));
+    HttpClient.getMobMenuItems()?.then(items => setMobMenu(items));
   }, []);
 
   const onMobMenuItemClick: React.MouseEventHandler<HTMLAnchorElement> = (): void => {

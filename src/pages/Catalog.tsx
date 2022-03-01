@@ -30,7 +30,12 @@ const Catalog: FC = () => {
   const [isLoading, setLoading] = React.useState(false);
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
 
-  useLoading(fetchItemsThunkCreator, setLoading, '?sort=asc')
+  
+  useLoading(
+    fetchItemsThunkCreator, 
+    setLoading, 
+    history.location.search + "&sort=asc"
+    )
 
 
   const favorites = useSelector(getFavorites);
@@ -132,10 +137,10 @@ const Catalog: FC = () => {
                 <SortPopup onSelectSortType={onSelectSortType} />
               </div>
               {
-                isLoading 
+                isLoading || !products.length
                 ? <Loader />
                 : 
-                  products.length 
+                  products.length && !isLoading
                     ? <div className="catalog__items">
                         {products.map(product => (
                           <SalesItem 

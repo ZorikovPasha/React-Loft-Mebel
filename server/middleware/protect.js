@@ -1,10 +1,14 @@
+const jwt = require('jsonwebtoken');
+
+const ApiError = require("../error/ApiError");
+const User = require('../models/UserModel');
 
 
 const protect = async (req, res, next) => {
   let token;
 
-  if (req.headers.autorazation && req.headers.autorazation.startsWith('Bearer')) {
-    token = req.headers.autorazation.split(' ');
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
   }
 
   if (!token) {
@@ -12,12 +16,11 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token, proces.env.SECRET);
+    const uncodedPayload = jwt.verify(token, process.env.SECRET);
 
-    const user = await UserModel.findById(decodedToken._id);
-
+    const user = await User.findById(uncodedPayload.id);
     if (!user) {
-      return ApiError.internal(res, 'No user found with this id');
+      return ApiError.notAuthorized(res, 'No user found with this id');
     }
 
     req.user = user;
