@@ -56,7 +56,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
     case ActionsTypes.RESET_CART:
       return {
         ...state,
-        cartItems: [],
+        ...initialState,
       }
     default:
       return state;

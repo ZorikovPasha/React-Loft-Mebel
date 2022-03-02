@@ -34,7 +34,7 @@ export const favoritesReducer = (
     case ActionsTypes.RESET_FAVORITES:
       return {
         ...state,
-        favorites: []
+        ...initialState,
       }
     default:
       return state;

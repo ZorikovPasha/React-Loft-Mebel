@@ -36,7 +36,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async({ email, password }: typeof initFormValues) => {
     const { token, message } = await HttpClient.login(email, password);
-
+    
     if (message) {
       loginErrorMessage.current = message;
       document.body.classList.add("lock");
