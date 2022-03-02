@@ -65,7 +65,7 @@ class dataController {
         return ApiError.badRequest(res, 'No id provided');
       }
   
-      await User.updateOne({ id: req.user.id }, { $push: { favorites: id} });
+      await User.updateOne({ _id: req.user._id }, { $push: { favorites: id} });
       res.status(200).json({ message: "Item added to favorites successfully" })
   
     } catch (err) {
@@ -90,14 +90,23 @@ class dataController {
         return ApiError.badRequest(res, 'Provided incomplete data');
       }
 
-      await User.updateOne({ id: req.user.id }, { $push: { cartItems: {
-        id,
-        colors,
-        quintity,
-        dimensions,
-        price,
-      }}});
+      const user = await User.findOne({ _id: req.user._id });
+      const identicalItem = user.cartItems.filter(cartItem => cartItem.id === id)
 
+      if (identicalItem.length) {
+        await User.updateOne({ _id: req.user._id,
+          "cartItems": { "$elemMatch": { "id": id }}}, { "$set": { "cartItems.$.quintity": identicalItem[0].quintity + 1 }} 
+        );
+        const user = await User.findOne({ _id: req.user._id });
+      } else {
+        await User.updateOne({ _id: req.user._id }, { $push: { cartItems: {
+          id,
+          colors,
+          quintity,
+          dimensions,
+          price,
+        }} });
+      }
       res.status(200).json({ message: "Item successfully added to cart" })
     } catch (err) {
       return ApiError.internal(res, err);
@@ -107,14 +116,20 @@ class dataController {
   async getCartItems(req, res) {
     try {
       if (req.user) {
-
         const { cartItems } = await User.findOne({ id: req.user._id })
         delete cartItems._id
-        res.json({ items: cartItems })
+        res.json({ items: req.user.cartItems })
       }
     } catch (err) {
       return ApiError.internal(res, err);
     }
+  }
+
+  async removeCartItem(req, res) {
+    const { id } = req.body;
+    req.user.cartItems = req.user.cartItems.filter(cartItem => cartItem.id !== id );
+    req.user.save();
+    res.status(200).json({ message: "Item successfully removed fromm cart" })
   }
 }
 

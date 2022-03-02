@@ -187,4 +187,21 @@ export class HttpClient {
       console.log(err);
     }
   }
+
+  static async removeCartItem(id: number) {
+    try {
+      const response = await fetch(URL + '/private/removeCartItem', {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        },
+        method: "POST",
+        body: JSON.stringify({ id })
+      });
+      return response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
