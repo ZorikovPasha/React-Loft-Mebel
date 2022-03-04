@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { addFavoriteActionCreator } from "../../redux/actions/favorites";
-import { cartItemsActionCreator } from "../../redux/actions/cartItems";
+import { addtemsActionCreator } from "../../redux/actions/cartItems";
 import { ProductType } from "../../types";
 import { getIsAuth } from "../../redux/getters";
 import { HttpClient } from "../../services/api";
@@ -35,7 +35,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
   }
 
   const onAddToCartClick = async () => {
-    dispatch(cartItemsActionCreator({
+    dispatch(addtemsActionCreator([{
         id: id,
         colors: [colors[0]],
         quintity: 1,
@@ -45,8 +45,10 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
           height: dimensions.height,
         },
         price: priceNew,
-      })
+      }])
     );
+    if (!isAuth) return;
+
     HttpClient.addItemToCart({
       id: id,
       colors: [colors[0]],

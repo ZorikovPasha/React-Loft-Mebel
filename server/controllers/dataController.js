@@ -2,6 +2,7 @@ const MobMenu = require('../models/mobMenuModel');
 const Furniture = require('../models/FurnitureModel');
 const Slides = require('../models/SliderModel');
 const User = require('../models/UserModel');
+const Order = require('../models/OrderModel');
 
 const ApiError = require('../error/ApiError');
 
@@ -37,6 +38,15 @@ class dataController {
       res.json(furnitureItems);
     } catch (e) {
       return ApiError.internal(res, e);
+    }
+  }
+
+  async getSingleFurniture(req, res) {
+    try {
+      const furnitureItem = await Furniture.findOne({ id: Number(req.body.id) })
+      res.send(furnitureItem);
+    } catch (err) {
+      return ApiError.internal(res, err);
     }
   }
 
@@ -126,10 +136,40 @@ class dataController {
   }
 
   async removeCartItem(req, res) {
-    const { id } = req.body;
-    req.user.cartItems = req.user.cartItems.filter(cartItem => cartItem.id !== id );
-    req.user.save();
-    res.status(200).json({ message: "Item successfully removed fromm cart" })
+    try {
+      const { id } = req.body;
+      req.user.cartItems = req.user.cartItems.filter(cartItem => cartItem.id !== id );
+      req.user.save();
+      res.status(200).json({ message: "Item successfully removed fromm cart" })  
+    } catch (err) {
+      return ApiError.internal(res, err);
+    }
+  }
+
+  async processOrder(req, res) {
+    try {
+      const { items } = req.body;
+      for(let i = 0; i < items.length; i++) {
+        const order = new Order({
+          userId: req.user._id,
+          ...items[i]
+        });
+        await order.save();
+      }
+
+      res.status(201).json({ message: "order created successfully" })
+    } catch (err) {
+      return ApiError.internal(res, err);
+    }
+  }
+
+  async getOrders(req, res) {
+    try {
+      const orders = await Order.find({ userId: req.user._id });
+      res.send({ orders });
+    } catch (err) {
+      return ApiError.internal(res, err);
+    }
   }
 }
 

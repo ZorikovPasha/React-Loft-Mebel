@@ -1,16 +1,20 @@
 import { ActionsTypes } from '../../types/actionsTypes';
 
-export const addFavoriteActionCreator = (favorites: number) => ({
+type favoritesActionsTypes = ActionsTypes.ADD_TO_FAVORITES | ActionsTypes.ADD_TO_FAVORITES_MULT | ActionsTypes.RESET_FAVORITES;
+
+type actionCreatorType<T> = (payload?: T) => { type: favoritesActionsTypes, payload?: T}
+
+export const addFavoriteActionCreator:actionCreatorType<number>  = (payload) => ({
   type: ActionsTypes.ADD_TO_FAVORITES,
-  payload: favorites
+  payload: payload
 });
 
 
-export const addMultipleFavoritesActionCreator = (favorites: number[]) => ({
+export const addMultipleFavoritesActionCreator:actionCreatorType<number[]> = (payload ) => ({
   type: ActionsTypes.ADD_TO_FAVORITES_MULT,
-  payload: favorites
+  payload: payload
 });
 
-export const resetFavoritesActionCreator = () => ({
+export const resetFavoritesActionCreator: actionCreatorType<null> = () => ({
   type: ActionsTypes.RESET_FAVORITES,
 });

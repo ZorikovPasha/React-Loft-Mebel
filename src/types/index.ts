@@ -80,6 +80,22 @@ export type userFormValuesType = {
   apartment: string,
 };
 
+export type OrderInfoType = {
+  id: number,
+  name: string,
+  imageUrl: string,
+  price: number,
+  date: number,
+  status: string,
+  dimensions: {
+    width: number,
+    length: number,
+    height: number,
+  },
+  colors: string[],
+  quintity: number,
+};
+
 export interface IHeaderProps {
   isMobMenuOpen: boolean;
   setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;

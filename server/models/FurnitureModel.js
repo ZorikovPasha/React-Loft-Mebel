@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const furnitureSchema = mongoose.Schema({
+    id: Number,
     imageUrl: String,
     bigImageUrl: String,
     thumbsUrls: [String],

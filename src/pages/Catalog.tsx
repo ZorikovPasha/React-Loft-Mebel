@@ -97,6 +97,7 @@ const Catalog: FC = () => {
     }
 
     toggleAsideVisibility(false);
+    document.body.classList.remove("lock");
   };
 
   const onBtnClick: MouseEventHandler<HTMLButtonElement> = React.useCallback((): void => {

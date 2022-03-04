@@ -4,7 +4,6 @@ import { Formik, FieldArray } from 'formik';
 import { CustomSelect } from '../index';
 
 import { submitValuesType } from '../../types';
-import { useHistory } from "react-router-dom";
 
 interface IAsideProps {
   isAsideVisible: boolean;
@@ -14,7 +13,6 @@ interface IAsideProps {
 
 const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFiltersSubmit }) => {
 
-  const history = useHistory();
   const roomSelectOptions = [
     {value: "all", label: "Показать все"},
     {value: "living", label: "Гостинные"},
