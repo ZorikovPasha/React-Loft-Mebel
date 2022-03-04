@@ -1,14 +1,18 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { SalesItem, CartItem, Breadcrumbs, Empty, Loader } from "../Components";
-import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { getCartItems, getQuintity, getTotalCost, getFavorites, getProducts } from "../redux/getters";
+import { SalesItem, CartItem, Breadcrumbs, Empty, ModalInfo } from "../Components";
+import { getCartItems, getQuintity, getTotalCost, getFavorites, 
+  getProducts, getOrderStatus, getIsAuth } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
+import { HttpClient } from "../services/api";
+import { OrderInfoType } from "../types";
+import { resetCartActionCreator } from "../redux/actions/removeItem";
+import { setOrderStatusActionCreator } from "../redux/actions/cartItems";
 
 
 const Cart: React.FC = () => {
-  const [isLoading, setIsloading] = React.useState(false);
+  const [modalLoginOpened, setModalLoginOpened] = React.useState(false);
   const dispatch = useDispatch();
 
   const cartItems = useSelector(getCartItems);
@@ -16,53 +20,91 @@ const Cart: React.FC = () => {
   const total = useSelector(getTotalCost);
   const items = useSelector(getProducts);
   const favorites = useSelector(getFavorites);
-
-  React.useEffect(() => {
-    setIsloading(true);
-    dispatch(fetchItemsThunkCreator(''));
-    setIsloading(false);
-  }, [dispatch]);
-
+  const isOrderMade = useSelector(getOrderStatus);
+  const isAuth = useSelector(getIsAuth);
+  
   const breadcrumbs = useBreadcrumbs();
+
+  const onRegisterOrder = () => {
+    if (!isAuth) {
+      setModalLoginOpened(true);
+      document.body.classList.add("lock")
+      return;
+    }
+    const orders: OrderInfoType[] = [];
+
+    cartItems.forEach(({ id, dimensions, colors, quintity, price }) => {
+      const item = items.find(item => item.id === id);
+
+      if (item) {
+        orders.push({
+          id, 
+          dimensions,
+          colors,
+          quintity,
+          price,
+          status: "В ожидании",
+          date: Date.now(),
+          name: item.name,
+          imageUrl: item.imageUrl
+        })
+      }
+    })
+    HttpClient.makeOrder(orders);
+    dispatch(resetCartActionCreator());
+    dispatch(setOrderStatusActionCreator(true));
+  }
+
+  const onLoginModalClose:React.MouseEventHandler<HTMLButtonElement> = () => {
+    setModalLoginOpened(false);
+    document.body.classList.remove("lock")
+  };
 
   return (
     <>
+      { modalLoginOpened && <ModalInfo 
+        text="Пожалуйста, войдите в свою учетную запись" 
+        title="Мы не знаем, кто вы" 
+        link="/login"
+        onModalClose={onLoginModalClose}
+        /> }
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className="cart">
         <div className="container">
           {
-            isLoading
-              ? <Loader />
-              : !isLoading && !cartItems?.length 
-                ? <Empty text="Вы ничего не добавили в корзину(" />
-                :
-                  <>
-                    <div className="cart__top">
-                      <p>Ваша корзина</p>
-                      <p>
-                        <span className="cart__top-num">Предметов: {quintity}</span>
-                      </p>
-                    </div>
-                    {cartItems && 
-                      cartItems.map(cartItem => {
-                        const currItem = items.find(item => item.id === cartItem.id);
-                        if (currItem) {
-                          return (
-                            <CartItem 
-                              key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
-                              cartItem={cartItem} 
-                              item={currItem}
-                            />
-                          )}
-                      })}
-                    <div className="cart__bottom">
-                      <p className="cart__bottom-total">
-                        Итоговая стоимость:
-                        <span> {total} P</span>
-                      </p>
-                      <button className="cart__bottom-btn">Оформить заказ</button>
-                    </div>
-                  </>
+            !cartItems.length 
+              ? <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />
+              :
+                <>
+                  <div className="cart__top">
+                    <p>Ваша корзина</p>
+                    <p>
+                      <span className="cart__top-num">Предметов: {quintity}</span>
+                    </p>
+                  </div>
+                  {cartItems && 
+                    cartItems.map(cartItem => {
+                      const currItem = items.find(item => item.id === cartItem.id);
+                      if (currItem) {
+                        return (
+                          <CartItem 
+                            key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
+                            cartItem={cartItem} 
+                            item={currItem}
+                          />
+                        )}
+                    })}
+                  <div className="cart__bottom">
+                    <p className="cart__bottom-total">
+                      Итоговая стоимость:
+                      <span> {total} P</span>
+                    </p>
+                    <button 
+                      className="cart__bottom-btn"
+                      onClick={onRegisterOrder}
+                      >Оформить заказ</button>
+                  </div>
+                </>
             }
         </div>
       </section>

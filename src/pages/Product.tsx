@@ -1,25 +1,31 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { ProductCard, Breadcrumbs, ProductTabs, Related } from "../Components";
-import { getProducts } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 import "../../node_modules/slick-carousel/slick/slick.css";
+import { HttpClient } from "../services/api";
+import { ProductType } from "../types";
 
 const Product: React.FC = () => {
-  const items = useSelector(getProducts);
-
+  const [currentProduct, setCurrentProduct] = React.useState<ProductType>();
   const breadcrumbs = useBreadcrumbs();
 
   const { id } = useParams<{ id: string }>();
-  const currentItem = items.find(item => item.id === Number(id));
+
+  React.useEffect(() => {
+    const getCurrentItem = async (): Promise<ProductType> => {
+      return await HttpClient.getOneFurniture(id);
+    };
+  
+    getCurrentItem().then(data => setCurrentProduct(data));
+  }, [id]);
 
   return (
     <>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      {currentItem && <ProductCard product={currentItem} />}
-      {currentItem && <ProductTabs />}
+      {currentProduct && <ProductCard product={currentProduct} />}
+      {currentProduct && <ProductTabs />}
 
       <section className="sales">
         <div className="container">

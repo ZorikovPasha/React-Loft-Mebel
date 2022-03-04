@@ -1,42 +1,50 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { authActionCreator } from "../redux/actions/authAction";
-import { cartItemsActionCreator } from "../redux/actions/cartItems";
+import { addtemsActionCreator, ordersActionCreator } from "../redux/actions/cartItems";
 import { addMultipleFavoritesActionCreator } from '../redux/actions/favorites';
 import { resetCartActionCreator } from "../redux/actions/removeItem";
 import { addUserDataActionCreator } from "../redux/actions/userAction";
+import { getIsAuth } from "../redux/getters";
 import { HttpClient } from "../services/api/";
-import { CartItemType } from "../types";
 
 export const useAuth = async () => {
   const dispatch = useDispatch();
+  const isAuth = useSelector(getIsAuth);
 
   React.useEffect(() => {
-    const getDavorites = async () => {
+    const checkAuth = async () => {
       const token = localStorage.getItem('token');
-      if (token) {
-        const { message } = await HttpClient.checkAuth(token);
-    
-        if (message === "Token is valid") {
-          dispatch(authActionCreator(true));
-          const favoritesData: { favorites: string[] } = await HttpClient.getFAvorites();
-          dispatch(addMultipleFavoritesActionCreator(favoritesData.favorites?.map(id => Number(id))));
-
-          dispatch(resetCartActionCreator());
-
-          const cartItems = await HttpClient.getCartItems();
-          cartItems.items.forEach((item: CartItemType) => {
-            dispatch(cartItemsActionCreator(item));
-          });
-
-          const userData = await HttpClient.getUserData();
-          dispatch(addUserDataActionCreator(userData));
-        }
+      if (!token) return;
+      const { message } = await HttpClient.checkAuth(token);
+      if (message === "Token is valid") {
+        dispatch(authActionCreator(true));
       }
     };
 
-    getDavorites();
-  }, [])
+    checkAuth();
+  }, []);
+
+  React.useEffect(() => {
+    if (!isAuth) return;
+    const getData = async () => {
+      let favoritesData: { favorites: string[] | number[] } = await HttpClient.getFAvorites();
+      favoritesData.favorites = favoritesData.favorites.map(id => Number(id))
+      dispatch(addMultipleFavoritesActionCreator(favoritesData.favorites));
+
+      dispatch(resetCartActionCreator());
+      const cartItems = await HttpClient.getCartItems();
+
+      dispatch(addtemsActionCreator(cartItems.items));
+
+      const userData = await HttpClient.getUserData();
+      dispatch(addUserDataActionCreator(userData));
+
+      const orders = await HttpClient.getOrders();
+      dispatch(ordersActionCreator(orders.orders));
+    };
+    getData();
+  }, [isAuth])
   
 };

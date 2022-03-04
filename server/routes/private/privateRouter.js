@@ -7,6 +7,9 @@ const authController = require('../../controllers/authController');
 router.post('/favorite', protect, dataController.writeFavoriteItem);
 router.get('/favorites', protect, dataController.getFavorites);
 
+router.post('/order', protect, dataController.processOrder);
+router.get('/orders', protect, dataController.getOrders);
+
 router.post('/cartItem', protect, dataController.addCartItem);
 router.get('/cartItems', protect, dataController.getCartItems);
 router.post('/removeCartItem', protect, dataController.removeCartItem);

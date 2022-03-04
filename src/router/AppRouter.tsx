@@ -1,17 +1,22 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Footer, Loader, MobMenu, Header } from "../Components";
 import { publicRoutes, authRoutes, initialRoute } from "./routes";
 import { getIsAuth } from "../redux/getters";
 import { useAuth } from "../hooks/useAuth";
+import { fetchItemsThunkCreator } from "../redux/actions/items";
 
 const AppRouter: React.FC = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false);
-
+  const dispatch = useDispatch();
   useAuth();
   
+  React.useEffect(() => {
+    dispatch(fetchItemsThunkCreator(''));
+  }, []);
+
   const isAuth = useSelector(getIsAuth);
 
   return (

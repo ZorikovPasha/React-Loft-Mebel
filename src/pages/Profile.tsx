@@ -8,12 +8,13 @@ import term_3 from "../images/terms/3.svg";
 import { userFormValuesType } from '../types';
 import { HttpClient } from "../services/api";
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserData } from '../redux/getters';
+import { getOrders, getUserData } from '../redux/getters';
 import { authActionCreator } from '../redux/actions/authAction';
 import { addUserDataActionCreator } from '../redux/actions/userAction';
 import { initFormValues } from '../redux/reducers/userReducer';
 import { resetFavoritesActionCreator } from '../redux/actions/favorites';
 import { resetCartActionCreator } from '../redux/actions/removeItem';
+import { Link, useHistory } from 'react-router-dom';
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,10 @@ const Profile: React.FC = () => {
     { text: 'Оплачивайте бонусами до 20% от покупки', img: term_3 },
   ];
 
+
+  const history = useHistory();
+
+  const fetchedOrders = useSelector(getOrders);
   const userFormValues = useSelector(getUserData);
   let buffer = {...userFormValues};
 
@@ -59,6 +64,7 @@ const Profile: React.FC = () => {
     dispatch(addUserDataActionCreator(initFormValues));
     dispatch(resetFavoritesActionCreator());
     dispatch(resetCartActionCreator());
+    history.push({ pathname: '/' })
   };
 
   return (
@@ -222,7 +228,7 @@ const Profile: React.FC = () => {
                   </div>
                   </form>
                 )}
-                 </Formik>
+              </Formik>
             </div>
             <div className="profile__orders orders">
               <h3 className="profile__title">Мои заказы</h3>
@@ -231,47 +237,17 @@ const Profile: React.FC = () => {
                 <div className="orders__cost heading">Цена</div>
                 <div className="orders__date heading">Дата</div>
                 <div className="orders__status heading">Статус</div>
-
-                <div className="orders__name">
-                  <img src="images/orders/1.png" alt="order" />
-                  <a  href="product.html">
-                    Кускен Navy Blue
-                  </a>
-                </div>
-                <div className="orders__cost">16990</div>
-                <div className="orders__date">01.05.2020</div>
-                <div className="orders__status">Ожидается</div>
-
-                <div className="orders__name">
-                  <img src="images/orders/2.png" alt="order" />
-                  <a  href="product.html">
-                    Кускен Navy Blue
-                  </a>
-                </div>
-                <div className="orders__cost">28490</div>
-                <div className="orders__date">01.05.2020</div>
-                <div className="orders__status">Оплачено 50%</div>
-
-                <div className="orders__name">
-                  <img src="images/orders/3.png" alt="order" />
-                  <a  href="product.html">
-                    Кускен Navy Blue
-                  </a>
-                </div>
-                <div className="orders__cost">21990</div>
-                <div className="orders__date">01.05.2020</div>
-                <div className="orders__status">Доставлено</div>
-
-                <div className="orders__name">
-                  <img src="images/orders/4.png" alt="order" />
-                  <a  href="product.html">
-                    Кускен Navy Blue
-                  </a>
-                </div>
-                <div className="orders__cost">21921212190</div>
-                <div className="orders__date">01.05.2020</div>
-                <div className="orders__status">Отменен</div>
-
+                { fetchedOrders && fetchedOrders?.map(({ id, name, price, date, status, imageUrl }, idx) => (
+                  < React.Fragment key={idx}>
+                    <div className="orders__name">
+                      <img  className="orders__preview" src={imageUrl} alt="Превю мебели" />
+                      <Link to={`/products/${id}`}>{name}</Link>
+                    </div>
+                    <div className="orders__cost">{price}</div>
+                    <div className="orders__date">{date.toString().substring(0, 10)}</div>
+                    <div className="orders__status">{status}</div>
+                  </React.Fragment>
+                )) }
               </div>
             </div>
           </div>

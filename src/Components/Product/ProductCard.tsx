@@ -4,9 +4,7 @@ import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 
 import AddToFavorite from "../common/AddToFavorite";
-
-import { cartItemsActionCreator } from "../../redux/actions/cartItems";
-
+import { addtemsActionCreator } from "../../redux/actions/cartItems";
 import { ProductType } from "../../types";
 import { CustomSelect } from "..";
 
@@ -80,7 +78,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   colors.forEach((color, idx) => colorsPrepared[idx] = {value: color, label: color} );
 
   const handleSubmit = ({ quintity, color, dimensions }: submitValuesType) => {
-    dispatch(cartItemsActionCreator({
+    dispatch(addtemsActionCreator([{
         id: id,
         colors: [color],
         quintity: Number(quintity), 
@@ -90,7 +88,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
           height: parseInt(dimensions.split('×')[2]),
         },
         price: priceNew,
-      })
+      }])
     );
   };
 

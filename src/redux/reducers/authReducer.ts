@@ -5,10 +5,8 @@ export const initialState = {
   isAuth: false,
 };
 
-type stateType = typeof initialState;
 
-
-const authReducer = (state: stateType = initialState, action: authActionType): stateType => {
+const authReducer = (state = initialState, action: authActionType): typeof initialState => {
   switch (action.type) {
     case ActionsTypes.AUTH:
       return {

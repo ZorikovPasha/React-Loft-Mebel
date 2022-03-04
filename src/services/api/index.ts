@@ -1,6 +1,9 @@
-import { ProductType, SlideType, mobMenuType, CartItemType, userFormValuesType } from "../../types";
+import { ProductType, SlideType, mobMenuType, CartItemType,
+   userFormValuesType, OrderInfoType } from "../../types";
 
 const URL = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://distracted-clarke-2debdf.netlify.app';
+
+
 
 export class HttpClient {
   static async http<T>(request: string): Promise<T[]> {
@@ -11,6 +14,23 @@ export class HttpClient {
   static async getFurnitureItems (queryParams: string) {
     try {
       return HttpClient.http<ProductType>('/api/furniture' + queryParams);
+    } catch(err) {
+      console.log(err);
+    }
+  };
+
+  
+  static async getOneFurniture (id: string) {
+    try {
+      const response = await fetch(URL + '/api/furniture', {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({ id })
+      });
+      return await response.json();
     } catch(err) {
       console.log(err);
     }
@@ -198,6 +218,38 @@ export class HttpClient {
         },
         method: "POST",
         body: JSON.stringify({ id })
+      });
+      return response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  static async makeOrder(orderInfo: OrderInfoType[]) {
+    try {
+      const response = await fetch(URL + '/private/order', {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        },
+        method: "POST",
+        body: JSON.stringify({items: orderInfo})
+      });
+      return response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  static async getOrders() {
+    try {
+      const response = await fetch(URL + '/private/orders', {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        },
       });
       return response.json();
     } catch (err) {

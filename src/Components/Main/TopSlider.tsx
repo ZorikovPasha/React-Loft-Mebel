@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
 import { HttpClient } from "../../services/api";
-
 import { SlideType } from '../../types';
 
 const SliderPrevArrow: React.FC = () => {
@@ -38,7 +37,7 @@ const TopSlider: React.FC = () => {
   React.useEffect(() => {
     HttpClient.getSlidesItems()?.then(slides => setSlides(slides));
   }, []);
-  
+
   const settings = {
     fade: true,
     infinite: true,
@@ -54,23 +53,23 @@ const TopSlider: React.FC = () => {
       },
     ],
   };
-  
+
   return (
-    <Slider 
-      {...settings} 
+    <Slider
+      {...settings}
       className={`top__slider ${!slides?.length ? 'top__slider--fullsize': '' }`}
       >
       {slides?.length && slides?.map((slide, idx) => (
         <div key={idx}>
-          <div 
-            className="top__slider-item" 
+          <div
+            className="top__slider-item"
             style={{ backgroundImage: `url(${slide.imageUrl})` }}
             >
             <div className="top__slider-box">
               <h1 className="top__title">{slide.title}</h1>
               <p className="top__subtitle">{slide.subtitle}</p>
-              <Link 
-                className="top__btn" 
+              <Link
+                className="top__btn"
                 to="/catalog/kitchens"
                 >
                   Смотреть каталог
