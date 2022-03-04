@@ -2,8 +2,8 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { authActionCreator } from "../redux/actions/authAction";
-import { addtemsActionCreator, ordersActionCreator } from "../redux/actions/cartItems";
-import { addMultipleFavoritesActionCreator } from '../redux/actions/favorites';
+import { addtemsActionCreator, fetchingActionCreator, ordersActionCreator } from "../redux/actions/cartItems";
+import { addFavoritesActionCreator, loadingActionCreator } from '../redux/actions/favorites';
 import { resetCartActionCreator } from "../redux/actions/removeItem";
 import { addUserDataActionCreator } from "../redux/actions/userAction";
 import { getIsAuth } from "../redux/getters";
@@ -31,12 +31,14 @@ export const useAuth = async () => {
     const getData = async () => {
       let favoritesData: { favorites: string[] | number[] } = await HttpClient.getFAvorites();
       favoritesData.favorites = favoritesData.favorites.map(id => Number(id))
-      dispatch(addMultipleFavoritesActionCreator(favoritesData.favorites));
+      dispatch(addFavoritesActionCreator(favoritesData.favorites));
+      dispatch(loadingActionCreator(true));
 
       dispatch(resetCartActionCreator());
       const cartItems = await HttpClient.getCartItems();
 
       dispatch(addtemsActionCreator(cartItems.items));
+      dispatch(fetchingActionCreator(true));
 
       const userData = await HttpClient.getUserData();
       dispatch(addUserDataActionCreator(userData));

@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { addFavoriteActionCreator } from "../../redux/actions/favorites";
+import { addFavoritesActionCreator } from "../../redux/actions/favorites";
 import { addtemsActionCreator } from "../../redux/actions/cartItems";
 import { ProductType } from "../../types";
 import { getIsAuth } from "../../redux/getters";
@@ -22,11 +22,10 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
   const isAuth = useSelector(getIsAuth);
 
   const onLikeProductClick = () => {
-    dispatch(addFavoriteActionCreator(id));
+    dispatch(addFavoritesActionCreator([id]));
 
     if (isAuth ) {
       HttpClient.sendFavoriteItem(id);
-    } else {
     }
   };
 
@@ -118,7 +117,3 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
 };
 
 export default React.memo(SalesItem);
-function addItemToCart(arg0: { id: number; colors: string[]; quintity: number; dimensions: { width: number; length: number; height: number; }; price: number; }) {
-  throw new Error("Function not implemented.");
-}
-

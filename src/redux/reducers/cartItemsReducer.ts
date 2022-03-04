@@ -8,7 +8,8 @@ export type stateType = {
   quintity: number,
   totalCost: number,
   isOrderMade: boolean,
-  orders: OrderInfoType[]
+  orders: OrderInfoType[],
+  isLoaded: boolean
 }
 
 const initialState: stateType = {
@@ -16,7 +17,8 @@ const initialState: stateType = {
   quintity: 0,
   totalCost: 0,
   isOrderMade: false,
-  orders: []
+  orders: [],
+  isLoaded: false
 };
 
 const cartItemsReducer = (state = initialState, action: cartItemsActionType): stateType => {
@@ -80,6 +82,11 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
           quintity: action.payload.length,
           totalCost: action.payload.reduce((accum, item) => accum + item.price, 0)
         }
+      }
+    case ActionsTypes.CART_LOADING:
+      return {
+        ...state,
+        isLoaded: action.payload
       }
     default:
       return state;

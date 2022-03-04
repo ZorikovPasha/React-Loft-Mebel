@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getFavorites } from "../../redux/getters";
-import { addFavoriteActionCreator } from "../../redux/actions/favorites";
+import { addFavoritesActionCreator } from "../../redux/actions/favorites";
 import { HttpClient } from "../../services/api";
 
 interface IProps {
@@ -16,7 +16,7 @@ const AddToFavorite: React.FC<IProps> = ({ id }) => {
 
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
-    dispatch(addFavoriteActionCreator(id));
+    dispatch(addFavoritesActionCreator([id]));
     HttpClient.sendFavoriteItem(id);
   };
 

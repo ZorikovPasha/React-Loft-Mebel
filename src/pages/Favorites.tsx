@@ -1,19 +1,20 @@
 import React from 'react';
 import { useSelector } from "react-redux";
 
-import { SalesItem, Breadcrumbs, Empty } from "../Components";
-import { getFavorites, getProducts } from "../redux/getters";
+import { SalesItem, Breadcrumbs, Empty, Loader } from "../Components";
+import { getFavorites, getFavsLoadingState, getIsAuth, getProducts } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 import { ProductType } from "../types"; 
 
 const Favorites: React.FC = () => {
-
   const breadcrumbs = useBreadcrumbs();
 
+  const isLoaded = useSelector(getFavsLoadingState);
   const items = useSelector(getProducts);
   const favoriteItemsIds = useSelector(getFavorites);
+  const isAuth = useSelector(getIsAuth);
+  
   const favorites: ProductType[] = []; 
-
   favoriteItemsIds.forEach(id => {
     const item = items.find(item => item.id === id)
     if (!!item) {
@@ -35,7 +36,9 @@ const Favorites: React.FC = () => {
         </div>
       </section>
       {
-        favoriteItemsIds.length
+        !isLoaded && isAuth
+          ? <Loader />
+          : favoriteItemsIds.length
           ? (<section className="sales">
             <div className="container">
               <div className="sales__items sales__items--cart">

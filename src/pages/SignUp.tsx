@@ -28,8 +28,8 @@ const SignUp: React.FC = () => {
 
 
   const handleSubmit = async ({ name, email, password }: typeof initFormValues) => {
-    const res = await HttpClient.register(name, email, password);
 
+    const res = await HttpClient.register(name, email, password);
     if (res.status === 200) {
       document.body.classList.add("lock");
       setModalSignUp(true);

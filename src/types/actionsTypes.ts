@@ -1,10 +1,10 @@
-import { ProductType, SlideType, CartItemType, userFormValuesType, OrderInfoType } from "./index";
+import { ProductType, CartItemType, userFormValuesType, OrderInfoType } from "./index";
 
 export enum ActionsTypes {
   FETCH_PRODUCTS = "FETCH_PRODUCTS",
   FETCH_SLIDES = "FETCH_SLIDES",
-  ADD_TO_FAVORITES = 'ADD_TO_FAVORITES',
-  ADD_TO_FAVORITES_MULT = 'ADD_TO_FAVORITES_MULT',
+  ADD_FAVORITES = 'ADD_FAVORITES',
+  FAVORITES_LOADED = 'FAVORITES_LOADED',
   ADD_CART_ITEMS = "ADD_CART_ITEMS",
   ADD_SINGLE_ITEM ='ADD_SINGLE_ITEM',
   QUINTITY = "QUINTITY",
@@ -17,6 +17,7 @@ export enum ActionsTypes {
   RESET_FAVORITES = "RESET_FAVORITES",
   ORDER_STATUS = "ORDER_STATUS",
   SET_ORDERS = "SET_ORDERS",
+  CART_LOADING = "CART_LOADING"
 }
 
 export type fetchItemsActionType = {
@@ -26,13 +27,13 @@ export type fetchItemsActionType = {
 
 
 export type favoritesActionType = {
-  type: ActionsTypes.ADD_TO_FAVORITES;
-  payload: number;
-} | {
-  type: ActionsTypes.ADD_TO_FAVORITES_MULT;
+  type: ActionsTypes.ADD_FAVORITES;
   payload: number[];
 } | {
   type: ActionsTypes.RESET_FAVORITES;
+} | { 
+  type: ActionsTypes.FAVORITES_LOADED,
+  payload: boolean 
 };
 
 export type ordersActionCreator = {
@@ -46,7 +47,8 @@ export type cartItemsActionType = {
   payload: CartItemType;
 } | ordersActionCreator | { 
   type: ActionsTypes.ADD_CART_ITEMS, 
-  payload: CartItemType[] };
+  payload: CartItemType[] 
+} | { type: ActionsTypes.CART_LOADING, payload: boolean };
 
 
 export type authActionType = {

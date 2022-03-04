@@ -1,5 +1,5 @@
 import { userFormValuesType } from "../../types";
-import { ActionsTypes, userActionType } from "../../types/actionsTypes";
+import { ActionsTypes } from "../../types/actionsTypes";
 
 type userActionsTypes = ActionsTypes.USER;
 

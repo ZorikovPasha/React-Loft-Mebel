@@ -2,10 +2,12 @@ import { favoritesActionType,  ActionsTypes } from "../../types/actionsTypes";
 
 type stateType = {
   favorites: number[];
+  isLoaded: boolean
 };
 
 const initialState: stateType = {
   favorites: [],
+  isLoaded: false
 };
 
 export const favoritesReducer = (
@@ -13,29 +15,29 @@ export const favoritesReducer = (
   action: favoritesActionType 
   ): stateType => {
   switch (action.type) {
-    case ActionsTypes.ADD_TO_FAVORITES:
-      if (state.favorites.includes(action.payload)) {
-        const arr = [...state.favorites].filter(item => item !== action.payload)
-        return {
-          ...state,
-          favorites: arr
+    case ActionsTypes.ADD_FAVORITES:
+      let tmpState = [...state.favorites];
+      let tmpPayload = [...action.payload];
+      action.payload.forEach(id => {
+        if (state.favorites.includes(id)) {
+          tmpState = tmpState.filter(item => item !== id);
+          tmpPayload = tmpPayload.filter(item => item !== id)
         }
-      } else {
-        return {
-          ...state,
-          favorites: [...state.favorites, action.payload]
-        };
-      }
-    case ActionsTypes.ADD_TO_FAVORITES_MULT:
+      })
       return {
         ...state,
-        favorites: action.payload
+        favorites: [...tmpState, ...tmpPayload]
       }
     case ActionsTypes.RESET_FAVORITES:
       return {
         ...state,
         ...initialState,
       }
+      case ActionsTypes.FAVORITES_LOADED:
+        return {
+          ...state,
+          isLoaded: action.payload
+        }
     default:
       return state;
   }

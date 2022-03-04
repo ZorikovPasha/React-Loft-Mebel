@@ -14,6 +14,9 @@ export const useLoading = (
     const dispatch = useDispatch();
     const history = useHistory();
 
+    console.log(queryParams);
+    
+
     React.useEffect(() => {
       setState(true);
       dispatch(thunkCreator(queryParams));
