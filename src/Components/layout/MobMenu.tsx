@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 
 import { mobMenuType } from "../../types";
-import { HttpClient } from "../../services/api";
+import { ApiClient } from "../../services/api";
 
 interface IMobMenuProps {
   isMobMenuOpen: Boolean;
@@ -10,10 +10,11 @@ interface IMobMenuProps {
 };
 
 const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
-  const [mobMenu, setMobMenu] = React.useState<mobMenuType[]>();
+  const [mobMenu, setMobMenu] = React.useState<mobMenuType>();
+
 
   React.useEffect(() => {
-    HttpClient.getMobMenuItems()?.then(items => setMobMenu(items));
+      ApiClient.get<mobMenuType[]>('/api/mobMenu').then(data => setMobMenu(data[0]))
   }, []);
 
   const onMobMenuItemClick: React.MouseEventHandler<HTMLAnchorElement> = (): void => {
@@ -39,7 +40,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       </div>
       <ul className="mob-menu__list">
         {mobMenu &&
-          mobMenu[0]?.top.map(item => (
+          mobMenu?.top.map(item => (
             <li 
               className="mob-menu__list-item" 
               key={item.mobMenuItem}
@@ -60,7 +61,7 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
       <p className="mob-menu__subtitle">Категории</p>
       <ul className="mob-menu__list">
         {mobMenu &&
-          mobMenu[0]?.body.map(item => (
+          mobMenu?.body.map(item => (
             <li className="mob-menu__list-item" key={item.mobMenuItem}>
               <Link 
                 to={item.link} 

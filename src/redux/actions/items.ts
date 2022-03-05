@@ -5,15 +5,12 @@ import { ActionsTypes, fetchItemsActionType } from '../../types/actionsTypes';
 import { ProductType } from '../../types';
 import { stateType } from '../reducers/itemsReducer';
 
-import { HttpClient } from '../../services/api';
+import { ApiClient } from '../../services/api';
 
 export const fetchItemsThunkCreator = (queryParams: string): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {
-    const furniture = await HttpClient.getFurnitureItems(queryParams);
-    
-    if (furniture) {
-      dispatch(fetchItemsActionCreator(furniture));
-    }
+    const furniture = await ApiClient.get<ProductType[]>('/api/furniture' + queryParams);
+    dispatch(fetchItemsActionCreator(furniture));
   }
 }
 

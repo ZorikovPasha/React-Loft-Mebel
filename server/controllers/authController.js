@@ -23,13 +23,13 @@ class authController {
       if (errors.length) {
         return ApiError.badRequest(res, 'An error occured');
       }
-
       const { userName, email, password } = req.body;
 
       const candidate = await UserModel.findOne({userName});
       if (candidate) {
         return ApiError.badRequest(res, 'User with provided id already exists');
       }
+
       const hashedPassword = bcrypt.hashSync(password, 10);
 
       const userRole = await RoleModel.findOne({ value: 'USER' });
@@ -49,7 +49,7 @@ class authController {
       });
 
       await user.save();
-      res.json({ message: 'User has been registered', status: 200 })
+      res.json({ message: 'User has been registered', status: 200 });
     } catch (e) {
       return ApiError.badRequest(res, 'An error occured during registration');
     }
@@ -94,8 +94,16 @@ class authController {
         street,
         house,
         apartment } = req.body;
+        console.log(name,
+          email,
+          surname,
+          phone,
+          city,
+          street,
+          house,
+          apartment);
   
-      await UserModel.updateOne({ id: req.user.id }, { $set: { 
+      await UserModel.updateOne({ _id: req.user._id }, { $set: { 
         name,
         email,
         surname,

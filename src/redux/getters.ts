@@ -10,4 +10,6 @@ export const getIsAuth = (state: RootState) => state.auth.isAuth;
 export const getUserData = (state: RootState) => state.user;
 export const getOrderStatus = (state: RootState) => state.cartItems.isOrderMade;
 export const getOrders = (state: RootState) => state.cartItems.orders;
+export const getCartLoadingState = (state: RootState) => state.cartItems.isLoaded;
+export const getFavsLoadingState = (state: RootState) => state.favorites.isLoaded;
 

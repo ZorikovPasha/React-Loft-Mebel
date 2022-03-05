@@ -183,12 +183,22 @@
     line-height: 15px;
     color: #FFFFFF;
     padding: 12px 20px;
+    opacity: 1;
+    transition: all .2s;
   }
 
   &__form-btn--red {
     background-color: rgba(red, .4);
   }
 
+  &__form-btn:hover {
+    opacity: .9;
+  }
+
+  &__form-btn:focus,
+  &__form-btn:active {
+    opacity: .5;
+  }
 
   // .profile__orders
 

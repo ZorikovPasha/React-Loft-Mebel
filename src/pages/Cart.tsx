@@ -1,11 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { SalesItem, CartItem, Breadcrumbs, Empty, ModalInfo } from "../Components";
+import { SalesItem, CartItem, Breadcrumbs, Empty, ModalInfo, Loader } from "../Components";
 import { getCartItems, getQuintity, getTotalCost, getFavorites, 
-  getProducts, getOrderStatus, getIsAuth } from "../redux/getters";
+  getProducts, getOrderStatus, getIsAuth, getCartLoadingState } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
-import { HttpClient } from "../services/api";
+import { UserApiClient } from "../services/api";
 import { OrderInfoType } from "../types";
 import { resetCartActionCreator } from "../redux/actions/removeItem";
 import { setOrderStatusActionCreator } from "../redux/actions/cartItems";
@@ -22,6 +22,7 @@ const Cart: React.FC = () => {
   const favorites = useSelector(getFavorites);
   const isOrderMade = useSelector(getOrderStatus);
   const isAuth = useSelector(getIsAuth);
+  const isLoaded = useSelector(getCartLoadingState);
   
   const breadcrumbs = useBreadcrumbs();
 
@@ -50,7 +51,8 @@ const Cart: React.FC = () => {
         })
       }
     })
-    HttpClient.makeOrder(orders);
+    UserApiClient.makeOrder(orders);
+    cartItems.forEach(({ id }) => UserApiClient.removeCartItem(id));
     dispatch(resetCartActionCreator());
     dispatch(setOrderStatusActionCreator(true));
   }
@@ -72,7 +74,9 @@ const Cart: React.FC = () => {
       <section className="cart">
         <div className="container">
           {
-            !cartItems.length 
+            !isLoaded && isAuth
+              ? <Loader />
+              : !cartItems.length 
               ? <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />
               :
                 <>

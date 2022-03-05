@@ -6,7 +6,7 @@ import { removeItemActionCreator } from "../../redux/actions/removeItem";
 import { CartItemType, ProductType } from "../../types";
 
 import crossImg from "../../images/icons/cross.svg";
-import { HttpClient } from "../../services/api";
+import { UserApiClient } from "../../services/api";
 
 interface ICartItemProps {
   cartItem: CartItemType;
@@ -18,7 +18,7 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
 
   const onRemoveItemClick: MouseEventHandler<HTMLDivElement> = (): void => {
     dispatch(removeItemActionCreator(cartItem));
-    HttpClient.removeCartItem(cartItem.id);
+    UserApiClient.removeCartItem(cartItem.id);
   }
 
   const getTotalCost = React.useMemo(() => {

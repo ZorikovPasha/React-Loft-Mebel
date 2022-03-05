@@ -2,44 +2,62 @@ import React from "react";
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { Breadcrumbs } from "../Components";
+import { Breadcrumbs, ModalInfo } from "../Components";
 import { useBreadcrumbs } from "../hooks/useBreadcrumbs";
+import { formDataType, UserApiClient } from "../services/api";
 
 const Contacts: React.FC = () => {
+  const [isModalOpened, setModalOpened] = React.useState(false);
   const breadcrumbs = useBreadcrumbs();
 
   const formSchema = yup.object().shape({
-    name: yup.string().required("Пожалуйста, заполните имя"),
+    userName: yup.string().required("Пожалуйста, заполните имя"),
     email: yup.string().email('Введите, корректный email').required('Пожалуйста, заполните email'),
     message: yup.string().required("Пожалуйста, напишите сообщение"),
   });
 
+  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+    document.body.classList.remove('lock');
+    setModalOpened(false);
+  };
+
+  const handleSubmitMessage = (formData: formDataType) => {
+    UserApiClient.sendMessage(formData);
+    document.body.classList.add('lock');
+    setModalOpened(true);
+  };
+
   return (
     <>
+      {isModalOpened && <ModalInfo 
+        title="Сообщение отправлено"
+        text="Мы с вами свяжемся"
+        onModalClose={onModalClose}
+      />}
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className="contacts">
         <div className="container">
           <h4 className="contacts__title">Свяжитесь с нами</h4>
           <div className="contacts__inner">
             <Formik 
-              initialValues={{ name: "", email: "", message: "" }}
+              initialValues={{ userName: "", email: "", message: "" }}
               validationSchema={formSchema}
-              onSubmit={(data) => console.log(data)}
+              onSubmit={handleSubmitMessage}
             >
               {({ values, errors, touched, handleSubmit, handleChange, handleBlur }) => (
                 <form className="contacts__form" onSubmit={handleSubmit}>
                   <div className="contacts__form-line">
                     <div className="contacts__form-block">
-                    {errors.name && touched.name && 
+                    {errors.userName && touched.userName && 
                       <p className="contacts__form-error form-error">
-                      {errors.name}
+                      {errors.userName}
                       </p>}
                       <label className="contacts__form-label">
                         Ваше имя
                         <input 
-                          value={values.name}
-                          className={`contacts__form-input ${ errors.name && touched.name ? 'form-input--error' : ''}`}
-                          name="name" 
+                          value={values.userName}
+                          className={`contacts__form-input ${ errors.userName && touched.userName ? 'form-input--error' : ''}`}
+                          name="userName" 
                           type="text" 
                           placeholder="Введите ваше имя" 
                           required 

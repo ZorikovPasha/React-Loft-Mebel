@@ -1,7 +1,8 @@
 import { ActionsTypes } from '../../types/actionsTypes';
 import { CartItemType, OrderInfoType } from '../../types';
 
-type CartItemsActionsTypes = ActionsTypes.ADD_CART_ITEMS | ActionsTypes.ORDER_STATUS | ActionsTypes.SET_ORDERS;
+type CartItemsActionsTypes = ActionsTypes.ADD_CART_ITEMS | ActionsTypes.ORDER_STATUS | ActionsTypes.SET_ORDERS
+  | ActionsTypes.CART_LOADING;
 
 type actionCreatorType<T> = (payload?: T) => { type: CartItemsActionsTypes, payload?: T }
 
@@ -18,4 +19,9 @@ export const setOrderStatusActionCreator: actionCreatorType<boolean> = (payload)
 export const ordersActionCreator: actionCreatorType<OrderInfoType[]> = (payload) => ({
   type: ActionsTypes.SET_ORDERS,
   payload: payload,
+});
+
+export const fetchingActionCreator: actionCreatorType<boolean> = (bool) => ({
+  type: ActionsTypes.CART_LOADING,
+  payload: bool
 });
