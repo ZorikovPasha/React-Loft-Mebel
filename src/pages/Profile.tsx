@@ -6,7 +6,7 @@ import term_1 from "../images/terms/1.svg";
 import term_2 from "../images/terms/2.svg";
 import term_3 from "../images/terms/3.svg";
 import { userFormValuesType } from '../types';
-import { HttpClient } from "../services/api";
+import { UserApiClient } from "../services/api";
 import { useDispatch, useSelector } from 'react-redux';
 import { getOrders, getUserData } from '../redux/getters';
 import { authActionCreator } from '../redux/actions/authAction';
@@ -54,7 +54,7 @@ const Profile: React.FC = () => {
 
     if (isAnyDirty) {
       buffer = {...userData};
-      HttpClient.sendUserData(userData);
+      UserApiClient.sendUserData(userData);
     }
   };
 
@@ -124,6 +124,7 @@ const Profile: React.FC = () => {
                         <input 
                           name="email"
                           type="text" 
+                          required 
                           className={`profile__form-input ${touched.email && errors.email ? 'form-input--error' : ''} `}
                           value={values.email}
                           onChange={handleChange}
@@ -138,6 +139,7 @@ const Profile: React.FC = () => {
                           <input 
                             name="surname"
                             type="text" 
+                            required 
                             className={`profile__form-input ${touched.surname && errors.surname ? 'form-input--error' : ''} `}
                             value={values.surname}
                             onChange={handleChange}
@@ -152,6 +154,7 @@ const Profile: React.FC = () => {
                           <input 
                             name="phone"
                             type="text" 
+                            required 
                             className={`profile__form-input ${touched.phone && errors.phone ? 'form-input--error' : ''} `}
                             value={values.phone}
                             onChange={handleChange}
@@ -166,6 +169,7 @@ const Profile: React.FC = () => {
                         <input 
                           name="city"
                           type="text" 
+                          required 
                           className={`profile__form-input ${touched.city && errors.city ? 'form-input--error' : ''} `}
                           value={values.city}
                           onChange={handleChange}
@@ -180,6 +184,7 @@ const Profile: React.FC = () => {
                       <input 
                         name="street"
                         type="text" 
+                        required 
                         className={`profile__form-input ${touched.street && errors.street ? 'form-input--error' : ''} `}
                         value={values.street}
                         onChange={handleChange}
@@ -195,6 +200,7 @@ const Profile: React.FC = () => {
                         <input 
                           name="house"
                           type="text" 
+                          required 
                           className={`profile__form-input ${touched.house && errors.house ? 'form-input--error' : ''} `}
                           value={values.house}
                           onChange={handleChange}
@@ -208,6 +214,7 @@ const Profile: React.FC = () => {
                         <input 
                           name="apartment"
                           type="text" 
+                          required 
                           className={`profile__form-input ${touched.apartment && errors.apartment ? 'form-input--error' : ''} `}
                           value={values.apartment}
                           onChange={handleChange}

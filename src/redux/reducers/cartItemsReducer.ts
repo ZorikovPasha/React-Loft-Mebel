@@ -35,8 +35,12 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
       }
     case ActionsTypes.RESET_CART:
       return {
-        ...state,
         ...initialState,
+        isLoaded: true,
+        quintity: 0,
+        totalCost: 0,
+        isOrderMade: true,
+        orders: state.orders,
       }
     case ActionsTypes.ORDER_STATUS:
       return {

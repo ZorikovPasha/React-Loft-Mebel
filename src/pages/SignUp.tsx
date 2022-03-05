@@ -5,20 +5,20 @@ import * as yup from 'yup';
 
 import { ModalInfo } from '../Components';
 
-import { HttpClient } from '../services/api';
+import { UserApiClient } from '../services/api';
 
 const SignUp: React.FC = () => {
 
   const history = useHistory();
   const [modalSignUp, setModalSignUp] = React.useState(false);
   const initFormValues = {
-    name: '',
+    userName: '',
     email: '',
     password: '',
   };
 
   const formSchema = yup.object().shape({
-    name: yup.string().required("Пожалуйста, заполните имя"),
+    userName: yup.string().required("Пожалуйста, заполните имя"),
     email: yup.string().email('Введите, корректный email').required('Пожалуйста, заполните email'),
     password: yup.string()
       .required("Введите пароль")
@@ -27,10 +27,11 @@ const SignUp: React.FC = () => {
   });
 
 
-  const handleSubmit = async ({ name, email, password }: typeof initFormValues) => {
+  const handleSubmit = async ({ userName, email, password }: typeof initFormValues) => {
 
-    const res = await HttpClient.register(name, email, password);
-    if (res.status === 200) {
+    const data  = await UserApiClient.register<{ message: string, status: number }>({ userName, email, password });
+    
+    if (data.status === 200) {
       document.body.classList.add("lock");
       setModalSignUp(true);
     }
@@ -63,17 +64,17 @@ const SignUp: React.FC = () => {
                       <p className="signup__form-label form-label">Имя пользователя</p>
                       <input 
                         type="text" 
-                        className={`signup__form-input form-input ${errors.name && touched.name ? 'form-input--error' : ''}`} 
-                        value={values.name}
-                        name="name" 
+                        className={`signup__form-input form-input ${errors.userName && touched.userName ? 'form-input--error' : ''}`} 
+                        value={values.userName}
+                        name="userName" 
                         placeholder="Введите имя" 
                         required 
                         onChange={handleChange}
                         onBlur={handleBlur}
                         />
-                      {errors.name && touched.name && 
+                      {errors.userName && touched.userName && 
                         <p className="form-error">
-                          {errors.name}
+                          {errors.userName}
                         </p>}
                     </div>
 

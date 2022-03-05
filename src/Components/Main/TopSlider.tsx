@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
-import { HttpClient } from "../../services/api";
+import { ApiClient } from "../../services/api";
 import { SlideType } from '../../types';
 
 const SliderPrevArrow: React.FC = () => {
@@ -35,7 +35,7 @@ const TopSlider: React.FC = () => {
   const [slides, setSlides] = React.useState<SlideType[]>();
 
   React.useEffect(() => {
-    HttpClient.getSlidesItems()?.then(slides => setSlides(slides));
+    ApiClient.get<SlideType[]>('/api/slides').then(data => setSlides(data))
   }, []);
 
   const settings = {

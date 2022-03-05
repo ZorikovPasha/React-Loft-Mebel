@@ -5,7 +5,7 @@ import { SalesItem, CartItem, Breadcrumbs, Empty, ModalInfo, Loader } from "../C
 import { getCartItems, getQuintity, getTotalCost, getFavorites, 
   getProducts, getOrderStatus, getIsAuth, getCartLoadingState } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
-import { HttpClient } from "../services/api";
+import { UserApiClient } from "../services/api";
 import { OrderInfoType } from "../types";
 import { resetCartActionCreator } from "../redux/actions/removeItem";
 import { setOrderStatusActionCreator } from "../redux/actions/cartItems";
@@ -51,7 +51,8 @@ const Cart: React.FC = () => {
         })
       }
     })
-    HttpClient.makeOrder(orders);
+    UserApiClient.makeOrder(orders);
+    cartItems.forEach(({ id }) => UserApiClient.removeCartItem(id));
     dispatch(resetCartActionCreator());
     dispatch(setOrderStatusActionCreator(true));
   }

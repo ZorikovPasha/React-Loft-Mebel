@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 
 import { ModalInfo } from '../Components';
 import { authActionCreator } from '../redux/actions/authAction';
-import { HttpClient } from '../services/api';
+import { UserApiClient } from '../services/api';
 import vk from '../images/vk.svg';
 import fb from '../images/fb.svg';
 import google from '../images/google.svg';
@@ -35,7 +35,9 @@ const Login: React.FC = () => {
   });
 
   const handleSubmit = async({ email, password }: typeof initFormValues) => {
-    const { token, message } = await HttpClient.login(email, password);
+    const { token, message } = await UserApiClient.login({email, password});
+    console.log(token, message);
+    
     
     if (message) {
       loginErrorMessage.current = message;
@@ -44,7 +46,7 @@ const Login: React.FC = () => {
     }
 
     if (token) {
-      localStorage.setItem('token', token);
+      UserApiClient.setToken(token)
       dispatch(authActionCreator(true));
 
       history.push({

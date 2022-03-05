@@ -1,259 +1,138 @@
-import { ProductType, SlideType, mobMenuType, CartItemType,
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInterceptorManager, AxiosInstance } from 'axios';
+import { CartItemType,
    userFormValuesType, OrderInfoType } from "../../types";
 
-const URL = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://distracted-clarke-2debdf.netlify.app';
 
 
+export const apiConfig = {
+  returnRejectedPromiseOnError: true,
+  baseURL: "http://localhost:5000",
+  headers: {
+    "Cache-Control": "no-cache, no-store, must-revalidate",
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+}
 
-export class HttpClient {
-  static async http<T>(request: string): Promise<T[]> {
-    const response = await fetch(URL + request);
-    return await response.json();
-  };
 
-  static async getFurnitureItems (queryParams: string) {
-    try {
-      return HttpClient.http<ProductType>('/api/furniture' + queryParams);
-    } catch(err) {
-      console.log(err);
-    }
-  };
+type SignUpCredsType = {
+  userName: string;
+  email: string;
+  password: string;
+};
 
-  
-  static async getOneFurniture (id: string) {
-    try {
-      const response = await fetch(URL + '/api/furniture', {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({ id })
-      });
-      return await response.json();
-    } catch(err) {
-      console.log(err);
-    }
-  };
+type LoginCredsType = Omit<SignUpCredsType, 'userName'>;
 
-  static async getSlidesItems() {
-    try {
-      return HttpClient.http<SlideType>('/api/slides');
-    } catch(err) {
-      console.log(err);
-    }
-  };
+export type formDataType = Omit<SignUpCredsType, 'password'> & { message: string };
 
-  static async getMobMenuItems() {
-    try {
-      return HttpClient.http<mobMenuType>('/api/mobMenu');
-    } catch(err) {
-      console.log(err);
-    }
-  };
-
-  static async register (
-    userName: string, 
-    email: string, 
-    password: string): Promise<{ message: string, status?: number }> {
-    try {
-      const response = await fetch(URL + '/auth/register', {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({ userName, email, password })
-      })
-  
-      return response.json()
-    } catch (e) {
-      console.log(e);
-      return { message: 'An error uccured...' }
-    }
-  };
-
-  static async login (
-    email: string, 
-    password: string
-    ): Promise<{ message: string, token?: string }> {
-    try {
-      const response = await fetch(URL + '/auth/login', {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({ email, password })
-      })
-  
-      return response.json()
-    } catch (e) {
-      console.log(e);
-      return { message: 'An error uccured...' }
-    }
-  };
-
-  static async sendFavoriteItem (id: number) {
-    try {
-      await fetch(URL + '/private/favorite', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-        method: 'POST',
-        body: JSON.stringify({ id })
-      })
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  static async getFAvorites() {
-    try {
-      const response = await fetch(URL + '/private/favorites', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-      })
-      return response.json();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  static async addItemToCart (cartItem: CartItemType) {
-    try {
-      const response = await fetch(URL + '/private/cartItem', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-        method: 'POST',
-        body: JSON.stringify(cartItem)
-      })
-      return response.json();
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  static async getCartItems () {
-    try {
-      const response = await fetch(URL + '/private/cartItems', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-      })
-      return response.json();
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  static async checkAuth (token: string): Promise<{ message: string }> {
-    try {
-      const response = await fetch(URL + '/private/check', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token
-        },
-      })
-  
-      return response.json();
-    } catch (e) {
-      console.log(e);
-      return { message: 'An error uccured during auth check...' }
-    }
-  };
-
-  static async sendUserData(formValues: userFormValuesType) {
-    try {
-      const response = await fetch(URL + '/private/user', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-        method: "POST",
-        body: JSON.stringify(formValues)
-      })
-  
-      return response.json();
-    } catch (e) {
-      console.log(e);
-      return { message: 'An error uccured during auth check...' }
-    }
-  }
-
-  static async getUserData() {
-    try {
-      const response = await fetch(URL + '/private/user', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-      });
-      return response.json();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  static async removeCartItem(id: number) {
-    try {
-      const response = await fetch(URL + '/private/removeCartItem', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-        method: "POST",
-        body: JSON.stringify({ id })
-      });
-      return response.json();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  static async makeOrder(orderInfo: OrderInfoType[]) {
-    try {
-      const response = await fetch(URL + '/private/order', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-        method: "POST",
-        body: JSON.stringify({items: orderInfo})
-      });
-      return response.json();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  static async getOrders() {
-    try {
-      const response = await fetch(URL + '/private/orders', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token')
-        },
-      });
-      return response.json();
-    } catch (err) {
-      console.log(err);
-    }
+export class Axios {
+  protected _axios: AxiosInstance;
+  public interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>;
+    response: AxiosInterceptorManager<AxiosResponse>;
+  } | undefined;
+  constructor(config: AxiosRequestConfig) {
+    this._axios =  axios.create(config);
   }
 }
+
+
+class Api extends Axios {
+  constructor(config: AxiosRequestConfig) {
+    super(config);
+  }
+
+  success = <T>(response: AxiosResponse<T>): T =>  {
+    return response.data;
+  }
+
+  error = <T>(error: AxiosError<T>): void => {
+    throw error;
+  }
+
+  get = <T>(url: string): Promise<T> => {
+    return this._axios.get(url)
+      .then(this.success)
+      .catch((error: AxiosError<Error>) => {
+        throw error;
+    });
+    }
+  post = <T, B>(url: string, data?: B): Promise<T> => {
+    return this._axios.post(url, data)
+      .then(this.success)
+      .catch((error: AxiosError<Error>) => {
+        console.log(error.response);
+        return error?.response?.data;
+      });
+  }
+}
+
+class UserApi extends Api {
+  constructor(config: AxiosRequestConfig) {
+    super(config)
+    this._axios.interceptors.request.use((config) => {
+      return {
+        ...config,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    }, (error) => {
+        console.log(error);
+    });
+  }
+  setToken =  (token: string): void => {
+    localStorage.setItem('token', token);
+  }
+
+  register = <T>(credentials: SignUpCredsType): Promise<T> => {
+    return this.post('/auth/register', {...credentials})
+  }
+
+  login = (credentials: LoginCredsType): Promise<{ token?: string, message?: string }> => {
+    return this.post('/auth/login', {...credentials})
+  }
+
+  checkAuth = (): Promise<{ token?: string, message?: string }> => {
+    return this.get('/private/check');
+  }
+
+  getFavorites = (): Promise<{ favorites: string[] }> => {
+    return this.get('/private/favorites');
+  };
+
+  getCartItems = <T>(): Promise<T> => {
+    return this.get('/private/cartItems');
+  };
+
+  getUserData = <T>(): Promise<T> => {
+    return this.get('/private/user');
+  };
+  getOrders = <T>(): Promise<T> => {
+    return this.get('/private/orders');
+  };
+  getOneFurniture = <T>(id: string): Promise<T> => {
+    return this.post('/api/furniture', { id })
+  };
+  sendFavoriteItem = (id: number) => {
+    this.post('/private/favorite', { id })
+  };
+  addItemToCart = (cartItem: CartItemType) => {
+    this.post('/private/cartItem', { ...cartItem })
+  };
+  removeCartItem = (id: number) => {
+    this.post('/private/removeCartItem', { id })
+  };
+  sendUserData = (userFormValues: userFormValuesType) => {
+    this.post('/private/user', { ...userFormValues })
+  };
+  makeOrder = (orderInfo: OrderInfoType[]) => {
+    this.post('/private/order', { items: orderInfo })
+  };
+  sendMessage = (formData: formDataType) => {
+    this.post('/private/message', { ...formData })
+  };
+}
+
+export const ApiClient = new Api(apiConfig);
+export const UserApiClient = new UserApi(apiConfig);

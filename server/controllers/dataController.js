@@ -126,9 +126,9 @@ class dataController {
   async getCartItems(req, res) {
     try {
       if (req.user) {
-        const { cartItems } = await User.findOne({ id: req.user._id })
+        const { cartItems } = await User.findOne({ _id: req.user._id })
         delete cartItems._id
-        res.json({ items: req.user.cartItems })
+        res.json({ items: cartItems })
       }
     } catch (err) {
       return ApiError.internal(res, err);

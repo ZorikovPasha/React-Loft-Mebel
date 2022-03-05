@@ -6,7 +6,7 @@ import { addFavoritesActionCreator } from "../../redux/actions/favorites";
 import { addtemsActionCreator } from "../../redux/actions/cartItems";
 import { ProductType } from "../../types";
 import { getIsAuth } from "../../redux/getters";
-import { HttpClient } from "../../services/api";
+import { UserApiClient } from "../../services/api";
 
 interface ISalesItemProps {
   product: ProductType;
@@ -25,7 +25,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
     dispatch(addFavoritesActionCreator([id]));
 
     if (isAuth ) {
-      HttpClient.sendFavoriteItem(id);
+      UserApiClient.sendFavoriteItem(id);
     }
   };
 
@@ -48,7 +48,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
     );
     if (!isAuth) return;
 
-    HttpClient.addItemToCart({
+    UserApiClient.addItemToCart({
       id: id,
       colors: [colors[0]],
       quintity: 1,

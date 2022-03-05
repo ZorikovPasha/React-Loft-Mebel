@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { getFavorites } from "../../redux/getters";
 import { addFavoritesActionCreator } from "../../redux/actions/favorites";
-import { HttpClient } from "../../services/api";
+import { UserApiClient } from "../../services/api";
 
 interface IProps {
   id: number
@@ -17,7 +17,7 @@ const AddToFavorite: React.FC<IProps> = ({ id }) => {
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
     dispatch(addFavoritesActionCreator([id]));
-    HttpClient.sendFavoriteItem(id);
+    UserApiClient.sendFavoriteItem(id);
   };
 
   return (
