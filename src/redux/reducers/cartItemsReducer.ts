@@ -39,13 +39,12 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         isLoaded: true,
         quintity: 0,
         totalCost: 0,
-        isOrderMade: true,
         orders: state.orders,
       }
     case ActionsTypes.ORDER_STATUS:
       return {
         ...state,
-        isOrderMade: true,
+        isOrderMade: action.payload,
       }
     case ActionsTypes.SET_ORDERS:
       return {

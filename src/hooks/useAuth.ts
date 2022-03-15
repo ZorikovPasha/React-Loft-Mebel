@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActionCreator } from "../redux/actions/authAction";
 import { addtemsActionCreator, fetchingActionCreator, ordersActionCreator } from "../redux/actions/cartItems";
 import { addFavoritesActionCreator, loadingActionCreator } from '../redux/actions/favorites';
-import { resetCartActionCreator } from "../redux/actions/removeItem";
+import { resetCartActionCreator } from "../redux/actions/cartItems";
 import { addUserDataActionCreator } from "../redux/actions/userAction";
 import { getIsAuth } from "../redux/getters";
 import { UserApiClient } from "../services/api/";

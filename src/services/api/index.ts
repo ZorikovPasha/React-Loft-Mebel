@@ -1,12 +1,14 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInterceptorManager, AxiosInstance } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios';
 import { CartItemType,
    userFormValuesType, OrderInfoType } from "../../types";
 
 
+const URI = process.env.URI ?? 'http://localhost:5000';
+
 
 export const apiConfig = {
   returnRejectedPromiseOnError: true,
-  baseURL: "http://localhost:5000",
+  baseURL: URI,
   headers: {
     "Cache-Control": "no-cache, no-store, must-revalidate",
     "Content-Type": "application/json",
@@ -27,10 +29,6 @@ export type formDataType = Omit<SignUpCredsType, 'password'> & { message: string
 
 export class Axios {
   protected _axios: AxiosInstance;
-  public interceptors: {
-    request: AxiosInterceptorManager<AxiosRequestConfig>;
-    response: AxiosInterceptorManager<AxiosResponse>;
-  } | undefined;
   constructor(config: AxiosRequestConfig) {
     this._axios =  axios.create(config);
   }
