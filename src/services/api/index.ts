@@ -3,7 +3,7 @@ import { CartItemType,
    userFormValuesType, OrderInfoType } from "../../types";
 
 
-const URI = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://distracted-clarke-2debdf.netlify.app/';
+const URI = process.env.URI ?? 'http://localhost:5000';
 
 
 export const apiConfig = {
