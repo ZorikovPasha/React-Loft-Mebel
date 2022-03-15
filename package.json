@@ -44,6 +44,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
+    "client": "react-scripts start",
     "start": "concurrently \"npm run serve\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",

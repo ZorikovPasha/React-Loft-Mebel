@@ -42,13 +42,13 @@ export type ordersActionCreator = {
 };
 
 export type cartItemsActionType = {
-  type: ActionsTypes.ADD_SINGLE_ITEM | ActionsTypes.REMOVE_CART_ITEM | ActionsTypes.RESET_CART
-  | ActionsTypes.ORDER_STATUS ;
+  type: ActionsTypes.ADD_SINGLE_ITEM | ActionsTypes.REMOVE_CART_ITEM | ActionsTypes.RESET_CART;
   payload: CartItemType;
 } | ordersActionCreator | { 
   type: ActionsTypes.ADD_CART_ITEMS, 
   payload: CartItemType[] 
-} | { type: ActionsTypes.CART_LOADING, payload: boolean };
+} | { type: ActionsTypes.CART_LOADING, payload: boolean } | 
+{ type: ActionsTypes.ORDER_STATUS, payload: boolean };
 
 
 export type authActionType = {

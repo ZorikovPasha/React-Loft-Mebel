@@ -7,7 +7,7 @@ import { getCartItems, getQuintity, getTotalCost, getFavorites,
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 import { UserApiClient } from "../services/api";
 import { OrderInfoType } from "../types";
-import { resetCartActionCreator } from "../redux/actions/removeItem";
+import { resetCartActionCreator } from "../redux/actions/cartItems";
 import { setOrderStatusActionCreator } from "../redux/actions/cartItems";
 
 
@@ -77,38 +77,38 @@ const Cart: React.FC = () => {
             !isLoaded && isAuth
               ? <Loader />
               : !cartItems.length 
-              ? <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />
-              :
-                <>
-                  <div className="cart__top">
-                    <p>Ваша корзина</p>
-                    <p>
-                      <span className="cart__top-num">Предметов: {quintity}</span>
-                    </p>
-                  </div>
-                  {cartItems && 
-                    cartItems.map(cartItem => {
-                      const currItem = items.find(item => item.id === cartItem.id);
-                      if (currItem) {
-                        return (
-                          <CartItem 
-                            key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
-                            cartItem={cartItem} 
-                            item={currItem}
-                          />
-                        )}
-                    })}
-                  <div className="cart__bottom">
-                    <p className="cart__bottom-total">
-                      Итоговая стоимость:
-                      <span> {total} P</span>
-                    </p>
-                    <button 
-                      className="cart__bottom-btn"
-                      onClick={onRegisterOrder}
-                      >Оформить заказ</button>
-                  </div>
-                </>
+                ? <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />
+                :
+                  <>
+                    <div className="cart__top">
+                      <p>Ваша корзина</p>
+                      <p>
+                        <span className="cart__top-num">Предметов: {quintity}</span>
+                      </p>
+                    </div>
+                    {cartItems && 
+                      cartItems.map(cartItem => {
+                        const currItem = items.find(item => item.id === cartItem.id);
+                        if (currItem) {
+                          return (
+                            <CartItem 
+                              key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
+                              cartItem={cartItem} 
+                              item={currItem}
+                            />
+                          )}
+                      })}
+                    <div className="cart__bottom">
+                      <p className="cart__bottom-total">
+                        Итоговая стоимость:
+                        <span> {total} P</span>
+                      </p>
+                      <button 
+                        className="cart__bottom-btn"
+                        onClick={onRegisterOrder}
+                        >Оформить заказ</button>
+                    </div>
+                  </>
             }
         </div>
       </section>

@@ -13,7 +13,7 @@ import { authActionCreator } from '../redux/actions/authAction';
 import { addUserDataActionCreator } from '../redux/actions/userAction';
 import { initFormValues } from '../redux/reducers/userReducer';
 import { resetFavoritesActionCreator } from '../redux/actions/favorites';
-import { resetCartActionCreator } from '../redux/actions/removeItem';
+import { resetCartActionCreator } from '../redux/actions/cartItems';
 import { Link, useHistory } from 'react-router-dom';
 
 const Profile: React.FC = () => {

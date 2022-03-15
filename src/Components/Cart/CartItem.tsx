@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { removeItemActionCreator } from "../../redux/actions/removeItem";
+import { removeItemActionCreator } from "../../redux/actions/cartItems";
 import { CartItemType, ProductType } from "../../types";
 
 import crossImg from "../../images/icons/cross.svg";
