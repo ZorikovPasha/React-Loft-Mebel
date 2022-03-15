@@ -3,7 +3,7 @@ import { CartItemType,
    userFormValuesType, OrderInfoType } from "../../types";
 
 
-const URI = process.env.REACT_APP_URI ?? 'http://localhost:5000';
+const URI = process.env.NODE_ENV === 'production' ? 'https://react-loft-mebel.herokuapp.com/' : 'http://localhost:5000';
 
 
 export const apiConfig = {
