@@ -18,8 +18,8 @@ const Cart: React.FC = () => {
   const cartItems = useSelector(getCartItems);
   const quintity = useSelector(getQuintity);
   const total = useSelector(getTotalCost);
-  const items = useSelector(getProducts);
-  const favorites = useSelector(getFavorites);
+  const { items } = useSelector(getProducts);
+  const { favorites } = useSelector(getFavorites);
   const isOrderMade = useSelector(getOrderStatus);
   const isAuth = useSelector(getIsAuth);
   const isLoaded = useSelector(getCartLoadingState);

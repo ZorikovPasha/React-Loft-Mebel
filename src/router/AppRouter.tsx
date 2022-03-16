@@ -10,15 +10,13 @@ import { fetchItemsThunkCreator } from "../redux/actions/items";
 
 const AppRouter: React.FC = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false);
+
   const dispatch = useDispatch();
-  useAuth();
-  
-  React.useEffect(() => {
-    dispatch(fetchItemsThunkCreator(''));
-  }, []);
+  dispatch(fetchItemsThunkCreator('?sort=asc'));
 
   const isAuth = useSelector(getIsAuth);
-
+  useAuth();
+  
   return (
     <div className="wrapper">
         <BrowserRouter>

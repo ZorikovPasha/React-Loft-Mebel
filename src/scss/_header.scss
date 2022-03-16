@@ -184,6 +184,7 @@
   // .header__categories
 
   &__categories {
+    flex-grow: 1;
   }
 
   // .header__promo
@@ -263,6 +264,7 @@
   &__list {
     display: flex;
     align-items: flex-start;
+    justify-content: space-between;
   }
 
   // .categories__item

@@ -6,8 +6,8 @@ import { SalesItem } from "../";
 import { getProducts, getFavorites } from "../../redux/getters";
 
 const Related: React.FC = () => {
-  const items = useSelector(getProducts);
-  const favorites = useSelector(getFavorites);
+  const { items }  = useSelector(getProducts);
+  const { favorites } = useSelector(getFavorites);
 
   return (
     <div className="sales__items sales__items--product">

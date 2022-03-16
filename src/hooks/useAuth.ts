@@ -29,6 +29,7 @@ export const useAuth = async () => {
   }, []);
 
   React.useEffect(() => {
+
     if (!isAuth) return;
     const getData = async () => {
       let favoritesData: { favorites: string[] | number[] } = await UserApiClient.getFavorites();

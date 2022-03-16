@@ -1,7 +1,7 @@
 import { ProductType, CartItemType, userFormValuesType, OrderInfoType } from "./index";
 
 export enum ActionsTypes {
-  FETCH_PRODUCTS = "FETCH_PRODUCTS",
+  SET_PRODUCTS = "SET_PRODUCTS",
   FETCH_SLIDES = "FETCH_SLIDES",
   ADD_FAVORITES = 'ADD_FAVORITES',
   FAVORITES_LOADED = 'FAVORITES_LOADED',
@@ -17,12 +17,16 @@ export enum ActionsTypes {
   RESET_FAVORITES = "RESET_FAVORITES",
   ORDER_STATUS = "ORDER_STATUS",
   SET_ORDERS = "SET_ORDERS",
-  CART_LOADING = "CART_LOADING"
+  CART_LOADING = "CART_LOADING",
+  RESET_PRODUCTS = "RESET_PRODUCTS"
 }
 
 export type fetchItemsActionType = {
-  type: ActionsTypes.FETCH_PRODUCTS;
-  payload: ProductType[];
+  type: ActionsTypes.SET_PRODUCTS;
+  payload: {
+    items: ProductType[];
+    isLoaded: boolean;
+  }
 };
 
 
