@@ -1,17 +1,16 @@
 import React, { FC, MouseEventHandler } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
 
 import { Aside, SortPopup, SalesItem, Breadcrumbs, Loader, Empty } from "../Components";
-import { fetchItemsThunkCreator } from "../redux/actions/items";
-import { getFavorites, getProducts } from "../redux/getters";
+import { getFavorites } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
-import { useLoading } from '../hooks/useLoading';
-import { submitValuesType } from "../types";
+import { ProductType, submitValuesType } from "../types";
+import { makeQueryParametersFromStringArr } from "../utils/makeQueryParametersFromStringArr";
+import { ApiClient } from "../services/api";
 
 
 const Catalog: FC = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
 
   const asideToggleRef = React.useRef(null);
@@ -25,39 +24,24 @@ const Catalog: FC = () => {
     sort: 'asc'
   });
 
-  const QueryCache = React.useRef('');
+  const QueryCache = React.useRef(history.location.search + "&sort=asc");
 
-  const [isLoading, setLoading] = React.useState(false);
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false);
+  const [items, setItems] = React.useState<ProductType[]>([]);
+  const [isLoading, setLoading] = React.useState(false);
 
-  
-  useLoading(
-    fetchItemsThunkCreator, 
-    setLoading, 
-    history.location.search + "&sort=asc"
-    )
+  React.useEffect(() => {
+    setLoading(true);
+    ApiClient.get<ProductType[]>('/api/furniture' + history.location.search)
+      .then(data => { 
+        setItems(data)
+        setLoading(false);
+      });
+  }, [history.location.search]);
 
-
-  const favorites = useSelector(getFavorites);
-  const products = useSelector(getProducts);
+  const { favorites } = useSelector(getFavorites);
 
   const breadcrumbs = useBreadcrumbs();
-
-  const makeQueryParametersFromStringArr = (arr: string[], type: string): string => {
-    let query = '';
-    let hasAll = false;
-
-    query = arr.reduce((accum, value) => {
-      if (value === 'all') {
-        hasAll = true;
-      }
-      return accum + `&${type}=${value}`
-    }, '');
-    if (hasAll) {
-      query = ''
-    }
-    return query;
-  };
 
   const handleFiltersSubmit = ({
     brandsIds, 
@@ -84,16 +68,15 @@ const Catalog: FC = () => {
     if (searchQuery[0] === '&') {
       searchQuery = '?' + searchQuery.substring(1);
     }
-    
-    history.push({
-      pathname: '',
-      search: searchQuery
-    });
 
 
     if (QueryCache.current !== searchQuery) {
-      dispatch(fetchItemsThunkCreator(searchQuery));
       QueryCache.current = searchQuery;
+
+      history.push({
+        pathname: '',
+        search: searchQuery
+      });
     }
 
     toggleAsideVisibility(false);
@@ -138,21 +121,20 @@ const Catalog: FC = () => {
                 <SortPopup onSelectSortType={onSelectSortType} />
               </div>
               {
-                isLoading || !products.length
+                isLoading
                 ? <Loader />
-                : 
-                  products.length && !isLoading
-                    ? <div className="catalog__items">
-                        {products.map(product => (
-                          <SalesItem 
-                            key={product.id} 
-                            product={product}
-                            baseDir={'../../'}
-                            isFavorite={favorites.includes(product.id)}
-                            />
-                        ))}
-                      </div>
-                    : <Empty text="Ничего не найдено"/>
+                : items.length
+                  ? <div className="catalog__items">
+                      {items.map(item => (
+                        <SalesItem 
+                          key={item.id} 
+                          product={item}
+                          baseDir={'../../'}
+                          isFavorite={favorites.includes(item.id)}
+                          />
+                      ))}
+                    </div>
+                  : <Empty text="Ничего не найдено"/>
                 }
             </div>
           </div>

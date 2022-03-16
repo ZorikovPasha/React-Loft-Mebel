@@ -121,24 +121,6 @@ const HeaderBottom: React.FC = () => {
         "text": "Детские столики",
         "link": "tables"
       }
-    ],
-    [
-      {
-        "text": "Новинки",
-        "link": "new"
-      },
-      {
-        "text": "Шкафы",
-        "link": "Cabinets"
-      },
-      {
-        "text": "Матрасы",
-        "link": "Mattresses"
-      },
-      {
-        "text": "Мягкая мебель",
-        "link": "upholstered"
-      }
     ]
   ]);
 
@@ -315,32 +297,18 @@ const HeaderBottom: React.FC = () => {
             </svg>
           </Link>
           <Link 
-            to="/catalog/children" 
+            to="/catalog?room=children" 
             className="categories__link"
             >
             Детская
           </Link>
           {subLists && 
             <HeaderSubList
-              parentDir={'/catalog/children'}
+              parentDir={'/catalog?room=children'}
               items={subLists.current[5]}
               />}
         </li>
       </ul>
-    </div>
-    <div className="header__promo">
-      <Link 
-        to="/catalog/kitchen" 
-        className="header__promo-link"
-        >
-        Акция
-      </Link>
-      {subLists && 
-        <HeaderSubList
-          rootElClass="sub-list--rightside"
-          parentDir={'/catalog'}
-          items={subLists.current[6]}
-          />}
     </div>
   </div>
   )

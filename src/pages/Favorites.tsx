@@ -2,23 +2,23 @@ import React from 'react';
 import { useSelector } from "react-redux";
 
 import { SalesItem, Breadcrumbs, Empty, Loader } from "../Components";
-import { getFavorites, getFavsLoadingState, getIsAuth, getProducts } from "../redux/getters";
+import { getFavorites, getIsAuth, getProducts } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 import { ProductType } from "../types"; 
 
 const Favorites: React.FC = () => {
   const breadcrumbs = useBreadcrumbs();
 
-  const isLoaded = useSelector(getFavsLoadingState);
-  const items = useSelector(getProducts);
-  const favoriteItemsIds = useSelector(getFavorites);
+  const { items } = useSelector(getProducts);
+  
+  const { favorites, isLoaded } = useSelector(getFavorites);
   const isAuth = useSelector(getIsAuth);
   
-  const favorites: ProductType[] = []; 
-  favoriteItemsIds.forEach(id => {
+  const favoriteItems: ProductType[] = []; 
+  favorites.forEach(id => {
     const item = items.find(item => item.id === id)
     if (!!item) {
-      favorites.push(item);
+      favoriteItems.push(item);
     }
   })
 
@@ -30,7 +30,7 @@ const Favorites: React.FC = () => {
           <div className="cart__top">
             <p>Вам понравилось:</p>
             <p>
-              <span className="cart__top-num">Предметов: {favoriteItemsIds?.length}</span>
+              <span className="cart__top-num">Предметов: {favorites?.length}</span>
             </p>
           </div>
         </div>
@@ -38,24 +38,24 @@ const Favorites: React.FC = () => {
       {
         !isLoaded && isAuth
           ? <Loader />
-          : favoriteItemsIds.length
-          ? (<section className="sales">
-            <div className="container">
-              <div className="sales__items sales__items--cart">
-                {favorites && favorites.map(item => (
-                  <SalesItem 
-                    key={item.id} 
-                    product={item}
-                    baseDir={'../../../'}
-                    isFavorite={true}
-                  />
-                ))}
+          : favorites.length
+            ? (<section className="sales">
+              <div className="container">
+                <div className="sales__items sales__items--cart">
+                  {favoriteItems && favoriteItems?.map(item => (
+                    <SalesItem 
+                      key={item.id} 
+                      product={item}
+                      baseDir={'../../../'}
+                      isFavorite={true}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-            </section>)
-          : (<div className="container">
-              <Empty text="Вам ничего не понравилось("/>
-            </div>)
+              </section>)
+            : (<div className="container">
+                <Empty text="Вам ничего не понравилось("/>
+              </div>)
         }
     </>
   );

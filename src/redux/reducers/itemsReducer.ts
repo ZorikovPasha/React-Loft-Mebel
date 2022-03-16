@@ -3,18 +3,22 @@ import { fetchItemsActionType, ActionsTypes } from '../../types/actionsTypes';
 
 export type stateType = {
   items: ProductType[],
+  isLoaded: boolean,
+  isError: boolean,
 }
 
 const initialState: stateType = {
   items: [],
+  isLoaded: false,
+  isError: false,
 }
 
 const itemsReducer = (state = initialState, action: fetchItemsActionType ): stateType => {
   switch (action.type) {
-    case ActionsTypes.FETCH_PRODUCTS:
+    case ActionsTypes.SET_PRODUCTS:
       return {
         ...state,
-        items: action.payload,
+        ...action.payload,
       };
     default:
       return state;

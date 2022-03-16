@@ -12,7 +12,7 @@ interface IProps {
 const AddToFavorite: React.FC<IProps> = ({ id }) => {
   const dispatch = useDispatch();
 
-  const favorites = useSelector(getFavorites);
+  const { favorites } = useSelector(getFavorites);
 
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
