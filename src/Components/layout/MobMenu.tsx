@@ -19,12 +19,12 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
 
   const onMobMenuItemClick: React.MouseEventHandler<HTMLAnchorElement> = (): void => {
     setMobMenuOpen(false);
-    document.body.classList.remove("lock");
+    document.documentElement.classList.remove("lock");
   }
 
   const onMobMenuCloseClick: MouseEventHandler<HTMLButtonElement> = (): void => {
     setMobMenuOpen(false);
-    document.body.classList.remove("lock");
+    document.documentElement.classList.remove("lock");
   };
 
   return (

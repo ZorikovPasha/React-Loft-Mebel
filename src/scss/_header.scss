@@ -168,11 +168,11 @@
     transform: translate(0%, -50%);
   }
 
-  // .header__user
-
-  &__user {
+  &__search:active,
+  &__search:focus {
+    border: 1px solid #245462;
   }
-
+  
   // .header__bottom
 
   &__bottom {
@@ -321,11 +321,6 @@
   &--rightside {
     left: auto;
     right: 0;
-  }
-
-  // .sub-list__item
-
-  &__item {
   }
 
   &__item + &__item {

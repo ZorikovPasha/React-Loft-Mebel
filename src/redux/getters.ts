@@ -1,6 +1,7 @@
 import { RootState } from "./store";
 
 export const getProducts = (state: RootState) => state.items;
+export const getFilteredProductsByName = (query: string) => (state: RootState) => state.items.items.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
 
 export const getFavorites = (state: RootState) => state.favorites;
 

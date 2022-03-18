@@ -80,18 +80,18 @@ const Catalog: FC = () => {
     }
 
     toggleAsideVisibility(false);
-    document.body.classList.remove("lock");
+    document.documentElement.classList.remove("lock");
   };
 
   const onBtnClick: MouseEventHandler<HTMLButtonElement> = React.useCallback((): void => {
     toggleAsideVisibility(true);
-    document.body.classList.add("lock");
+    document.documentElement.classList.add("lock");
   }, []);
 
   const onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault();
     toggleAsideVisibility(false);
-    document.body.classList.remove("lock");
+    document.documentElement.classList.remove("lock");
   };
 
   const onSelectSortType = React.useCallback((cat: string): void => {

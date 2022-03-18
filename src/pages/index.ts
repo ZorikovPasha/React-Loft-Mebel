@@ -8,7 +8,8 @@ import Contacts from "./Contacts";
 import SignUp from "./SignUp";
 import Login from "./Login";
 import Profile from "./Profile";
+import SearchResult from "./SearchResult";
 
 export { Main, Catalog, Cart, Product, 
   Favorites, About, Contacts, SignUp, Login,
-  Profile };
+  Profile, SearchResult };

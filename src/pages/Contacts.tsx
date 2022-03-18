@@ -17,13 +17,13 @@ const Contacts: React.FC = () => {
   });
 
   const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
-    document.body.classList.remove('lock');
+    document.documentElement.classList.remove('lock');
     setModalOpened(false);
   };
 
   const handleSubmitMessage = (formData: formDataType) => {
     UserApiClient.sendMessage(formData);
-    document.body.classList.add('lock');
+    document.documentElement.classList.add('lock');
     setModalOpened(true);
   };
 

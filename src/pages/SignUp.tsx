@@ -32,7 +32,7 @@ const SignUp: React.FC = () => {
     const data  = await UserApiClient.register<{ message: string, status: number }>({ userName, email, password });
     
     if (data.status === 200) {
-      document.body.classList.add("lock");
+      document.documentElement.classList.add("lock");
       setModalSignUp(true);
     }
   };
@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
     history.push({
       pathname: '/login',
     });
-    document.body.classList.remove("lock");
+    document.documentElement.classList.remove("lock");
 
     setModalSignUp(false);
   };

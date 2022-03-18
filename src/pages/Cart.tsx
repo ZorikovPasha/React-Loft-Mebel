@@ -29,7 +29,7 @@ const Cart: React.FC = () => {
   const onRegisterOrder = () => {
     if (!isAuth) {
       setModalLoginOpened(true);
-      document.body.classList.add("lock")
+      document.documentElement.classList.add("lock")
       return;
     }
     const orders: OrderInfoType[] = [];
@@ -59,7 +59,7 @@ const Cart: React.FC = () => {
 
   const onLoginModalClose:React.MouseEventHandler<HTMLButtonElement> = () => {
     setModalLoginOpened(false);
-    document.body.classList.remove("lock")
+    document.documentElement.classList.remove("lock")
   };
 
   return (
