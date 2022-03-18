@@ -8,5 +8,6 @@ export enum ROUTES {
   Login = '/login',
   Signup = '/signup',
   Profile = '/profile',
+  SearchResult = '/search',
   Home = '/'
 }

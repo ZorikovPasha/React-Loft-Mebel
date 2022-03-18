@@ -5,9 +5,18 @@ import Slider from "react-slick";
 import { ApiClient } from "../../services/api";
 import { SlideType } from '../../types';
 
-const SliderPrevArrow: React.FC = () => {
+interface IArrowProps {
+  onClick: (() => void) | undefined,
+}
+
+
+const SliderPrevArrow: React.FC<IArrowProps> = ({ onClick }) => {
   return (
-    <button type="button" className="slick-btn slick-prev">
+    <button 
+      type="button" 
+      className={`slick-btn slick-prev`}
+      onClick={onClick}
+      >
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fillRule="evenodd" clipRule="evenodd" d="M30 0H0V30H30V0ZM12.2929 18.2929L11.5858 19L13 20.4142L13.7071 19.7071L17.7071 15.7071L18.4142 15L17.7071 14.2929L13.7071 10.2929L13 9.58579L11.5858 11L12.2929 11.7071L15.5858 15L12.2929 18.2929Z" fill="white" />
       </svg>
@@ -15,9 +24,13 @@ const SliderPrevArrow: React.FC = () => {
   );
 };
 
-const SliderNextArrow: React.FC = () => {
+const SliderNextArrow: React.FC<IArrowProps> = ({ onClick }) => {
   return (
-    <button type="button" className="slick-btn slick-next">
+    <button 
+      type="button" 
+      className={`slick-btn slick-next`}
+      onClick={onClick}
+      >
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fillRule="evenodd" clipRule="evenodd" d="M30 0H0V30H30V0ZM12.2929 18.2929L11.5858 19L13 20.4142L13.7071 19.7071L17.7071 15.7071L18.4142 15L17.7071 14.2929L13.7071 10.2929L13 9.58579L11.5858 11L12.2929 11.7071L15.5858 15L12.2929 18.2929Z" fill="white" />
       </svg>
@@ -32,7 +45,8 @@ export type Text = {
 };
 
 const TopSlider: React.FC = () => {
-  const [slides, setSlides] = React.useState<SlideType[]>();
+  const [slides, setSlides] = React.useState<SlideType[]>([]);
+  const [slider, setSlider] = React.useState<Slider>();
 
   React.useEffect(() => {
     ApiClient.get<SlideType[]>('/api/slides').then(data => setSlides(data))
@@ -42,8 +56,8 @@ const TopSlider: React.FC = () => {
     fade: true,
     infinite: true,
     autoplay: true,
-    prevArrow: <SliderPrevArrow />,
-    nextArrow: <SliderNextArrow />,
+    prevArrow: <SliderPrevArrow onClick={slider?.slickPrev} />,
+    nextArrow: <SliderNextArrow onClick={slider?.slickNext} />,
     responsive: [
       {
         breakpoint: 511,
@@ -58,6 +72,7 @@ const TopSlider: React.FC = () => {
     <Slider
       {...settings}
       className={`top__slider ${!slides?.length ? 'top__slider--fullsize': '' }`}
+      ref={(slider: Slider) => setSlider(slider)}
       >
       {slides?.length && slides?.map((slide, idx) => (
         <div key={idx}>

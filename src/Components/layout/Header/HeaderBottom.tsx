@@ -231,7 +231,8 @@ const HeaderBottom: React.FC = () => {
           {subLists && 
             <HeaderSubList
               parentDir={'/catalog?room=living'}
-              items={subLists.current[2]} />}
+              items={subLists.current[2]} 
+            />}
         </li>
 
         <li className="categories__item">
@@ -304,6 +305,7 @@ const HeaderBottom: React.FC = () => {
           </Link>
           {subLists && 
             <HeaderSubList
+              rootElClass="sub-list--rightside"
               parentDir={'/catalog?room=children'}
               items={subLists.current[5]}
               />}

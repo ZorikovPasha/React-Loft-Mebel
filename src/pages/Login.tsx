@@ -36,7 +36,7 @@ const Login: React.FC = () => {
     
     if (message) {
       loginErrorMessage.current = message;
-      document.body.classList.add("lock");
+      document.documentElement.classList.add("lock");
       setModalVisible(true);
     }
 
@@ -52,7 +52,7 @@ const Login: React.FC = () => {
 
   const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
     setModalVisible(false);
-    document.body.classList.remove("lock");
+    document.documentElement.classList.remove("lock");
   };
 
   return (
@@ -117,7 +117,7 @@ const Login: React.FC = () => {
           </div>
         </div>
       </div>
-      { modalVisible && 
+      { modalVisible &&
         <ModalInfo 
           title="Оошибка при логине"
           text={loginErrorMessage.current} 

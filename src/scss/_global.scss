@@ -4,6 +4,14 @@ html {
   box-sizing: border-box;
   scroll-behavior: smooth;
   height: 100%;
+
+  &.lock {
+    overflow: hidden;
+
+    @media (hover: hover) {
+      margin-right: calc(100vw - 100%);
+    }
+  }
 }
 
 *, 
@@ -11,7 +19,6 @@ html {
 *::before {
   box-sizing: inherit;
 }
-
 
 body {
 	min-width: 320px;

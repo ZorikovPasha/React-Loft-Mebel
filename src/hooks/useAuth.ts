@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { authActionCreator } from "../redux/actions/authAction";
 import { addtemsActionCreator, fetchingActionCreator, ordersActionCreator } from "../redux/actions/cartItems";
-import { addFavoritesActionCreator, loadingActionCreator } from '../redux/actions/favorites';
+import { addFavoritesActionCreator, loadingActionCreator, resetFavoritesActionCreator } from '../redux/actions/favorites';
 import { resetCartActionCreator } from "../redux/actions/cartItems";
 import { addUserDataActionCreator } from "../redux/actions/userAction";
 import { getIsAuth } from "../redux/getters";
@@ -32,6 +32,8 @@ export const useAuth = async () => {
 
     if (!isAuth) return;
     const getData = async () => {
+
+      dispatch(resetFavoritesActionCreator());
       let favoritesData: { favorites: string[] | number[] } = await UserApiClient.getFavorites();
       favoritesData.favorites = favoritesData.favorites.map(id => Number(id))
       dispatch(addFavoritesActionCreator(favoritesData.favorites));
