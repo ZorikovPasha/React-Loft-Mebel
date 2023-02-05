@@ -9,14 +9,16 @@ interface IDeliveryProps {
   deliveryMethods: DeliveryType[]
 }
 const Delivery: React.FC<IDeliveryProps> = ({ deliveryMethods }) => {
-  return <div className="product-tabs__content-item product-content">
-    {deliveryMethods.map((delivery) => (
-      <div key={delivery.details}>
-        <span>{delivery.method}: </span>
-        {delivery.details}
-      </div>
-    ))}
-  </div>;
+  return (
+    <div className="product-tabs__content-item product-content">
+      {deliveryMethods.map(({ details, method }) => 
+        <div key={details}>
+          <span>{method}: </span>
+          {details}
+        </div>
+      )}
+    </div>
+  )
 };
 
 export default Delivery;

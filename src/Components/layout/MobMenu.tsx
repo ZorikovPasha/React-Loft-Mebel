@@ -12,9 +12,8 @@ interface IMobMenuProps {
 const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const [mobMenu, setMobMenu] = React.useState<mobMenuType>();
 
-
   React.useEffect(() => {
-      ApiClient.get<mobMenuType[]>('/api/mobMenu').then(data => setMobMenu(data[0]))
+    ApiClient.get<mobMenuType[]>('/api/mobMenu').then(data => setMobMenu(data[0]))
   }, []);
 
   const onMobMenuItemClick: React.MouseEventHandler<HTMLAnchorElement> = (): void => {
@@ -35,46 +34,47 @@ const MobMenu: FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
         <button 
           className="mob-menu__close" 
           onClick={onMobMenuCloseClick}
-        >
-        </button>
+        />
       </div>
       <ul className="mob-menu__list">
-        {mobMenu &&
-          mobMenu?.top.map(item => (
-            <li 
-              className="mob-menu__list-item" 
-              key={item.mobMenuItem}
-              >
-              <Link 
-                to={item.link} 
-                className="mob-menu__link" 
-                onClick={onMobMenuItemClick}
-              >
-                <span>
-                  <img src={item.imgLink} alt="" />
-                </span>
-                {item.mobMenuItem}
-              </Link>
-            </li>
-          ))}
+        {mobMenu?.top.map(({ mobMenuItem, link, imgLink }) => (
+          <li 
+            className="mob-menu__list-item" 
+            key={mobMenuItem}
+          >
+            <Link 
+              to={link} 
+              className="mob-menu__link" 
+              onClick={onMobMenuItemClick}
+            >
+              <span>
+                <img src={imgLink} alt="" />
+              </span>
+              {mobMenuItem}
+            </Link>
+          </li>
+        ))}
       </ul>
       <p className="mob-menu__subtitle">Категории</p>
       <ul className="mob-menu__list">
         {mobMenu &&
-          mobMenu?.body.map(item => (
-            <li className="mob-menu__list-item" key={item.mobMenuItem}>
+          mobMenu?.body.map(({ mobMenuItem, link, imgLink }) => 
+            <li 
+              className="mob-menu__list-item" 
+              key={mobMenuItem}
+            >
               <Link 
-                to={item.link} 
+                to={link} 
                 className="mob-menu__link" 
                 onClick={onMobMenuItemClick}
-                >
+              >
                 <span>
-                  <img src={item.imgLink} alt="" />
+                  <img src={imgLink} alt="" />
                 </span>
-                {item.mobMenuItem}
+                {mobMenuItem}
               </Link>
             </li>
-          ))}
+          )}
       </ul>
     </div>
     </div>

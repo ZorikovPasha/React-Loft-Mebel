@@ -45,23 +45,22 @@ const ProductTabs: React.FC = () => {
   const renderChosenTabContent = () => {
     switch (activeTab) {
       case 0:
-        
         return (
           <FeaturesTab
-          features={tabsContents.features.items}
-        ></FeaturesTab>
+            features={tabsContents.features.items}
+          />
         );
       case 1:
         return (
           <Reviews
             reviews={tabsContents.reviews.items}
-          ></Reviews>
+          />
         );
       case 2:
         return (
           <Delivery
-          deliveryMethods={tabsContents.delivery.items}
-          ></Delivery>
+            deliveryMethods={tabsContents.delivery.items}
+            />
         );
     }
   };
@@ -71,20 +70,18 @@ const ProductTabs: React.FC = () => {
       <div className="container">
         <div className="product-tabs__inner">
           <div className="product-tabs__toggle">
-            {Object.entries(tabsContents)
-              .map((tab, idx) => (
-                <a
-                  className={`product-tabs__title ${activeTab === idx ? 'active' : ''}`}
-                  key={tab[0]}
-                  href="/#"
-                  data-index={idx}
-                  onClick={onTabClick}
-                  >
-                  {tab[1].name}
-              </a>
-              ))}
+            {Object.entries(tabsContents).map((tab, idx) => 
+              <a
+                className={`product-tabs__title ${activeTab === idx ? 'active' : ''}`}
+                key={tab[0]}
+                href="/#"
+                data-index={idx}
+                onClick={onTabClick}
+                >
+                {tab[1].name}
+            </a>
+            )}
           </div>
-
           <div className="product-tabs__content">
             {renderChosenTabContent()}
           </div>

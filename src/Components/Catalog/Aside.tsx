@@ -73,7 +73,10 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
         onSubmit={handleFiltersSubmit}
         > 
           {({ values, setFieldValue, handleSubmit }) => (
-            <form className="aside__form" onSubmit={handleSubmit}>
+            <form 
+              className="aside__form" 
+              onSubmit={handleSubmit}
+            >
               <div className="aside__filter filter">
                 <h6 className="filter__title">Раздел</h6>
                 <button className="aside__close" onClick={onAsideCloseClick} />
@@ -81,19 +84,19 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
                   value={values.room}
                   options={roomSelectOptions}
                   onChange={value => setFieldValue('room', value?.value)}
-                  />
+                />
                 <h6 className="filter__title">Материал Мебели</h6>
                 <CustomSelect
                   value={values.material}
                   options={catSelectOptions}
                   onChange={value => setFieldValue('material', value?.value)}
-                  />
+                />
                 <h6 className="filter__title">Тип Мебели</h6>
                 <CustomSelect
                   value={values.type}
                   options={furnitureSelectOptions}
                   onChange={value => setFieldValue('type', value?.value)}
-                  />
+                />
               </div>
 
               {/* <div className="aside__filter filter">
@@ -105,7 +108,7 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
                 <h6 className="filter__title">Цвет</h6>
                 <FieldArray name="colorsIds" render={arrayHelpers => (
                   <div className="filter__colors colors">
-                    {colorsCategories.map(color => (
+                    {colorsCategories.map(color => 
                       <label className="colors__item" key={color.id}>
                         <input 
                           className="colors__checkbox-real" 
@@ -122,7 +125,7 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
                           />
                         <span className="colors__checkbox-fake" style={{ backgroundColor: '#' + color.id }}></span>
                       </label>
-                    ))}
+                    )}
                   </div>
                   )} />
               </div>
@@ -131,26 +134,26 @@ const Aside: FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFilte
                 <h6 className="filter__title">Бренд</h6>
                 <FieldArray name="brandsIds" render={arrayHelpers => (
                   <div>
-                    {furnitureBrandOptions.map(brand => (
-                      <label className="brands-filter__label" key={brand.value}>
+                    {furnitureBrandOptions.map(({ value, label }) => 
+                      <label className="brands-filter__label" key={value}>
                       <input 
                         className="brands-filter__checkbox-real" 
-                        id={brand.value} 
+                        id={value} 
                         type="checkbox" 
-                        checked={values.brandsIds.includes(brand.value)} 
+                        checked={values.brandsIds.includes(value)} 
                         onChange={e => {
                           if (e.target.checked) { 
-                            arrayHelpers.push(brand.value) 
+                            arrayHelpers.push(value) 
                           } else {
-                            const idx = values.brandsIds.indexOf(brand.value)
+                            const idx = values.brandsIds.indexOf(value)
                             arrayHelpers.remove(idx);
                           }
                         }}
                         />
                       <span className="brands-filter__checkbox-fake"></span>
-                      <span className="brands-filter__text">{brand.label}</span>
+                      <span className="brands-filter__text">{label}</span>
                     </label>
-                    ))}
+                    )}
                   </div>
                   )} />
               </div>

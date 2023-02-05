@@ -2,8 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { SalesItem, CartItem, Breadcrumbs, Empty, ModalInfo, Loader } from "../Components";
-import { getCartItems, getQuintity, getTotalCost, getFavorites, 
-  getProducts, getOrderStatus, getIsAuth, getCartLoadingState } from "../redux/getters";
+import { getCartItems, getQuintity, getTotalCost, getFavorites, getProducts, getOrderStatus, getIsAuth, getCartLoadingState } from "../redux/getters";
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs';
 import { UserApiClient } from "../services/api";
 import { OrderInfoType } from "../types";
@@ -64,58 +63,57 @@ const Cart: React.FC = () => {
 
   return (
     <>
-      { modalLoginOpened && <ModalInfo 
+      {modalLoginOpened && <ModalInfo 
         text="Пожалуйста, войдите в свою учетную запись" 
         title="Мы не знаем, кто вы" 
         link="/login"
         onModalClose={onLoginModalClose}
-        /> }
+      />}
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className="cart">
         <div className="container">
-          {
-            !isLoaded && isAuth
-              ? <Loader />
-              : !cartItems.length 
-                ? <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />
-                :
-                  <>
-                    <div className="cart__top">
-                      <p>Ваша корзина</p>
-                      <p>
-                        <span className="cart__top-num">Предметов: {quintity}</span>
-                      </p>
-                    </div>
-                    {cartItems && 
-                      cartItems.map(cartItem => {
-                        const currItem = items.find(item => item.id === cartItem.id);
-                        if (currItem) {
-                          return (
-                            <CartItem 
-                              key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
-                              cartItem={cartItem} 
-                              item={currItem}
-                            />
-                          )}
-                      })}
-                    <div className="cart__bottom">
-                      <p className="cart__bottom-total">
-                        Итоговая стоимость:
-                        <span> {total} P</span>
-                      </p>
-                      <button 
-                        className="cart__bottom-btn"
-                        onClick={onRegisterOrder}
-                        >Оформить заказ</button>
-                    </div>
-                  </>
-            }
+          {!isLoaded && isAuth
+            ? <Loader />
+            : !cartItems.length 
+              ? <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />
+              :
+                <>
+                  <div className="cart__top">
+                    <p>Ваша корзина</p>
+                    <p>
+                      <span className="cart__top-num">Предметов: {quintity}</span>
+                    </p>
+                  </div>
+                  {cartItems?.map(cartItem => {
+                    const currItem = items.find(item => item.id === cartItem.id);
+                    if (currItem) {
+                      return (
+                        <CartItem 
+                          key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`} 
+                          cartItem={cartItem} 
+                          item={currItem}
+                        />
+                      )}
+                  })}
+                  <div className="cart__bottom">
+                    <p className="cart__bottom-total">
+                      Итоговая стоимость:
+                      <span> {total} P</span>
+                    </p>
+                    <button 
+                      className="cart__bottom-btn"
+                      onClick={onRegisterOrder}
+                    >
+                      Оформить заказ
+                    </button>
+                  </div>
+                </>
+          }
         </div>
       </section>
-      {
-        cartItems.length 
-          ? (
-            <section className="sales">
+      {cartItems.length 
+        ? 
+          <section className="sales">
             <div className="container">
               <h3 className="sales__title">Вам может понравиться</h3>
               <div className="sales__items sales__items--cart">
@@ -130,9 +128,8 @@ const Cart: React.FC = () => {
               </div>
             </div>
           </section>
-          )
-          : ''
-        }
+        : ''
+      }
     </>
   );
 };

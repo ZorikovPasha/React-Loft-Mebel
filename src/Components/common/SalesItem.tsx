@@ -63,16 +63,15 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
 
   return (
     <div className="sales__item item-sales" >
-      {sale && (
+      {sale &&
         <div className="item-sales__label label-sales">
           <div className="label-sales__body">-{sale}</div>
         </div>
-      )}
+      }
       <button 
         className={`item-sales__like ${isFavorite ? 'active' : ''}`} 
         onClick={onLikeProductClick}
-        >
-        </button>
+      />
       <div className="item-sales__box">
         <div className="item-sales__img">
           <img src={baseDir + imageUrl} alt="furniture" />
@@ -80,7 +79,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
         <h5
           className="item-sales__title"
           onClick={onProductLinkClick}
-          >
+        >
           {name}
         </h5>
         <p className="item-sales__type">{type.label}</p>
@@ -107,7 +106,7 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
           <button 
             className="item-sales__tocart" 
             onClick={onAddToCartClick}
-            >
+          >
             Добавить в корзину
           </button>
         </div>

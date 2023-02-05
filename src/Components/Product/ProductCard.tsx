@@ -102,24 +102,24 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
               asNavFor={nav2} 
               ref={(slider1: Slider) => setNav1(slider1)}
               {...slider1Settings}
-              >
-              {thumbsUrls.map(url => (
+            >
+              {thumbsUrls.map(url => 
                 <div className="product__slider-item" key={url}>
                   <img src={'../../../' + imageUrl} alt="furniture" />
                 </div>
-              ))}
+              )}
             </Slider>
             <Slider 
               className="product__thumbs" 
               asNavFor={nav1} 
               ref={(slider2: Slider) => setNav2(slider2)} 
               {...slider2Settings}
-              >
-              {thumbsUrls.map((url) => (
+            >
+              {thumbsUrls.map((url) => 
                 <div className="product__thumb" key={url}>
                   <img src={'../../../' + imageUrl} alt="furniture thumb" />
                 </div>
-              ))}
+              )}
             </Slider>
           </div>
           <div className="product__info info">
@@ -127,10 +127,11 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             <h1 className="info__title">{name}</h1>
             <p className="info__category">{type.label}</p>
 
-            <Formik initialValues={{
-              quintity: '1',
-              color: colorsPrepared[0].value,
-              dimensions: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
+            <Formik 
+              initialValues={{
+                quintity: '1',
+                color: colorsPrepared[0].value,
+                dimensions: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
               }}
               onSubmit={handleSubmit}
             > 
@@ -141,7 +142,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                     <button 
                       className="shop__btn" 
                       type="submit" 
-                      >
+                    >
                         Купить
                     </button>
                     <AddToFavorite id={id}/>
@@ -153,7 +154,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                         value={values.color}
                         options={colorsPrepared}
                         onChange={value => setFieldValue('color', value?.value)}
-                        />
+                      />
                     </div>
                     <div className="features__col features__col--quintity">
                       <p className="features__title">Количество</p>
@@ -161,7 +162,7 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                         value={values.quintity}
                         options={[{ value: "1", label: "1" }, { value: "2", label: "2" }, { value: "3", label: "3" }, { value: "4", label: "4" } ]}
                         onChange={value => setFieldValue('quintity', value?.value)}
-                        />
+                      />
                     </div>
                     <div className="features__col features__col--size">
                       <p className="features__title">Размер (Д × Ш × В)</p>
@@ -169,7 +170,8 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                         value={values.dimensions}
                         options={[ 
                           { value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
-                          label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM` }]}
+                          label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM` }
+                        ]}
                         onChange={value => setFieldValue('dimensions', value?.value)}
                         />
                     </div>

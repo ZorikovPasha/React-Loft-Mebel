@@ -64,15 +64,16 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
           </Link>
           <nav className="header__nav">
             <ul className="header__list">
-              {items.map((item, idx) => {
-                return (
-                  <li key={`${item.name}_${idx}`} className="header__list-item">
-                    <Link to={item.link} className="header__list-link">
-                      {item.name}
-                    </Link>
-                  </li>
-                );
-              })}
+              {items.map((item, idx) => 
+                <li 
+                  key={`${item.name}_${idx}`} 
+                  className="header__list-item"
+                >
+                  <Link to={item.link} className="header__list-link">
+                    {item.name}
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
           <HeaderSearchForm inputSpec />
@@ -87,7 +88,10 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
           <div className="header__user user-header">
             <HeaderWishListIcon />
             <HeaderBagIcon />
-            <Link to={isAuth ? "/profile" : "/login"} className="user-header__link">
+            <Link 
+              to={isAuth ? "/profile" : "/login"} 
+              className="user-header__link"
+            >
               <img src={profile} alt="profile" />
             </Link>
           </div>
@@ -115,7 +119,10 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
           <div className="header__user user-header">
             <HeaderWishListIcon />
             <HeaderBagIcon />
-            <Link to={isAuth ? "/profile" : "/login"} className="user-header__link user-header__link--hover">
+            <Link 
+              to={isAuth ? "/profile" : "/login"} 
+              className="user-header__link user-header__link--hover"
+            >
               <img src={profile} alt="profile" />
             </Link>
           </div>

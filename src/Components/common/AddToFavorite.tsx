@@ -24,7 +24,7 @@ const AddToFavorite: React.FC<IProps> = ({ id }) => {
     <button 
       className={`shop__wish ${favorites.includes(id) ? 'active' : ''}`}
       onClick={onAddToFavoriteClick}
-      >
+    >
       Добавить в желаемое
     </button>
   );

@@ -1,6 +1,4 @@
 import React from "react";
-
-
 import HeaderMiddle from "./HeaderMiddle";
 import HeaderBottom from "./HeaderBottom";
 import HeaderTop from "./HeaderTop";

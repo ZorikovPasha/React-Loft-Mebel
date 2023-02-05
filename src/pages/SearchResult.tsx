@@ -24,15 +24,21 @@ const SearchResult: React.FC = () => {
           </div>
 
           <div className="search-results__content">
-            {items.length ? (
-              <div className="search-results__items catalog__items">
-                {items.map((item) => (
-                  <SalesItem key={item.id} product={item} baseDir={"../../"} isFavorite={favorites.includes(item.id)} />
-                ))}
-              </div>
-            ) : (
+            {items.length 
+              ? 
+                <div className="search-results__items catalog__items">
+                  {items.map((item) => 
+                    <SalesItem 
+                      key={item.id} 
+                      product={item} 
+                      baseDir={"../../"} 
+                      isFavorite={favorites.includes(item.id)} 
+                    />
+                  )}
+                </div>
+             : 
               <Empty text="Ничего не найдено" />
-            )}
+            }
           </div>
         </div>
       </div>

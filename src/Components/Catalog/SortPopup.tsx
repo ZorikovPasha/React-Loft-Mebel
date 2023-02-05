@@ -57,18 +57,18 @@ const SortPopup: React.FC<ISortPopupProps> = ({ onSelectSortType }) => {
       ref={popupRef}
       >
       Сортировать: <span className="controls__sort-choice">{items.find(item => item.value === activeCat)?.text}</span>
-      {isSortPopupVisible && (
+      {isSortPopupVisible && 
         <ul className="sort-list">
-          {items.map((obj) => (
+          {items.map(({ value, text }) => 
             <li 
-              className={`sort-list__item ${activeCat === obj.value ? 'active' : ''}`} 
-              onClick={onListItemClick} value={obj.value} key={obj.value}
-              >
-              {obj.text}
+              className={`sort-list__item ${activeCat === value ? 'active' : ''}`} 
+              onClick={onListItemClick} value={value} key={value}
+            >
+              {text}
             </li>
-          ))}
+          )}
         </ul>
-      )}
+      }
     </button>
   );
 };
