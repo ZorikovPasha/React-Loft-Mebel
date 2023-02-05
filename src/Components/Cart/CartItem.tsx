@@ -33,13 +33,13 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
         <img 
           src={item.imageUrl} 
           alt="furniture" 
-          />
+        />
         <div className="item__info">
           <div className="item__info-top">
             <h4 className="item__info-name">
               <Link to={`/products/${cartItem.id}`}>
-                  {item.name}
-                </Link>
+                {item.name}
+              </Link>
             </h4>
             <div className="item__info-nums">
               <p className="item__info-price">
@@ -54,9 +54,9 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
               >
               <p className="info-feature__name">Цвет:</p>
               <p className="info-feature__val">
-                {cartItem.colors.map((color, idx) => (
+                {cartItem.colors.map((color, idx) => 
                   color ? item.colors[idx] : ""
-                ))}
+                )}
                 </p>
               <span></span>
             </div>
@@ -89,7 +89,7 @@ const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
         <img 
           src={crossImg} 
           alt="cross" 
-          />
+        />
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ const CustomSelect: React.FC<ICustomSelect> = ({ onChange, options, value }) => 
       value={defaultValue(options, value)} 
       options={options} 
       onChange={onChange} 
-      />
+    />
   )
 };
 

@@ -13,18 +13,27 @@ const ModalInfo: React.FC<IModalProps> = ({ onModalClose, text, link, title, has
   return (
     <div className="popup-message shown">
       <div className="popup-message__body">
-        <button className="popup-message__close mob-menu__close" onClick={onModalClose}>
-        </button>
+        <button 
+          className="popup-message__close mob-menu__close" 
+          onClick={onModalClose}
+        />
         <h3 className="popup-message__title">{title}</h3>
         <p className="popup-message__text"> {text}</p>
-        { hasButton && 
-          <button className="popup-message__btn" onClick={onModalClose}>Войти</button>
+        {hasButton && 
+          <button 
+            className="popup-message__btn" 
+            onClick={onModalClose}
+          >
+            Войти
+          </button>
         }
-        { link && 
+        {link && 
           <Link 
             to={link}
             className="popup-message__btn" 
-            >Войти</Link>
+          >
+            Войти
+          </Link>
         }
       </div>
     </div>

@@ -103,9 +103,6 @@ const Login: React.FC = () => {
                             {errors.password}
                           </p>}
                     </div>
-                    <div className="login__link-wrapper">
-                      {/* <a href="restore-password.html" className="login__form-reminder">Забыли пароль?</a> */}
-                    </div>
                     <button className="login__form-btn btn" type="submit">Войти</button>
                   </form>
                 )}
@@ -117,12 +114,12 @@ const Login: React.FC = () => {
           </div>
         </div>
       </div>
-      { modalVisible &&
+      {modalVisible &&
         <ModalInfo 
           title="Оошибка при логине"
           text={loginErrorMessage.current} 
           onModalClose={onModalClose}
-          />
+        />
       }
     </>
   )

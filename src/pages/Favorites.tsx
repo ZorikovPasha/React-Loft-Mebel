@@ -35,11 +35,10 @@ const Favorites: React.FC = () => {
           </div>
         </div>
       </section>
-      {
-        !isLoaded && isAuth
-          ? <Loader />
-          : favorites.length
-            ? (<section className="sales">
+      {!isLoaded && isAuth
+        ? <Loader />
+        : favorites.length
+          ? <section className="sales">
               <div className="container">
                 <div className="sales__items sales__items--cart">
                   {favoriteItems && favoriteItems?.map(item => (
@@ -52,10 +51,10 @@ const Favorites: React.FC = () => {
                   ))}
                 </div>
               </div>
-              </section>)
-            : (<div className="container">
-                <Empty text="Вам ничего не понравилось("/>
-              </div>)
+            </section>
+          : <div className="container">
+              <Empty text="Вам ничего не понравилось("/>
+            </div>
         }
     </>
   );

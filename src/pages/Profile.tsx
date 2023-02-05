@@ -24,7 +24,6 @@ const Profile: React.FC = () => {
     { text: 'Оплачивайте бонусами до 20% от покупки', img: term_3 },
   ];
 
-
   const history = useHistory();
 
   const fetchedOrders = useSelector(getOrders);
@@ -84,12 +83,12 @@ const Profile: React.FC = () => {
               </div>
             </div>
             <div className="profile__terms">
-              {terms.map(({ text , img }) => (
+              {terms.map(({ text , img }) => 
                 <div className="profile__term" key={text}>
                   <img src={img} alt="condition" />
                   <p className="profile__term-text">{text}</p>
-              </div>
-              ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -115,7 +114,7 @@ const Profile: React.FC = () => {
                           value={values.name}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          />
+                        />
                       </label>
                     </div>
                     <div className="profile__form-block">
@@ -129,7 +128,7 @@ const Profile: React.FC = () => {
                           value={values.email}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          />
+                        />
                       </label>
                     </div>
                     <div className="profile__form-line">
@@ -144,7 +143,7 @@ const Profile: React.FC = () => {
                             value={values.surname}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            />
+                          />
                         </label>
                       </div>
 
@@ -159,7 +158,7 @@ const Profile: React.FC = () => {
                             value={values.phone}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            />
+                          />
                         </label>
                       </div>
                     </div>
@@ -174,7 +173,7 @@ const Profile: React.FC = () => {
                           value={values.city}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          />
+                        />
                       </label>
                     </div>
 
@@ -189,7 +188,7 @@ const Profile: React.FC = () => {
                         value={values.street}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        />
+                      />
                     </label>
                   </div>
 
@@ -205,7 +204,7 @@ const Profile: React.FC = () => {
                           value={values.house}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                            />
+                        />
                       </label>
                   </div>
                     <div className="profile__form-block">
@@ -219,7 +218,7 @@ const Profile: React.FC = () => {
                           value={values.apartment}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          />
+                        />
                     </label>
                     </div>
                   </div>
@@ -228,10 +227,15 @@ const Profile: React.FC = () => {
                       className="profile__form-btn profile__form-btn--red"
                       type="button"
                       onClick={onLogout}
-                      >
-                        Выйти
-                        </button>
-                    <button className="profile__form-btn" type="submit">Изменить</button>
+                    >
+                      Выйти
+                    </button>
+                    <button 
+                      className="profile__form-btn" 
+                      type="submit"
+                    >
+                      Изменить
+                    </button>
                   </div>
                   </form>
                 )}
@@ -244,17 +248,21 @@ const Profile: React.FC = () => {
                 <div className="orders__cost heading">Цена</div>
                 <div className="orders__date heading">Дата</div>
                 <div className="orders__status heading">Статус</div>
-                { fetchedOrders && fetchedOrders?.map(({ id, name, price, date, status, imageUrl }, idx) => (
-                  < React.Fragment key={idx}>
+                {fetchedOrders && fetchedOrders?.map(({ id, name, price, date, status, imageUrl }, idx) => 
+                  <React.Fragment key={idx}>
                     <div className="orders__name">
-                      <img  className="orders__preview" src={imageUrl} alt="Превю мебели" />
+                      <img 
+                        className="orders__preview" 
+                        src={imageUrl} 
+                        alt="Превю мебели" 
+                      />
                       <Link to={`/products/${id}`}>{name}</Link>
                     </div>
                     <div className="orders__cost">{price}</div>
                     <div className="orders__date">{date.toString().substring(0, 10)}</div>
                     <div className="orders__status">{status}</div>
                   </React.Fragment>
-                )) }
+                )}
               </div>
             </div>
           </div>

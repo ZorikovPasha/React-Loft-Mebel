@@ -13,16 +13,16 @@ const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir, rootElClass
   
   return (
     <ul className={`sub-list ${rootElClass}`}>
-      {items && items.map(item => (
-        <li key={item.link} className="sub-list__item">
+      {items && items.map(({ link, text }) => 
+        <li key={link} className="sub-list__item">
           <Link 
             to={`${parentDir}`} 
             className="sub-list__link"
             >
-            {item.text}
+            {text}
           </Link>
         </li>
-      ))}
+      )}
     </ul>
   );
 };

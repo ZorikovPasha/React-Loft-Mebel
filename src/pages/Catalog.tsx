@@ -108,7 +108,7 @@ const Catalog: FC = () => {
               isAsideVisible={isAsideVisible}
               onAsideCloseClick={onAsideCloseClick}
               handleFiltersSubmit={handleFiltersSubmit}
-              />}
+            />}
             <div className="catalog__body">
               <div className="catalog__controls controls">
                 <button 
@@ -120,8 +120,7 @@ const Catalog: FC = () => {
                 </button>
                 <SortPopup onSelectSortType={onSelectSortType} />
               </div>
-              {
-                isLoading
+              {isLoading
                 ? <Loader />
                 : items.length
                   ? <div className="catalog__items">
@@ -135,7 +134,7 @@ const Catalog: FC = () => {
                       ))}
                     </div>
                   : <Empty text="Ничего не найдено"/>
-                }
+              }
             </div>
           </div>
         </div>

@@ -31,7 +31,7 @@ const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
         placeholder="Поиск"
         value={searchValue}
         onChange={onSearchValChange} 
-        />
+      />
       <button 
         className="header__search" 
         type="submit"

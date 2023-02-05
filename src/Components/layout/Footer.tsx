@@ -19,26 +19,26 @@ const Footer: React.FC = () => {
             <div className="footer__column">
               <p className="footer__title">НАВИГАЦИЯ</p>
               <div className="footer__box">
-                {FooterListsRef.current?.map(list => (
-                    <ul 
-                      className="footer__list" 
-                      key={list[0].link}
+                {FooterListsRef.current?.map(list => 
+                  <ul 
+                    className="footer__list" 
+                    key={list[0].link}
+                  >
+                    {list.map(({ link, name }) => 
+                      <li 
+                        className="footer__list-item" 
+                        key={link}
                       >
-                      {list.map((listItem) => (
-                        <li 
-                          className="footer__list-item" 
-                          key={listItem.link}
+                        <Link 
+                          to={link} 
+                          className="footer__list-link"
                           >
-                          <Link 
-                            to={listItem.link} 
-                            className="footer__list-link"
-                            >
-                            {listItem.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ))}
+                          {name}
+                        </Link>
+                      </li>
+                    )}
+                  </ul>
+                )}
               </div>
             </div>
             <div className="footer__column footer__column--common">
@@ -53,33 +53,33 @@ const Footer: React.FC = () => {
               <Link 
                 to="/catalog/new" 
                 className="bottom-footer__text bottom-footer__text--promo"
-                  >
-                  Акция
-                </Link>
+              >
+                Акция
+              </Link>
               <Link 
                 to="/catalog/new" 
                 className="bottom-footer__text"
-                >
-                  Новинки
-                </Link>
+              >
+                Новинки
+              </Link>
             </div>
             <div className="bottom-footer__contacts">
               <a 
                 className="bottom-footer__phone" 
                 href="tel:89648999119"
-                >
+              >
                 8 (964) 89 99 119
               </a>
               <a 
                 className="bottom-footer__link" 
                 href="#"
-                >
+              >
                 INSTAGRAM
               </a>
               <a 
                 className="bottom-footer__mail" 
                 href="mailto:mebel_loft_anapa@mail.ru"
-                >
+              >
                 mebel_loft_anapa@mail.ru
               </a>
             </div>

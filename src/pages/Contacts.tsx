@@ -91,14 +91,13 @@ const Contacts: React.FC = () => {
                       {errors.message && touched.message && 
                         <p className="form-error">
                           {errors.message}
-                        </p>}
+                      </p>}
 
                     Сообщение
                     <textarea 
                       value={values.message}
                       name="message"
                       className={`contacts__form-area ${ errors.message && touched.message ? 'form-input--error' : ''}`}
-
                       placeholder="Напишите ваше сообщение" 
                       required
                       onChange={handleChange}
@@ -154,10 +153,10 @@ const Contacts: React.FC = () => {
               src="https://yandex.ru/map-widget/v1/-/CCUqI-Sv8C" 
               width="100%" 
               height="400" 
-              frameBorder="1" 
+              frame-border="1" 
               allowFullScreen={true} 
               style={{position:"relative"}} 
-              />
+            />
           </div>
         </div>
       </section>
