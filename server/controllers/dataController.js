@@ -107,7 +107,6 @@ class dataController {
         await User.updateOne({ _id: req.user._id,
           "cartItems": { "$elemMatch": { "id": id }}}, { "$set": { "cartItems.$.quintity": identicalItem[0].quintity + 1 }} 
         );
-        const user = await User.findOne({ _id: req.user._id });
       } else {
         await User.updateOne({ _id: req.user._id }, { $push: { cartItems: {
           id,

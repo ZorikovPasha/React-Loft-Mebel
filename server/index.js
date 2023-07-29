@@ -1,9 +1,9 @@
+require('dotenv/config');
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const protect = require('./middleware/protect');
-
-require('dotenv/config');
 
 const dataRouter = require('./routes/dataRouter');
 const authRouter = require('./routes/authRouter');

@@ -1,0 +1,151 @@
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  height: 100%;
+
+  &.lock {
+    overflow: hidden;
+
+    @media (hover: hover) {
+      margin-right: calc(100vw - 100%);
+    }
+  }
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+body {
+  min-width: 320px;
+  overflow-x: hidden;
+  height: 100%;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: $text;
+
+  &.lock {
+    overflow: hidden;
+  }
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+}
+
+.container {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.container-fluid {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+button {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow-x: hidden;
+  flex-grow: 1;
+}
+
+.main {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex: 0 0 auto;
+}
+
+.breadcrumbs {
+  padding: 0 0 20px;
+
+  // .breadcrumbs__list
+
+  &__list {
+    display: flex;
+  }
+
+  // .breadcrumbs__item
+
+  &__item {
+    position: relative;
+    padding-right: 12px;
+    margin-right: 10px;
+    font-size: 12px;
+    line-height: 14px;
+    color: #969696;
+  }
+
+  &__item-back {
+    display: none;
+  }
+
+  &__item:not(:last-child)::after {
+    content: '/';
+    position: absolute;
+    right: 0;
+    font-size: 12px;
+    line-height: 14px;
+    color: #575757;
+  }
+}
+
+.error {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 14px;
+  display: block;
+  margin: 0;
+  color: red;
+}
+
+.btn {
+  color: #fff;
+  background: #209cee;
+  border-radius: 5px;
+  font-size: 16px;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(#209cee, 0.9);
+  }
+
+  &:active {
+    background-color: rgba(#209cee, 0.7);
+  }
+}
+
+@media (width <=510px) {
+  .breadcrumbs__item:not(:last-child) {
+    display: none;
+  }
+
+  .breadcrumbs__item:last-child {
+    display: flex;
+  }
+
+  .breadcrumbs__item-back {
+    display: block;
+    margin-right: 7px;
+  }
+}
