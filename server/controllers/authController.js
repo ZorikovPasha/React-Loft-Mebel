@@ -94,14 +94,6 @@ class authController {
         street,
         house,
         apartment } = req.body;
-        console.log(name,
-          email,
-          surname,
-          phone,
-          city,
-          street,
-          house,
-          apartment);
   
       await UserModel.updateOne({ _id: req.user._id }, { $set: { 
         name,
