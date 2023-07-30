@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { ROUTES } from '../utils/const'
-import { Main } from '../pages'
+import { Main } from '../pages/Main'
 
 const LazyCart = React.lazy(() => import('../pages/Cart'))
 const LazyCatalog = React.lazy(() => import('../pages/Catalog'))

@@ -1,10 +1,10 @@
 import React from 'react'
 import Select, { ActionMeta, SingleValue } from 'react-select'
 
-type OptionsType = {
+interface IOption {
   value: string
   label: string
-}[]
+}
 
 interface ICustomSelect {
   onChange: (
@@ -17,23 +17,21 @@ interface ICustomSelect {
       label: string
     }>
   ) => void
-  options: OptionsType
+  options: IOption[]
   value: string
 }
 
-const CustomSelect: React.FC<ICustomSelect> = ({ onChange, options, value }) => {
-  const defaultValue = (options: OptionsType, value: string) => {
-    if (options) {
-      return options.find((option) => option?.value === value)
-    }
-  }
-  return (
-    <Select
-      value={defaultValue(options, value)}
-      options={options}
-      onChange={onChange}
-    />
-  )
+export const CustomSelect: React.FC<ICustomSelect> = ({ onChange, options, value }) => {
+	const defaultValue = (options: IOption[], value: string) => {
+		if (options) {
+			return options.find((option) => option?.value === value)
+		}
+	}
+	return (
+		<Select
+			value={defaultValue(options, value)}
+			options={options}
+			onChange={onChange}
+		/>
+	)
 }
-
-export default CustomSelect

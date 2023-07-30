@@ -5,7 +5,7 @@ import { ActionsTypes, fetchItemsActionType } from '../../types/actionsTypes'
 import { ProductType } from '../../types'
 import { stateType } from '../reducers/itemsReducer'
 
-import { ApiClient } from '../../services/api'
+import { ApiClient } from '../../api'
 
 export const fetchItemsThunkCreator = (queryParams: string): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {

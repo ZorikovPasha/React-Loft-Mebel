@@ -1,10 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { TopSlider } from '../Components'
-import '../scss/style.scss'
+import { TopSlider } from '../components/Main/TopSlider'
 
-const Main: React.FC = () => {
+export const Main: React.FC = () => {
   return (
     <>
       <div className='container'>

@@ -1,10 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { SalesItem, Breadcrumbs, Empty, Loader } from '../Components'
 import { getFavorites, getIsAuth, getProducts } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { ProductType } from '../types'
+import { SalesItem } from '../components/common/SalesItem'
+import { Breadcrumbs } from '../components/common/Breadcrumbs'
+import { Empty } from '../components/common/Empty'
+import { Loader } from '../components/common/Loader'
 
 const Favorites: React.FC = () => {
   const breadcrumbs = useBreadcrumbs()

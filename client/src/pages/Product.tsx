@@ -1,11 +1,14 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-import { ProductCard, Breadcrumbs, ProductTabs, Related } from '../Components'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
-import '../../node_modules/slick-carousel/slick/slick.css'
-import { UserApiClient } from '../services/api'
+import { UserApiClient } from '../api'
 import { ProductType } from '../types'
+import { ProductCard } from '../components/Product/ProductCard'
+import { Breadcrumbs } from '../components/common/Breadcrumbs'
+import { ProductTabs } from '../components/Product/ProductTabs'
+import { Related } from '../components/Product/Related'
+import '../../node_modules/slick-carousel/slick/slick.css'
 
 const Product: React.FC = () => {
   const [currentProduct, setCurrentProduct] = React.useState<ProductType>()

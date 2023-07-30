@@ -3,9 +3,8 @@ import { useHistory } from 'react-router-dom'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 
-import { ModalInfo } from '../Components'
-
-import { UserApiClient } from '../services/api'
+import { ModalInfo } from '../components/common/ModalInfo'
+import { UserApiClient } from '../api'
 
 const SignUp: React.FC = () => {
   const history = useHistory()

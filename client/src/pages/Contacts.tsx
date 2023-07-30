@@ -2,9 +2,10 @@ import React from 'react'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 
-import { Breadcrumbs, ModalInfo } from '../Components'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
-import { formDataType, UserApiClient } from '../services/api'
+import { formDataType, UserApiClient } from '../api'
+import { Breadcrumbs } from '../components/common/Breadcrumbs'
+import { ModalInfo } from '../components/common/ModalInfo'
 
 const Contacts: React.FC = () => {
   const [isModalOpened, setModalOpened] = React.useState(false)

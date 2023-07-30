@@ -2,12 +2,17 @@ import React, { FC, MouseEventHandler } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { Aside, SortPopup, SalesItem, Breadcrumbs, Loader, Empty } from '../Components'
+import { Aside } from '../components/Catalog/Aside'
+import { SortPopup } from '../components/Catalog/SortPopup'
+import { SalesItem } from '../components/common/SalesItem'
+import { Empty } from '../components/common/Empty'
+import { Loader } from '../components/common/Loader'
+import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { getFavorites } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { ProductType, submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
-import { ApiClient } from '../services/api'
+import { ApiClient } from '../api'
 
 const Catalog: FC = () => {
   const history = useHistory()
