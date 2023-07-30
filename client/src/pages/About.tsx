@@ -1,11 +1,5 @@
 import React from 'react'
 
-import topImg from '../images/about-top.png'
-import benefit_1 from '../images/benefits/1.svg'
-import benefit_2 from '../images/benefits/2.svg'
-import benefit_3 from '../images/benefits/3.svg'
-import benefit_4 from '../images/benefits/4.svg'
-
 const About: React.FC = () => {
   return (
     <>
@@ -26,7 +20,7 @@ const About: React.FC = () => {
               </div>
               <div className='about-top__images animate__animated animate__delay-2s animate__fadeInRight'>
                 <img
-                  src={topImg}
+                  src='/images/about-top.png'
                   alt='furniture'
                 />
               </div>
@@ -41,7 +35,7 @@ const About: React.FC = () => {
           <div className='about-benefits__items'>
             <div className='about-benefits__item'>
               <img
-                src={benefit_1}
+                src='/images/benefits/1.svg'
                 alt='benefit'
               />
               <div className='about-benefits__item-text'>
@@ -53,7 +47,7 @@ const About: React.FC = () => {
             </div>
             <div className='about-benefits__item'>
               <img
-                src={benefit_2}
+                src='/images/benefits/2.svg'
                 alt='benefit'
               />
               <div className='about-benefits__item-text'>
@@ -65,7 +59,7 @@ const About: React.FC = () => {
             </div>
             <div className='about-benefits__item'>
               <img
-                src={benefit_3}
+                src='/images/benefits/3.svg'
                 alt='benefit'
               />
               <div className='about-benefits__item-text'>
@@ -77,7 +71,7 @@ const About: React.FC = () => {
             </div>
             <div className='about-benefits__item'>
               <img
-                src={benefit_4}
+                src='/images/benefits/4.svg'
                 alt='benefit'
               />
               <div className='about-benefits__item-text'>

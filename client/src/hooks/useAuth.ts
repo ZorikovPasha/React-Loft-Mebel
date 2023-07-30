@@ -7,7 +7,7 @@ import { addFavoritesActionCreator, loadingActionCreator, resetFavoritesActionCr
 import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { addUserDataActionCreator } from '../redux/actions/userAction'
 import { getIsAuth } from '../redux/getters'
-import { UserApiClient } from '../services/api/'
+import { UserApiClient } from '../api/'
 import { CartItemType, OrderInfoType, userFormValuesType } from '../types'
 
 export const useAuth = async () => {

@@ -18,7 +18,7 @@ export const Main: React.FC = () => {
             loop
             preload='auto'
           >
-            <source src='../images/promo.mp4' />
+            <source src='/images/promo.mp4' />
           </video>
           <div className='home__promo-content'>
             <p className='home__promo-text'>Новый коллекция ярких решений для вашего интерьера.</p>
