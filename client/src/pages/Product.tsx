@@ -8,7 +8,6 @@ import { ProductCard } from '../components/Product/ProductCard'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { ProductTabs } from '../components/Product/ProductTabs'
 import { Related } from '../components/Product/Related'
-import '../../node_modules/slick-carousel/slick/slick.css'
 
 const Product: React.FC = () => {
   const [currentProduct, setCurrentProduct] = React.useState<ProductType>()

@@ -2,11 +2,16 @@ import React, { Suspense } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Footer, Loader, MobMenu, Header } from '../Components'
+import { Footer } from '../components/layout/Footer'
+import { Loader } from '../components/common/Loader'
+import { MobMenu } from '../components/layout/MobMenu'
+import { Header } from '../components/layout/Header/Header'
 import { publicRoutes, authRoutes, initialRoute } from './routes'
 import { getIsAuth } from '../redux/getters'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
+import '../scss/style.scss'
+import '../../node_modules/slick-carousel/slick/slick.css'
 
 const AppRouter: React.FC = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)

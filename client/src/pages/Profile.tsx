@@ -4,9 +4,6 @@ import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 
-import term_1 from '../images/terms/1.svg'
-import term_2 from '../images/terms/2.svg'
-import term_3 from '../images/terms/3.svg'
 import { userFormValuesType } from '../types'
 import { UserApiClient } from '..//api'
 import { getOrders, getUserData } from '../redux/getters'
@@ -19,9 +16,9 @@ import { resetCartActionCreator } from '../redux/actions/cartItems'
 const Profile: React.FC = () => {
   const dispatch = useDispatch()
   const terms = [
-    { text: 'Возвращаем до 7% на бонусный счет', img: term_1 },
-    { text: '1 бонус = 1 рубль', img: term_2 },
-    { text: 'Оплачивайте бонусами до 20% от покупки', img: term_3 }
+    { text: 'Возвращаем до 7% на бонусный счет', img: '/images/terms/1.svg' },
+    { text: '1 бонус = 1 рубль', img: '/images/terms/2.svg' },
+    { text: 'Оплачивайте бонусами до 20% от покупки', img: '/images/terms/3.svg' }
   ]
 
   const history = useHistory()

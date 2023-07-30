@@ -127,10 +127,10 @@
     right: 16px;
     width: 24px;
     height: 21px;
-    background-image: url('../images/icons/wish.svg');
+    background-image: url('/images/icons/wish.svg');
 
     &.active {
-      background-image: url('../images/icons/wished.svg');
+      background-image: url('/images/icons/wished.svg');
     }
   }
 
@@ -262,7 +262,7 @@
         transform: translate(0%, -50%);
         width: 6px;
         height: 6px;
-        background-image: url('../images/icons/cross.svg');
+        background-image: url('/images/icons/cross.svg');
       }
     }
   }
@@ -325,7 +325,7 @@
     left: 0;
     width: 18px;
     height: 19px;
-    background-image: url('../images/icons/sale.svg');
+    background-image: url('/images/icons/sale.svg');
   }
 }
 

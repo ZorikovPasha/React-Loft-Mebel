@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { getFavorites } from '../../../redux/getters'
 
-import wishlist from '../../../images/icons/wishlist.svg'
-
-const HeaderWishListIcon: React.FC = () => {
+export const HeaderWishListIcon: React.FC = () => {
   const { favorites } = useSelector(getFavorites)
 
   return (
@@ -15,11 +13,9 @@ const HeaderWishListIcon: React.FC = () => {
       className={`user-header__link user-header__link--hover ${favorites.length ? 'user-header__link--dot' : ''}`}
     >
       <img
-        src={wishlist}
+        src='/images/icons/wishlist.svg'
         alt='wishlist'
       />
     </Link>
   )
 }
-
-export default HeaderWishListIcon

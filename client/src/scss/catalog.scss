@@ -131,7 +131,7 @@
     left: 3px;
     width: 11px;
     height: 8px;
-    background-image: url('../images/icons/check.svg');
+    background-image: url('/images/icons/check.svg');
   }
 }
 
@@ -185,7 +185,7 @@
     left: 2px;
     width: 11px;
     height: 8px;
-    background-image: url('../images/icons/check.svg');
+    background-image: url('/images/icons/check.svg');
   }
 }
 
@@ -225,7 +225,7 @@
       transform: translate(0%, -50%);
       width: 19px;
       height: 11px;
-      background-image: url('../images/icons/sort.svg');
+      background-image: url('/images/icons/sort.svg');
     }
 
     &:hover,
@@ -347,7 +347,7 @@
     display: block;
     width: 30px;
     height: 30px;
-    background-image: url('../images/mob-menu/close.svg');
+    background-image: url('/images/mob-menu/close.svg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

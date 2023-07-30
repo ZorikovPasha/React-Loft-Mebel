@@ -56,14 +56,14 @@
       transform: translate(0%, -50%);
       width: 19px;
       height: 19px;
-      background-image: url('../images/icons/phone.svg');
+      background-image: url('/images/icons/phone.svg');
     }
   }
 
   &__phone--black::after {
     width: 16px;
     height: 16px;
-    background-image: url('../images/icons/phone-black.svg');
+    background-image: url('/images/icons/phone-black.svg');
   }
 
   // .header__delivery
@@ -82,7 +82,7 @@
       transform: translate(0%, -50%);
       width: 30px;
       height: 17px;
-      background-image: url('../images/icons/delivery-icon.svg');
+      background-image: url('/images/icons/delivery-icon.svg');
     }
   }
 
@@ -91,7 +91,7 @@
   }
 
   &__delivery--black::after {
-    background-image: url('../images/icons/delivery-black.svg');
+    background-image: url('/images/icons/delivery-black.svg');
   }
 
   // .header__mid

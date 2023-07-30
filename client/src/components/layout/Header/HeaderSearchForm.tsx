@@ -1,13 +1,11 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-import search from '../../../images/icons/search.svg'
-
 interface IHeaderSearchFormProps {
   inputSpec?: boolean
 }
 
-const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
+export const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
   const [searchValue, setSearchValue] = React.useState('')
   const history = useHistory()
 
@@ -37,12 +35,10 @@ const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }) => {
         type='submit'
       >
         <img
-          src={search}
+          src='/images/icons/search.svg'
           alt='search'
         />
       </button>
     </form>
   )
 }
-
-export default HeaderSearchForm

@@ -1,5 +1,18 @@
+// @import '~slick-carousel/slick/slick.css';
+@import 'vars';
 @import 'reset';
 @import 'global';
+
+// blocks
+@import 'loader';
+@import 'form';
+@import 'animate';
+@import 'mobile';
+@import 'header';
+@import 'footer';
+@import 'popup';
+
+// pages
 @import 'main';
 @import 'home';
 @import 'cart';
@@ -11,11 +24,4 @@
 @import 'login';
 @import 'signup';
 @import 'profile';
-@import 'loader';
-@import 'form';
-@import 'animate';
-@import 'mobile';
-@import 'header';
-@import 'footer';
-@import 'popup';
 @import 'search-results';
