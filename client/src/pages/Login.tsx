@@ -5,9 +5,9 @@ import * as yup from 'yup'
 import { Formik } from 'formik'
 import { useDispatch } from 'react-redux'
 
-import { ModalInfo } from '../Components'
 import { authActionCreator } from '../redux/actions/authAction'
-import { UserApiClient } from '../services/api'
+import { UserApiClient } from '../api'
+import { ModalInfo } from '../components/common/ModalInfo'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()

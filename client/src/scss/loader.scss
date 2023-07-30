@@ -13,12 +13,11 @@
   box-shadow:
     20px 0 #0002,
     -20px 0 #000;
-
-  // animation:d5 1s infinite linear alternate;
+  animation:d5 1s infinite linear alternate;
 }
 
-// @keyframes d5 {
-//     0% {box-shadow: 20px 0 #000000,-20px 0 #00000022;background: #000000}
-//     33%{box-shadow: 20px 0 #000000,-20px 0 #00000022;background: #00000022}
-//     66%{box-shadow: 20px 0 #00000022,-20px 0 #000000;background: #00000022}
-// }
+@keyframes d5 {
+    0% {box-shadow: 20px 0 #000000,-20px 0 #00000022;background: #000000}  /* stylelint-disable-line */
+    33%{box-shadow: 20px 0 #000000,-20px 0 #00000022;background: #00000022} /* stylelint-disable-line */
+    66%{box-shadow: 20px 0 #00000022,-20px 0 #000000;background: #00000022} /* stylelint-disable-line */
+}

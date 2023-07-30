@@ -3,10 +3,10 @@ import Slider, { Settings } from 'react-slick'
 import { useDispatch } from 'react-redux'
 import { Formik } from 'formik'
 
-import AddToFavorite from '../common/AddToFavorite'
+import { AddToFavorite } from '../common/AddToFavorite'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
 import { ProductType } from '../../types'
-import { CustomSelect } from '..'
+import { CustomSelect } from '../common/CustomSelect'
 
 interface IProductCardProps {
   product: ProductType
@@ -85,7 +85,7 @@ type submitValuesType = {
   dimensions: string
 }
 
-const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product
 
   const dispatch = useDispatch()
@@ -235,5 +235,3 @@ const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     </section>
   )
 }
-
-export default ProductCard

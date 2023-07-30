@@ -6,7 +6,7 @@ import { addFavoritesActionCreator } from '../../redux/actions/favorites'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
 import { ProductType } from '../../types'
 import { getIsAuth } from '../../redux/getters'
-import { UserApiClient } from '../../services/api'
+import { UserApiClient } from '../../api'
 
 interface ISalesItemProps {
   product: ProductType
@@ -14,7 +14,7 @@ interface ISalesItemProps {
   isFavorite: boolean
 }
 
-const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) => {
+export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite, baseDir }) => {
   const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale, colors } = product
 
   const dispatch = useDispatch()
@@ -66,11 +66,11 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
 
   return (
     <div className='sales__item item-sales'>
-      {sale && (
+      {sale ? (
         <div className='item-sales__label label-sales'>
           <div className='label-sales__body'>-{sale}</div>
         </div>
-      )}
+      ) : null}
       <button
         className={`item-sales__like ${isFavorite ? 'active' : ''}`}
         onClick={onLikeProductClick}
@@ -119,6 +119,6 @@ const SalesItem: React.FC<ISalesItemProps> = ({ product, isFavorite, baseDir }) 
       </div>
     </div>
   )
-}
+})
 
-export default React.memo(SalesItem)
+SalesItem.displayName = 'SalesItem'

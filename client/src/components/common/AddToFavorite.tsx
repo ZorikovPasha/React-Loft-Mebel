@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { getFavorites } from '../../redux/getters'
 import { addFavoritesActionCreator } from '../../redux/actions/favorites'
-import { UserApiClient } from '../../services/api'
+import { UserApiClient } from '../../api'
 
 interface IProps {
   id: number
 }
 
-const AddToFavorite: React.FC<IProps> = ({ id }) => {
+export const AddToFavorite: React.FC<IProps> = ({ id }) => {
   const dispatch = useDispatch()
 
   const { favorites } = useSelector(getFavorites)
@@ -29,5 +29,3 @@ const AddToFavorite: React.FC<IProps> = ({ id }) => {
     </button>
   )
 }
-
-export default AddToFavorite

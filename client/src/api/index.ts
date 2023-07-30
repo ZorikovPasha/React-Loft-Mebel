@@ -1,11 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
-import { CartItemType, userFormValuesType, OrderInfoType } from '../../types'
-
-const URI = process.env.NODE_ENV === 'production' ? 'https://react-loft-mebel.herokuapp.com/' : 'http://localhost:5000'
+import { CartItemType, userFormValuesType, OrderInfoType } from '../types'
 
 export const apiConfig = {
   returnRejectedPromiseOnError: true,
-  baseURL: URI,
+  baseURL: import.meta.env.VITE_BACKEND,
   headers: {
     'Cache-Control': 'no-cache, no-store, must-revalidate',
     'Content-Type': 'application/json',
@@ -79,11 +77,11 @@ class UserApi extends Api {
   }
 
   register = <T>(credentials: SignUpCredsType): Promise<T> => {
-    return this.post('/auth/register', { ...credentials })
+    return this.post('/auth/register', credentials)
   }
 
   login = (credentials: LoginCredsType): Promise<{ token?: string; message?: string }> => {
-    return this.post('/auth/login', { ...credentials })
+    return this.post('/auth/login', credentials)
   }
 
   checkAuth = (): Promise<{ token?: string; message?: string }> => {
@@ -115,7 +113,7 @@ class UserApi extends Api {
   }
 
   addItemToCart = (cartItem: CartItemType) => {
-    this.post('/private/cartItem', { ...cartItem })
+    this.post('/private/cartItem', cartItem)
   }
 
   removeCartItem = (id: number) => {
@@ -123,7 +121,7 @@ class UserApi extends Api {
   }
 
   sendUserData = (userFormValues: userFormValuesType) => {
-    this.post('/private/user', { ...userFormValues })
+    this.post('/private/user', userFormValues)
   }
 
   makeOrder = (orderInfo: OrderInfoType[]) => {
@@ -131,7 +129,7 @@ class UserApi extends Api {
   }
 
   sendMessage = (formData: formDataType) => {
-    this.post('/private/message', { ...formData })
+    this.post('/private/message', formData)
   }
 }
 
