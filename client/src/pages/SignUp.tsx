@@ -1,45 +1,121 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Formik } from 'formik'
-import * as yup from 'yup'
 
 import { ModalInfo } from '../components/common/ModalInfo'
 import { UserApiClient } from '../api'
+import { getPasswordFieldErrorMessage, validateEmail, validatePassword, validateTextInput } from '../utils'
+import AppTextField from '../components/common/appTextField'
+
+export interface IField {
+  value: string
+  isValid: boolean
+  required: boolean
+  type: 'text' | 'email' | 'tel'
+  placeholder: string
+  customPlaceholder?: string
+  className?: string
+  inputClassName?: string
+  tag: 'input' | 'textarea'
+  getErrorMessage: (st: string) => string
+  label?: string
+  labelClass?: string
+  inputWrapClass?: string
+  showErrors: boolean
+  validateFn: (str: string) => boolean
+}
 
 const SignUp: React.FC = () => {
   const history = useHistory()
+
+  const _fields = React.useRef<Record<string, IField>>({
+    name: {
+      value: '',
+      label: 'Имя пользователя',
+      labelClass: 'signup__form-label form-label',
+      isValid: false,
+      required: true,
+      type: 'text',
+      placeholder: 'Введите Имя пользователя',
+      className: 'form-block',
+      inputClassName: 'signup__form-input form-input',
+      tag: 'input',
+      showErrors: false,
+      getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
+      validateFn: validateTextInput
+    },
+    email: {
+      tag: 'input',
+      value: '',
+      label: 'Электронная почта',
+      labelClass: 'signup__form-label form-label',
+      isValid: false,
+      required: true,
+      type: 'email',
+      placeholder: 'Введите электронную почту',
+      className: 'form-block',
+      inputClassName: 'signup__form-input form-input',
+      showErrors: false,
+      getErrorMessage: (str: string) => (str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : ''),
+      validateFn: validateEmail
+    },
+    password: {
+      value: '',
+      label: 'Пароль',
+      labelClass: 'signup__form-label form-label',
+      isValid: false,
+      required: true,
+      type: 'text',
+      placeholder: 'Введите пароль',
+      className: 'form-block',
+      inputClassName: 'signup__form-input form-input',
+      tag: 'input',
+      showErrors: false,
+      getErrorMessage: getPasswordFieldErrorMessage,
+      validateFn: validatePassword
+    }
+  } as const)
+
   const [modalSignUp, setModalSignUp] = React.useState(false)
-  const initFormValues = {
-    userName: '',
-    email: '',
-    password: ''
+  const [form, setForm] = React.useState(_fields.current)
+
+  const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((prev) => {
+      return {
+        ...prev,
+        [name]: {
+          ...prev[name],
+          value: e.target.value,
+          isValid: prev[name].validateFn(e.target.value),
+          showErrors: true
+        }
+      }
+    })
   }
 
-  const formSchema = yup.object().shape({
-    userName: yup.string().required('Пожалуйста, заполните имя'),
-    email: yup.string().email('Введите, корректный email').required('Пожалуйста, заполните email'),
-    password: yup
-      .string()
-      .required('Введите пароль')
-      .min(8, 'Пароль должен быть длиной не менее 8 символов')
-      .max(32, 'Пароль должен быть длиной не более 32 символов')
-  })
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
 
-  const handleSubmit = async ({ userName, email, password }: typeof initFormValues) => {
-    const data = await UserApiClient.register<{ message: string; status: number }>({ userName, email, password })
-
-    if (data.status === 200) {
-      document.documentElement.classList.add('lock')
-      setModalSignUp(true)
+    if (!Object.values(form).every(({ isValid }) => isValid)) {
+      return
     }
+
+    const dto = {
+      userName: form.name.value,
+      email: form.email.value,
+      password: form.password.value
+    }
+
+    UserApiClient.register(dto).then((data) => {
+      if (data.status === 200) {
+        document.documentElement.classList.add('lock')
+        setModalSignUp(true)
+      }
+    })
   }
 
   const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
-    history.push({
-      pathname: '/login'
-    })
+    history.push({ pathname: '/login' })
     document.documentElement.classList.remove('lock')
-
     setModalSignUp(false)
   }
 
@@ -50,68 +126,55 @@ const SignUp: React.FC = () => {
           <div className='signup__inner'>
             <h1 className='signup__title'>Регистрация</h1>
 
-            <Formik
-              initialValues={initFormValues}
-              validationSchema={formSchema}
+            <form
+              className='signup__form from'
               onSubmit={handleSubmit}
             >
-              {({ values, touched, errors, handleChange, handleBlur, handleSubmit }) => (
-                <form
-                  className='signup__form from'
-                  onSubmit={handleSubmit}
-                >
-                  <div className='form-block'>
-                    <p className='signup__form-label form-label'>Имя пользователя</p>
-                    <input
-                      type='text'
-                      className={`signup__form-input form-input ${errors.userName && touched.userName ? 'form-input--error' : ''}`}
-                      value={values.userName}
-                      name='userName'
-                      placeholder='Введите имя'
-                      required
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.userName && touched.userName && <p className='form-error'>{errors.userName}</p>}
-                  </div>
+              {Object.entries(form).map(([key, props]) => {
+                const {
+                  tag,
+                  required,
+                  placeholder,
+                  type,
+                  value,
+                  isValid,
+                  className,
+                  label,
+                  labelClass,
+                  inputWrapClass,
+                  inputClassName,
+                  getErrorMessage,
+                  showErrors
+                } = props
 
-                  <div className='form-block'>
-                    <p className='signup__form-label form-label'>Электронная почта</p>
-                    <input
-                      type='text'
-                      className={`signup__form-input form-input ${errors.email && touched.email ? 'form-input--error' : ''}`}
-                      value={values.email}
-                      name='email'
-                      placeholder='Введите электронную почту'
-                      required
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.email && touched.email && <p className='form-error'>{errors.email}</p>}
-                  </div>
-                  <div className='form-block'>
-                    <p className='signup__form-label form-label'>Пароль</p>
-                    <input
-                      type='password'
-                      className={`signup__form-input form-input ${errors.password && touched.password ? 'form-input--error' : ''}`}
-                      value={values.password}
-                      name='password'
-                      placeholder='Введите пароль'
-                      required
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.password && touched.password && <p className='form-error'>{errors.password}</p>}
-                  </div>
-                  <button
-                    type='submit'
-                    className='signup__form-btn btn'
-                  >
-                    Зарегистрироваться
-                  </button>
-                </form>
-              )}
-            </Formik>
+                const _showErrors = showErrors && !isValid && (required || Boolean(value))
+                return (
+                  <AppTextField
+                    elementType={tag}
+                    key={key}
+                    placeholder={placeholder}
+                    name={key as string}
+                    type={type}
+                    value={value}
+                    required={required}
+                    rootElclass={className}
+                    label={label}
+                    labelClass={labelClass}
+                    inputWrapClass={inputWrapClass}
+                    inputClassName={`${inputClassName} ${_showErrors ? 'input-text--error' : ''}`}
+                    showErrors={_showErrors}
+                    errorMessage={getErrorMessage(value)}
+                    onChange={onChange(key)}
+                  />
+                )
+              })}
+              <button
+                type='submit'
+                className='signup__form-btn btn'
+              >
+                Зарегистрироваться
+              </button>
+            </form>
           </div>
         </div>
       </div>

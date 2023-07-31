@@ -1,6 +1,10 @@
 Furniture E-commerce store project
 
-todo 
+TODO!: 
 слайдер заменить на полегче
-aborcontroller
+---aborcontroller
 поиск по товарам
+---убрать формик
+---убрать яп
+вынести селект в отдельный чанк
+/api/furniture changed for GET from POST

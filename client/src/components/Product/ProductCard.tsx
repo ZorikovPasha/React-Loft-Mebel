@@ -1,12 +1,12 @@
 import React from 'react'
 import Slider, { Settings } from 'react-slick'
 import { useDispatch } from 'react-redux'
-import { Formik } from 'formik'
 
 import { AddToFavorite } from '../common/AddToFavorite'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
 import { ProductType } from '../../types'
-import { CustomSelect } from '../common/CustomSelect'
+import CustomSelect from '../common/CustomSelect'
+import 'slick-carousel/slick/slick.scss'
 
 interface IProductCardProps {
   product: ProductType
@@ -79,39 +79,82 @@ type ColorOptionType = {
   label: string
 }
 
-type submitValuesType = {
-  quintity: string
-  color: string
-  dimensions: string
+interface ISelectField {
+  rootElClass: string
+  value: string
+  label: string
+  options: ColorOptionType[]
 }
 
 export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
-  const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product
-
   const dispatch = useDispatch()
 
-  const [nav1, setNav1] = React.useState<Slider>()
-  const [nav2, setNav2] = React.useState<Slider>()
+  const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product
 
   const colorsPrepared: ColorOptionType[] = []
   colors.forEach((color, idx) => (colorsPrepared[idx] = { value: color, label: color }))
 
-  const handleSubmit = ({ quintity, color, dimensions }: submitValuesType) => {
-    dispatch(
-      addtemsActionCreator([
+  const fields = React.useRef<Record<string, ISelectField>>({
+    quintity: {
+      rootElClass: 'features__col features__col--quintity',
+      label: 'Количество',
+      value: '1',
+      options: [
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+        { value: '3', label: '3' },
+        { value: '4', label: '4' }
+      ]
+    },
+    dimensions: {
+      rootElClass: 'features__col features__col--size',
+      label: 'Размер (Д × Ш × В)',
+      value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
+      options: [
         {
-          id: id,
-          colors: [color],
-          quintity: Number(quintity),
-          dimensions: {
-            width: parseInt(dimensions.split('×')[0]),
-            length: parseInt(dimensions.split('×')[1]),
-            height: parseInt(dimensions.split('×')[2])
-          },
-          price: priceNew
+          value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
+          label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`
         }
-      ])
-    )
+      ]
+    },
+    color: {
+      rootElClass: 'features__col features__col--color',
+      label: 'Цвет',
+      value: colorsPrepared[0].value,
+      options: colorsPrepared
+    }
+  })
+
+  const [nav1, setNav1] = React.useState<Slider>()
+  const [nav2, setNav2] = React.useState<Slider>()
+  const [form, setForm] = React.useState(fields.current)
+
+  const onSelect = (name: string) => (value: ColorOptionType | null) => {
+    setForm((prev) => ({
+      ...prev,
+      [name]: {
+        ...prev.name,
+        value: value?.value ?? ''
+      }
+    }))
+  }
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+
+    const dto = {
+      id: id,
+      colors: [form.color.value],
+      quintity: Number(form.quintity.value),
+      dimensions: {
+        width: parseInt(form.dimensions.value.split('×')[0]),
+        length: parseInt(form.dimensions.value.split('×')[1]),
+        height: parseInt(form.dimensions.value.split('×')[2])
+      },
+      price: priceNew
+    }
+
+    dispatch(addtemsActionCreator([dto]))
   }
 
   return (
@@ -160,69 +203,30 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             <div className='info__star'></div>
             <h1 className='info__title'>{name}</h1>
             <p className='info__category'>{type.label}</p>
-
-            <Formik
-              initialValues={{
-                quintity: '1',
-                color: colorsPrepared[0].value,
-                dimensions: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`
-              }}
-              onSubmit={handleSubmit}
-            >
-              {({ values, setFieldValue, handleSubmit }) => (
-                <form
-                  action=''
-                  onSubmit={handleSubmit}
+            <form onSubmit={handleSubmit}>
+              <div className='info__shop shop'>
+                <p className='shop__price'>{priceNew} P</p>
+                <button
+                  className='shop__btn'
+                  type='submit'
                 >
-                  <div className='info__shop shop'>
-                    <p className='shop__price'>{priceNew} P</p>
-                    <button
-                      className='shop__btn'
-                      type='submit'
-                    >
-                      Купить
-                    </button>
-                    <AddToFavorite id={id} />
+                  Купить
+                </button>
+                <AddToFavorite id={id} />
+              </div>
+              <div className='info__features features'>
+                {Object.entries(form).map(([key, props]) => (
+                  <div className={props.rootElClass}>
+                    <p className='features__title'>{props.label}</p>
+                    <CustomSelect
+                      value={props.value}
+                      options={props.options}
+                      onChange={onSelect(key)}
+                    />
                   </div>
-                  <div className='info__features features'>
-                    <div className='features__col features__col--color'>
-                      <p className='features__title'>Цвет</p>
-                      <CustomSelect
-                        value={values.color}
-                        options={colorsPrepared}
-                        onChange={(value) => setFieldValue('color', value?.value)}
-                      />
-                    </div>
-                    <div className='features__col features__col--quintity'>
-                      <p className='features__title'>Количество</p>
-                      <CustomSelect
-                        value={values.quintity}
-                        options={[
-                          { value: '1', label: '1' },
-                          { value: '2', label: '2' },
-                          { value: '3', label: '3' },
-                          { value: '4', label: '4' }
-                        ]}
-                        onChange={(value) => setFieldValue('quintity', value?.value)}
-                      />
-                    </div>
-                    <div className='features__col features__col--size'>
-                      <p className='features__title'>Размер (Д × Ш × В)</p>
-                      <CustomSelect
-                        value={values.dimensions}
-                        options={[
-                          {
-                            value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
-                            label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`
-                          }
-                        ]}
-                        onChange={(value) => setFieldValue('dimensions', value?.value)}
-                      />
-                    </div>
-                  </div>
-                </form>
-              )}
-            </Formik>
+                ))}
+              </div>
+            </form>
             <p className='info__text-title'>Описание</p>
             <p className='info__text'>
               Лаконичные линии и простые формы, безупречный стиль и индивидуальность – все это диван «Динс». Сдержанный скандинавский дизайн украсит любую

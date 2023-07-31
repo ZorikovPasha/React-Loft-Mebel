@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import isEqual from 'lodash.isequal'
 
 import { cartItemsActionType, ActionsTypes } from '../../types/actionsTypes'
 import { CartItemType, OrderInfoType } from '../../types'
@@ -59,7 +59,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
       if (state.cartItems.length) {
         action.payload.forEach((cartItem) => {
           state.cartItems.forEach((item: CartItemType) => {
-            if (_.isEqual({ ...item, quintity: 1 }, { ...cartItem, quintity: 1 })) {
+            if (isEqual({ ...item, quintity: 1 }, { ...cartItem, quintity: 1 })) {
               item.quintity += 1
             } else {
               buff.push(cartItem)

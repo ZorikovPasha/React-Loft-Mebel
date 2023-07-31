@@ -21,17 +21,19 @@ interface ICustomSelect {
   value: string
 }
 
-export const CustomSelect: React.FC<ICustomSelect> = ({ onChange, options, value }) => {
-	const defaultValue = (options: IOption[], value: string) => {
-		if (options) {
-			return options.find((option) => option?.value === value)
-		}
-	}
-	return (
-		<Select
-			value={defaultValue(options, value)}
-			options={options}
-			onChange={onChange}
-		/>
-	)
+const CustomSelect: React.FC<ICustomSelect> = ({ onChange, options, value }) => {
+  const defaultValue = (options: IOption[], value: string) => {
+    if (options) {
+      return options.find((option) => option?.value === value)
+    }
+  }
+  return (
+    <Select
+      value={defaultValue(options, value)}
+      options={options}
+      onChange={onChange}
+    />
+  )
 }
+
+export default CustomSelect

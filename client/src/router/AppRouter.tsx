@@ -11,7 +11,6 @@ import { getIsAuth } from '../redux/getters'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import '../scss/style.scss'
-import '../../node_modules/slick-carousel/slick/slick.css'
 
 const AppRouter: React.FC = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)

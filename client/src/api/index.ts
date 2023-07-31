@@ -41,9 +41,9 @@ class Api extends Axios {
     throw error
   }
 
-  get = <T>(url: string): Promise<T> => {
+  get = <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
     return this._axios
-      .get(url)
+      .get(url, config)
       .then(this.success)
       .catch((error: AxiosError<Error>) => {
         throw error
@@ -76,7 +76,7 @@ class UserApi extends Api {
     localStorage.setItem('token', token)
   }
 
-  register = <T>(credentials: SignUpCredsType): Promise<T> => {
+  register = (credentials: SignUpCredsType): Promise<{ message: string; status: number }> => {
     return this.post('/auth/register', credentials)
   }
 
@@ -104,32 +104,32 @@ class UserApi extends Api {
     return this.get('/private/orders')
   }
 
-  getOneFurniture = <T>(id: string): Promise<T> => {
-    return this.post('/api/furniture', { id })
+  getOneFurniture = <T>(id: string, signal: AbortSignal): Promise<T> => {
+    return this.get(`/api/furniture/${id}`, { signal })
   }
 
-  sendFavoriteItem = (id: number) => {
-    this.post('/private/favorite', { id })
+  sendFavoriteItem = (id: number): Promise<unknown> => {
+    return this.post('/private/favorite', { id })
   }
 
-  addItemToCart = (cartItem: CartItemType) => {
-    this.post('/private/cartItem', cartItem)
+  addItemToCart = (cartItem: CartItemType): Promise<unknown> => {
+    return this.post('/private/cartItem', cartItem)
   }
 
-  removeCartItem = (id: number) => {
-    this.post('/private/removeCartItem', { id })
+  removeCartItem = (id: number): Promise<unknown> => {
+    return this.post('/private/removeCartItem', { id })
   }
 
-  sendUserData = (userFormValues: userFormValuesType) => {
-    this.post('/private/user', userFormValues)
+  sendUserData = (userFormValues: userFormValuesType): Promise<unknown> => {
+    return this.post('/private/user', userFormValues)
   }
 
-  makeOrder = (orderInfo: OrderInfoType[]) => {
-    this.post('/private/order', { items: orderInfo })
+  makeOrder = (orderInfo: OrderInfoType[]): Promise<unknown> => {
+    return this.post('/private/order', { items: orderInfo })
   }
 
-  sendMessage = (formData: formDataType) => {
-    this.post('/private/message', formData)
+  sendMessage = (formData: formDataType): Promise<unknown> => {
+    return this.post('/private/message', formData)
   }
 }
 
