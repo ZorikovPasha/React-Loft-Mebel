@@ -1,54 +1,98 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
-import * as yup from 'yup'
-import { Formik } from 'formik'
 import { useDispatch } from 'react-redux'
 
 import { authActionCreator } from '../redux/actions/authAction'
 import { UserApiClient } from '../api'
 import { ModalInfo } from '../components/common/ModalInfo'
+import { IField } from './SignUp'
+import { getPasswordFieldErrorMessage, validateEmail, validatePassword } from '../utils'
+import AppTextField from '../components/common/appTextField'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
 
   const history = useHistory()
 
-  const [modalVisible, setModalVisible] = React.useState(false)
-
   const loginErrorMessage = React.useRef('')
 
-  const initFormValues = {
-    email: '',
-    password: ''
+  const _fields = React.useRef<Record<string, IField>>({
+    email: {
+      tag: 'input',
+      value: '',
+      label: 'Электронная почта',
+      labelClass: 'login__form-label form-label',
+      isValid: false,
+      required: true,
+      type: 'email',
+      placeholder: 'Введите электронную почту',
+      className: 'form-block',
+      inputClassName: 'login__form-input form-input',
+      showErrors: false,
+      getErrorMessage: (str: string) => (str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : ''),
+      validateFn: validateEmail
+    },
+    password: {
+      value: '',
+      label: 'Пароль',
+      labelClass: 'login__form-label form-label',
+      isValid: false,
+      required: true,
+      type: 'text',
+      placeholder: 'Введите пароль',
+      className: 'form-block',
+      inputClassName: 'login__form-input form-input',
+      tag: 'input',
+      showErrors: false,
+      getErrorMessage: getPasswordFieldErrorMessage,
+      validateFn: validatePassword
+    }
+  } as const)
+
+  const [form, setForm] = React.useState(_fields.current)
+  const [modalVisible, setModalVisible] = React.useState(false)
+
+  const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((prev) => {
+      return {
+        ...prev,
+        [name]: {
+          ...prev[name],
+          value: e.target.value,
+          isValid: prev[name].validateFn(e.target.value),
+          showErrors: true
+        }
+      }
+    })
   }
 
-  const formSchema = yup.object().shape({
-    email: yup.string().email('Введите, корректный email').required('Пожалуйста, заполните email'),
-    password: yup
-      .string()
-      .required('Введите пароль')
-      .min(8, 'Пароль должен быть длиной не менее 8 символов')
-      .max(32, 'Пароль должен быть длиной не более 32 символов')
-  })
+  const handleSubmit: React.MouseEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
 
-  const handleSubmit = async ({ email, password }: typeof initFormValues) => {
-    const { token, message } = await UserApiClient.login({ email, password })
-
-    if (message) {
-      loginErrorMessage.current = message
-      document.documentElement.classList.add('lock')
-      setModalVisible(true)
+    if (!Object.values(form).every(({ isValid }) => isValid)) {
+      return
     }
 
-    if (token) {
-      UserApiClient.setToken(token)
-      dispatch(authActionCreator(true))
-
-      history.push({
-        pathname: '/'
-      })
+    const dto = {
+      email: form.email.value,
+      password: form.password.value
     }
+
+    UserApiClient.login(dto).then((data) => {
+      const { token, message } = data
+      if (message) {
+        loginErrorMessage.current = message
+        document.documentElement.classList.add('lock')
+        setModalVisible(true)
+      }
+
+      if (token) {
+        UserApiClient.setToken(token)
+        dispatch(authActionCreator(true))
+        history.push({ pathname: '/' })
+      }
+    })
   }
 
   const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -62,54 +106,55 @@ const Login: React.FC = () => {
         <div className='container'>
           <div className='login__inner'>
             <h1 className='login__title'>Авторизация</h1>
-            <Formik
-              initialValues={initFormValues}
-              validationSchema={formSchema}
+            <form
+              className='login__form form'
               onSubmit={handleSubmit}
             >
-              {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
-                <form
-                  className='login__form form'
-                  onSubmit={handleSubmit}
-                >
-                  <div className='form-block'>
-                    <p className='login__form-label form-label'>Электронная почта</p>
-                    <input
-                      type='text'
-                      className={`login__form-input form-input ${errors.email && touched.email ? 'form-input--error' : ''}`}
-                      value={values.email}
-                      name='email'
-                      placeholder='Введите электронную почту'
-                      required
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.email && touched.email && <p className='form-error'>{errors.email}</p>}
-                  </div>
+              {Object.entries(form).map(([key, props]) => {
+                const {
+                  tag,
+                  required,
+                  placeholder,
+                  type,
+                  value,
+                  isValid,
+                  className,
+                  label,
+                  labelClass,
+                  inputWrapClass,
+                  inputClassName,
+                  getErrorMessage,
+                  showErrors
+                } = props
 
-                  <div className='form-block'>
-                    <p className='login__form-label form-label'>Пароль</p>
-                    <input
-                      type='password'
-                      className={`login__form-input form-input ${errors.password && touched.password ? 'form-input--error' : ''}`}
-                      value={values.password}
-                      name='password'
-                      placeholder='Введите пароль'
-                      required
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    {errors.password && touched.password && <p className='form-error'>{errors.password}</p>}
-                  </div>
-                  <button
-                    className='login__form-btn btn'
-                    type='submit'
-                  >
-                    Войти
-                  </button>
-                </form>
-              )}
-            </Formik>
+                const _showErrors = showErrors && !isValid && (required || Boolean(value))
+                return (
+                  <AppTextField
+                    elementType={tag}
+                    key={key}
+                    placeholder={placeholder}
+                    name={key as string}
+                    type={type}
+                    value={value}
+                    required={required}
+                    rootElclass={className}
+                    label={label}
+                    labelClass={labelClass}
+                    inputWrapClass={inputWrapClass}
+                    inputClassName={`${inputClassName} ${_showErrors ? 'input-text--error' : ''}`}
+                    showErrors={_showErrors}
+                    errorMessage={getErrorMessage(value)}
+                    onChange={onChange(key)}
+                  />
+                )
+              })}
+              <button
+                className='login__form-btn btn'
+                type='submit'
+              >
+                Войти
+              </button>
+            </form>
           </div>
           <div className='login__bottom'>
             <span className='login__new'>Новый пользователь? </span>

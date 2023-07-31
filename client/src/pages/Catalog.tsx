@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -14,7 +14,7 @@ import { ProductType, submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { ApiClient } from '../api'
 
-const Catalog: FC = () => {
+const Catalog: React.FC = () => {
   const history = useHistory()
 
   const asideToggleRef = React.useRef(null)
@@ -35,11 +35,15 @@ const Catalog: FC = () => {
   const [isLoading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
+    const controller = new AbortController()
+    const signal = controller.signal
+
     setLoading(true)
-    ApiClient.get<ProductType[]>('/api/furniture' + history.location.search).then((data) => {
+    ApiClient.get<ProductType[]>('/api/furniture' + history.location.search, { signal }).then((data) => {
       setItems(data)
       setLoading(false)
     })
+    return () => controller.abort()
   }, [history.location.search])
 
   const { favorites } = useSelector(getFavorites)
@@ -79,7 +83,7 @@ const Catalog: FC = () => {
     document.documentElement.classList.remove('lock')
   }
 
-  const onBtnClick: MouseEventHandler<HTMLButtonElement> = React.useCallback((): void => {
+  const onBtnClick: React.MouseEventHandler<HTMLButtonElement> = React.useCallback((): void => {
     toggleAsideVisibility(true)
     document.documentElement.classList.add('lock')
   }, [])

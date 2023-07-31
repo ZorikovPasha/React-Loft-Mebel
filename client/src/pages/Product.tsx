@@ -16,7 +16,11 @@ const Product: React.FC = () => {
   const { id } = useParams<{ id: string }>()
 
   React.useEffect(() => {
-    UserApiClient.getOneFurniture<ProductType>(id).then((data) => setCurrentProduct(data))
+    const controller = new AbortController()
+    const signal = controller.signal
+
+    UserApiClient.getOneFurniture<ProductType>(id, signal).then((data) => setCurrentProduct(data))
+    return () => controller.abort()
   }, [id])
 
   return (

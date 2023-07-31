@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -11,17 +11,17 @@ interface ICartItemProps {
   item: ProductType
 }
 
-export const CartItem: FC<ICartItemProps> = ({ cartItem, item }) => {
+export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
   const dispatch = useDispatch()
 
-  const onRemoveItemClick: MouseEventHandler<HTMLDivElement> = (): void => {
+  const onRemoveItemClick: React.MouseEventHandler<HTMLDivElement> = (): void => {
     dispatch(removeItemActionCreator(cartItem))
     UserApiClient.removeCartItem(cartItem.id)
   }
 
-  const getTotalCost = React.useMemo(() => {
+  const getTotalCost = () => {
     return item.priceNew ? item.priceNew * cartItem.quintity : item.priceOld * cartItem.quintity
-  }, [item.priceNew, item.priceOld, cartItem.quintity])
+  }
 
   return (
     <div className='cart__item item'>
