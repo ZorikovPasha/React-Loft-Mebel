@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model FavoriteFurniture {
+  id Int @id @default(autoincrement())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  surname String?
+  userName String @unique
+  password String
+  email String @unique
+  phone String
+  city String?
+  street String?
+  house String?
+  apartment String?
+  photo Bytes?
+  role Role @default(BASIC)
+  emailConfirmed Boolean @default(false)
+  wantsToReceiveEmailUpdates Boolean @default(false)
+  favorites FavoriteFurniture[]
+  orders Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FurnitureDimension {
+  id Int @id @default(autoincrement())
+  furnitureId Int
+  width Int
+  length Int
+  height Int
+  furniture Furniture @relation(fields: [furnitureId], references: [id])
+}
+
+model Furniture {
+  id Int @id @default(autoincrement())
+  image String
+  ImageUrl Bytes
+  thumbnails Bytes[]
+  name String
+  type Json
+  priceOld String
+  priceNew String
+  dimensions FurnitureDimension[]
+  colors String[]
+  rating Int
+  sale String
+  room String
+  material String
+  brand String
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  name String
+  status OrderStatus @default(CREATED)
+  quintity Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  BASIC
+  EDITOR
+  AUTHOR
+  ADMIN
+}
+
+enum OrderStatus {
+  CREATED
+  WORKING
+  COMPLETED
+  CANCELED
+}

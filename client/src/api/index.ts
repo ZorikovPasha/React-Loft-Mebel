@@ -19,6 +19,32 @@ type SignUpCredsType = {
 
 type LoginCredsType = Omit<SignUpCredsType, 'userName'>
 
+interface IRegisterResponse {
+  message: 'User has been registered'
+}
+
+interface ILoginResponse {
+  token: string
+}
+
+interface IUpdateUserResponse {
+  message: 'Data successfully was written'
+}
+
+interface IGetUserDataResponse {
+  name: string | undefined
+  surname: string | undefined
+  userName: string | undefined
+  email: string | undefined
+  phone: string | undefined
+  city: string | undefined
+  street: string | undefined
+  house: string | undefined
+  apartment: string | undefined
+  emailConfirmed: boolean | undefined
+  createdAt: string | undefined
+}
+
 export type formDataType = Omit<SignUpCredsType, 'password'> & { message: string }
 
 export class Axios {
@@ -57,6 +83,14 @@ class Api extends Axios {
         return error?.response?.data
       })
   }
+  put = <T, B>(url: string, data?: B): Promise<T> => {
+    return this._axios
+      .put(url, data)
+      .then(this.success)
+      .catch((error: AxiosError<Error>) => {
+        return error?.response?.data
+      })
+  }
 }
 
 class UserApi extends Api {
@@ -76,16 +110,12 @@ class UserApi extends Api {
     localStorage.setItem('token', token)
   }
 
-  register = (credentials: SignUpCredsType): Promise<{ message: string; status: number }> => {
-    return this.post('/auth/register', credentials)
+  register = (credentials: SignUpCredsType): Promise<IRegisterResponse> => {
+    return this.post('/user/register', credentials)
   }
 
-  login = (credentials: LoginCredsType): Promise<{ token?: string; message?: string }> => {
-    return this.post('/auth/login', credentials)
-  }
-
-  checkAuth = (): Promise<{ token?: string; message?: string }> => {
-    return this.get('/private/check')
+  login = (credentials: LoginCredsType): Promise<ILoginResponse> => {
+    return this.post('/user/login', credentials)
   }
 
   getFavorites = (): Promise<{ favorites: string[] }> => {
@@ -96,8 +126,8 @@ class UserApi extends Api {
     return this.get('/private/cartItems')
   }
 
-  getUserData = <T>(): Promise<T> => {
-    return this.get('/private/user')
+  getUserData = (): Promise<IGetUserDataResponse> => {
+    return this.get('/user')
   }
 
   getOrders = <T>(): Promise<T> => {
@@ -120,8 +150,8 @@ class UserApi extends Api {
     return this.post('/private/removeCartItem', { id })
   }
 
-  sendUserData = (userFormValues: userFormValuesType): Promise<unknown> => {
-    return this.post('/private/user', userFormValues)
+  sendUserData = (userFormValues: userFormValuesType): Promise<IUpdateUserResponse> => {
+    return this.put('/user', userFormValues)
   }
 
   makeOrder = (orderInfo: OrderInfoType[]): Promise<unknown> => {

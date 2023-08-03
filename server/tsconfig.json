@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "./dist", 
+    "target": "es6",
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "module": "esnext",
+    "isolatedModules": true,
+    "moduleResolution":"node",
+    "incremental": true,
+    "noUnusedLocals": true, 
+    "noUnusedParameters": false,
+    "noImplicitAny": true,
+    "alwaysStrict": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "strictNullChecks": true,
+    "noErrorTruncation": false
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "ts-node": {
+    "swc": true
+  }
+}
