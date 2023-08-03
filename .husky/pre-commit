@@ -3,4 +3,11 @@
 
 cd client
 npx lint-staged
-git add .
+
+cd ../server
+npm run format
+npm run build
+
+cd ..
+git add client
+git add server
