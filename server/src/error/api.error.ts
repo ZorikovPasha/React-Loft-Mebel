@@ -16,10 +16,6 @@ export class ApiError {
     return new ApiError(500, error.message)
   }
 
-  public static default(res: Response) {
-    return res.status(500).json({ message: 'An error occured' })
-  }
-
   public static notAuthorized(res: Response, message: string) {
     return res.status(401).json({ message })
   }

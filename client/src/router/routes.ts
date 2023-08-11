@@ -13,6 +13,7 @@ const LazyLogin = React.lazy(() => import('../pages/Login'))
 const LazySignup = React.lazy(() => import('../pages/SignUp'))
 const LazyProfile = React.lazy(() => import('../pages/Profile'))
 const LazyProfileSearchReult = React.lazy(() => import('../pages/SearchResult'))
+const LazyNewProduct = React.lazy(() => import('../pages/newProduct'))
 
 export const initialRoute = {
   path: ROUTES.Home,
@@ -29,6 +30,11 @@ export const publicRoutes = [
   {
     path: ROUTES.Catalog,
     component: LazyCatalog,
+    exact: false
+  },
+  {
+    path: ROUTES.NewProduct,
+    component: LazyNewProduct,
     exact: false
   },
   {

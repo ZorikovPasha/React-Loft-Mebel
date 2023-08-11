@@ -6,7 +6,6 @@ npx lint-staged
 
 cd ../server
 npm run format
-npm run build
 
 cd ..
 git add client

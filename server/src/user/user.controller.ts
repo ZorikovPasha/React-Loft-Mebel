@@ -3,10 +3,18 @@ import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import type { UploadedFile } from 'express-fileupload'
+import { injectable, inject } from 'inversify'
 
 import { LoggerService } from '../logger/logger.service.js'
 import { ApiError } from '../error/api.error.js'
 import { prismaClient } from '../prisma/client.js'
+import { TYPES } from '../types.js'
+import {
+  ILoginRequestBody,
+  IRequestBody,
+  IUpdateUserDto,
+  IUserController
+} from './user.controller.interface.js'
 
 const generateToken = (id: string, email: string, password: string) => {
   const payload = {
@@ -24,46 +32,9 @@ const generateToken = (id: string, email: string, password: string) => {
   return jwt.sign(payload, jwtSecret ?? '', { expiresIn: process.env.JWT_EXPIRATION })
 }
 
-interface ILoginRequestBody {
-  email?: string
-  password?: string
-}
-
-interface IRequestBody {
-  userName?: string
-  email?: string
-  password?: string
-}
-
-interface IUpdateUserDto {
-  name: string | undefined | null
-  surname: string | undefined | null
-  email: string | undefined | null
-  phone: string | undefined | null
-  city: string | undefined | null
-  street: string | undefined | null
-  house: string | undefined | null
-  apartment: string | undefined | null
-  photo: string | undefined | null
-  emailConfirmed: boolean | undefined | null
-  wantsToReceiveEmailUpdates: boolean | undefined | null
-}
-
-// interface IValidationError {
-//   value: string | number | undefined
-//   msg: string | undefined
-//   param: string
-//   location: "body" | string
-// }
-
-// interface IValidationResult {
-//   formatter: () => void
-//   errors: IValidationError[]
-// }
-
-class UserController {
-  private logger: LoggerService
-  constructor(logger: LoggerService) {
+@injectable()
+export class UserController implements IUserController {
+  constructor(@inject(TYPES.ILoggerService) private logger: LoggerService) {
     this.logger = logger
   }
 
@@ -115,11 +86,11 @@ class UserController {
           city: '',
           street: '',
           house: '',
-          apartment: '',
-          photo: Buffer.alloc(0)
+          apartment: ''
+          // photo: Buffer.alloc(0)
         }
       })
-      res.status(201).json({ message: 'User has been registered' })
+      return res.status(201).json({ message: 'User has been registered' })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
@@ -235,7 +206,7 @@ class UserController {
           ...set
         }
       })
-      res.status(204).json({ message: 'Data successfully was written' })
+      return res.status(204).json({ message: 'Data successfully was written' })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
@@ -264,7 +235,7 @@ class UserController {
       } = res.locals.user
       console.log('res.locals.user', res.locals.user)
 
-      res.json({
+      return res.json({
         name,
         surname,
         userName,
@@ -286,5 +257,3 @@ class UserController {
     }
   }
 }
-
-export const userController = new UserController(new LoggerService())

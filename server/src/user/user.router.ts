@@ -1,9 +1,84 @@
-import express from 'express'
 import { check } from 'express-validator'
-import { userController } from '../controllers/user.controller.js'
-import { protect } from '../middleware/protect.js'
+import { Router } from 'express'
+import { inject, injectable } from 'inversify'
 
-export const router = express.Router()
+import { UserController } from './user.controller.js'
+import { protect } from '../middleware/protect.js'
+import { TYPES } from '../types.js'
+import { LoggerService } from '../logger/logger.service.js'
+
+interface IItem {
+  endpoint: string
+  handler: ((...args: any[]) => void)[]
+  method: keyof Pick<Router, 'get' | 'post' | 'delete' | 'patch' | 'put'>
+}
+
+@injectable()
+export class UserRouter {
+  private _router: Router
+
+  constructor(
+    @inject(TYPES.ILoggerService) private logger: LoggerService,
+    @inject(TYPES.UserController) private userController: UserController
+  ) {
+    this._router = Router()
+    const values: IItem[] = [
+      {
+        method: 'post',
+        endpoint: '/register',
+        handler: [
+          check('userName', 'User name provided is empty').notEmpty(),
+          check('email', 'Email is incorrect').normalizeEmail().notEmpty().isEmail(),
+          check('password', 'Password should have at least 8 characters').isLength({
+            min: 8,
+            max: 52
+          }),
+          this.userController.register.bind(userController)
+        ]
+      },
+      {
+        method: 'post',
+        endpoint: '/login',
+        handler: [this.userController.login.bind(userController)]
+      },
+      {
+        method: 'get',
+        endpoint: '/',
+        handler: [protect, this.userController.getUserData.bind(userController)]
+      },
+      {
+        method: 'put',
+        endpoint: '/',
+        handler: [protect, userController.updateUserData.bind(userController)]
+      }
+    ]
+
+    values.forEach(({ method, endpoint, handler }) => {
+      this._router[method](endpoint, handler)
+      this.logger.log(`Mapped [${method}] /user${endpoint}`)
+    })
+  }
+
+  get router(): Router {
+    return this._router
+  }
+}
+
+// router.post(
+//   '/register',
+//   [
+//     check('userName', 'User name provided is empty').notEmpty(),
+//     check('email', 'Email is incorrect').normalizeEmail().notEmpty().isEmail(),
+//     check('password', 'Password should have at least 8 characters').isLength({ min: 8, max: 52 })
+//   ],
+//   userController.register.bind(userController)
+// )
+
+// router.post('/login', userController.login.bind(userController))
+
+// router.get('/', protect, userController.getUserData.bind(userController))
+
+// router.put('/', protect, userController.updateUserData.bind(userController))
 
 /**
  * @swagger
@@ -125,16 +200,6 @@ export const router = express.Router()
  *                   example: 'This could be any string'
  */
 
-router.post(
-  '/register',
-  [
-    check('userName', 'User name provided is empty').notEmpty(),
-    check('email', 'Email is incorrect').normalizeEmail().notEmpty().isEmail(),
-    check('password', 'Password should have at least 8 characters').isLength({ min: 8, max: 52 })
-  ],
-  userController.register.bind(userController)
-)
-
 /**
  * @swagger
  * tags:
@@ -169,7 +234,7 @@ router.post(
  *                   type: string
  *                   example: 'xxx'
  *       400:
- *         description: User has been registered.
+ *         description: Bad request.
  *         content:
  *           application/json:
  *             schema:
@@ -189,7 +254,6 @@ router.post(
  *                   type: string
  *                   example: 'This could be any string'
  */
-router.post('/login', userController.login.bind(userController))
 
 /**
  * @swagger
@@ -259,7 +323,6 @@ router.post('/login', userController.login.bind(userController))
  *                   type: string
  *                   example: 'This could be any string'
  */
-router.get('/', protect, userController.getUserData.bind(userController))
 
 /**
 * @swagger
@@ -273,10 +336,9 @@ router.get('/', protect, userController.getUserData.bind(userController))
 *     parameters: 
 *       - in: header
 *         name: Authorization
-*         schema:
-*           type: string
-*           format: string
+*         description: an authorization header
 *         required: true
+*         type: string
 *     requestBody:
 *       required: true
 *       content:
@@ -334,4 +396,3 @@ router.get('/', protect, userController.getUserData.bind(userController))
 *                   type: string
 *                   example: 'This could be any string'
 */
-router.put('/', protect, userController.updateUserData.bind(userController))

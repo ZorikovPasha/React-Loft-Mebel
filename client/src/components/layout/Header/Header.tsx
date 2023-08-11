@@ -5,33 +5,37 @@ import HeaderMiddle from './HeaderMiddle'
 import HeaderBottom from './HeaderBottom'
 import HeaderTop from './HeaderTop'
 import { ROUTES } from '../../../utils/const'
-import { IHeaderProps } from '../../../types'
+
+export interface IHeaderProps {
+  isMobMenuOpen: boolean
+  setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
-	const items = [
-		{ name: 'Главная', link: '/' },
-		{ name: 'О нас', link: 'about' },
-		{ name: 'Контакты', link: 'contacts' }
-	]
+  const items = [
+    { name: 'Главная', link: ROUTES.Home },
+    { name: 'О нас', link: ROUTES.About },
+    { name: 'Контакты', link: ROUTES.Contacts }
+  ]
 
-	const { location } = useHistory()
-	let showHeaderTop = false
+  const { location } = useHistory()
+  let showHeaderTop = false
 
-	if (location.pathname === ROUTES.Home) {
-		showHeaderTop = true
-	}
+  if (location.pathname === ROUTES.Home) {
+    showHeaderTop = true
+  }
 
-	return (
-		<header className='header'>
-			{showHeaderTop && <HeaderTop items={items} />}
-			<div className='container'>
-				<HeaderMiddle
-					isMobMenuOpen={isMobMenuOpen}
-					setMobMenuOpen={setMobMenuOpen}
-					items={items}
-				/>
-				<HeaderBottom />
-			</div>
-		</header>
-	)
+  return (
+    <header className='header'>
+      {showHeaderTop && <HeaderTop items={items} />}
+      <div className='container'>
+        <HeaderMiddle
+          isMobMenuOpen={isMobMenuOpen}
+          setMobMenuOpen={setMobMenuOpen}
+          items={items}
+        />
+        <HeaderBottom />
+      </div>
+    </header>
+  )
 }
