@@ -6,9 +6,9 @@ import { useHistory } from 'react-router-dom'
 import { HeaderSearchForm } from './HeaderSearchForm'
 import { HeaderWishListIcon } from './HeaderWishListIcon'
 import { HeaderBagIcon } from './HeaderBagIcon'
-import { ROUTES } from '../../../utils/const'
-import { IHeaderProps } from '../../../types'
+import { Const, ROUTES } from '../../../utils/const'
 import { getIsAuth } from '../../../redux/getters'
+import { IHeaderProps } from './Header'
 
 type ItemType = {
   name: string
@@ -95,7 +95,7 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
               className='header__phone header__phone--black'
               href='tel:89648999119'
             >
-              8 (964) 89 99 119
+              {Const.phone}
             </a>
             <Link
               className='header__delivery header__delivery--black'
@@ -144,7 +144,7 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
               className='header__phone header__phone--black'
               href='tel:89648999119'
             >
-              8 (964) 89 99 119
+              {Const.phone}
             </a>
             <Link
               to='/about'

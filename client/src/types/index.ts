@@ -19,12 +19,6 @@ export type ProductType = {
   brand: string
 }
 
-export type SlideType = {
-  title: string
-  subtitle: string
-  imageUrl: string
-}
-
 export type CartItemType = {
   id: number
   colors: string[]
@@ -44,21 +38,10 @@ type ListItemType = {
 
 export type ListsType = ListItemType[]
 
-type mobMenuItemType = {
-  imgLink: string
-  mobMenuItem: string
-  link: string
-}
-
 export type BreadcrumbsLinkType = {
   name: string
   href: string
   isLink: boolean
-}
-
-export type mobMenuType = {
-  top: mobMenuItemType[]
-  body: mobMenuItemType[]
 }
 
 export type submitValuesType = {
@@ -94,9 +77,4 @@ export type OrderInfoType = {
   }
   colors: string[]
   quintity: number
-}
-
-export interface IHeaderProps {
-  isMobMenuOpen: boolean
-  setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
 }

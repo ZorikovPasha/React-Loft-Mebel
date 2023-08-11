@@ -11,7 +11,7 @@ export const apiConfig = {
   }
 }
 
-type SignUpCredsType = {
+interface SignUpCredsType {
   userName: string
   email: string
   password: string

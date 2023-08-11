@@ -9,5 +9,10 @@ export const ROUTES = {
   Signup: '/signup',
   Profile: '/profile',
   SearchResult: '/search',
-  Home: '/'
+  Home: '/',
+  NewProduct: '/products/new'
+}
+
+export const Const = {
+  phone: '8 (964) 89 99 119'
 }

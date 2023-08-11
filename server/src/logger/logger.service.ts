@@ -1,11 +1,22 @@
-import { Logger } from 'tslog'
+import Logger from 'pino'
+import type { Logger as ILogger } from 'pino'
+import { injectable } from 'inversify'
 
+@injectable()
 export class LoggerService {
-  private logger: Logger<unknown>
+  private logger: ILogger
 
   constructor() {
-    this.logger = new Logger({
-      prettyLogTimeZone: 'UTC'
+    this.logger = Logger({
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          ignore: 'pid,hostname',
+          singleLine: true,
+          customPrettifiers: {}
+        }
+      }
     })
   }
 
