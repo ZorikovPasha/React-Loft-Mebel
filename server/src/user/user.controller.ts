@@ -13,10 +13,11 @@ import {
   ILoginRequestBody,
   IRequestBody,
   IUpdateUserDto,
-  IUserController
+  IUserController,
+  ResponseType
 } from './user.controller.interface.js'
 
-const generateToken = (id: string, email: string, password: string) => {
+const generateToken = (id: string, email: string, password: string): string | undefined => {
   const payload = {
     id,
     email,
@@ -38,18 +39,20 @@ export class UserController implements IUserController {
     this.logger = logger
   }
 
-  async register(req: Request<{}, {}, IRequestBody>, res: Response, next: NextFunction) {
+  async register(
+    req: Request<{}, {}, IRequestBody>,
+    res: Response,
+    next: NextFunction
+  ): ResponseType {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
       const errors = validationResult(req)
       console.log('errors', errors)
 
-      /* @ts-ignore */
-      if (errors.errors.length) {
-        /* @ts-ignore */
-        return res.json(errors.errors).status(400)
-        // return next(ApiError.badRequest('An error occured'), {})
-      }
+      // if (errors.errors.length) {
+      //   return res.json(errors.errors).status(400)
+      //   // return next(ApiError.badRequest('An error occured'), {})
+      // }
       const { userName, email, password } = req.body
 
       if (!userName) {
@@ -97,7 +100,11 @@ export class UserController implements IUserController {
     }
   }
 
-  async login(req: Request<{}, {}, ILoginRequestBody>, res: Response, next: NextFunction) {
+  async login(
+    req: Request<{}, {}, ILoginRequestBody>,
+    res: Response,
+    next: NextFunction
+  ): ResponseType {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
 
@@ -117,12 +124,12 @@ export class UserController implements IUserController {
         }
       })
       if (!user) {
-        return ApiError.badRequest(`User with email ${email} has not found`)
+        return next(ApiError.badRequest(`User with email ${email} has not found`))
       }
 
       const isValidPassword = bcrypt.compareSync(password, user.password)
       if (!isValidPassword) {
-        return ApiError.badRequest('Provided password incorrect')
+        return next(ApiError.badRequest('Provided password incorrect'))
       }
 
       const token = generateToken(user.id, email, password)
@@ -130,7 +137,7 @@ export class UserController implements IUserController {
       return res.json({ token: token })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
-      return ApiError.internal(error as Error)
+      return next(ApiError.internal(error as Error))
     }
   }
 
@@ -140,7 +147,11 @@ export class UserController implements IUserController {
   //   }
   // }
 
-  async updateUserData(req: Request<{}, {}, IUpdateUserDto>, res: Response, next: NextFunction) {
+  async updateUserData(
+    req: Request<{}, {}, IUpdateUserDto>,
+    res: Response,
+    next: NextFunction
+  ): ResponseType {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
 
@@ -213,7 +224,7 @@ export class UserController implements IUserController {
     }
   }
 
-  async getUserData(req: Request, res: Response, next: NextFunction) {
+  async getUserData(req: Request, res: Response, next: NextFunction): ResponseType {
     this.logger.log(`[${req.method}] ${req.path}`)
 
     try {

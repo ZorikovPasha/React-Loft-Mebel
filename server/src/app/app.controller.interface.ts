@@ -62,6 +62,8 @@ export interface IRemoveCartItemDto {
   productId?: number
 }
 
+export type AppLocalsResponseType = Promise<void | Response<Record<string, string>, IAppLocals>>
+
 export interface IAppControllerInterface {
   mappedValues: Record<string, string>
   logger: LoggerService

@@ -5,6 +5,7 @@ cd client
 npx lint-staged
 
 cd ../server
+npm run lint
 npm run format
 
 cd ..
