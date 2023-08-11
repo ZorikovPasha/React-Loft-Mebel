@@ -47,7 +47,12 @@ const appModule = new ContainerModule((bind: interfaces.Bind) => {
   bind<App>(TYPES.App).to(App)
 })
 
-const bootstrap = () => {
+type BootstrapType = () => {
+  app: App
+  appContainer: Container
+}
+
+const bootstrap: BootstrapType = () => {
   const appContainer = new Container()
   appContainer.load(appModule)
 

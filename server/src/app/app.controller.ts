@@ -9,11 +9,13 @@ import { prismaClient } from '../prisma/client.js'
 import { LoggerService } from '../logger/logger.service.js'
 import { TYPES } from '../types.js'
 import {
+  AppLocalsResponseType,
   AppResponse,
   IAddCartItemDto,
   ICreateFurnitureDto,
   IRemoveCartItemDto
 } from './app.controller.interface.js'
+import { ResponseType } from '../user/user.controller.interface.js'
 
 @injectable()
 export class AppController {
@@ -24,7 +26,7 @@ export class AppController {
     this.logger = logger
   }
 
-  async getFilteredFurniture(req: Request, res: Response, next: NextFunction) {
+  async getFilteredFurniture(req: Request, res: Response, next: NextFunction): ResponseType {
     try {
       const furniture = await prismaClient.furniture.findMany()
       // const findCriteria = Object.keys(req.query).reduce((accum, key) => {
@@ -58,7 +60,7 @@ export class AppController {
     req: Request<{}, {}, ICreateFurnitureDto>,
     res: Response,
     next: NextFunction
-  ) {
+  ): ResponseType {
     try {
       const {
         name,
@@ -190,7 +192,7 @@ export class AppController {
     req: Request<{}, {}, {}, { id?: string }>,
     res: Response,
     next: NextFunction
-  ) {
+  ): ResponseType {
     try {
       if (!req.query.id) {
         return next(ApiError.badRequest('Id was not provided'))
@@ -207,7 +209,11 @@ export class AppController {
     }
   }
 
-  async addFavoriteItem(req: Request<{}, {}, { id?: number }>, res: Response, next: NextFunction) {
+  async addFavoriteItem(
+    req: Request<{}, {}, { id?: number }>,
+    res: Response,
+    next: NextFunction
+  ): ResponseType {
     try {
       const { id } = req.body
       if (!id) {
@@ -232,7 +238,7 @@ export class AppController {
     req: Request<{}, {}, { id?: number }>,
     res: Response,
     next: NextFunction
-  ) {
+  ): ResponseType {
     try {
       const { id } = req.body
       if (!id) {
@@ -252,7 +258,7 @@ export class AppController {
     }
   }
 
-  async getFavorites(req: Request, res: AppResponse, next: NextFunction) {
+  async getFavorites(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     try {
       const favorites = await prismaClient.favoriteFurniture.findMany({
         where: {
@@ -267,7 +273,7 @@ export class AppController {
   }
 
   // :TODO: this should return cart items getting orders
-  async getCartItems(req: Request, res: AppResponse, next: NextFunction) {
+  async getCartItems(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     try {
       if (!res.locals.user) {
         return
@@ -295,7 +301,11 @@ export class AppController {
     }
   }
 
-  async addCartItem(req: Request<{}, {}, IAddCartItemDto>, res: AppResponse, next: NextFunction) {
+  async addCartItem(
+    req: Request<{}, {}, IAddCartItemDto>,
+    res: AppResponse,
+    next: NextFunction
+  ): AppLocalsResponseType {
     try {
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
@@ -339,7 +349,7 @@ export class AppController {
     req: Request<{}, {}, IRemoveCartItemDto>,
     res: AppResponse,
     next: NextFunction
-  ) {
+  ): AppLocalsResponseType {
     try {
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
@@ -350,7 +360,7 @@ export class AppController {
         return next(ApiError.badRequest('Product id was not provided'))
       }
 
-      let userCart = await prismaClient.cart.findFirst({
+      const userCart = await prismaClient.cart.findFirst({
         where: {
           userId: res.locals.user.id
         }
@@ -373,7 +383,7 @@ export class AppController {
     }
   }
 
-  async getOrders(req: Request, res: Response, next: NextFunction) {
+  async getOrders(req: Request, res: Response, next: NextFunction): ResponseType {
     try {
       const orders = await prismaClient.order.findMany({
         where: {
@@ -387,7 +397,7 @@ export class AppController {
     }
   }
 
-  async addOrder(req: Request, res: AppResponse, next: NextFunction) {
+  async addOrder(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     try {
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
@@ -438,7 +448,11 @@ export class AppController {
     }
   }
 
-  async deleteOrder(req: Request<{}, {}, { id: number }>, res: AppResponse, next: NextFunction) {
+  async deleteOrder(
+    req: Request<{}, {}, { id: number }>,
+    res: AppResponse,
+    next: NextFunction
+  ): AppLocalsResponseType {
     try {
       if (!res.locals.user) {
         return next({ status: 500, message: '' })

@@ -11,7 +11,14 @@ interface UncodedPayload extends JwtPayload {
   password?: string
 }
 
-export const protect = async (req: Request, res: Response, next: NextFunction) => {
+type ReturnType = Promise<void | Response<
+  {
+    message: string
+  },
+  Record<string, unknown>
+>>
+
+export const protect = async (req: Request, res: Response, next: NextFunction): ReturnType => {
   if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
     return ApiError.notAuthorized(res, 'Not authorized')
   }

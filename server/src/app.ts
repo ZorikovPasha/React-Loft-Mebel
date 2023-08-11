@@ -29,7 +29,7 @@ export class App {
     this.port = process.env.PORT ? parseInt(process.env.PORT) : 5000
   }
 
-  public async init(specs: {} | Record<string, unknown>) {
+  public async init(specs: {} | Record<string, unknown>): Promise<void> {
     const app = express()
 
     app.use(cors())

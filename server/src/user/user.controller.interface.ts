@@ -37,6 +37,8 @@ export interface IUpdateUserDto {
 //   errors: IValidationError[]
 // }
 
+export type ResponseType = Promise<void | Response<Record<string, string>, Record<string, unknown>>>
+
 export interface IUserController {
   register: (
     req: Request<{}, {}, IRequestBody>,

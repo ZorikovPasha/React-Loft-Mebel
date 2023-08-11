@@ -8,15 +8,18 @@ export class ApiError {
     this.message = message
   }
 
-  public static badRequest(message: string) {
+  public static badRequest(message: string): ApiError {
     return new ApiError(400, message)
   }
 
-  public static internal(error: Error) {
+  public static internal(error: Error): ApiError {
     return new ApiError(500, error.message)
   }
 
-  public static notAuthorized(res: Response, message: string) {
+  public static notAuthorized(
+    res: Response,
+    message: string
+  ): Response<{ message: string }, Record<string, unknown>> {
     return res.status(401).json({ message })
   }
 }
