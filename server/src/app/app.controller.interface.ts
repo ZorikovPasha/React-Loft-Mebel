@@ -23,6 +23,8 @@ interface IAppLocals {
         wantsToReceiveEmailUpdates: boolean
         createdAt: Date
         updatedAt: Date
+        orders: string[]
+        favorites: string[]
       }
     | undefined
 }

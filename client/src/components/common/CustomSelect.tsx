@@ -22,7 +22,7 @@ interface ICustomSelect {
 }
 
 const CustomSelect: React.FC<ICustomSelect> = ({ onChange, options, value }) => {
-  const defaultValue = (options: IOption[], value: string) => {
+  const defaultValue = (options: IOption[], value: string): IOption | undefined => {
     if (options) {
       return options.find((option) => option?.value === value)
     }

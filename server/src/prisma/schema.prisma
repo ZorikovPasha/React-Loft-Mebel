@@ -21,7 +21,7 @@ model Image {
   ext                 String
   size                Int
   url                 String
-  mime                 String
+  mime                String
   provider            String
   data                Bytes
   createdAt           DateTime   @default(now())

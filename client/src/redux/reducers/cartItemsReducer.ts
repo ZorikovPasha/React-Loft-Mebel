@@ -23,7 +23,7 @@ const initialState: stateType = {
 
 const cartItemsReducer = (state = initialState, action: cartItemsActionType): stateType => {
   switch (action.type) {
-    case ActionsTypes.REMOVE_CART_ITEM:
+    case ActionsTypes.REMOVE_CART_ITEM: {
       const remainingCartItems = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id)
       const remainingQuintity = state.cartItems
         .filter((item: CartItemType) => item.id !== action.payload.id)
@@ -33,8 +33,13 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         ...state,
         cartItems: remainingCartItems,
         quintity: remainingQuintity,
-        totalCost: remainingCartItems.reduce((partialCost, item: CartItemType) => partialCost + item.quintity * item.price, 0)
+        totalCost: remainingCartItems.reduce(
+          (partialCost, item: CartItemType) => partialCost + item.quintity * item.price,
+          0
+        )
       }
+    }
+
     case ActionsTypes.RESET_CART:
       return {
         ...initialState,
@@ -53,7 +58,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         ...state,
         orders: action.payload
       }
-    case ActionsTypes.ADD_CART_ITEMS:
+    case ActionsTypes.ADD_CART_ITEMS: {
       const buff: CartItemType[] = []
 
       if (state.cartItems.length) {
@@ -71,7 +76,10 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
             ...state,
             cartItems: [...state.cartItems, ...buff],
             quintity: [...state.cartItems, ...buff].reduce((accum, a) => accum + a.quintity, 0),
-            totalCost: [...state.cartItems, ...buff].reduce((partialCost, item) => partialCost + item.quintity * item.price, 0)
+            totalCost: [...state.cartItems, ...buff].reduce(
+              (partialCost, item) => partialCost + item.quintity * item.price,
+              0
+            )
           }
         } else {
           return {
@@ -88,6 +96,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
           totalCost: action.payload.reduce((accum, item) => accum + item.price, 0)
         }
       }
+    }
     case ActionsTypes.CART_LOADING:
       return {
         ...state,

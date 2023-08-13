@@ -33,11 +33,11 @@ interface IRadioProps {
   placeholder: string
 }
 
-interface IFileProps {
-  value: File | null
-  type: 'file'
-  placeholder: string
-}
+// interface IFileProps {
+//   value: File | null
+//   type: 'file'
+//   placeholder: string
+// }
 
 interface IColorsProps {
   value: string[]
@@ -57,7 +57,7 @@ interface IDimensions {
   placeholder: 'Размер'
 }
 
-const NewProduct = () => {
+const NewProduct = (): JSX.Element => {
   const nameProps: IInputProps = {
     value: '',
     isValid: false,
@@ -181,11 +181,11 @@ const NewProduct = () => {
     placeholder: 'Размер'
   }
 
-  const imageProps: IFileProps = {
-    value: null,
-    type: 'file',
-    placeholder: 'Картинка Мебели'
-  }
+  // const imageProps: IFileProps = {
+  //   value: null,
+  //   type: 'file',
+  //   placeholder: 'Картинка Мебели'
+  // }
 
   const [name, setName] = React.useState(nameProps)
   const [type, setType] = React.useState(typeProps)
@@ -198,17 +198,18 @@ const NewProduct = () => {
   const [material, setMaterial] = React.useState(materialProps)
   const [brand, setBrand] = React.useState(brandProps)
   const [dimensions, setDimensions] = React.useState(dimensionsProps)
-  const [image, setImage] = React.useState(imageProps)
+  // const [image, setImage] = React.useState(imageProps)
 
   const lastPickedColor = colors.value.length ? colors.value[colors.value.length - 1] : undefined
 
-  const onType = (setState: React.Dispatch<React.SetStateAction<IInputProps>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState((prev) => ({
-      ...prev,
-      value: e.target.value,
-      isValid: e.target.value.trim().length > 0
-    }))
-  }
+  const onType =
+    (setState: React.Dispatch<React.SetStateAction<IInputProps>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setState((prev) => ({
+        ...prev,
+        value: e.target.value,
+        isValid: e.target.value.trim().length > 0
+      }))
+    }
 
   const onSelect = (setState: React.Dispatch<React.SetStateAction<ISelectProps>>) => (value: ISelectOption | null) => {
     setState((prev) => ({
@@ -218,11 +219,11 @@ const NewProduct = () => {
     }))
   }
 
-  const onFile = (e: React.ChangeEvent) => {
-    console.log('e.target.files[0]', e.target.files[0])
+  // const onFile = (e: React.ChangeEvent): void => {
+  //   console.log('e.target.files[0]', e.target.files[0])
 
-    setImage(e.target.files[0])
-  }
+  //   setImage(e.target.files[0])
+  // }
 
   const onToggle = (setState: React.Dispatch<React.SetStateAction<IRadioProps>>) => () => {
     setState((prev) => ({
@@ -231,7 +232,7 @@ const NewProduct = () => {
     }))
   }
 
-  const onColors = (newColor: string) => {
+  const onColors = (newColor: string): void => {
     setColors((prev) =>
       prev.value.includes(newColor)
         ? prev
@@ -249,29 +250,30 @@ const NewProduct = () => {
     }))
   }
 
-  const onAddDimension = () => {
+  const onAddDimension = (): void => {
     setDimensions((prev) => ({
       ...prev,
       value: [...prev.value, { width: '', length: '', height: '' }]
     }))
   }
 
-  const onTypeDimension = (idx: number, dimension: 'width' | 'length' | 'height') => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDimensions((prev) => {
-      const dimensionToEdit = prev.value.find((d, index) => index === idx)
+  const onTypeDimension =
+    (idx: number, dimension: 'width' | 'length' | 'height') => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDimensions((prev) => {
+        const dimensionToEdit = prev.value.find((d, index) => index === idx)
 
-      if (!dimensionToEdit) {
-        return prev
-      }
+        if (!dimensionToEdit) {
+          return prev
+        }
 
-      dimensionToEdit[dimension] = e.target.value
+        dimensionToEdit[dimension] = e.target.value
 
-      return {
-        ...prev,
-        value: [...prev.value.filter((d, index) => index !== idx), dimensionToEdit]
-      }
-    })
-  }
+        return {
+          ...prev,
+          value: [...prev.value.filter((d, index) => index !== idx), dimensionToEdit]
+        }
+      })
+    }
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
@@ -430,14 +432,14 @@ const NewProduct = () => {
 
         <button onClick={onAddDimension}>Add dimension</button>
 
-        <label className='contacts__form-file form-file'>
+        {/* <label className='contacts__form-file form-file'>
           <input
             className='form-file__real'
             type='file'
             onChange={onFile}
           />
           <span className='form-file__fake'>Прикрепить файл</span>
-        </label>
+        </label> */}
 
         <button type='submit'>Create</button>
       </form>

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 
-export interface IRequestBody {
+export interface IRegisterUserDto {
   userName?: string
   email?: string
   password?: string
 }
 
-export interface ILoginRequestBody {
+export interface ILoginUserDto {
   email?: string
   password?: string
 }
@@ -37,16 +37,31 @@ export interface IUpdateUserDto {
 //   errors: IValidationError[]
 // }
 
+export interface IUserPhoto {
+  name: string
+  alternativeText: string
+  caption: string
+  width: number
+  height: number
+  hash: string
+  ext: string
+  mime: string
+  size: number
+  url: string
+  provider: string
+  data: Buffer
+}
+
 export type ResponseType = Promise<void | Response<Record<string, string>, Record<string, unknown>>>
 
 export interface IUserController {
   register: (
-    req: Request<{}, {}, IRequestBody>,
+    req: Request<{}, {}, IRegisterUserDto>,
     res: Response,
     next: NextFunction
   ) => Promise<void | Response>
 
-  login: (req: Request<{}, {}, ILoginRequestBody>, res: Response, next: NextFunction) => void
+  login: (req: Request<{}, {}, ILoginUserDto>, res: Response, next: NextFunction) => void
 
   updateUserData: (req: Request<{}, {}, IUpdateUserDto>, res: Response, next: NextFunction) => void
 

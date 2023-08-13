@@ -1,5 +1,5 @@
 import { check } from 'express-validator'
-import { Router } from 'express'
+import { NextFunction, Router, Response, Request } from 'express'
 import { inject, injectable } from 'inversify'
 
 import { UserController } from './user.controller.js'
@@ -9,7 +9,11 @@ import { LoggerService } from '../logger/logger.service.js'
 
 interface IItem {
   endpoint: string
-  handler: ((...args: any[]) => void)[]
+  handler: ((
+    req: Request,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => void)[]
   method: keyof Pick<Router, 'get' | 'post' | 'delete' | 'patch' | 'put'>
 }
 

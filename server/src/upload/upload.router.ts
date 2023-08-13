@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 import { injectable, inject } from 'inversify'
 
 import { UploadController } from './upload.controller.js'
@@ -7,7 +7,11 @@ import { LoggerService } from '../logger/logger.service.js'
 
 interface IItem {
   endpoint: string
-  handler: ((...args: any[]) => void)[]
+  handler: ((
+    req: Request,
+    res: Response<unknown, Record<string, unknown>>,
+    next: NextFunction
+  ) => void)[]
   method: keyof Pick<Router, 'get' | 'post' | 'delete' | 'patch' | 'put'>
 }
 

@@ -4,18 +4,22 @@ import { validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import type { UploadedFile } from 'express-fileupload'
 import { injectable, inject } from 'inversify'
+import sizeOf from 'buffer-image-size'
+import sharp from 'sharp'
 
 import { LoggerService } from '../logger/logger.service.js'
 import { ApiError } from '../error/api.error.js'
 import { prismaClient } from '../prisma/client.js'
 import { TYPES } from '../types.js'
 import {
-  ILoginRequestBody,
-  IRequestBody,
+  ILoginUserDto,
+  IRegisterUserDto,
   IUpdateUserDto,
   IUserController,
   ResponseType
 } from './user.controller.interface.js'
+import fileUpload from 'express-fileupload'
+import { AppLocalsResponseType, AppResponse } from '../app/app.controller.interface.js'
 
 const generateToken = (id: string, email: string, password: string): string | undefined => {
   const payload = {
@@ -40,7 +44,7 @@ export class UserController implements IUserController {
   }
 
   async register(
-    req: Request<{}, {}, IRequestBody>,
+    req: Request<{}, {}, IRegisterUserDto>,
     res: Response,
     next: NextFunction
   ): ResponseType {
@@ -76,7 +80,44 @@ export class UserController implements IUserController {
         return next(ApiError.badRequest('User already exists'))
       }
 
-      const hashedPassword = bcrypt.hashSync(password, 10)
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      let savedImage
+      if (req.files && req.files.photo) {
+        let processedImageFromRequest: fileUpload.UploadedFile
+
+        if (Array.isArray(req.files.photo)) {
+          processedImageFromRequest = req.files.photo[0]
+        } else {
+          processedImageFromRequest = req.files.photo
+        }
+
+        const imageDimensions = sizeOf(processedImageFromRequest.data)
+        console.log('imageDimensions', imageDimensions)
+
+        const compressedImage = await sharp(processedImageFromRequest.data).toBuffer()
+
+        const imageNameWithoutExtension = processedImageFromRequest.name.split('.').slice(0, -1)
+        const imageExtension = processedImageFromRequest.name.split('.').pop()
+        const photo = {
+          name: processedImageFromRequest.name,
+          alternativeText: '',
+          caption: '',
+          width: imageDimensions.width,
+          height: imageDimensions.height,
+          hash: processedImageFromRequest.md5,
+          ext: imageExtension ?? '',
+          mime: processedImageFromRequest.mimetype,
+          size: processedImageFromRequest.size / 1000,
+          url: `${process.env.SELF}/uploads/${imageNameWithoutExtension}_${processedImageFromRequest.md5}.${imageExtension}`,
+          provider: 'database',
+          data: compressedImage
+        }
+
+        savedImage = await prismaClient.image.create({
+          data: photo
+        })
+      }
 
       await prismaClient.user.create({
         data: {
@@ -89,8 +130,8 @@ export class UserController implements IUserController {
           city: '',
           street: '',
           house: '',
-          apartment: ''
-          // photo: Buffer.alloc(0)
+          apartment: '',
+          photoId: savedImage?.id
         }
       })
       return res.status(201).json({ message: 'User has been registered' })
@@ -101,7 +142,7 @@ export class UserController implements IUserController {
   }
 
   async login(
-    req: Request<{}, {}, ILoginRequestBody>,
+    req: Request<{}, {}, ILoginUserDto>,
     res: Response,
     next: NextFunction
   ): ResponseType {
@@ -213,9 +254,7 @@ export class UserController implements IUserController {
         where: {
           email: res.locals.user.email
         },
-        data: {
-          ...set
-        }
+        data: set
       })
       return res.status(204).json({ message: 'Data successfully was written' })
     } catch (error) {
@@ -224,7 +263,7 @@ export class UserController implements IUserController {
     }
   }
 
-  async getUserData(req: Request, res: Response, next: NextFunction): ResponseType {
+  async getUserData(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     this.logger.log(`[${req.method}] ${req.path}`)
 
     try {
@@ -243,7 +282,7 @@ export class UserController implements IUserController {
         createdAt,
         orders,
         favorites
-      } = res.locals.user
+      } = res.locals.user || {}
       console.log('res.locals.user', res.locals.user)
 
       return res.json({

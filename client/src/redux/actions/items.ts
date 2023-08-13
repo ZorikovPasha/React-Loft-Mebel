@@ -7,7 +7,9 @@ import { stateType } from '../reducers/itemsReducer'
 
 import { ApiClient } from '../../api'
 
-export const fetchItemsThunkCreator = (queryParams: string): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
+export const fetchItemsThunkCreator = (
+  queryParams: string
+): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {
     const furniture = await ApiClient.get<ProductType[]>('/api/furniture' + queryParams)
     dispatch(setItemsActionCreator(furniture))

@@ -1,18 +1,18 @@
 import { favoritesActionType, ActionsTypes } from '../../types/actionsTypes'
 
-type stateType = {
+export interface IfavoritesState {
   favorites: number[]
   isLoaded: boolean
 }
 
-const initialState: stateType = {
+const initialState: IfavoritesState = {
   favorites: [],
   isLoaded: false
 }
 
-export const favoritesReducer = (state = initialState, action: favoritesActionType): stateType => {
+export const favoritesReducer = (state = initialState, action: favoritesActionType): IfavoritesState => {
   switch (action.type) {
-    case ActionsTypes.ADD_FAVORITES:
+    case ActionsTypes.ADD_FAVORITES: {
       let tmpState = [...state.favorites]
       let tmpPayload = [...action.payload]
       action.payload.forEach((id) => {
@@ -25,6 +25,7 @@ export const favoritesReducer = (state = initialState, action: favoritesActionTy
         ...state,
         favorites: [...tmpState, ...tmpPayload]
       }
+    }
     case ActionsTypes.RESET_FAVORITES:
       return {
         ...state,

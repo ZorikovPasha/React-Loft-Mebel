@@ -19,9 +19,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
     UserApiClient.removeCartItem(cartItem.id)
   }
 
-  const getTotalCost = () => {
-    return item.priceNew ? item.priceNew * cartItem.quintity : item.priceOld * cartItem.quintity
-  }
+  const totalCost = item.priceNew ? item.priceNew * cartItem.quintity : item.priceOld * cartItem.quintity
 
   return (
     <div className='cart__item item'>
@@ -36,7 +34,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
               <Link to={`/products/${cartItem.id}`}>{item.name}</Link>
             </h4>
             <div className='item__info-nums'>
-              <p className='item__info-price'>{getTotalCost}</p>
+              <p className='item__info-price'>{totalCost}</p>
             </div>
           </div>
           <div className='item__info-line'>
@@ -45,7 +43,9 @@ export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
               data-color
             >
               <p className='info-feature__name'>Цвет:</p>
-              <p className='info-feature__val'>{cartItem.colors.map((color, idx) => (color ? item.colors[idx] : ''))}</p>
+              <p className='info-feature__val'>
+                {cartItem.colors.map((color, idx) => (color ? item.colors[idx] : ''))}
+              </p>
               <span></span>
             </div>
             <div className='item__info-feature info-feature'>

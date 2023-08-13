@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Response, NextFunction, Router } from 'express'
 import { injectable, inject } from 'inversify'
 
 import { protect } from '../middleware/protect.js'
@@ -8,7 +8,7 @@ import { LoggerService } from '../logger/logger.service.js'
 
 interface IItem {
   endpoint: string
-  handler: ((...args: any[]) => void)[]
+  handler: ((req: Request, res: Response, next: NextFunction) => void)[]
   method: keyof Pick<Router, 'get' | 'post' | 'delete' | 'patch' | 'put'>
 }
 

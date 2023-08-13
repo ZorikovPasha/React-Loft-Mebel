@@ -37,7 +37,8 @@ const Contacts: React.FC = () => {
       className: 'contacts__form-block',
       inputClassName: 'contacts__form-input',
       showErrors: false,
-      getErrorMessage: (str: string) => (str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : ''),
+      getErrorMessage: (str: string) =>
+        str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
       validateFn: validateEmail
     },
     message: {
