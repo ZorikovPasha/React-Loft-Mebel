@@ -198,6 +198,9 @@ const Profile: React.FC = () => {
     history.push({ pathname: '/' })
   }
 
+  const showNameInputError = name.isValid && name.required
+  const showEmailInputError = email.isValid && email.required
+
   return (
     <>
       <section className='profile'>
