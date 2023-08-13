@@ -25,6 +25,7 @@ interface IRegisterResponse {
 
 interface ILoginResponse {
   token: string
+  message?: string
 }
 
 interface IUpdateUserResponse {

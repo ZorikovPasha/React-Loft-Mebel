@@ -3,6 +3,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "node",
     "module": "ESNext",
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -15,12 +16,12 @@
     "incremental": true,
     "strictNullChecks": true,
     "noErrorTruncation": false,
+    "noUnusedParameters": false,
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "./src/global-types.d.ts"]
 }

@@ -106,11 +106,11 @@ const SignUp: React.FC = () => {
       password: form.password.value
     }
 
-    UserApiClient.register(dto).then((data) => {
-      if (data.status === 200) {
-        document.documentElement.classList.add('lock')
-        setModalSignUp(true)
-      }
+    UserApiClient.register(dto).then(() => {
+      // if (data.status === 200) {
+      document.documentElement.classList.add('lock')
+      setModalSignUp(true)
+      // }
     })
   }
 

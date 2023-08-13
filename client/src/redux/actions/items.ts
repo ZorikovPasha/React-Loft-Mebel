@@ -3,13 +3,13 @@ import { Dispatch } from 'redux'
 
 import { ActionsTypes, fetchItemsActionType } from '../../types/actionsTypes'
 import { ProductType } from '../../types'
-import { stateType } from '../reducers/itemsReducer'
+import { IProductsState } from '../reducers/itemsReducer'
 
 import { ApiClient } from '../../api'
 
 export const fetchItemsThunkCreator = (
   queryParams: string
-): ThunkAction<void, stateType, unknown, fetchItemsActionType> => {
+): ThunkAction<void, IProductsState, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {
     const furniture = await ApiClient.get<ProductType[]>('/api/furniture' + queryParams)
     dispatch(setItemsActionCreator(furniture))
