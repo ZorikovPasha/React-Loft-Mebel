@@ -1,19 +1,19 @@
 import { ProductType } from '../../types'
 import { fetchItemsActionType, ActionsTypes } from '../../types/actionsTypes'
 
-export type stateType = {
+export interface IProductsState {
   items: ProductType[]
   isLoaded: boolean
   isError: boolean
 }
 
-const initialState: stateType = {
+const initialState: IProductsState = {
   items: [],
   isLoaded: false,
   isError: false
 }
 
-const itemsReducer = (state = initialState, action: fetchItemsActionType): stateType => {
+const itemsReducer = (state = initialState, action: fetchItemsActionType): IProductsState => {
   switch (action.type) {
     case ActionsTypes.SET_PRODUCTS:
       return {

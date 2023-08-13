@@ -21,7 +21,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
   const router = useHistory()
   const isAuth = useSelector(getIsAuth)
 
-  const onLikeProductClick = () => {
+  const onLikeProductClick = (): void => {
     dispatch(addFavoritesActionCreator([id]))
 
     if (isAuth) {
@@ -33,7 +33,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     router.push(`/products/${id}`)
   }
 
-  const onAddToCartClick = async () => {
+  const onAddToCartClick = async (): Promise<void> => {
     dispatch(
       addtemsActionCreator([
         {

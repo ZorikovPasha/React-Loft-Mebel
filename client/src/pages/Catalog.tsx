@@ -50,7 +50,7 @@ const Catalog: React.FC = () => {
 
   const breadcrumbs = useBreadcrumbs()
 
-  const handleFiltersSubmit = ({ brandsIds, colorsIds, room, material, type }: submitValuesType) => {
+  const handleFiltersSubmit = ({ brandsIds, colorsIds, room, material, type }: submitValuesType): void => {
     filters.current.room = room
     filters.current.material = material
     filters.current.type = type

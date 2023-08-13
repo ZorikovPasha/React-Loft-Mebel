@@ -2,7 +2,9 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd client
-npx lint-staged
+npm run lintstyles
+npm run lint
+npm run format
 
 cd ../server
 npm run lint

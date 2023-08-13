@@ -3,6 +3,7 @@
 
 cd client
 npm run test
+npm run typecheck
 
 cd ../server
-npx tsc
+npm run build

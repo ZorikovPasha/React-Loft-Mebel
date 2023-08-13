@@ -7,7 +7,16 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { ModalInfo } from '../components/common/ModalInfo'
-import { getCartItems, getQuintity, getTotalCost, getFavorites, getProducts, getOrderStatus, getIsAuth, getCartLoadingState } from '../redux/getters'
+import {
+  getCartItems,
+  getQuintity,
+  getTotalCost,
+  getFavorites,
+  getProducts,
+  getOrderStatus,
+  getIsAuth,
+  getCartLoadingState
+} from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
 import { OrderInfoType } from '../types'
@@ -29,7 +38,7 @@ const Cart: React.FC = () => {
 
   const breadcrumbs = useBreadcrumbs()
 
-  const onRegisterOrder = () => {
+  const onRegisterOrder = (): void => {
     if (!isAuth) {
       setModalLoginOpened(true)
       document.documentElement.classList.add('lock')

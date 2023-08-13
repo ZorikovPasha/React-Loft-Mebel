@@ -3,19 +3,23 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { authActionCreator } from '../redux/actions/authAction'
 import { addtemsActionCreator, fetchingActionCreator, ordersActionCreator } from '../redux/actions/cartItems'
-import { addFavoritesActionCreator, loadingActionCreator, resetFavoritesActionCreator } from '../redux/actions/favorites'
+import {
+  addFavoritesActionCreator,
+  loadingActionCreator,
+  resetFavoritesActionCreator
+} from '../redux/actions/favorites'
 import { resetCartActionCreator } from '../redux/actions/cartItems'
 // import { addUserDataActionCreator } from '../redux/actions/userAction'
 import { getIsAuth } from '../redux/getters'
 import { UserApiClient } from '../api/'
 import { CartItemType, OrderInfoType } from '../types'
 
-export const useAuth = async () => {
+export const useAuth = async (): Promise<void> => {
   const dispatch = useDispatch()
   const isAuth = useSelector(getIsAuth)
 
   React.useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuth = async (): Promise<void> => {
       const token = localStorage.getItem('token')
       if (!token) {
         return
@@ -34,7 +38,7 @@ export const useAuth = async () => {
       return
     }
 
-    const getData = async () => {
+    const getData = async (): Promise<void> => {
       dispatch(resetFavoritesActionCreator())
       UserApiClient.getFavorites().then((favoriteItems) => {
         dispatch(addFavoritesActionCreator(favoriteItems.favorites.map((id) => Number(id))))

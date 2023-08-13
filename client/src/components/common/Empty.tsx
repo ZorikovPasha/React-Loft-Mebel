@@ -5,9 +5,9 @@ interface IEmpty {
 }
 
 export const Empty: React.FC<IEmpty> = ({ text }) => {
-	return (
-		<div className='favorites__empty'>
-			<p className='favorites__empty-text'>{text}</p>
-		</div>
-	)
+  return (
+    <div className='favorites__empty'>
+      <p className='favorites__empty-text'>{text}</p>
+    </div>
+  )
 }

@@ -20,7 +20,7 @@ const Favorites: React.FC = () => {
   const favoriteItems: ProductType[] = []
   favorites.forEach((id) => {
     const item = items.find((item) => item.id === id)
-    if (!!item) {
+    if (item) {
       favoriteItems.push(item)
     }
   })

@@ -14,7 +14,7 @@ const matchingPoints = [
   { link: 'ышптгз', name: 'Регистрация' }
 ]
 
-export const useBreadcrumbs = () => {
+export const useBreadcrumbs = (): BreadcrumbsLinkType[] => {
   const router = useHistory()
   const points = router.location.pathname.split('/')
 
@@ -27,7 +27,7 @@ export const useBreadcrumbs = () => {
         return
       }
 
-      let routeToPoint = points.slice(0, idx + 1).join('/')
+      const routeToPoint = points.slice(0, idx + 1).join('/')
 
       buffer.push({
         name: matchingPoint.name,

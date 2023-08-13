@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 
 import { UserApiClient } from '..//api'
-import { getOrders, getUserData } from '../redux/getters'
+import { getOrders } from '../redux/getters'
 import { authActionCreator } from '../redux/actions/authAction'
 import { addUserDataActionCreator } from '../redux/actions/userAction'
 import { initFormValues } from '../redux/reducers/userReducer'
@@ -24,7 +24,7 @@ const Profile: React.FC = () => {
   const history = useHistory()
 
   const fetchedOrders = useSelector(getOrders)
-  const userFormValues = useSelector(getUserData)
+  // const userFormValues = useSelector(getUserData)
 
   const fields = React.useRef<Record<string, IField>>({
     name: {
@@ -54,7 +54,8 @@ const Profile: React.FC = () => {
       className: 'profile__form-block',
       inputClassName: 'profile__form-input',
       showErrors: false,
-      getErrorMessage: (str: string) => (str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : ''),
+      getErrorMessage: (str: string) =>
+        str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
       validateFn: validateEmail
     },
     surname: {
@@ -188,7 +189,7 @@ const Profile: React.FC = () => {
     })
   }
 
-  const onLogout = () => {
+  const onLogout = (): void => {
     localStorage.setItem('token', '')
     dispatch(authActionCreator(false))
     dispatch(addUserDataActionCreator(initFormValues))

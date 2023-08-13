@@ -25,7 +25,7 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
   const menuBtnRef = React.useRef(null)
 
   React.useEffect(() => {
-    document.body.onclick = function (e: any): void {
+    document.body.onclick = function (e: MouseEvent): void {
       if (isMobMenuOpen && !e.path.includes(menuBtnRef.current)) {
         setMobMenuOpen(false)
         document.documentElement.classList.remove('lock')

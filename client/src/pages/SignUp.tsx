@@ -55,7 +55,8 @@ const SignUp: React.FC = () => {
       className: 'form-block',
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
-      getErrorMessage: (str: string) => (str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : ''),
+      getErrorMessage: (str: string) =>
+        str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
       validateFn: validateEmail
     },
     password: {

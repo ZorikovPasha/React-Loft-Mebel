@@ -165,7 +165,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             <Slider
               className='product__slider'
               asNavFor={nav2}
-              ref={(slider1: Slider) => setNav1(slider1)}
+              ref={(slider1: Slider): void => setNav1(slider1)}
               {...slider1Settings}
             >
               {thumbsUrls.map((url) => (
@@ -183,7 +183,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             <Slider
               className='product__thumbs'
               asNavFor={nav1}
-              ref={(slider2: Slider) => setNav2(slider2)}
+              ref={(slider2: Slider): void => setNav2(slider2)}
               {...slider2Settings}
             >
               {thumbsUrls.map((url) => (
@@ -229,9 +229,9 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             </form>
             <p className='info__text-title'>Описание</p>
             <p className='info__text'>
-              Лаконичные линии и простые формы, безупречный стиль и индивидуальность – все это диван «Динс». Сдержанный скандинавский дизайн украсит любую
-              современную обстановку. Элегантность, комфорт и функциональность, собранные воедино – «Динс» просто создан для размеренного отдыха в кругу семьи
-              или компании друзей!
+              Лаконичные линии и простые формы, безупречный стиль и индивидуальность – все это диван «Динс». Сдержанный
+              скандинавский дизайн украсит любую современную обстановку. Элегантность, комфорт и функциональность,
+              собранные воедино – «Динс» просто создан для размеренного отдыха в кругу семьи или компании друзей!
             </p>
           </div>
         </div>
