@@ -641,15 +641,16 @@ const NewProduct = (): JSX.Element => {
           <div className='mt-30'>
             <p className='newproduct__subtitle'>Check if product is on sale</p>
 
-            <label className=''>
+            <label className='form__label'>
               <input
                 name='check'
                 type='checkbox'
+                className='form__checkbox-real'
                 checked={sale.value}
                 onChange={onToggle(setSale)}
               />
-              <span className='brief__agree-fake'></span>
-              OnSale?
+              <span className='form__checkbox-fake'></span>
+              <span className='form__text'>OnSale?</span>
             </label>
           </div>
 

@@ -2,9 +2,15 @@ import React from 'react'
 
 import { submitValuesType } from '../../types'
 import { Loader } from '../common/Loader'
+import { capitalizeFirstLetter } from '../../utils'
 const CustomSelect = React.lazy(() => import('../common/CustomSelect'))
 
 interface IAsideProps {
+  colors: string[]
+  brands: string[]
+  rooms: string[]
+  materials: string[]
+  types: string[]
   isAsideVisible: boolean
   onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement>
   handleFiltersSubmit: (values: submitValuesType) => void
@@ -19,157 +25,156 @@ interface ISelectField {
   value: string
   options: ISelectOption[]
   label: string
-  name: string
 }
 
 interface IRadiosField {
   value: string[]
-  options: ISelectOption[]
   label: string
+  options: ISelectOption[]
 }
 
-const isRadiosField = (props: ISelectField | IRadiosField): props is IRadiosField => {
-  return Array.isArray(props)
-}
+export const Aside: React.FC<IAsideProps> = ({
+  colors: allColors,
+  brands: allBrands,
+  rooms: allRooms,
+  materials: allMaterials,
+  types: allTypes,
+  isAsideVisible,
+  onAsideCloseClick
+}) => {
+  // const roomSelectOptions = [
+  //   { value: 'all', label: 'Показать все' },
+  //   { value: 'living', label: 'Гостинные' },
+  //   { value: 'kitchen', label: 'Кухни' },
+  //   { value: 'bedroom', label: 'Спальные' },
+  //   { value: 'children', label: 'Детские' },
+  //   { value: 'hall', label: 'Прихожие' },
+  //   { value: 'office', label: 'Офисная мебель' }
+  // ]
 
-export const Aside: React.FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick, handleFiltersSubmit }) => {
-  const roomSelectOptions = [
-    { value: 'all', label: 'Показать все' },
-    { value: 'living', label: 'Гостинные' },
-    { value: 'kitchen', label: 'Кухни' },
-    { value: 'bedroom', label: 'Спальные' },
-    { value: 'children', label: 'Детские' },
-    { value: 'hall', label: 'Прихожие' },
-    { value: 'office', label: 'Офисная мебель' }
-  ]
+  // const materialSelectOptions = [
+  //   { value: 'all', label: 'Показать все' },
+  //   { value: 'soft', label: 'Мягкая мебель' },
+  //   { value: 'hard', label: 'Твердая мебель' },
+  //   { value: 'wood', label: 'Деревянная мебель' }
+  // ]
 
-  const materialSelectOptions = [
-    { value: 'all', label: 'Показать все' },
-    { value: 'soft', label: 'Мягкая мебель' },
-    { value: 'hard', label: 'Твердая мебель' },
-    { value: 'wood', label: 'Деревянная мебель' }
-  ]
+  // const furnitureSelectOptions = [
+  //   { value: 'all', label: 'Показать все' },
+  //   { value: 'coach', label: 'Диваны' },
+  //   { value: 'bed', label: 'Кровати' },
+  //   { value: 'table', label: 'Столы' },
+  //   { value: 'chair', label: 'Стулья' },
+  //   { value: 'set', label: 'Серванты' },
+  //   { value: 'bedsideTables', label: 'Комоды' }
+  // ]
 
-  const furnitureSelectOptions = [
-    { value: 'all', label: 'Показать все' },
-    { value: 'coach', label: 'Диваны' },
-    { value: 'bed', label: 'Кровати' },
-    { value: 'table', label: 'Столы' },
-    { value: 'chair', label: 'Стулья' },
-    { value: 'set', label: 'Серванты' },
-    { value: 'bedsideTables', label: 'Комоды' }
-  ]
+  const colorsProps: IRadiosField = {
+    value: [],
+    label: 'Colors',
+    options: []
+  }
 
-  const furnitureBrandOptions = [
-    { value: 'Шерона', label: 'Шерона' },
-    { value: 'Динс', label: 'Динс' },
-    { value: 'Taskany', label: 'Taskany' },
-    { value: 'Бенфлит', label: 'Бенфлит' },
-    { value: 'Тиффани', label: 'Тиффани' },
-    { value: 'Лайт', label: 'Лайт' },
-    { value: 'Вилли', label: 'Вилли' }
-  ]
+  const brandProps: IRadiosField = {
+    value: [],
+    options: [],
+    label: 'Brands'
+  }
 
-  const colorsCategories = [
-    { value: 'E94848', label: 'E94848' },
-    { value: '43BF57', label: '43BF57' },
-    { value: 'E4E4E4', label: 'E4E4E4' },
-    { value: '3E3E3E', label: '3E3E3E' },
-    { value: '675A5A', label: '675A5A' }
-  ]
+  const roomProps: ISelectField = {
+    value: 'all',
+    options: [], // roomSelectOptions,
+    label: 'Room'
+  }
 
-  const fields = React.useRef<Record<string, ISelectField | IRadiosField>>({
-    room: {
-      value: 'all',
-      options: roomSelectOptions,
-      label: 'Раздел',
-      name: 'room'
-    },
-    material: {
-      value: 'all',
-      options: materialSelectOptions,
-      label: 'Материал Мебели',
-      name: 'material'
-    },
-    type: {
-      value: 'all',
-      options: furnitureSelectOptions,
-      label: 'Тип Мебели',
-      name: 'type'
-    },
-    colors: {
-      value: [] as string[],
-      options: colorsCategories,
-      label: 'Цвет'
-    },
-    brands: {
-      value: [] as string[],
-      options: furnitureBrandOptions,
-      label: 'Бренд'
-    }
-  })
+  const materialProps: ISelectField = {
+    value: 'all',
+    options: [], //materialSelectOptions,
+    label: 'Material'
+  }
 
-  const [form, setForm] = React.useState(fields.current)
+  const typeProps: ISelectField = {
+    value: 'all',
+    options: [], // furnitureSelectOptions,
+    label: 'Type'
+  }
 
-  const { room, material, type, colors, brands } = form
+  const [chosenColors, setChosenColors] = React.useState(colorsProps)
+  const [chosenBrands, setChosenBrands] = React.useState(brandProps)
+  const [room, setRoom] = React.useState(roomProps)
+  const [material, setMaterial] = React.useState(materialProps)
+  const [type, setType] = React.useState(typeProps)
 
-  const selects = [room, material, type] as ISelectField[]
+  React.useEffect(() => {
+    setChosenColors((prev) => ({
+      ...prev,
+      options: allColors.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+    }))
+  }, [allColors])
 
-  const onSelect = (key: string) => (value: ISelectOption | null) => {
-    setForm((prev) => {
-      const current = prev[key]
-      if (isRadiosField(current)) {
-        return prev
-      }
+  React.useEffect(() => {
+    setChosenBrands((prev) => ({
+      ...prev,
+      options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+    }))
+  }, [allBrands])
+
+  React.useEffect(() => {
+    setRoom((prev) => ({
+      ...prev,
+      options: allRooms.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+    }))
+  }, [allRooms])
+
+  React.useEffect(() => {
+    setMaterial((prev) => ({
+      ...prev,
+      options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+    }))
+  }, [allMaterials])
+
+  React.useEffect(() => {
+    setType((prev) => ({
+      ...prev,
+      options: allTypes.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+    }))
+  }, [allTypes])
+
+  const onSelect = (setState: React.Dispatch<React.SetStateAction<ISelectField>>) => (value: ISelectOption | null) => {
+    setState((prev) => {
       return {
         ...prev,
-        [key]: {
-          ...current,
-          value: value?.value ?? ''
-        }
+        value: value?.value ?? ''
       }
     })
   }
 
-  const onRadio = (key: keyof typeof form, id: string) => () => {
-    setForm((prev) => {
-      const current = prev[key]
+  const onBrand = (brand: string) => () => {
+    setChosenBrands((prev) => ({
+      ...prev,
+      value: prev.value.includes(brand) ? prev.value.filter((c) => c !== brand) : [...prev.value, brand]
+    }))
+  }
 
-      if (!isRadiosField(current)) {
-        return prev
-      }
-      if (current.value.includes(id)) {
-        return {
-          ...prev,
-          [key]: {
-            ...current,
-            value: current.value.filter((str) => str !== id)
-          }
-        }
-      } else {
-        return {
-          ...prev,
-          [key]: {
-            ...current,
-            value: [...current.value, id]
-          }
-        }
-      }
-    })
+  const onColor = (color: string) => () => {
+    setChosenColors((prev) => ({
+      ...prev,
+      value: prev.value.includes(color) ? prev.value.filter((c) => c !== color) : [...prev.value, color]
+    }))
   }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
-    const dto = {
-      brandsIds: brands.value as string[],
-      colorsIds: colors.value as string[],
-      room: room.value as string,
-      material: material.value as string,
-      type: type.value as string
-    }
+    // const dto = {
+    //   brandsIds: brands.value as string[],
+    //   colorsIds: colors.value as string[],
+    //   room: room.value as string,
+    //   material: material.value as string,
+    //   type: type.value as string
+    // }
 
-    handleFiltersSubmit(dto)
+    // handleFiltersSubmit(dto)
   }
 
   return (
@@ -185,37 +190,45 @@ export const Aside: React.FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick
               onClick={onAsideCloseClick}
             />
             <React.Suspense fallback={<Loader />}>
-              {selects.map(({ value, label, options, name }) => (
-                <React.Fragment key={label}>
-                  <h6 className='filter__title'>{label}</h6>
-                  <CustomSelect
-                    value={value}
-                    options={options}
-                    onChange={onSelect(name)}
-                  />
-                </React.Fragment>
-              ))}
+              <h6 className='filter__title'>{room.label}</h6>
+              <CustomSelect
+                value={room.value}
+                options={room.options}
+                onChange={onSelect(setRoom)}
+              />
+              <h6 className='filter__title'>{material.label}</h6>
+              <CustomSelect
+                value={material.value}
+                options={material.options}
+                onChange={onSelect(setMaterial)}
+              />
+              <h6 className='filter__title'>{type.label}</h6>
+              <CustomSelect
+                value={type.value}
+                options={type.options}
+                onChange={onSelect(setType)}
+              />
             </React.Suspense>
           </div>
 
           <div className='aside__filter filter'>
-            <h6 className='filter__title'>{colors.label}</h6>
+            <h6 className='filter__title'>{chosenColors.label}</h6>
             <div className='filter__colors colors'>
-              {colors.options.map((color) => (
+              {allColors.map((color) => (
                 <label
                   className='colors__item'
-                  key={color.value}
+                  key={color}
                 >
                   <input
                     className='colors__checkbox-real'
-                    id={color.value}
+                    id={color}
                     type='checkbox'
-                    checked={colors.value.includes(color.value)}
-                    onChange={onRadio('colors', color.value)}
+                    checked={chosenColors.value.includes(color)}
+                    onChange={onColor(color)}
                   />
                   <span
                     className='colors__checkbox-fake'
-                    style={{ backgroundColor: '#' + color.value }}
+                    style={{ backgroundColor: color }}
                   ></span>
                 </label>
               ))}
@@ -223,28 +236,28 @@ export const Aside: React.FC<IAsideProps> = ({ isAsideVisible, onAsideCloseClick
           </div>
 
           <div className='aside__filter brands-filter'>
-            <h6 className='filter__title'>{brands.label}</h6>
+            <h6 className='filter__title'>{chosenBrands.label}</h6>
             <div>
-              {brands.options.map(({ value, label }) => (
+              {chosenBrands.options.map(({ value, label }) => (
                 <label
-                  className='brands-filter__label'
+                  className='form__label'
                   key={value}
                 >
                   <input
-                    className='brands-filter__checkbox-real'
+                    className='form__checkbox-real'
                     id={value}
                     type='checkbox'
-                    checked={brands.value.includes(value)}
-                    onChange={onRadio('brands', value)}
+                    checked={chosenBrands.value.includes(value)}
+                    onChange={onBrand(value)}
                   />
-                  <span className='brands-filter__checkbox-fake'></span>
-                  <span className='brands-filter__text'>{label}</span>
+                  <span className='form__checkbox-fake'></span>
+                  <span className='form__text'>{label}</span>
                 </label>
               ))}
             </div>
           </div>
           <button
-            className='aside__btn'
+            className='btn mt-20'
             type='submit'
           >
             Подобрать
