@@ -10,9 +10,10 @@ import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { getFavorites } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
-import { ProductType, submitValuesType } from '../types'
+import { submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
-import { ApiClient } from '../api'
+import { UserApiClient } from '../api'
+import { IFurniture } from '../api/types'
 
 const Catalog: React.FC = () => {
   const history = useHistory()
@@ -31,7 +32,7 @@ const Catalog: React.FC = () => {
   const QueryCache = React.useRef(history.location.search + '&sort=asc')
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false)
-  const [items, setItems] = React.useState<ProductType[]>([])
+  const [items, setItems] = React.useState<IFurniture[]>([])
   const [isLoading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
@@ -39,8 +40,8 @@ const Catalog: React.FC = () => {
     const signal = controller.signal
 
     setLoading(true)
-    ApiClient.get<ProductType[]>('/api/furniture' + history.location.search, { signal }).then((data) => {
-      setItems(data)
+    UserApiClient.geFurniture(signal).then((data) => {
+      setItems(data.items)
       setLoading(false)
     })
     return () => controller.abort()
@@ -130,7 +131,6 @@ const Catalog: React.FC = () => {
                     <SalesItem
                       key={item.id}
                       product={item}
-                      baseDir={'../../'}
                       isFavorite={favorites.includes(item.id)}
                     />
                   ))}

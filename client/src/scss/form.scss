@@ -1,15 +1,28 @@
 .form-input {
   width: 100%;
-  background: #fbfbfb;
+  background: #f7f7f7;
+  border: 1px solid #f7f7f7;
   border-radius: 5px;
-  height: 40px;
-  border: none;
-  padding: 0 20px;
+  padding: 10px 20px;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 24px;
   font-family: 'STIX Two Text', serif;
   color: #000;
+
+  &::placeholder {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: 'STIX Two Text', serif;
+    color: #575757;
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+    border: 1px solid #209cee;
+  }
 }
 
 .form-label {

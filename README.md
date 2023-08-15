@@ -18,3 +18,6 @@ profile picture?
 refactor server api
 добавить продукты
 image compressing
+should add notfound page
+switch from redux to react query?
+redirect to 404

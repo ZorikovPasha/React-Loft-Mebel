@@ -39,6 +39,11 @@ export class AppRouter {
         handler: [this.appController.createFurniture.bind(this.appController)]
       },
       {
+        method: 'delete',
+        endpoint: '/furniture/:id',
+        handler: [this.appController.deleteFurniture.bind(this.appController)]
+      },
+      {
         method: 'get',
         endpoint: '/favorites',
         handler: [protect, this.appController.getFavorites.bind(this.appController)]

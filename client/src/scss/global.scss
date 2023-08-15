@@ -122,11 +122,14 @@ button {
   color: #fff;
   background: #209cee;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 18px;
+  line-height: 22px;
   display: inline-block;
   cursor: pointer;
+  padding: 18px 35px;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: rgba(#209cee, 0.9);
   }
 
@@ -148,4 +151,36 @@ button {
     display: block;
     margin-right: 7px;
   }
+}
+
+.mt-30 {
+  margin-top: 30px;
+}
+
+.grid {
+  display: grid;
+}
+
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.mt-10 {
+  margin-top: 10px;
 }

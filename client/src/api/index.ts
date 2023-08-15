@@ -1,7 +1,19 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
 import { CartItemType, userFormValuesType, OrderInfoType } from '../types'
+import {
+  FormDataType,
+  IErrorResponse,
+  IErrorsResponse,
+  IFurnitureResponse,
+  IGetUserDataResponse,
+  ILoginResponse,
+  IResponseWithMessage,
+  ISuccessfullResponse,
+  LoginCredsType,
+  SignUpCredsType
+} from './types'
 
-export const apiConfig = {
+const apiConfig = {
   returnRejectedPromiseOnError: true,
   baseURL: import.meta.env.VITE_BACKEND,
   headers: {
@@ -11,44 +23,7 @@ export const apiConfig = {
   }
 }
 
-interface SignUpCredsType {
-  userName: string
-  email: string
-  password: string
-}
-
-type LoginCredsType = Omit<SignUpCredsType, 'userName'>
-
-interface IRegisterResponse {
-  message: 'User has been registered'
-}
-
-interface ILoginResponse {
-  token: string
-  message?: string
-}
-
-interface IUpdateUserResponse {
-  message: 'Data successfully was written'
-}
-
-interface IGetUserDataResponse {
-  name: string | undefined
-  surname: string | undefined
-  userName: string | undefined
-  email: string | undefined
-  phone: string | undefined
-  city: string | undefined
-  street: string | undefined
-  house: string | undefined
-  apartment: string | undefined
-  emailConfirmed: boolean | undefined
-  createdAt: string | undefined
-}
-
-export type formDataType = Omit<SignUpCredsType, 'password'> & { message: string }
-
-export class Axios {
+class Axios {
   protected _axios: AxiosInstance
   constructor(config: AxiosRequestConfig) {
     this._axios = axios.create(config)
@@ -76,9 +51,9 @@ class Api extends Axios {
         throw error
       })
   }
-  post = <T, B>(url: string, data?: B): Promise<T> => {
+  post = <T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<T> => {
     return this._axios
-      .post(url, data)
+      .post(url, data, config)
       .then(this.success)
       .catch((error: AxiosError<Error>) => {
         return error?.response?.data
@@ -111,7 +86,7 @@ class UserApi extends Api {
     localStorage.setItem('token', token)
   }
 
-  register = (credentials: SignUpCredsType): Promise<IRegisterResponse> => {
+  register = (credentials: SignUpCredsType): Promise<IResponseWithMessage> => {
     return this.post('/user/register', credentials)
   }
 
@@ -132,11 +107,19 @@ class UserApi extends Api {
   }
 
   getOrders = <T>(): Promise<T> => {
-    return this.get('/private/orders')
+    return this.get('/api/orders')
+  }
+
+  geFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
+    return this.get(`/api/furniture/`, { signal })
   }
 
   getOneFurniture = <T>(id: string, signal: AbortSignal): Promise<T> => {
     return this.get(`/api/furniture/${id}`, { signal })
+  }
+
+  createFurniture = (dto: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
+    return this.post('/api/furniture/', dto, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 
   sendFavoriteItem = (id: number): Promise<unknown> => {
@@ -151,7 +134,7 @@ class UserApi extends Api {
     return this.post('/private/removeCartItem', { id })
   }
 
-  sendUserData = (userFormValues: userFormValuesType): Promise<IUpdateUserResponse> => {
+  sendUserData = (userFormValues: userFormValuesType): Promise<IResponseWithMessage> => {
     return this.put('/user', userFormValues)
   }
 
@@ -159,10 +142,9 @@ class UserApi extends Api {
     return this.post('/private/order', { items: orderInfo })
   }
 
-  sendMessage = (formData: formDataType): Promise<unknown> => {
+  sendMessage = (formData: FormDataType): Promise<unknown> => {
     return this.post('/private/message', formData)
   }
 }
 
-export const ApiClient = new Api(apiConfig)
 export const UserApiClient = new UserApi(apiConfig)

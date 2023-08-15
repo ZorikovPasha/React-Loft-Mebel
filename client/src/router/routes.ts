@@ -2,7 +2,6 @@ import React from 'react'
 
 import { ROUTES } from '../utils/const'
 import { Main } from '../pages/Main'
-
 const LazyCart = React.lazy(() => import('../pages/Cart'))
 const LazyCatalog = React.lazy(() => import('../pages/Catalog'))
 const LazyProduct = React.lazy(() => import('../pages/Product'))
@@ -33,13 +32,13 @@ export const publicRoutes = [
     exact: false
   },
   {
-    path: ROUTES.NewProduct,
-    component: LazyNewProduct,
-    exact: false
-  },
-  {
     path: ROUTES.Product,
     component: LazyProduct,
+    exact: true
+  },
+  {
+    path: ROUTES.NewProduct,
+    component: LazyNewProduct,
     exact: true
   },
   {
