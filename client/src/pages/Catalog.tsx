@@ -37,19 +37,41 @@ const Catalog: React.FC = () => {
 
   React.useEffect(() => {
     const controller = new AbortController()
-    const signal = controller.signal
 
     setLoading(true)
-    UserApiClient.geFurniture(signal).then((data) => {
+    UserApiClient.geFurniture(controller.signal).then((data) => {
       setItems(data.items)
       setLoading(false)
     })
     return () => controller.abort()
   }, [history.location.search])
 
+  console.log('items', items)
+
   const { favorites } = useSelector(getFavorites)
 
   const breadcrumbs = useBreadcrumbs()
+
+  const colors = items.reduce((accum: string[], next) => {
+    const absentColors = next.colors.filter((c) => !accum.includes(c))
+    return [...accum, ...absentColors]
+  }, [])
+
+  const brands = items.reduce((accum: string[], next) => {
+    return accum.includes(next.brand) ? accum : [...accum, next.brand]
+  }, [])
+
+  const rooms = items.reduce((accum: string[], next) => {
+    return accum.includes(next.room) ? accum : [...accum, next.room]
+  }, [])
+
+  const materials = items.reduce((accum: string[], next) => {
+    return accum.includes(next.material) ? accum : [...accum, next.material]
+  }, [])
+
+  const furnitureTypes = items.reduce((accum: string[], next) => {
+    return accum.includes(next.type) ? accum : [...accum, next.type]
+  }, [])
 
   const handleFiltersSubmit = ({ brandsIds, colorsIds, room, material, type }: submitValuesType): void => {
     filters.current.room = room
@@ -107,6 +129,11 @@ const Catalog: React.FC = () => {
           <div className='catalog__inner'>
             {
               <Aside
+                colors={colors}
+                brands={brands}
+                rooms={rooms}
+                types={furnitureTypes}
+                materials={materials}
                 isAsideVisible={isAsideVisible}
                 onAsideCloseClick={onAsideCloseClick}
                 handleFiltersSubmit={handleFiltersSubmit}

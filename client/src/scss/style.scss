@@ -3,6 +3,13 @@
 @import 'global';
 
 // blocks
+@import "./blocks/aslide.scss";
+@import "./blocks/brands-filter.scss";
+@import "./blocks/colors.scss";
+@import "./blocks/controls.scss";
+@import "./blocks/filter.scss";
+@import "./blocks/pagination.scss";
+@import "./blocks/sort-list.scss";
 @import 'loader';
 @import 'form';
 @import 'animate';

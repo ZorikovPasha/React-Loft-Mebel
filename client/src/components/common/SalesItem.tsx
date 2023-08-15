@@ -43,7 +43,9 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
         }
       ])
     )
-    if (!isAuth) return
+    if (!isAuth) {
+      return
+    }
 
     UserApiClient.addItemToCart({
       id: id,
@@ -91,10 +93,10 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
         </Link>
         <p className='item-sales__type'>{type}</p>
         <div className='item-sales__price'>
-          <p className='item-sales__price-new'>{priceNew} ₽</p>
-          <p className='item-sales__price-old'>{!!priceOld && priceOld + ' ₽'}</p>
+          {priceNew ? <p className='item-sales__price-new'>{priceNew} ₽</p> : null}
+          {priceOld ? <p className='item-sales__price-old'>{priceOld + ' ₽'}</p> : null}
         </div>
-        <div className='item-sales__bottom'>
+        <div className='item-sales__bottom flex'>
           <p className='item-sales__text'>Размеры</p>
           <div className='item-sales__line'>
             <div className='item-sales__size'>
@@ -111,7 +113,8 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
             </div>
           </div>
           <button
-            className='item-sales__tocart'
+            className='item-sales__tocart btn'
+            type='button'
             onClick={onAddToCartClick}
           >
             Добавить в корзину
