@@ -2,7 +2,11 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { authActionCreator } from '../redux/actions/authAction'
-import { addtemsActionCreator, fetchingActionCreator, ordersActionCreator } from '../redux/actions/cartItems'
+import {
+  // addtemsActionCreator,
+  fetchingActionCreator,
+  ordersActionCreator
+} from '../redux/actions/cartItems'
 import {
   addFavoritesActionCreator,
   loadingActionCreator,
@@ -12,7 +16,7 @@ import { resetCartActionCreator } from '../redux/actions/cartItems'
 // import { addUserDataActionCreator } from '../redux/actions/userAction'
 import { getIsAuth } from '../redux/getters'
 import { UserApiClient } from '../api/'
-import { CartItemType, OrderInfoType } from '../types'
+import { OrderInfoType } from '../types'
 
 export const useAuth = async (): Promise<void> => {
   const dispatch = useDispatch()
@@ -46,8 +50,8 @@ export const useAuth = async (): Promise<void> => {
       })
 
       dispatch(resetCartActionCreator())
-      UserApiClient.getCartItems<{ items: CartItemType[] }>().then((items) => {
-        dispatch(addtemsActionCreator(items.items))
+      UserApiClient.getCartItems().then(() => {
+        // dispatch(addtemsActionCreator(dto.items))
         dispatch(fetchingActionCreator(true))
       })
 

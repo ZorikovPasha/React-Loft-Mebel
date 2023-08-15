@@ -123,3 +123,12 @@ export const isResponseWithErrors = (
 export const isStringPropertyname = (obj: Record<string, unknown>, key: string): key is keyof typeof obj => {
   return key in obj
 }
+
+export interface ICartItemsResponse {
+  items: {
+    id: number
+    furnitureId: number
+    cartId: number
+    quintity: number
+  }[]
+}

@@ -2,13 +2,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { removeItemActionCreator } from '../../redux/actions/cartItems'
-import { CartItemType, ProductType } from '../../types'
+import { ICartItem, removeItemActionCreator } from '../../redux/actions/cartItems'
 import { UserApiClient } from '../../api'
+import { IFurniture } from '../../api/types'
 
 interface ICartItemProps {
-  cartItem: CartItemType
-  item: ProductType
+  cartItem: ICartItem
+  item: IFurniture
 }
 
 export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
@@ -19,13 +19,17 @@ export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
     UserApiClient.removeCartItem(cartItem.id)
   }
 
-  const totalCost = item.priceNew ? item.priceNew * cartItem.quintity : item.priceOld * cartItem.quintity
+  console.log('item.priceNew', item.priceNew)
+
+  const totalCost = item.priceNew
+    ? parseInt(item.priceNew) * cartItem.quintity
+    : parseInt(item.priceOld) * cartItem.quintity
 
   return (
     <div className='cart__item item'>
       <div className='item__box'>
         <img
-          src={item.imageUrl}
+          src={item.image?.url}
           alt='furniture'
         />
         <div className='item__info'>
@@ -43,9 +47,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
               data-color
             >
               <p className='info-feature__name'>Цвет:</p>
-              <p className='info-feature__val'>
-                {cartItem.colors.map((color, idx) => (color ? item.colors[idx] : ''))}
-              </p>
+              <p className='info-feature__val'>{item.colors.map((color, idx) => (color ? item.colors[idx] : ''))}</p>
               <span></span>
             </div>
             <div className='item__info-feature info-feature'>
@@ -62,9 +64,11 @@ export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
               data-size
             >
               <p className='info-feature__name'>Размер(Ш×Д×В):</p>
-              <p className='info-feature__val'>
-                {cartItem.dimensions.width} СМ × {cartItem.dimensions.length} СМ × {cartItem.dimensions.length} СМ
-              </p>
+              {item.dimensions ? (
+                <p className='info-feature__val'>
+                  {item.dimensions.width} СМ × {item.dimensions.length} СМ × {item.dimensions.length} СМ
+                </p>
+              ) : null}
             </div>
           </div>
         </div>

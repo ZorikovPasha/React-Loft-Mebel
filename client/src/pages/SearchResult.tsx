@@ -32,7 +32,6 @@ const SearchResult: React.FC = () => {
                   <SalesItem
                     key={item.id}
                     product={item}
-                    baseDir={'../../'}
                     isFavorite={favorites.includes(item.id)}
                   />
                 ))}

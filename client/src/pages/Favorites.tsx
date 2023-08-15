@@ -3,21 +3,21 @@ import { useSelector } from 'react-redux'
 
 import { getFavorites, getIsAuth, getProducts } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
-import { ProductType } from '../types'
 import { SalesItem } from '../components/common/SalesItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
+import { IFurniture } from '../api/types'
 
 const Favorites: React.FC = () => {
   const breadcrumbs = useBreadcrumbs()
 
-  const { items } = useSelector(getProducts)
+  const items = useSelector(getProducts)
 
   const { favorites, isLoaded } = useSelector(getFavorites)
   const isAuth = useSelector(getIsAuth)
 
-  const favoriteItems: ProductType[] = []
+  const favoriteItems: IFurniture[] = []
   favorites.forEach((id) => {
     const item = items.find((item) => item.id === id)
     if (item) {
@@ -49,7 +49,6 @@ const Favorites: React.FC = () => {
                   <SalesItem
                     key={item.id}
                     product={item}
-                    baseDir={'../../../'}
                     isFavorite={true}
                   />
                 ))}

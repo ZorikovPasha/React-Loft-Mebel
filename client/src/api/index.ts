@@ -1,9 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
-import { CartItemType, userFormValuesType, OrderInfoType } from '../types'
+import { CartItemType, userFormValuesType } from '../types'
 import {
   FormDataType,
+  ICartItemsResponse,
   IErrorResponse,
   IErrorsResponse,
+  IFurniture,
   IFurnitureResponse,
   IGetUserDataResponse,
   ILoginResponse,
@@ -98,8 +100,8 @@ class UserApi extends Api {
     return this.get('/private/favorites')
   }
 
-  getCartItems = <T>(): Promise<T> => {
-    return this.get('/private/cartItems')
+  getCartItems = (): Promise<ICartItemsResponse> => {
+    return this.get('/api/cart')
   }
 
   getUserData = (): Promise<IGetUserDataResponse> => {
@@ -110,11 +112,11 @@ class UserApi extends Api {
     return this.get('/api/orders')
   }
 
-  geFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
+  getFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
     return this.get(`/api/furniture/`, { signal })
   }
 
-  getOneFurniture = <T>(id: string, signal: AbortSignal): Promise<T> => {
+  getOneFurniture = (id: string, signal: AbortSignal): Promise<IFurniture> => {
     return this.get(`/api/furniture/${id}`, { signal })
   }
 
@@ -127,7 +129,7 @@ class UserApi extends Api {
   }
 
   addItemToCart = (cartItem: CartItemType): Promise<unknown> => {
-    return this.post('/private/cartItem', cartItem)
+    return this.post('/api/cart', cartItem)
   }
 
   removeCartItem = (id: number): Promise<unknown> => {
@@ -138,8 +140,8 @@ class UserApi extends Api {
     return this.put('/user', userFormValues)
   }
 
-  makeOrder = (orderInfo: OrderInfoType[]): Promise<unknown> => {
-    return this.post('/private/order', { items: orderInfo })
+  makeOrder = (): Promise<unknown> => {
+    return this.post('/api/orders')
   }
 
   sendMessage = (formData: FormDataType): Promise<unknown> => {

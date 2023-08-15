@@ -1,5 +1,11 @@
 import { ActionsTypes } from '../../types/actionsTypes'
-import { CartItemType, OrderInfoType } from '../../types'
+import { OrderInfoType } from '../../types'
+
+export interface ICartItem {
+  id: number
+  quintity: number
+  price: number
+}
 
 type CartItemsActionsTypes =
   | ActionsTypes.ADD_CART_ITEMS
@@ -11,7 +17,7 @@ type CartItemsActionsTypes =
 
 type actionCreatorType<T> = (payload?: T) => { type: CartItemsActionsTypes; payload?: T }
 
-export const addtemsActionCreator: actionCreatorType<CartItemType[]> = (payload) => ({
+export const addtemsActionCreator: actionCreatorType<ICartItem[]> = (payload) => ({
   type: ActionsTypes.ADD_CART_ITEMS,
   payload: payload
 })
@@ -31,7 +37,7 @@ export const fetchingActionCreator: actionCreatorType<boolean> = (bool) => ({
   payload: bool
 })
 
-export const removeItemActionCreator: actionCreatorType<CartItemType> = (obj) => ({
+export const removeItemActionCreator: actionCreatorType<ICartItem> = (obj) => ({
   type: ActionsTypes.REMOVE_CART_ITEM,
   payload: obj
 })

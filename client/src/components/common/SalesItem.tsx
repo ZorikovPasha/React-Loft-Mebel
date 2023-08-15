@@ -14,7 +14,7 @@ interface ISalesItemProps {
 }
 
 export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
-  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors } = product
+  const { id, image, name, type, priceOld, priceNew, dimensions, sale } = product
 
   const dispatch = useDispatch()
   const isAuth = useSelector(getIsAuth)
@@ -32,14 +32,8 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
       addtemsActionCreator([
         {
           id: id,
-          colors: [colors[0]],
           quintity: 1,
-          dimensions: {
-            width: dimensions.width,
-            length: dimensions.length,
-            height: dimensions.height
-          },
-          price: parseInt(priceNew)
+          price: parseFloat(priceNew ? priceNew : priceOld)
         }
       ])
     )
@@ -49,14 +43,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
 
     UserApiClient.addItemToCart({
       id: id,
-      colors: [colors[0]],
-      quintity: 1,
-      dimensions: {
-        width: dimensions.width,
-        length: dimensions.length,
-        height: dimensions.height
-      },
-      price: parseInt(priceNew)
+      quintity: 1
     })
   }
 
@@ -80,7 +67,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
       <div className='item-sales__box'>
         <div className='item-sales__img'>
           <img
-            src={`http://localhost:5000${image.url}`}
+            src={image ? `http://localhost:5000${image.url}` : ''}
             alt='furniture'
           />
         </div>

@@ -1,18 +1,19 @@
-import { CartItemType, OrderInfoType, ProductType, userFormValuesType } from '../types'
+import { IFurniture } from '../api/types'
+import { OrderInfoType, userFormValuesType } from '../types'
+import { ICartItem } from './actions/cartItems'
 import { IfavoritesState } from './reducers/favoritesReducer'
-import { IProductsState } from './reducers/itemsReducer'
 import { RootState } from './store'
 
-export const getProducts = (state: RootState): IProductsState => state.items
+export const getProducts = (state: RootState): IFurniture[] => state.items.items
 export const getFilteredProductsByName =
   (query: string) =>
-  (state: RootState): ProductType[] => {
+  (state: RootState): IFurniture[] => {
     return state.items.items.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
   }
 
 export const getFavorites = (state: RootState): IfavoritesState => state.favorites
 
-export const getCartItems = (state: RootState): CartItemType[] => state.cartItems.cartItems
+export const getCartItems = (state: RootState): ICartItem[] => state.cartItems.cartItems
 export const getQuintity = (state: RootState): number => state.cartItems.quintity
 export const getTotalCost = (state: RootState): number => state.cartItems.totalCost
 export const getCartItemsQuintity = (state: RootState): number => state.cartItems.quintity
