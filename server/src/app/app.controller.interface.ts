@@ -33,7 +33,7 @@ export interface AppResponse extends Response {
   locals: IAppLocals
 }
 
-interface IFurnitureDimension {
+export interface IFurnitureDimension {
   width: number
   length: number
   height: number
@@ -45,13 +45,13 @@ export interface ICreateFurnitureDto {
   type?: string
   priceOld?: string
   priceNew?: string
-  colors?: string[]
-  rating?: number
-  sale?: string
+  colors?: string | undefined | null | unknown
+  rating?: string
+  sale?: string | null | undefined
   room?: string
   material?: string
   brand?: string
-  dimensions: (IFurnitureDimension | undefined)[] | undefined
+  dimensions: string | undefined | null | unknown
 }
 
 export interface IAddCartItemDto {

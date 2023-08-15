@@ -10,7 +10,7 @@ export const ROUTES = {
   Profile: '/profile',
   SearchResult: '/search',
   Home: '/',
-  NewProduct: '/products/new'
+  NewProduct: '/product'
 }
 
 export const Const = {

@@ -10,17 +10,17 @@ import { ProductTabs } from '../components/Product/ProductTabs'
 import { Related } from '../components/Product/Related'
 
 const Product: React.FC = () => {
+  const { id } = useParams<{ id: string }>()
+
   const [currentProduct, setCurrentProduct] = React.useState<ProductType>()
   const breadcrumbs = useBreadcrumbs()
-
-  const { id } = useParams<{ id: string }>()
 
   React.useEffect(() => {
     const controller = new AbortController()
     const signal = controller.signal
 
     UserApiClient.getOneFurniture<ProductType>(id, signal).then((data) => setCurrentProduct(data))
-    return () => controller.abort()
+    return (): void => controller.abort()
   }, [id])
 
   return (

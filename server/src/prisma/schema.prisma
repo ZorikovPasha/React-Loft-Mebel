@@ -84,8 +84,8 @@ model Furniture {
   priceNew          String
   dimensions        FurnitureDimension[]
   colors            String[]
-  rating            Int
-  sale              String
+  rating            String
+  sale              Boolean
   room              String
   material          String
   brand             String

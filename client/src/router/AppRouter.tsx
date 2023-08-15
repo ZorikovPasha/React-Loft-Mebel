@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -12,7 +12,7 @@ import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import '../scss/style.scss'
 
-const AppRouter: React.FC = () => {
+const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
 
   const dispatch = useDispatch()
@@ -39,7 +39,7 @@ const AppRouter: React.FC = () => {
             exact={initialRoute.exact}
           />
           {publicRoutes.map(({ path, component, exact }) => (
-            <Suspense
+            <React.Suspense
               fallback={<Loader />}
               key={path}
             >
@@ -48,11 +48,11 @@ const AppRouter: React.FC = () => {
                 component={component}
                 exact={exact}
               />
-            </Suspense>
+            </React.Suspense>
           ))}
           {isAuth &&
             authRoutes.map(({ path, component, exact }) => (
-              <Suspense
+              <React.Suspense
                 fallback={<Loader />}
                 key={path}
               >
@@ -61,7 +61,7 @@ const AppRouter: React.FC = () => {
                   component={component}
                   exact={exact}
                 />
-              </Suspense>
+              </React.Suspense>
             ))}
         </main>
         <Footer />

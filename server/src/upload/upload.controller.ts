@@ -12,24 +12,27 @@ export class UploadController implements IUploadController {
   constructor(@inject(TYPES.ILoggerService) public logger: LoggerService) {}
 
   async getUpload(
-    req: Request<{}, {}, {}, { url?: string }>,
+    req: Request<{ url?: string }, {}, {}>,
     res: Response,
     next: NextFunction
   ): Promise<void | Response<Record<string, string>, Record<string, unknown>>> {
     try {
-      if (!req.query.url) {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      if (!req.params.url) {
         return next(ApiError.badRequest('Url was not provided'))
       }
 
       const media = await prismaClient.image.findFirst({
         where: {
-          url: req.query.url
+          url: `/uploads/${req.params.url}`
         }
       })
 
       if (!media) {
         return res.status(404)
       }
+
       return res.status(200).contentType(media.mime).end(media.data)
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)

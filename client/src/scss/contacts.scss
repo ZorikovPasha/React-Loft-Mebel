@@ -209,8 +209,6 @@
 }
 
 .form-file {
-  // .form-file__real
-
   &__real {
     width: 1px;
     height: 1px;
@@ -220,10 +218,11 @@
   }
 
   &__fake {
-    font-size: 13px;
-    line-height: 15px;
+    font-size: 18px;
+    line-height: 22px;
     padding: 12px 20px;
     background: #fff;
+    cursor: pointer;
     box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
   }
 }

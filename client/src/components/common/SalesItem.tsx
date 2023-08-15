@@ -1,24 +1,22 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
 
 import { addFavoritesActionCreator } from '../../redux/actions/favorites'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
-import { ProductType } from '../../types'
 import { getIsAuth } from '../../redux/getters'
 import { UserApiClient } from '../../api'
+import { IFurniture } from '../../api/types'
+import { Link } from 'react-router-dom'
 
 interface ISalesItemProps {
-  product: ProductType
-  baseDir: string
+  product: IFurniture
   isFavorite: boolean
 }
 
-export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite, baseDir }) => {
-  const { id, imageUrl, name, type, priceOld, priceNew, dimensions, sale, colors } = product
+export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
+  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors } = product
 
   const dispatch = useDispatch()
-  const router = useHistory()
   const isAuth = useSelector(getIsAuth)
 
   const onLikeProductClick = (): void => {
@@ -27,10 +25,6 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     if (isAuth) {
       UserApiClient.sendFavoriteItem(id)
     }
-  }
-
-  const onProductLinkClick = (): void => {
-    router.push(`/products/${id}`)
   }
 
   const onAddToCartClick = async (): Promise<void> => {
@@ -45,7 +39,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
             length: dimensions.length,
             height: dimensions.height
           },
-          price: priceNew
+          price: parseInt(priceNew)
         }
       ])
     )
@@ -60,15 +54,21 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
         length: dimensions.length,
         height: dimensions.height
       },
-      price: priceNew
+      price: parseInt(priceNew)
     })
+  }
+
+  let discount = 0
+
+  if (priceNew < priceOld) {
+    discount = (parseInt(priceOld) - parseInt(priceNew)) / 100
   }
 
   return (
     <div className='sales__item item-sales'>
-      {sale ? (
+      {sale && discount ? (
         <div className='item-sales__label label-sales'>
-          <div className='label-sales__body'>-{sale}</div>
+          <div className='label-sales__body'>-{discount}%</div>
         </div>
       ) : null}
       <button
@@ -78,17 +78,18 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
       <div className='item-sales__box'>
         <div className='item-sales__img'>
           <img
-            src={baseDir + imageUrl}
+            src={`http://localhost:5000${image.url}`}
             alt='furniture'
           />
         </div>
-        <h5
+
+        <Link
+          to={`/products/${id}`}
           className='item-sales__title'
-          onClick={onProductLinkClick}
         >
           {name}
-        </h5>
-        <p className='item-sales__type'>{type.label}</p>
+        </Link>
+        <p className='item-sales__type'>{type}</p>
         <div className='item-sales__price'>
           <p className='item-sales__price-new'>{priceNew} ₽</p>
           <p className='item-sales__price-old'>{!!priceOld && priceOld + ' ₽'}</p>
@@ -98,15 +99,15 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
           <div className='item-sales__line'>
             <div className='item-sales__size'>
               <p className='item-sales__val'>ШИРИНА</p>
-              <p className='item-sales__num'>{dimensions.width} СМ</p>
+              <p className='item-sales__num'>{dimensions?.width} СМ</p>
             </div>
             <div className='item-sales__size'>
               <p className='item-sales__val'>ГЛУБИНА</p>
-              <p className='item-sales__num'>{dimensions.length} СМ</p>
+              <p className='item-sales__num'>{dimensions?.length} СМ</p>
             </div>
             <div className='item-sales__size'>
               <p className='item-sales__val'>ВЫСОТА</p>
-              <p className='item-sales__num'>{dimensions.height} СМ</p>
+              <p className='item-sales__num'>{dimensions?.height} СМ</p>
             </div>
           </div>
           <button
