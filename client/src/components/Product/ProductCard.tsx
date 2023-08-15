@@ -1,78 +1,77 @@
 import React from 'react'
-import Slider, { Settings } from 'react-slick'
+// import Slider, { Settings } from 'react-slick'
 import { useDispatch } from 'react-redux'
 
 import { AddToFavorite } from '../common/AddToFavorite'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
-import { ProductType } from '../../types'
 import CustomSelect from '../common/CustomSelect'
-import 'slick-carousel/slick/slick.scss'
+import { IFurniture } from '../../api/types'
 
 interface IProductCardProps {
-  product: ProductType
+  product: IFurniture
 }
 
-const SliderPrevArrow: React.FC = () => {
-  return (
-    <button className='slick-btn slick-prev'>
-      <svg
-        width='9'
-        height='14'
-        viewBox='0 0 9 14'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        <path
-          d='M7.5 1L1.5 7L7.5 13'
-          stroke='black'
-          strokeLinecap='square'
-        />
-      </svg>
-    </button>
-  )
-}
+// const SliderPrevArrow: React.FC = () => {
+//   return (
+//     <button className='slick-btn slick-prev'>
+//       <svg
+//         width='9'
+//         height='14'
+//         viewBox='0 0 9 14'
+//         fill='none'
+//         xmlns='http://www.w3.org/2000/svg'
+//       >
+//         <path
+//           d='M7.5 1L1.5 7L7.5 13'
+//           stroke='black'
+//           strokeLinecap='square'
+//         />
+//       </svg>
+//     </button>
+//   )
+// }
 
-const SliderNextArrow: React.FC = () => {
-  return (
-    <button className='slick-btn slick-next'>
-      <svg
-        width='8'
-        height='14'
-        viewBox='0 0 8 14'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        <path
-          d='M1 13L7 7L1 1'
-          stroke='black'
-          strokeLinecap='square'
-        />
-      </svg>
-    </button>
-  )
-}
+// const SliderNextArrow: React.FC = () => {
+//   return (
+//     <button className='slick-btn slick-next'>
+//       <svg
+//         width='8'
+//         height='14'
+//         viewBox='0 0 8 14'
+//         fill='none'
+//         xmlns='http://www.w3.org/2000/svg'
+//       >
+//         <path
+//           d='M1 13L7 7L1 1'
+//           stroke='black'
+//           strokeLinecap='square'
+//         />
+//       </svg>
+//     </button>
+//   )
+// }
 
-const slider1Settings: Settings = {
-  arrows: false,
-  fade: true,
-  swipe: false
-}
+// const slider1Settings: Settings = {
+//   arrows: false,
+//   fade: true,
+//   swipe: false
+// }
 
-const slider2Settings: Settings = {
-  variableWidth: true,
-  infinite: false,
-  focusOnSelect: true,
-  prevArrow: <SliderPrevArrow />,
-  nextArrow: <SliderNextArrow />,
-  responsive: [
-    {
-      breakpoint: 511,
-      settings: {
-        arrows: false
-      }
-    }
-  ]
-}
+// const slider2Settings: Settings = {
+//   variableWidth: true,
+//   infinite: false,
+//   focusOnSelect: true,
+//   prevArrow: <SliderPrevArrow />,
+//   nextArrow: <SliderNextArrow />,
+//   responsive: [
+//     {
+//       breakpoint: 511,
+//       settings: {
+//         arrows: false
+//       }
+//     }
+//   ]
+// }
 
 type ColorOptionType = {
   value: string
@@ -89,7 +88,7 @@ interface ISelectField {
 export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const dispatch = useDispatch()
 
-  const { id, thumbsUrls, imageUrl, name, type, priceNew, colors, dimensions } = product
+  const { id, name, type, priceNew, priceOld, colors, dimensions } = product
 
   const colorsPrepared: ColorOptionType[] = []
   colors.forEach((color, idx) => (colorsPrepared[idx] = { value: color, label: color }))
@@ -109,13 +108,15 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     dimensions: {
       rootElClass: 'features__col features__col--size',
       label: 'Размер (Д × Ш × В)',
-      value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
-      options: [
-        {
-          value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
-          label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`
-        }
-      ]
+      value: dimensions ? `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM` : '',
+      options: dimensions
+        ? [
+            {
+              value: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`,
+              label: `${dimensions.width} CM × ${dimensions.length} CM × ${dimensions.height} CM`
+            }
+          ]
+        : []
     },
     color: {
       rootElClass: 'features__col features__col--color',
@@ -125,8 +126,8 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     }
   })
 
-  const [nav1, setNav1] = React.useState<Slider>()
-  const [nav2, setNav2] = React.useState<Slider>()
+  // const [nav1, setNav1] = React.useState<Slider>()
+  // const [nav2, setNav2] = React.useState<Slider>()
   const [form, setForm] = React.useState(fields.current)
 
   const onSelect = (name: string) => (value: ColorOptionType | null) => {
@@ -143,15 +144,9 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     e.preventDefault()
 
     const dto = {
-      id: id,
-      colors: [form.color.value],
+      id,
       quintity: Number(form.quintity.value),
-      dimensions: {
-        width: parseInt(form.dimensions.value.split('×')[0]),
-        length: parseInt(form.dimensions.value.split('×')[1]),
-        height: parseInt(form.dimensions.value.split('×')[2])
-      },
-      price: priceNew
+      price: parseFloat(priceNew ? priceNew : priceOld)
     }
 
     dispatch(addtemsActionCreator([dto]))
@@ -162,7 +157,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
       <div className='container'>
         <div className='product__inner'>
           <div className='product__images'>
-            <Slider
+            {/* <Slider
               className='product__slider'
               asNavFor={nav2}
               ref={(slider1: Slider): void => setNav1(slider1)}
@@ -174,13 +169,13 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                   key={url}
                 >
                   <img
-                    src={'../../../' + imageUrl}
+                    src={imageUrl}
                     alt='furniture'
                   />
                 </div>
               ))}
-            </Slider>
-            <Slider
+            </Slider> */}
+            {/* <Slider
               className='product__thumbs'
               asNavFor={nav1}
               ref={(slider2: Slider): void => setNav2(slider2)}
@@ -192,20 +187,20 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                   key={url}
                 >
                   <img
-                    src={'../../../' + imageUrl}
+                    src={imageUrl}
                     alt='furniture thumb'
                   />
                 </div>
               ))}
-            </Slider>
+            </Slider> */}
           </div>
           <div className='product__info info'>
             <div className='info__star'></div>
             <h1 className='info__title'>{name}</h1>
-            <p className='info__category'>{type.label}</p>
+            <p className='info__category'>{type}</p>
             <form onSubmit={handleSubmit}>
               <div className='info__shop shop'>
-                <p className='shop__price'>{priceNew} P</p>
+                <p className='shop__price'>{priceNew ? priceNew : priceOld} P</p>
                 <button
                   className='shop__btn'
                   type='submit'

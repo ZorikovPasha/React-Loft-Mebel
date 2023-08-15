@@ -1,8 +1,8 @@
-import { ProductType } from '../../types'
+import { IFurniture } from '../../api/types'
 import { fetchItemsActionType, ActionsTypes } from '../../types/actionsTypes'
 
 export interface IProductsState {
-  items: ProductType[]
+  items: IFurniture[]
   isLoaded: boolean
   isError: boolean
 }

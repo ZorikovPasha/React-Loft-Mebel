@@ -1,10 +1,11 @@
 import isEqual from 'lodash.isequal'
 
 import { cartItemsActionType, ActionsTypes } from '../../types/actionsTypes'
-import { CartItemType, OrderInfoType } from '../../types'
+import { OrderInfoType } from '../../types'
+import { ICartItem } from '../actions/cartItems'
 
-export type stateType = {
-  cartItems: CartItemType[]
+export interface ICartState {
+  cartItems: ICartItem[]
   quintity: number
   totalCost: number
   isOrderMade: boolean
@@ -12,7 +13,7 @@ export type stateType = {
   isLoaded: boolean
 }
 
-const initialState: stateType = {
+const initialState: ICartState = {
   cartItems: [],
   quintity: 0,
   totalCost: 0,
@@ -21,22 +22,21 @@ const initialState: stateType = {
   isLoaded: false
 }
 
-const cartItemsReducer = (state = initialState, action: cartItemsActionType): stateType => {
+const cartItemsReducer = (state = initialState, action: cartItemsActionType): ICartState => {
   switch (action.type) {
     case ActionsTypes.REMOVE_CART_ITEM: {
-      const remainingCartItems = state.cartItems.filter((item: CartItemType) => item.id !== action.payload.id)
-      const remainingQuintity = state.cartItems
-        .filter((item: CartItemType) => item.id !== action.payload.id)
-        .reduce((partialSum, a: CartItemType) => partialSum + a.quintity, 0)
+      const remainingCartItems = state.cartItems.filter((item) => item.id !== action.payload.id)
+      const productsLeft = remainingCartItems.reduce((accum, next) => accum + next.quintity, 0)
+
+      const totalCost = remainingCartItems.reduce((partialCost, item) => {
+        return partialCost + item.quintity * item.price
+      }, 0)
 
       return {
         ...state,
         cartItems: remainingCartItems,
-        quintity: remainingQuintity,
-        totalCost: remainingCartItems.reduce(
-          (partialCost, item: CartItemType) => partialCost + item.quintity * item.price,
-          0
-        )
+        quintity: productsLeft,
+        totalCost
       }
     }
 
@@ -59,11 +59,11 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): st
         orders: action.payload
       }
     case ActionsTypes.ADD_CART_ITEMS: {
-      const buff: CartItemType[] = []
+      const buff: ICartItem[] = []
 
       if (state.cartItems.length) {
         action.payload.forEach((cartItem) => {
-          state.cartItems.forEach((item: CartItemType) => {
+          state.cartItems.forEach((item) => {
             if (isEqual({ ...item, quintity: 1 }, { ...cartItem, quintity: 1 })) {
               item.quintity += 1
             } else {

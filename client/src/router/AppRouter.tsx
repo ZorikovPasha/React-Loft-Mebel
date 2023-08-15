@@ -16,7 +16,7 @@ const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
 
   const dispatch = useDispatch()
-  dispatch(fetchItemsThunkCreator('?sort=asc'))
+  dispatch(fetchItemsThunkCreator())
 
   const isAuth = useSelector(getIsAuth)
   useAuth()

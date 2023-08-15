@@ -1,42 +1,7 @@
-export type ProductType = {
-  id: number
-  imageUrl: string
-  bigImageUrl: string
-  thumbsUrls: string[]
-  name: string
-  type: {
-    label: string
-    value: string
-  }
-  priceOld: number
-  priceNew: number
-  dimensions: { width: number; length: number; height: number }
-  colors: string[]
-  rating: number
-  sale: string
-  room: string
-  material: string
-  brand: string
-}
-
 export type CartItemType = {
   id: number
-  colors: string[]
   quintity: number
-  dimensions: {
-    width: number
-    length: number
-    height: number
-  }
-  price: number
 }
-
-type ListItemType = {
-  text: string
-  link: string
-}
-
-export type ListsType = ListItemType[]
 
 export type BreadcrumbsLinkType = {
   name: string

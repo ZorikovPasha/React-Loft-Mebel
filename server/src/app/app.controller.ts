@@ -508,7 +508,7 @@ export class AppController {
           cartId: userCart.id
         }
       })
-      return res.status(200).json({ message: 'Item was successfully added to cart' })
+      return res.status(200).json({ success: true })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
@@ -613,7 +613,7 @@ export class AppController {
           })
         })
       )
-      return res.status(201).json({ message: 'Order created successfully' })
+      return res.status(201).json({ success: true })
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))

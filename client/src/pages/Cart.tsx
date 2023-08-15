@@ -19,7 +19,6 @@ import {
 } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
-import { OrderInfoType } from '../types'
 import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { setOrderStatusActionCreator } from '../redux/actions/cartItems'
 
@@ -30,7 +29,7 @@ const Cart: React.FC = () => {
   const cartItems = useSelector(getCartItems)
   const quintity = useSelector(getQuintity)
   const total = useSelector(getTotalCost)
-  const { items } = useSelector(getProducts)
+  const items = useSelector(getProducts)
   const { favorites } = useSelector(getFavorites)
   const isOrderMade = useSelector(getOrderStatus)
   const isAuth = useSelector(getIsAuth)
@@ -44,27 +43,8 @@ const Cart: React.FC = () => {
       document.documentElement.classList.add('lock')
       return
     }
-    const orders: OrderInfoType[] = []
 
-    cartItems.forEach(({ id, dimensions, colors, quintity, price }) => {
-      const item = items.find((item) => item.id === id)
-
-      if (item) {
-        orders.push({
-          id,
-          dimensions,
-          colors,
-          quintity,
-          price,
-          status: 'В ожидании',
-          date: Date.now(),
-          name: item.name,
-          imageUrl: item.imageUrl
-        })
-      }
-    })
-    UserApiClient.makeOrder(orders)
-    cartItems.forEach(({ id }) => UserApiClient.removeCartItem(id))
+    UserApiClient.makeOrder()
     dispatch(resetCartActionCreator())
     dispatch(setOrderStatusActionCreator(true))
   }
@@ -104,7 +84,6 @@ const Cart: React.FC = () => {
                 if (currItem) {
                   return (
                     <CartItem
-                      key={`${cartItem.id}_${cartItem.quintity}_${cartItem.colors.filter((_, idx) => idx)}`}
                       cartItem={cartItem}
                       item={currItem}
                     />
@@ -139,7 +118,6 @@ const Cart: React.FC = () => {
                     <SalesItem
                       key={product.id}
                       product={product}
-                      baseDir={'../../../'}
                       isFavorite={favorites.includes(product.id)}
                     />
                   ))}

@@ -1,7 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { ListsType } from '../../../types'
+export type ListsType = {
+  text: string
+  link: string
+}[]
 
 interface IHeaderSubList {
   items: ListsType

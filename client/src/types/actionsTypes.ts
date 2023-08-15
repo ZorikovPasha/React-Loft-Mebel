@@ -1,4 +1,6 @@
-import { ProductType, CartItemType, userFormValuesType, OrderInfoType } from './index'
+import { IFurniture } from '../api/types'
+import { ICartItem } from '../redux/actions/cartItems'
+import { userFormValuesType, OrderInfoType } from './index'
 
 export enum ActionsTypes {
   SET_PRODUCTS = 'SET_PRODUCTS',
@@ -24,7 +26,7 @@ export enum ActionsTypes {
 export type fetchItemsActionType = {
   type: ActionsTypes.SET_PRODUCTS
   payload: {
-    items: ProductType[]
+    items: IFurniture[]
     isLoaded: boolean
   }
 }
@@ -50,12 +52,12 @@ export type ordersActionCreator = {
 export type cartItemsActionType =
   | {
       type: ActionsTypes.ADD_SINGLE_ITEM | ActionsTypes.REMOVE_CART_ITEM | ActionsTypes.RESET_CART
-      payload: CartItemType
+      payload: ICartItem
     }
   | ordersActionCreator
   | {
       type: ActionsTypes.ADD_CART_ITEMS
-      payload: CartItemType[]
+      payload: ICartItem[]
     }
   | { type: ActionsTypes.CART_LOADING; payload: boolean }
   | { type: ActionsTypes.ORDER_STATUS; payload: boolean }
