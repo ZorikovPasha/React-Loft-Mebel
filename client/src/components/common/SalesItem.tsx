@@ -1,11 +1,11 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { addFavoritesActionCreator } from '../../redux/actions/favorites'
+import { addFavoritesActionCreator, removeFavoritesActionCreator } from '../../redux/actions/favorites'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
 import { getIsAuth } from '../../redux/getters'
 import { UserApiClient } from '../../api'
-import { IFurniture } from '../../api/types'
+import { IFurniture, isSuccessFullResponse } from '../../api/types'
 import { Link } from 'react-router-dom'
 
 interface ISalesItemProps {
@@ -22,9 +22,14 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
   const onLikeProductClick = (): void => {
     dispatch(addFavoritesActionCreator([id]))
 
-    if (isAuth) {
-      UserApiClient.sendFavoriteItem(id)
-    }
+    UserApiClient.addFavoriteItem(id)
+      .then((dto) => {
+        if (isSuccessFullResponse(dto)) {
+          return
+        }
+        removeFavoritesActionCreator([id])
+      })
+      .catch(() => removeFavoritesActionCreator([id]))
   }
 
   const onAddToCartClick = async (): Promise<void> => {
@@ -42,7 +47,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     }
 
     UserApiClient.addItemToCart({
-      id: id,
+      productId: id,
       quintity: 1
     })
   }

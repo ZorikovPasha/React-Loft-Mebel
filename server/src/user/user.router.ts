@@ -68,22 +68,6 @@ export class UserRouter {
   }
 }
 
-// router.post(
-//   '/register',
-//   [
-//     check('userName', 'User name provided is empty').notEmpty(),
-//     check('email', 'Email is incorrect').normalizeEmail().notEmpty().isEmail(),
-//     check('password', 'Password should have at least 8 characters').isLength({ min: 8, max: 52 })
-//   ],
-//   userController.register.bind(userController)
-// )
-
-// router.post('/login', userController.login.bind(userController))
-
-// router.get('/', protect, userController.getUserData.bind(userController))
-
-// router.put('/', protect, userController.updateUserData.bind(userController))
-
 /**
  * @swagger
  * components:

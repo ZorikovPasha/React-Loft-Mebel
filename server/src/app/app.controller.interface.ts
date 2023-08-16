@@ -60,7 +60,6 @@ export interface IAddCartItemDto {
 }
 
 export interface IRemoveCartItemDto {
-  orderId?: number
   productId?: number
 }
 

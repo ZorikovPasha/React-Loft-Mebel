@@ -37,7 +37,7 @@ const Cart: React.FC = () => {
 
   const breadcrumbs = useBreadcrumbs()
 
-  const onRegisterOrder = (): void => {
+  const onRegisterOrder = () => {
     if (!isAuth) {
       setModalLoginOpened(true)
       document.documentElement.classList.add('lock')

@@ -43,3 +43,49 @@ export class UploadRouter {
     return this._router
   }
 }
+
+/**
+ * @swagger
+ * tags:
+ *   name: Uploads
+ *   description: The uploads managing API
+ * /uploads/{id}:
+ *   get:
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *     summary: gets upload
+ *     tags: [Uploads]
+ *     responses:
+ *       200:
+ *         description: Upload has been send.
+ *         content:
+ *           image:
+ *             schema:
+ *               type: string
+ *               example: binary
+ *       400:
+ *         description: Url was not provided.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Url was not provided'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'This could be any string'
+ */

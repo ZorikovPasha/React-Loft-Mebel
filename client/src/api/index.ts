@@ -1,10 +1,12 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
-import { CartItemType, userFormValuesType } from '../types'
+import { userFormValuesType } from '../types'
 import {
   FormDataType,
+  ICartItemRequest,
   ICartItemsResponse,
   IErrorResponse,
   IErrorsResponse,
+  IFavoritesResponse,
   IFurniture,
   IFurnitureResponse,
   IGetUserDataResponse,
@@ -69,6 +71,14 @@ class Api extends Axios {
         return error?.response?.data
       })
   }
+  delete = <T, B>(url: string, data?: B): Promise<T> => {
+    return this._axios
+      .delete(url, { data: data })
+      .then(this.success)
+      .catch((error: AxiosError<Error>) => {
+        throw error
+      })
+  }
 }
 
 class UserApi extends Api {
@@ -96,8 +106,8 @@ class UserApi extends Api {
     return this.post('/user/login', credentials)
   }
 
-  getFavorites = (): Promise<{ favorites: string[] }> => {
-    return this.get('/private/favorites')
+  getFavorites = (): Promise<IFavoritesResponse> => {
+    return this.get('/api/favorites')
   }
 
   getCartItems = (): Promise<ICartItemsResponse> => {
@@ -124,27 +134,28 @@ class UserApi extends Api {
     return this.post('/api/furniture/', dto, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 
-  sendFavoriteItem = (id: number): Promise<unknown> => {
-    return this.post('/private/favorite', { id })
+  addFavoriteItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
+    return this.post('/api/favorites', { id })
   }
 
-  addItemToCart = (cartItem: CartItemType): Promise<unknown> => {
-    return this.post('/api/cart', cartItem)
+  addItemToCart = (dto: ICartItemRequest): Promise<ISuccessfullResponse | IErrorResponse> => {
+    return this.post('/api/cart', dto)
   }
 
-  removeCartItem = (id: number): Promise<unknown> => {
-    return this.post('/private/removeCartItem', { id })
+  removeCartItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
+    return this.delete('/api/cart', { productId: id })
   }
 
   sendUserData = (userFormValues: userFormValuesType): Promise<IResponseWithMessage> => {
     return this.put('/user', userFormValues)
   }
 
-  makeOrder = (): Promise<unknown> => {
+  makeOrder = (): Promise<ISuccessfullResponse | IErrorResponse> => {
     return this.post('/api/orders')
   }
 
-  sendMessage = (formData: FormDataType): Promise<unknown> => {
+  // TODO: implement server logic
+  sendMessage = (formData: FormDataType): Promise<ISuccessfullResponse | IErrorResponse> => {
     return this.post('/private/message', formData)
   }
 }

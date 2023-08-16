@@ -94,31 +94,6 @@ export class AppRouter {
       this._router[method](endpoint, handler)
       this.logger.log(`Mapped [${method}] /api${endpoint}`)
     })
-
-    // router.get('/furniture', this.appController.getFilteredFurniture.bind(this.appController))
-
-    // router.get('/furniture/:id', this.appController.getSingleFurniture.bind(this.appController))
-
-    // router.post('/furniture', this.appController.createFurniture.bind(this.appController))
-
-    // router.get('/favorites', protect, this.appController.getFavorites.bind(this.appController))
-
-    // router.post('/favorites', protect, this.appController.addFavoriteItem.bind(this.appController))
-
-    // router.delete('/favorites', protect, this.appController.deleteFavouriteItem.bind(this.appController))
-
-    // router.get('/orders', protect, this.appController.getOrders.bind(this.appController));
-
-    // router.post('/orders', protect, this.appController.addOrder.bind(this.appController));
-
-    // router.delete('/orders', protect, this.appController.deleteOrder.bind(this.appController));
-
-    // router.get('/cart', protect, this.appController.getCartItems.bind(this.appController))
-
-    // router.post('/cart', protect, this.appController.addCartItem.bind(this.appController))
-    // router.put('/cart', protect, this.appController.addCartItem)
-
-    // router.delete('/cart', protect, this.appController.removeCartItem.bind(this.appController))
   }
 
   public get router(): Router {
@@ -168,7 +143,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -186,6 +160,16 @@ export class AppRouter {
  *         description: an authorization header
  *         required: true
  *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 example: 2
  *     responses:
  *       200:
  *         content:
@@ -193,9 +177,18 @@ export class AppRouter {
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
  *                 message:
- *                   id: string
- *                   example: "Item added to favorites successfully"
+ *                   type: string
+ *                   example: "Id was not provided"
  *       500:
  *         description: Internal server error
  *         content:
@@ -205,7 +198,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -223,6 +215,16 @@ export class AppRouter {
  *         description: an authorization header
  *         required: true
  *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 example: 2
  *     responses:
  *       200:
  *         content:
@@ -230,9 +232,18 @@ export class AppRouter {
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
  *                 message:
- *                   id: string
- *                   example: "Item removed from favorites successfully"
+ *                   type: string
+ *                   example: "Id was not provided"
  *       500:
  *         description: Internal server error
  *         content:
@@ -242,7 +253,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -297,7 +307,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -323,9 +332,9 @@ export class AppRouter {
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                   example: 'Order created successfully'
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *       500:
  *         description: Internal server error
  *         content:
@@ -335,7 +344,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -366,6 +374,14 @@ export class AppRouter {
  *     responses:
  *       200:
  *         description: Orders.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *       500:
  *         description: Internal server error
  *         content:
@@ -375,7 +391,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -424,7 +439,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -457,15 +471,15 @@ export class AppRouter {
  *                 example: 2
  *     responses:
  *       200:
- *         description: Cart items.
+ *         description: Created cart items.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                   example: 'Item was successfully added to cart'
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *       400:
  *         description: Bad request.
  *         content:
@@ -485,7 +499,6 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -521,9 +534,9 @@ export class AppRouter {
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                   example: 'Item was successfully removed fromm cart | Nothing to delete from'
+ *                 success:
+ *                   type: boolean
+ *                   example: boolean
  *       400:
  *         description: Bad request.
  *         content:
@@ -543,5 +556,4 @@ export class AppRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */

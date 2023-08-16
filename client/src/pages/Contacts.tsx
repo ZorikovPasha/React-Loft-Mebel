@@ -116,7 +116,7 @@ const Contacts: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='contacts'>
         <div className='container'>
-          <h4 className='contacts__title'>Свяжитесь с нами</h4>
+          <h4 className='contacts__title'>Let's connect</h4>
           <div className='contacts__inner'>
             <form
               className='contacts__form'

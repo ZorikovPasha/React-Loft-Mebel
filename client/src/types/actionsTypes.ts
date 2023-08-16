@@ -6,6 +6,7 @@ export enum ActionsTypes {
   SET_PRODUCTS = 'SET_PRODUCTS',
   FETCH_SLIDES = 'FETCH_SLIDES',
   ADD_FAVORITES = 'ADD_FAVORITES',
+  REMOVE_FAVORITES = 'REMOVE_FAVORITES',
   FAVORITES_LOADED = 'FAVORITES_LOADED',
   ADD_CART_ITEMS = 'ADD_CART_ITEMS',
   ADD_SINGLE_ITEM = 'ADD_SINGLE_ITEM',
@@ -34,6 +35,10 @@ export type fetchItemsActionType = {
 export type favoritesActionType =
   | {
       type: ActionsTypes.ADD_FAVORITES
+      payload: number[]
+    }
+  | {
+      type: ActionsTypes.REMOVE_FAVORITES
       payload: number[]
     }
   | {
