@@ -12,7 +12,7 @@ import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import '../scss/style.scss'
 
-const AppRouter = () => {
+export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
 
   const dispatch = useDispatch()
@@ -69,5 +69,3 @@ const AppRouter = () => {
     </div>
   )
 }
-
-export default AppRouter

@@ -44,8 +44,8 @@ export const useAuth = async (): Promise<void> => {
 
     const getData = async (): Promise<void> => {
       dispatch(resetFavoritesActionCreator())
-      UserApiClient.getFavorites().then((favoriteItems) => {
-        dispatch(addFavoritesActionCreator(favoriteItems.favorites.map((id) => Number(id))))
+      UserApiClient.getFavorites().then((dto) => {
+        dispatch(addFavoritesActionCreator(dto.items.map(({ furnitureId }) => furnitureId)))
         dispatch(loadingActionCreator(true))
       })
 

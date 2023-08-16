@@ -28,7 +28,7 @@ export class App {
     this.port = process.env.PORT ? parseInt(process.env.PORT) : 5000
   }
 
-  public async init(specs: {} | Record<string, unknown>): Promise<void> {
+  public init(specs: {} | Record<string, unknown>): void {
     this.app = express()
 
     this.app.use(cors())

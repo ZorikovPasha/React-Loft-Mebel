@@ -13,17 +13,22 @@ const initialState: IfavoritesState = {
 export const favoritesReducer = (state = initialState, action: favoritesActionType): IfavoritesState => {
   switch (action.type) {
     case ActionsTypes.ADD_FAVORITES: {
-      let tmpState = [...state.favorites]
-      let tmpPayload = [...action.payload]
-      action.payload.forEach((id) => {
-        if (state.favorites.includes(id)) {
-          tmpState = tmpState.filter((item) => item !== id)
-          tmpPayload = tmpPayload.filter((item) => item !== id)
-        }
-      })
+      const itemsToAdd = action.payload.reduce((accum: number[], next) => {
+        return accum.includes(next) ? accum : [...accum, next]
+      }, [])
+
       return {
         ...state,
-        favorites: [...tmpState, ...tmpPayload]
+        favorites: itemsToAdd
+      }
+    }
+    case ActionsTypes.REMOVE_FAVORITES: {
+      const remaningItems = action.payload.reduce((accum: number[], next) => {
+        return state.favorites.filter((f) => f !== next)
+      }, [])
+      return {
+        ...state,
+        favorites: remaningItems
       }
     }
     case ActionsTypes.RESET_FAVORITES:

@@ -397,7 +397,7 @@ export class AppController {
         }
       })
 
-      return res.status(200).json({ message: 'Item added to favorites successfully' })
+      return res.status(200).json({ success: true })
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))
@@ -421,7 +421,7 @@ export class AppController {
         }
       })
 
-      return res.status(200).json({ message: 'Item removed from favorites successfully' })
+      return res.status(200).json({ success: true })
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))
@@ -435,7 +435,7 @@ export class AppController {
           userId: res.locals.user?.id
         }
       })
-      return res.json({ favorites })
+      return res.json({ items: favorites })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
@@ -446,8 +446,9 @@ export class AppController {
   async getCartItems(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     try {
       if (!res.locals.user) {
-        return
+        return next({ status: 500, message: '' })
       }
+
       const userCart = await prismaClient.cart.findFirst({
         where: {
           userId: res.locals.user.id
@@ -537,16 +538,16 @@ export class AppController {
       })
 
       if (!userCart) {
-        return res.status(200).json({ message: 'Nothing to delete from' })
+        return res.status(200).json({ success: true })
       }
 
-      prismaClient.cartFurniture.deleteMany({
+      await prismaClient.cartFurniture.deleteMany({
         where: {
           furnitureId: productId,
           cartId: userCart.id
         }
       })
-      return res.status(200).json({ message: 'Item was successfully removed fromm cart' })
+      return res.status(200).json({ success: true })
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))
@@ -582,7 +583,7 @@ export class AppController {
       })
 
       if (!cart) {
-        return res.status(201).json({ message: 'Order created successfully' })
+        return res.status(201).json({ success: true })
       }
 
       const promises = await Promise.all([
@@ -599,7 +600,6 @@ export class AppController {
         })
       ])
       const currentProductsInCart = promises[0]
-
       const userOrder = promises[1]
 
       await Promise.all(
@@ -639,7 +639,7 @@ export class AppController {
         }
       })
 
-      return res.status(200)
+      return res.status(200).json({ success: true })
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))

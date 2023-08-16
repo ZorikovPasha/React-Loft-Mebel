@@ -21,4 +21,5 @@ image compressing
 should add notfound page
 switch from redux to react query?
 redirect to 404
-shuold get all colors and brands from backend
+shuold get all colors and brands from backend in aside
+should add logging when accessing a route

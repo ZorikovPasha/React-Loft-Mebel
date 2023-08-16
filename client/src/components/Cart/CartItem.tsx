@@ -2,9 +2,9 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { ICartItem, removeItemActionCreator } from '../../redux/actions/cartItems'
+import { ICartItem, addtemsActionCreator, removeItemActionCreator } from '../../redux/actions/cartItems'
 import { UserApiClient } from '../../api'
-import { IFurniture } from '../../api/types'
+import { IFurniture, isSuccessFullResponse } from '../../api/types'
 
 interface ICartItemProps {
   cartItem: ICartItem
@@ -14,9 +14,19 @@ interface ICartItemProps {
 export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
   const dispatch = useDispatch()
 
-  const onRemoveItemClick: React.MouseEventHandler<HTMLDivElement> = (): void => {
+  const onRemoveItemClick = () => {
     dispatch(removeItemActionCreator(cartItem))
-    UserApiClient.removeCartItem(cartItem.id)
+    UserApiClient.removeCartItem(item.id)
+      .then((dto) => {
+        if (!isSuccessFullResponse(dto)) {
+          return
+        }
+
+        addtemsActionCreator([cartItem])
+      })
+      .catch(() => {
+        addtemsActionCreator([cartItem])
+      })
   }
 
   console.log('item.priceNew', item.priceNew)

@@ -132,3 +132,16 @@ export interface ICartItemsResponse {
     quintity: number
   }[]
 }
+
+export interface IFavoritesResponse {
+  items: {
+    id: number
+    userId: string
+    furnitureId: number
+  }[]
+}
+
+export interface ICartItemRequest {
+  quintity: number
+  productId: number
+}

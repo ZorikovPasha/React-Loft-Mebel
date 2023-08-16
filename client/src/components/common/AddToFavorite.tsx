@@ -2,8 +2,9 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { getFavorites } from '../../redux/getters'
-import { addFavoritesActionCreator } from '../../redux/actions/favorites'
+import { addFavoritesActionCreator, removeFavoritesActionCreator } from '../../redux/actions/favorites'
 import { UserApiClient } from '../../api'
+import { isSuccessFullResponse } from '../../api/types'
 
 interface IProps {
   id: number
@@ -17,7 +18,14 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
     dispatch(addFavoritesActionCreator([id]))
-    UserApiClient.sendFavoriteItem(id)
+    UserApiClient.addFavoriteItem(id)
+      .then((dto) => {
+        if (isSuccessFullResponse(dto)) {
+          return
+        }
+        removeFavoritesActionCreator([id])
+      })
+      .catch(() => removeFavoritesActionCreator([id]))
   }
 
   return (
@@ -25,7 +33,7 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
       className={`shop__wish ${favorites.includes(id) ? 'active' : ''}`}
       onClick={onAddToFavoriteClick}
     >
-      Добавить в желаемое
+      Add to favorites
     </button>
   )
 }

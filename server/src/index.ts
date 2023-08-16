@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import 'reflect-metadata'
 import swaggerJsdoc from 'swagger-jsdoc'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 import { Container, ContainerModule, interfaces } from 'inversify'
 import { LoggerService } from './logger/logger.service.js'
@@ -12,6 +14,9 @@ import { App } from './app.js'
 import { AppRouter } from './app/app.router.js'
 import { UploadRouter } from './upload/upload.router.js'
 import { UserRouter } from './user/user.router.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const options = {
   definition: {
@@ -31,7 +36,11 @@ const options = {
       }
     ]
   },
-  apis: ['./src/routes/*.ts']
+  apis: [
+    path.resolve(__dirname, 'upload', '*.js'),
+    path.resolve(__dirname, 'user', '*.js'),
+    path.resolve(__dirname, 'app', '*.js')
+  ]
 }
 
 const specs = swaggerJsdoc(options)
