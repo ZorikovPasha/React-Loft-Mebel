@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { authActionCreator } from '../redux/actions/authAction'
 import {
   // addtemsActionCreator,
   fetchingActionCreator,
@@ -14,13 +13,14 @@ import {
 } from '../redux/actions/favorites'
 import { resetCartActionCreator } from '../redux/actions/cartItems'
 // import { addUserDataActionCreator } from '../redux/actions/userAction'
-import { getIsAuth } from '../redux/getters'
 import { UserApiClient } from '../api/'
 import { OrderInfoType } from '../types'
+import { loginUserActionCreator } from '../redux/actions/userAction'
+import { getIsUserLoggedin } from '../redux/getters'
 
 export const useAuth = async (): Promise<void> => {
   const dispatch = useDispatch()
-  const isAuth = useSelector(getIsAuth)
+  const isAuth = useSelector(getIsUserLoggedin)
 
   React.useEffect(() => {
     const checkAuth = async (): Promise<void> => {
@@ -30,7 +30,7 @@ export const useAuth = async (): Promise<void> => {
       }
 
       UserApiClient.getUserData().then(() => {
-        dispatch(authActionCreator(true))
+        dispatch(loginUserActionCreator())
       })
     }
 

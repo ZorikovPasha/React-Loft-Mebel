@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getFavorites } from '../../redux/getters'
 import { addFavoritesActionCreator, removeFavoritesActionCreator } from '../../redux/actions/favorites'
 import { UserApiClient } from '../../api'
-import { isSuccessFullResponse } from '../../api/types'
+import { isSuccessfullResponse } from '../../api/types'
 
 interface IProps {
   id: number
@@ -20,7 +20,7 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
     dispatch(addFavoritesActionCreator([id]))
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
-        if (isSuccessFullResponse(dto)) {
+        if (isSuccessfullResponse(dto)) {
           return
         }
         removeFavoritesActionCreator([id])

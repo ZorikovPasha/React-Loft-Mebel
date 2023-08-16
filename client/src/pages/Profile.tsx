@@ -4,9 +4,7 @@ import { Link, useHistory } from 'react-router-dom'
 
 import { UserApiClient } from '..//api'
 import { getOrders } from '../redux/getters'
-import { authActionCreator } from '../redux/actions/authAction'
-import { addUserDataActionCreator } from '../redux/actions/userAction'
-import { initFormValues } from '../redux/reducers/userReducer'
+import { logoutUserActionCreator } from '../redux/actions/userAction'
 import { resetFavoritesActionCreator } from '../redux/actions/favorites'
 import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { validateEmail, validateTextInput } from '../utils'
@@ -39,6 +37,7 @@ const Profile: React.FC = () => {
       inputClassName: 'profile__form-input',
       tag: 'input',
       showErrors: false,
+      errorMessage: '',
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
       validateFn: validateTextInput
     },
@@ -54,6 +53,7 @@ const Profile: React.FC = () => {
       className: 'profile__form-block',
       inputClassName: 'profile__form-input',
       showErrors: false,
+      errorMessage: '',
       getErrorMessage: (str: string) =>
         str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
       validateFn: validateEmail
@@ -70,6 +70,7 @@ const Profile: React.FC = () => {
       inputClassName: 'profile__form-input',
       tag: 'textarea',
       showErrors: false,
+      errorMessage: '',
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
       validateFn: validateTextInput
     },
@@ -85,6 +86,7 @@ const Profile: React.FC = () => {
       inputClassName: 'profile__form-input',
       type: 'tel',
       showErrors: false,
+      errorMessage: '',
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
       validateFn: validateTextInput
     },
@@ -100,6 +102,7 @@ const Profile: React.FC = () => {
       showErrors: false,
       className: 'profile__form-block',
       inputClassName: 'profile__form-input',
+      errorMessage: '',
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
       validateFn: validateTextInput
     },
@@ -115,6 +118,7 @@ const Profile: React.FC = () => {
       labelClass: 'profile__form-label wide',
       className: 'profile__form-block',
       inputClassName: 'profile__form-input',
+      errorMessage: '',
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
       validateFn: validateTextInput
     },
@@ -130,6 +134,7 @@ const Profile: React.FC = () => {
       showErrors: false,
       className: 'profile__form-block',
       inputClassName: 'profile__form-input',
+      errorMessage: '',
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
       validateFn: validateTextInput
     },
@@ -145,6 +150,7 @@ const Profile: React.FC = () => {
       showErrors: false,
       className: 'profile__form-block',
       inputClassName: 'profile__form-input',
+      errorMessage: '',
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
       validateFn: validateTextInput
     }
@@ -190,9 +196,8 @@ const Profile: React.FC = () => {
   }
 
   const onLogout = (): void => {
-    localStorage.setItem('token', '')
-    dispatch(authActionCreator(false))
-    dispatch(addUserDataActionCreator(initFormValues))
+    localStorage.removeItem('loft_furniture_token')
+    dispatch(logoutUserActionCreator())
     dispatch(resetFavoritesActionCreator())
     dispatch(resetCartActionCreator())
     history.push({ pathname: '/' })

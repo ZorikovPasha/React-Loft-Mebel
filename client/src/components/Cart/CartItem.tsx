@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { ICartItem, addtemsActionCreator, removeItemActionCreator } from '../../redux/actions/cartItems'
 import { UserApiClient } from '../../api'
-import { IFurniture, isSuccessFullResponse } from '../../api/types'
+import { IFurniture, isSuccessfullResponse } from '../../api/types'
 
 interface ICartItemProps {
   cartItem: ICartItem
@@ -18,7 +18,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ cartItem, item }) => {
     dispatch(removeItemActionCreator(cartItem))
     UserApiClient.removeCartItem(item.id)
       .then((dto) => {
-        if (!isSuccessFullResponse(dto)) {
+        if (!isSuccessfullResponse(dto)) {
           return
         }
 

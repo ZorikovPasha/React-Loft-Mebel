@@ -1,7 +1,7 @@
 import { ThunkAction } from 'redux-thunk'
 import { Dispatch } from 'redux'
 
-import { ActionsTypes, fetchItemsActionType } from '../../types/actionsTypes'
+import { Actions, fetchItemsActionType } from '../../types/actionsTypes'
 import { IProductsState } from '../reducers/itemsReducer'
 import { UserApiClient } from '../../api'
 import { IFurniture } from '../../api/types'
@@ -18,11 +18,11 @@ export const fetchItemsThunkCreator = () // queryParams: string
 type actionCreatorType<T> = (payload: T) => fetchItemsActionType
 
 export const setItemsActionCreator: actionCreatorType<IFurniture[]> = (items) => ({
-  type: ActionsTypes.SET_PRODUCTS,
+  type: Actions.SET_PRODUCTS,
   payload: { items, isLoaded: true }
 })
 
 export const resetItemsActionCreator: actionCreatorType<IFurniture[]> = (items) => ({
-  type: ActionsTypes.SET_PRODUCTS,
+  type: Actions.SET_PRODUCTS,
   payload: { items, isLoaded: false }
 })

@@ -1,5 +1,5 @@
 import { IFurniture } from '../../api/types'
-import { fetchItemsActionType, ActionsTypes } from '../../types/actionsTypes'
+import { fetchItemsActionType, Actions } from '../../types/actionsTypes'
 
 export interface IProductsState {
   items: IFurniture[]
@@ -15,7 +15,7 @@ const initialState: IProductsState = {
 
 const itemsReducer = (state = initialState, action: fetchItemsActionType): IProductsState => {
   switch (action.type) {
-    case ActionsTypes.SET_PRODUCTS:
+    case Actions.SET_PRODUCTS:
       return {
         ...state,
         ...action.payload

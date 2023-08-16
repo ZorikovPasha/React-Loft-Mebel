@@ -1,11 +1,12 @@
-import { userFormValuesType } from '../../types'
-import { ActionsTypes } from '../../types/actionsTypes'
+import { Actions } from '../../types/actionsTypes'
+import { IUserState } from '../reducers/userReducer'
 
-type userActionsTypes = ActionsTypes.USER
-
-type actionCreatorType<T> = (payload?: T) => { type: userActionsTypes; payload?: T }
-
-export const addUserDataActionCreator: actionCreatorType<userFormValuesType> = (userData) => ({
-  type: ActionsTypes.USER,
+export const loginUserActionCreator = (userData: IUserState) => ({
+  type: Actions.LOGIN,
   payload: userData
+})
+
+export const logoutUserActionCreator = () => ({
+  type: Actions.LOGOUT,
+  payload: {}
 })

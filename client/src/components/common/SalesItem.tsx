@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { addFavoritesActionCreator, removeFavoritesActionCreator } from '../../redux/actions/favorites'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
-import { getIsAuth } from '../../redux/getters'
 import { UserApiClient } from '../../api'
-import { IFurniture, isSuccessFullResponse } from '../../api/types'
+import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { Link } from 'react-router-dom'
+import { getIsUserLoggedin } from '../../redux/getters'
 
 interface ISalesItemProps {
   product: IFurniture
@@ -17,14 +17,14 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
   const { id, image, name, type, priceOld, priceNew, dimensions, sale } = product
 
   const dispatch = useDispatch()
-  const isAuth = useSelector(getIsAuth)
+  const isAuth = useSelector(getIsUserLoggedin)
 
   const onLikeProductClick = (): void => {
     dispatch(addFavoritesActionCreator([id]))
 
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
-        if (isSuccessFullResponse(dto)) {
+        if (isSuccessfullResponse(dto)) {
           return
         }
         removeFavoritesActionCreator([id])

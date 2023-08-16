@@ -26,13 +26,8 @@ export interface SignUpCredsType {
 
 export type LoginCredsType = Omit<SignUpCredsType, 'userName'>
 
-export interface ILoginResponse {
+export interface ISuccessfullLoginResponse {
   token: string
-  message?: string
-}
-
-export interface IResponseWithMessage {
-  message: string
 }
 
 export interface IGetUserDataResponse {
@@ -94,10 +89,12 @@ export interface IFurnitureResponse {
 }
 
 export interface IErrorsResponse {
-  errors: {
-    field: string
-    message: string
-  }[]
+  errors:
+    | {
+        field: string | null
+        message: string | null
+      }[]
+    | null
 }
 
 export interface IErrorResponse {
@@ -108,14 +105,22 @@ export interface ISuccessfullResponse {
   success: boolean
 }
 
-export const isSuccessFullResponse = (
+export const isSuccessfullResponse = (
   data: IErrorsResponse | IErrorResponse | ISuccessfullResponse
 ): data is ISuccessfullResponse => {
-  return 'success' in data
+  const property: keyof ISuccessfullResponse = 'success'
+  return property in data
 }
 
-export const isResponseWithErrors = (
-  data: IErrorsResponse | IErrorResponse | ISuccessfullResponse
+export const isSuccessfullLoginResponse = (
+  data: IErrorsResponse | IErrorResponse | ISuccessfullLoginResponse
+): data is ISuccessfullLoginResponse => {
+  const property: keyof ISuccessfullLoginResponse = 'token'
+  return property in data
+}
+
+export const isResponseWithErrors = <T extends Record<keyof T, unknown>>(
+  data: IErrorsResponse | IErrorResponse | T
 ): data is IErrorsResponse => {
   return 'errors' in data
 }

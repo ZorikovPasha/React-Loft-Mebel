@@ -336,6 +336,8 @@ export class AppController {
     next: NextFunction
   ): ResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       if (!req.query.id) {
         return next(ApiError.badRequest('Id was not provided'))
       }
@@ -357,6 +359,8 @@ export class AppController {
     next: NextFunction
   ): ResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       if (!req.params.id) {
         return next(ApiError.badRequest('Id was not provided'))
       }
@@ -385,6 +389,8 @@ export class AppController {
     next: NextFunction
   ): ResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       const { id } = req.body
       if (!id) {
         return next(ApiError.badRequest('Id was not provided'))
@@ -410,6 +416,8 @@ export class AppController {
     next: NextFunction
   ): ResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       const { id } = req.body
       if (!id) {
         return next(ApiError.badRequest('Id was not provided'))
@@ -430,6 +438,8 @@ export class AppController {
 
   async getFavorites(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       const favorites = await prismaClient.favoriteFurniture.findMany({
         where: {
           userId: res.locals.user?.id
@@ -445,6 +455,8 @@ export class AppController {
   // :TODO: this should return cart items getting orders
   async getCartItems(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
       }
@@ -478,6 +490,8 @@ export class AppController {
     next: NextFunction
   ): AppLocalsResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
       }
@@ -522,6 +536,8 @@ export class AppController {
     next: NextFunction
   ): AppLocalsResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
       }
@@ -572,6 +588,8 @@ export class AppController {
 
   async addOrder(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
       }
@@ -626,6 +644,8 @@ export class AppController {
     next: NextFunction
   ): AppLocalsResponseType {
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       if (!res.locals.user) {
         return next({ status: 500, message: '' })
       }

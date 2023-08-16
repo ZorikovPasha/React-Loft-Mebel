@@ -3,69 +3,67 @@ import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-import { authActionCreator } from '../redux/actions/authAction'
 import { UserApiClient } from '../api'
-import { ModalInfo } from '../components/common/ModalInfo'
 import { IField } from './SignUp'
-import { getPasswordFieldErrorMessage, validateEmail, validatePassword } from '../utils'
+import { getEmailInputErrorMessage, getPasswordFieldErrorMessage, validateEmail, validatePassword } from '../utils'
 import AppTextField from '../components/common/appTextField'
+import { ROUTES } from '../utils/const'
+import { isResponseWithErrors, isSuccessfullLoginResponse } from '../api/types'
+import { loginUserActionCreator } from '../redux/actions/userAction'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
 
   const history = useHistory()
 
-  const loginErrorMessage = React.useRef('')
-
   const _fields = React.useRef<Record<string, IField>>({
     email: {
       tag: 'input',
       value: '',
       label: 'Электронная почта',
-      labelClass: 'login__form-label form-label',
+      labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'email',
       placeholder: 'Введите электронную почту',
       className: 'form-block',
-      inputClassName: 'login__form-input form-input',
+      inputClassName: 'form-input',
       showErrors: false,
-      getErrorMessage: (str: string) =>
-        str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
+      errorMessage: getEmailInputErrorMessage(''),
+      getErrorMessage: getEmailInputErrorMessage,
       validateFn: validateEmail
     },
     password: {
       value: '',
       label: 'Пароль',
-      labelClass: 'login__form-label form-label',
+      labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'text',
       placeholder: 'Введите пароль',
       className: 'form-block',
-      inputClassName: 'login__form-input form-input',
+      inputClassName: 'form-input',
       tag: 'input',
       showErrors: false,
+      errorMessage: getPasswordFieldErrorMessage(''),
       getErrorMessage: getPasswordFieldErrorMessage,
       validateFn: validatePassword
     }
   } as const)
 
   const [form, setForm] = React.useState(_fields.current)
-  const [modalVisible, setModalVisible] = React.useState(false)
 
   const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => {
-      return {
-        ...prev,
-        [name]: {
-          ...prev[name],
-          value: e.target.value,
-          isValid: prev[name].validateFn(e.target.value),
-          showErrors: true
-        }
+    setForm((prev) => ({
+      ...prev,
+      [name]: {
+        ...prev[name],
+        value: e.target.value,
+        isValid: prev[name].validateFn(e.target.value),
+        errorMessage: prev[name].getErrorMessage(e.target.value),
+        showErrors: true
       }
-    })
+    }))
   }
 
   const handleSubmit: React.MouseEventHandler<HTMLFormElement> = async (e) => {
@@ -81,24 +79,38 @@ const Login: React.FC = () => {
     }
 
     UserApiClient.login(dto).then((data) => {
-      const { token, message } = data
-      if (message) {
-        loginErrorMessage.current = message
-        document.documentElement.classList.add('lock')
-        setModalVisible(true)
+      if (isResponseWithErrors(data)) {
+        data.errors?.forEach((error) => {
+          if (error.field === 'email') {
+            setForm((prev) => ({
+              ...prev,
+              email: {
+                ...prev.email,
+                isValid: false,
+                errorMessage: error.message ?? ''
+              }
+            }))
+          }
+          if (error.field === 'password') {
+            setForm((prev) => ({
+              ...prev,
+              password: {
+                ...prev.password,
+                isValid: false,
+                errorMessage: error.message ?? ''
+              }
+            }))
+          }
+        })
       }
 
-      if (token) {
-        UserApiClient.setToken(token)
-        dispatch(authActionCreator(true))
-        history.push({ pathname: '/' })
+      if (isSuccessfullLoginResponse(data)) {
+        setForm(_fields.current)
+        localStorage.setItem('loft_furniture_token', data.token)
+        dispatch(loginUserActionCreator(data))
+        history.push({ pathname: ROUTES.Profile })
       }
     })
-  }
-
-  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setModalVisible(false)
-    document.documentElement.classList.remove('lock')
   }
 
   return (
@@ -106,7 +118,7 @@ const Login: React.FC = () => {
       <div className='login'>
         <div className='container'>
           <div className='login__inner'>
-            <h1 className='login__title'>Авторизация</h1>
+            <h1 className='login__title'>Login</h1>
             <form
               className='login__form form'
               onSubmit={handleSubmit}
@@ -122,9 +134,9 @@ const Login: React.FC = () => {
                   className,
                   label,
                   labelClass,
+                  errorMessage,
                   inputWrapClass,
                   inputClassName,
-                  getErrorMessage,
                   showErrors
                 } = props
 
@@ -144,7 +156,7 @@ const Login: React.FC = () => {
                     inputWrapClass={inputWrapClass}
                     inputClassName={`${inputClassName} ${_showErrors ? 'input-text--error' : ''}`}
                     showErrors={_showErrors}
-                    errorMessage={getErrorMessage(value)}
+                    errorMessage={errorMessage}
                     onChange={onChange(key)}
                   />
                 )
@@ -168,13 +180,6 @@ const Login: React.FC = () => {
           </div>
         </div>
       </div>
-      {modalVisible && (
-        <ModalInfo
-          title='Оошибка при логине'
-          text={loginErrorMessage.current}
-          onModalClose={onModalClose}
-        />
-      )}
     </>
   )
 }

@@ -14,8 +14,8 @@ import {
   getFavorites,
   getProducts,
   getOrderStatus,
-  getIsAuth,
-  getCartLoadingState
+  getCartLoadingState,
+  getIsUserLoggedin
 } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
@@ -32,7 +32,7 @@ const Cart: React.FC = () => {
   const items = useSelector(getProducts)
   const { favorites } = useSelector(getFavorites)
   const isOrderMade = useSelector(getOrderStatus)
-  const isAuth = useSelector(getIsAuth)
+  const isAuth = useSelector(getIsUserLoggedin)
   const isLoaded = useSelector(getCartLoadingState)
 
   const breadcrumbs = useBreadcrumbs()

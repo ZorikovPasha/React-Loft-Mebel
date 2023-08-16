@@ -1,6 +1,6 @@
 import isEqual from 'lodash.isequal'
 
-import { cartItemsActionType, ActionsTypes } from '../../types/actionsTypes'
+import { cartItemsActionType, Actions } from '../../types/actionsTypes'
 import { OrderInfoType } from '../../types'
 import { ICartItem } from '../actions/cartItems'
 
@@ -24,7 +24,7 @@ const initialState: ICartState = {
 
 const cartItemsReducer = (state = initialState, action: cartItemsActionType): ICartState => {
   switch (action.type) {
-    case ActionsTypes.REMOVE_CART_ITEM: {
+    case Actions.REMOVE_CART_ITEM: {
       const remainingCartItems = state.cartItems.filter((item) => item.id !== action.payload.id)
       const productsLeft = remainingCartItems.reduce((accum, next) => accum + next.quintity, 0)
 
@@ -40,7 +40,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): IC
       }
     }
 
-    case ActionsTypes.RESET_CART:
+    case Actions.RESET_CART:
       return {
         ...initialState,
         isLoaded: true,
@@ -48,17 +48,17 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): IC
         totalCost: 0,
         orders: state.orders
       }
-    case ActionsTypes.ORDER_STATUS:
+    case Actions.ORDER_STATUS:
       return {
         ...state,
         isOrderMade: action.payload
       }
-    case ActionsTypes.SET_ORDERS:
+    case Actions.SET_ORDERS:
       return {
         ...state,
         orders: action.payload
       }
-    case ActionsTypes.ADD_CART_ITEMS: {
+    case Actions.ADD_CART_ITEMS: {
       const buff: ICartItem[] = []
 
       if (state.cartItems.length) {
@@ -97,7 +97,7 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): IC
         }
       }
     }
-    case ActionsTypes.CART_LOADING:
+    case Actions.CART_LOADING:
       return {
         ...state,
         isLoaded: action.payload

@@ -134,7 +134,7 @@ export class UserController implements IUserController {
           photoId: savedImage?.id
         }
       })
-      return res.status(201).json({ message: 'User has been registered' })
+      return res.status(201).json({ success: true })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
@@ -152,11 +152,15 @@ export class UserController implements IUserController {
       const { email, password } = req.body
 
       if (!password) {
-        return next(ApiError.badRequest('Password was not provided'))
+        return res
+          .status(400)
+          .json({ errors: [{ field: 'password', message: 'Password was not provided' }] })
       }
 
       if (!email) {
-        return next(ApiError.badRequest('Email was not provided'))
+        return res
+          .status(400)
+          .json({ errors: [{ field: 'email', message: 'Email was not provided' }] })
       }
 
       const user = await prismaClient.user.findFirst({
@@ -165,12 +169,16 @@ export class UserController implements IUserController {
         }
       })
       if (!user) {
-        return next(ApiError.badRequest(`User with email ${email} has not found`))
+        return res
+          .status(400)
+          .json({ errors: [{ field: 'email', message: `User with email ${email} has not found` }] })
       }
 
       const isValidPassword = bcrypt.compareSync(password, user.password)
       if (!isValidPassword) {
-        return next(ApiError.badRequest('Provided password incorrect'))
+        return res
+          .status(400)
+          .json({ errors: [{ field: 'password', message: `Provided password is incorrect` }] })
       }
 
       const token = generateToken(user.id, email, password)
@@ -256,7 +264,7 @@ export class UserController implements IUserController {
         },
         data: set
       })
-      return res.status(204).json({ message: 'Data successfully was written' })
+      return res.status(204).json({ success: true })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
@@ -264,9 +272,9 @@ export class UserController implements IUserController {
   }
 
   async getUserData(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
-    this.logger.log(`[${req.method}] ${req.path}`)
-
     try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
       const {
         name,
         surname,

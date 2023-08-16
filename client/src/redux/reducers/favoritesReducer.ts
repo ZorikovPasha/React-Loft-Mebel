@@ -1,4 +1,4 @@
-import { favoritesActionType, ActionsTypes } from '../../types/actionsTypes'
+import { favoritesActionType, Actions } from '../../types/actionsTypes'
 
 export interface IfavoritesState {
   favorites: number[]
@@ -12,7 +12,7 @@ const initialState: IfavoritesState = {
 
 export const favoritesReducer = (state = initialState, action: favoritesActionType): IfavoritesState => {
   switch (action.type) {
-    case ActionsTypes.ADD_FAVORITES: {
+    case Actions.ADD_FAVORITES: {
       const itemsToAdd = action.payload.reduce((accum: number[], next) => {
         return accum.includes(next) ? accum : [...accum, next]
       }, [])
@@ -22,7 +22,7 @@ export const favoritesReducer = (state = initialState, action: favoritesActionTy
         favorites: itemsToAdd
       }
     }
-    case ActionsTypes.REMOVE_FAVORITES: {
+    case Actions.REMOVE_FAVORITES: {
       const remaningItems = action.payload.reduce((accum: number[], next) => {
         return state.favorites.filter((f) => f !== next)
       }, [])
@@ -31,12 +31,12 @@ export const favoritesReducer = (state = initialState, action: favoritesActionTy
         favorites: remaningItems
       }
     }
-    case ActionsTypes.RESET_FAVORITES:
+    case Actions.RESET_FAVORITES:
       return {
         ...state,
         ...initialState
       }
-    case ActionsTypes.FAVORITES_LOADED:
+    case Actions.FAVORITES_LOADED:
       return {
         ...state,
         isLoaded: action.payload
