@@ -1,7 +1,24 @@
-import { userFormValuesType } from '../../types'
-import { ActionsTypes, userActionType } from '../../types/actionsTypes'
+import { Actions } from '../../types/actionsTypes'
 
-export const initFormValues = {
+export type userActionType = {
+  type: typeof Actions.LOGIN | typeof Actions.LOGOUT
+  payload: IUserState
+}
+
+export interface IUserState {
+  isLoggedIn: boolean
+  name: string
+  email: string
+  surname: string
+  phone: string
+  city: string
+  street: string
+  house: string
+  apartment: string
+}
+
+export const initialState: IUserState = {
+  isLoggedIn: false,
   name: '',
   email: '',
   surname: '',
@@ -12,17 +29,18 @@ export const initFormValues = {
   apartment: ''
 }
 
-const userReducer = (state = initFormValues, action: userActionType): userFormValuesType => {
+const userReducer = (state = initialState, action: userActionType): IUserState => {
   switch (action.type) {
-    case ActionsTypes.USER:
+    case Actions.LOGIN:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        isLoggedIn: true
       }
+    case Actions.LOGOUT:
+      return initialState
     default:
-      return {
-        ...state
-      }
+      return state
   }
 }
 

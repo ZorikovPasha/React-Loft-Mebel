@@ -3,7 +3,14 @@ import { useHistory } from 'react-router-dom'
 
 import { ModalInfo } from '../components/common/ModalInfo'
 import { UserApiClient } from '../api'
-import { getPasswordFieldErrorMessage, validateEmail, validatePassword, validateTextInput } from '../utils'
+import {
+  getEmailInputErrorMessage,
+  getPasswordFieldErrorMessage,
+  getTextInputErrorMessage,
+  validateEmail,
+  validatePassword,
+  validateTextInput
+} from '../utils'
 import AppTextField from '../components/common/appTextField'
 
 export interface IField {
@@ -17,6 +24,7 @@ export interface IField {
   inputClassName?: string
   tag: 'input' | 'textarea'
   getErrorMessage: (st: string) => string
+  errorMessage: string
   label?: string
   labelClass?: string
   inputWrapClass?: string
@@ -40,6 +48,7 @@ const SignUp: React.FC = () => {
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
+      errorMessage: getTextInputErrorMessage(''),
       getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
       validateFn: validateTextInput
     },
@@ -55,6 +64,7 @@ const SignUp: React.FC = () => {
       className: 'form-block',
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
+      errorMessage: getEmailInputErrorMessage(''),
       getErrorMessage: (str: string) =>
         str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
       validateFn: validateEmail
@@ -71,6 +81,7 @@ const SignUp: React.FC = () => {
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
+      errorMessage: getPasswordFieldErrorMessage(''),
       getErrorMessage: getPasswordFieldErrorMessage,
       validateFn: validatePassword
     }

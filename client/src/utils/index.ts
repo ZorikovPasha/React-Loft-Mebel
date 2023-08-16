@@ -29,3 +29,11 @@ export const getPasswordFieldErrorMessage = (str: string): string => {
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+export const getTextInputErrorMessage = (val: string) => {
+  return val.trim().length === 0 ? 'Required field' : ''
+}
+
+export const getEmailInputErrorMessage = (str: string) => {
+  return str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : ''
+}

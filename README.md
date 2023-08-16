@@ -1,7 +1,7 @@
 Furniture E-commerce store project
 
 TODO!: 
-слайдер заменить на полегче
+[xxx] слайдер заменить на полегче
 ---aborcontroller
 поиск по товарам
 ---убрать формик
@@ -23,3 +23,7 @@ switch from redux to react query?
 redirect to 404
 shuold get all colors and brands from backend in aside
 should add logging when accessing a route
+/login swagger edit response types
+redux should get user's info right after login
+/login should return user data
+decide whether should do login if there is token

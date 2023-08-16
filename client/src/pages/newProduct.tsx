@@ -4,7 +4,7 @@ import { HexColorPicker } from 'react-colorful'
 import AppTextField from '../components/common/appTextField'
 import CustomSelect from '../components/common/CustomSelect'
 import { UserApiClient } from '../api'
-import { isResponseWithErrors, isStringPropertyname, isSuccessFullResponse } from '../api/types'
+import { isResponseWithErrors, isStringPropertyname, isSuccessfullResponse } from '../api/types'
 
 interface ISelectOption {
   label: string
@@ -392,7 +392,7 @@ const NewProduct = (): JSX.Element => {
       .then((data) => {
         console.log('data', data)
 
-        if (isSuccessFullResponse(data)) {
+        if (isSuccessfullResponse(data)) {
           setName(nameProps)
           setType(typeProps)
           setPriceOld(priceOldProps)
@@ -425,7 +425,7 @@ const NewProduct = (): JSX.Element => {
           // const [activeColor, setActiveColor] = React.useState(0)
 
           data.errors?.forEach((error) => {
-            if (!isStringPropertyname(hashmap, error.field)) {
+            if (!isStringPropertyname(hashmap, error.field ?? '')) {
               return
             }
             // const name = error.field as keyof typeof hashmap

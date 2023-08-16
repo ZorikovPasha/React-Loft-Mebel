@@ -10,8 +10,7 @@ import {
   IFurniture,
   IFurnitureResponse,
   IGetUserDataResponse,
-  ILoginResponse,
-  IResponseWithMessage,
+  ISuccessfullLoginResponse,
   ISuccessfullResponse,
   LoginCredsType,
   SignUpCredsType
@@ -88,21 +87,18 @@ class UserApi extends Api {
       (config) => ({
         ...config,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('loft_furniture_token')}`
         }
       }),
       (error) => console.log(error)
     )
   }
-  setToken = (token: string): void => {
-    localStorage.setItem('token', token)
-  }
 
-  register = (credentials: SignUpCredsType): Promise<IResponseWithMessage> => {
+  register = (credentials: SignUpCredsType): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
     return this.post('/user/register', credentials)
   }
 
-  login = (credentials: LoginCredsType): Promise<ILoginResponse> => {
+  login = (credentials: LoginCredsType): Promise<IErrorResponse | IErrorsResponse | ISuccessfullLoginResponse> => {
     return this.post('/user/login', credentials)
   }
 
@@ -146,7 +142,9 @@ class UserApi extends Api {
     return this.delete('/api/cart', { productId: id })
   }
 
-  sendUserData = (userFormValues: userFormValuesType): Promise<IResponseWithMessage> => {
+  sendUserData = (
+    userFormValues: userFormValuesType
+  ): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
     return this.put('/user', userFormValues)
   }
 

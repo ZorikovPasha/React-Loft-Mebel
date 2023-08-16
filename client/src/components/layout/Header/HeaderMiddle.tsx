@@ -7,8 +7,8 @@ import { HeaderSearchForm } from './HeaderSearchForm'
 import { HeaderWishListIcon } from './HeaderWishListIcon'
 import { HeaderBagIcon } from './HeaderBagIcon'
 import { Const, ROUTES } from '../../../utils/const'
-import { getIsAuth } from '../../../redux/getters'
 import { IHeaderProps } from './Header'
+import { getIsUserLoggedin } from '../../../redux/getters'
 
 type ItemType = {
   name: string
@@ -20,7 +20,7 @@ interface IHeaderMiddleProps extends IHeaderProps {
 }
 
 const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, items }) => {
-  const isAuth = useSelector(getIsAuth)
+  const isAuth = useSelector(getIsUserLoggedin)
 
   const menuBtnRef = React.useRef(null)
 

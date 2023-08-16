@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { getFavorites, getIsAuth, getProducts } from '../redux/getters'
+import { getFavorites, getIsUserLoggedin, getProducts } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { SalesItem } from '../components/common/SalesItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
@@ -15,7 +15,7 @@ const Favorites: React.FC = () => {
   const items = useSelector(getProducts)
 
   const { favorites, isLoaded } = useSelector(getFavorites)
-  const isAuth = useSelector(getIsAuth)
+  const isAuth = useSelector(getIsUserLoggedin)
 
   const favoriteItems: IFurniture[] = []
   favorites.forEach((id) => {

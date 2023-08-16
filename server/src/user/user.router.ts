@@ -156,18 +156,18 @@ export class UserRouter {
  *           schema:
  *             $ref: '#/components/schemas/User'
  *     responses:
- *       200:
+ *       201:
  *         description: User has been registered.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                   example: 'User has been registered'
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *       400:
- *         description: User has been registered.
+ *         description: Bad request.
  *         content:
  *           application/json:
  *             schema:
@@ -212,7 +212,7 @@ export class UserRouter {
  *                 example: 'password123'
  *     responses:
  *       200:
- *         description: User has been registered.
+ *         description: User loggid in.
  *         content:
  *           application/json:
  *             schema:
@@ -369,9 +369,9 @@ export class UserRouter {
 *             schema:
 *               type: object
 *               properties:
-*                 message:
-*                   type: string
-*                   example: 'Data successfully was written'
+*                 success:
+*                   type: boolean
+*                   example: true
 
 *       500:
 *         description: Internal server error

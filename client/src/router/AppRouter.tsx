@@ -7,10 +7,10 @@ import { Loader } from '../components/common/Loader'
 import { MobMenu } from '../components/layout/MobMenu'
 import { Header } from '../components/layout/Header/Header'
 import { publicRoutes, authRoutes, initialRoute } from './routes'
-import { getIsAuth } from '../redux/getters'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import '../scss/style.scss'
+import { getIsUserLoggedin } from '../redux/getters'
 
 export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
@@ -18,7 +18,7 @@ export const AppRouter = () => {
   const dispatch = useDispatch()
   dispatch(fetchItemsThunkCreator())
 
-  const isAuth = useSelector(getIsAuth)
+  const isAuth = useSelector(getIsUserLoggedin)
   useAuth()
 
   return (

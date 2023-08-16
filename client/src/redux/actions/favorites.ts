@@ -1,28 +1,28 @@
-import { ActionsTypes } from '../../types/actionsTypes'
+import { Actions } from '../../types/actionsTypes'
 
 type favoritesActionsTypes =
-  | ActionsTypes.ADD_FAVORITES
-  | ActionsTypes.RESET_FAVORITES
-  | ActionsTypes.FAVORITES_LOADED
-  | ActionsTypes.REMOVE_FAVORITES
+  | typeof Actions.ADD_FAVORITES
+  | typeof Actions.RESET_FAVORITES
+  | typeof Actions.FAVORITES_LOADED
+  | typeof Actions.REMOVE_FAVORITES
 
 type actionCreatorType<T> = (payload?: T) => { type: favoritesActionsTypes; payload?: T }
 
 export const addFavoritesActionCreator: actionCreatorType<number[]> = (items) => ({
-  type: ActionsTypes.ADD_FAVORITES,
+  type: Actions.ADD_FAVORITES,
   payload: items
 })
 
 export const removeFavoritesActionCreator: actionCreatorType<number[]> = (items) => ({
-  type: ActionsTypes.REMOVE_FAVORITES,
+  type: Actions.REMOVE_FAVORITES,
   payload: items
 })
 
 export const resetFavoritesActionCreator: actionCreatorType<null> = () => ({
-  type: ActionsTypes.RESET_FAVORITES
+  type: Actions.RESET_FAVORITES
 })
 
 export const loadingActionCreator: actionCreatorType<boolean> = (bool) => ({
-  type: ActionsTypes.FAVORITES_LOADED,
+  type: Actions.FAVORITES_LOADED,
   payload: bool
 })
