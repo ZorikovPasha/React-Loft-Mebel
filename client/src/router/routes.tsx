@@ -14,13 +14,18 @@ const LazyProfile = React.lazy(() => import('../pages/Profile'))
 const LazyProfileSearchReult = React.lazy(() => import('../pages/SearchResult'))
 const LazyNewProduct = React.lazy(() => import('../pages/newProduct'))
 
-export const initialRoute = {
-  path: ROUTES.Home,
-  component: Main,
-  exact: true
+interface IRoute {
+  path: string
+  component: React.FC | React.LazyExoticComponent<React.FC>
+  exact: boolean
 }
 
-export const publicRoutes = [
+export const publicRoutes: IRoute[] = [
+  {
+    path: ROUTES.Home,
+    component: Main,
+    exact: true
+  },
   {
     path: ROUTES.Cart,
     component: LazyCart,
@@ -71,9 +76,14 @@ export const publicRoutes = [
     component: LazyProfileSearchReult,
     exact: false
   }
+  // {
+  //   path: "*",
+  //   component: Main, //TODO: custom 404
+  //   exact: false
+  // }
 ]
 
-export const authRoutes = [
+export const authRoutes: IRoute[] = [
   {
     path: ROUTES.Profile,
     component: LazyProfile,

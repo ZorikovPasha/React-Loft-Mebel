@@ -174,7 +174,6 @@ const Profile: React.FC = () => {
   const history = useHistory()
 
   const user = useSelector(getUserData)
-  console.log('user', user)
 
   const [name, setName] = React.useState(nameProps)
   const [surname, setSurname] = React.useState(surnameProps)
@@ -195,7 +194,14 @@ const Profile: React.FC = () => {
     })
   }, [user.image])
 
-  console.log('profilePicture', profilePicture)
+  React.useEffect(() => setName((prev) => ({ ...prev, value: user.name })), [user.name])
+  React.useEffect(() => setSurname((prev) => ({ ...prev, value: user.surname })), [user.surname])
+  React.useEffect(() => setEmail((prev) => ({ ...prev, value: user.email })), [user.email])
+  React.useEffect(() => setPhone((prev) => ({ ...prev, value: user.phone })), [user.phone])
+  React.useEffect(() => setCity((prev) => ({ ...prev, value: user.city })), [user.city])
+  React.useEffect(() => setStreet((prev) => ({ ...prev, value: user.street })), [user.street])
+  React.useEffect(() => setHouse((prev) => ({ ...prev, value: user.house })), [user.house])
+  React.useEffect(() => setApartment((prev) => ({ ...prev, value: user.apartment })), [user.apartment])
 
   const onChange =
     (setState: React.Dispatch<React.SetStateAction<IField>>) =>
