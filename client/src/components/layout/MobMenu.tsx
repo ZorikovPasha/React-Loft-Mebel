@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ROUTES } from '../../utils/const'
 
 interface IMobMenuProps {
-  isMobMenuOpen: Boolean
+  isMobMenuOpen: boolean
   setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
