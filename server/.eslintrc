@@ -16,7 +16,7 @@
 			"off"
 		],
 		"@typescript-eslint/explicit-function-return-type": [
-			"error"
+			"warn"
 		],
 		"prettier/prettier": [
 			"error",

@@ -1,8 +1,6 @@
 .header {
   padding-bottom: 30px;
 
-  // .header__top
-
   &__top {
     padding: 10px 0;
     color: #fff;
@@ -15,20 +13,14 @@
     justify-content: space-between;
   }
 
-  // .header__list
-
   &__list {
     display: flex;
     align-items: center;
   }
 
-  // .header__list-item
-
   &__list-item {
     margin-right: 30px;
   }
-
-  // .header__list-link
 
   &__list-link {
     font-size: 14px;
@@ -38,8 +30,6 @@
   &__connect--mid {
     display: none;
   }
-
-  // .header__phone
 
   &__phone {
     font-size: 14px;
@@ -65,8 +55,6 @@
     height: 16px;
     background-image: url('/images/icons/phone-black.svg');
   }
-
-  // .header__delivery
 
   &__delivery {
     font-size: 14px;
@@ -94,8 +82,6 @@
     background-image: url('/images/icons/delivery-black.svg');
   }
 
-  // .header__mid
-
   &__mid {
     display: flex;
     align-items: center;
@@ -111,17 +97,11 @@
     padding: 46px 0 47px;
   }
 
-  // .header__form
-
   &__form {
     position: relative;
-
-    // width: 100%;
     flex-grow: 1;
     margin-right: 37px;
   }
-
-  // .header__input
 
   &__input {
     width: 100%;
@@ -145,8 +125,6 @@
     height: 40px;
   }
 
-  // .header__search
-
   &__search {
     position: absolute;
     top: 50%;
@@ -159,21 +137,15 @@
     border: 1px solid #245462;
   }
 
-  // .header__bottom
-
   &__bottom {
     display: flex;
     align-items: center;
     box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
   }
 
-  // .header__categories
-
   &__categories {
     flex-grow: 1;
   }
-
-  // .header__promo
 
   &__promo {
     position: relative;
@@ -189,8 +161,6 @@
   &__promo-link {
     color: #d74444;
   }
-
-  // .header__more
 
   &__more {
     padding: 0 5px;
@@ -208,10 +178,24 @@
   align-items: center;
   min-width: 112px;
 
-  // .user-header__link
+  &__picture {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #245462;
+    object-fit: cover;
+  }
 
   &__link {
     transition: hover 0.2s;
+
+    &--profile {
+      position: relative;
+      width: 25px;
+      height: 25px;
+    }
   }
 
   &__link--dot {
@@ -241,15 +225,11 @@
 }
 
 .categories {
-  // .categories__list
-
   &__list {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
   }
-
-  // .categories__item
 
   &__item {
     position: relative;
@@ -277,8 +257,6 @@
     display: block;
   }
 
-  // .categories__link
-
   &__link {
     margin-left: 10px;
   }
@@ -304,8 +282,6 @@
   &__item + &__item {
     margin-top: 23px;
   }
-
-  // .sub-list__link
 
   &__link {
     display: inline-block;

@@ -136,7 +136,17 @@ button {
   &:active {
     background-color: rgba(#209cee, 0.7);
   }
+
+  &--danger {
+    background-color: #D41367;
+
+    &:hover,
+    &:focus {
+      background-color: #ef438e;
+    }
+  }
 }
+
 
 @media (width <=510px) {
   .breadcrumbs__item:not(:last-child) {

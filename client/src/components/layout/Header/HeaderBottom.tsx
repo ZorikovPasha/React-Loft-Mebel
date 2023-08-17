@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import HeaderSubList from './HeaderSubList'
+import { HeaderSubList } from './HeaderSubList'
 
 const HeaderBottom: React.FC = () => {
   const subLists = React.useRef([
@@ -232,12 +232,10 @@ const HeaderBottom: React.FC = () => {
             >
               Кухни
             </Link>
-            {subLists && (
-              <HeaderSubList
-                items={subLists.current[0]}
-                parentDir={'/catalog?room=kitchen'}
-              />
-            )}
+            <HeaderSubList
+              items={subLists.current[0]}
+              parentDir={'/catalog?room=kitchen'}
+            />
           </li>
 
           <li className='categories__item'>
@@ -268,12 +266,10 @@ const HeaderBottom: React.FC = () => {
             >
               Спальни
             </Link>
-            {subLists && (
-              <HeaderSubList
-                parentDir={'/catalog?room=bedroom'}
-                items={subLists.current[1]}
-              />
-            )}
+            <HeaderSubList
+              parentDir={'/catalog?room=bedroom'}
+              items={subLists.current[1]}
+            />
           </li>
 
           <li className='categories__item'>
@@ -308,12 +304,10 @@ const HeaderBottom: React.FC = () => {
             >
               Гостинные
             </Link>
-            {subLists && (
-              <HeaderSubList
-                parentDir={'/catalog?room=living'}
-                items={subLists.current[2]}
-              />
-            )}
+            <HeaderSubList
+              parentDir={'/catalog?room=living'}
+              items={subLists.current[2]}
+            />
           </li>
 
           <li className='categories__item'>
@@ -348,12 +342,10 @@ const HeaderBottom: React.FC = () => {
             >
               Прихожие
             </Link>
-            {subLists && (
-              <HeaderSubList
-                parentDir={'/catalog?room=hall'}
-                items={subLists.current[3]}
-              />
-            )}
+            <HeaderSubList
+              parentDir={'/catalog?room=hall'}
+              items={subLists.current[3]}
+            />
           </li>
 
           <li className='categories__item'>
@@ -388,12 +380,10 @@ const HeaderBottom: React.FC = () => {
             >
               Офисная мебель
             </Link>
-            {subLists && (
-              <HeaderSubList
-                parentDir={'/catalog?room=office'}
-                items={subLists.current[4]}
-              />
-            )}
+            <HeaderSubList
+              parentDir={'/catalog?room=office'}
+              items={subLists.current[4]}
+            />
           </li>
 
           <li className='categories__item'>
@@ -440,13 +430,11 @@ const HeaderBottom: React.FC = () => {
             >
               Детская
             </Link>
-            {subLists && (
-              <HeaderSubList
-                rootElClass='sub-list--rightside'
-                parentDir={'/catalog?room=children'}
-                items={subLists.current[5]}
-              />
-            )}
+            <HeaderSubList
+              rootElClass='sub-list--rightside'
+              parentDir={'/catalog?room=children'}
+              items={subLists.current[5]}
+            />
           </li>
         </ul>
       </div>

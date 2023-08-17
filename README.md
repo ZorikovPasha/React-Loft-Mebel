@@ -1,29 +1,36 @@
 Furniture E-commerce store project
 
 TODO!: 
-- [ ] слайдер заменить на полегче
-- [ ] aborcontroller
-- [ ] поиск по товарам
-- [x] убрать формик
-- [x] убрать яп
-- [x] вынести селект в отдельный чанк
-- [ ] /api/furniture changed for GET from POST
-- [x] убpать модель мобильного меню и слайдов из бэкенда и роуты тоже и методы
-- [x] remove /private prefix 
-- [x] unify success messages
-- [ ] switch to prisma + postgres
-- [ ] edit api endpoints on client
-- [ ] confirm email via email
-- [ ] profile picture?
-- [ ] refactor server api
-- [ ] добавить продукты
-- [ ] image compressing
-- [ ] should add notfound page
-- [ ] switch from redux to react query?
-- [ ] redirect to 404
-- [ ] shuold get all colors and brands from backend in aside
-- [ ] should add logging when accessing a route
-- [ ] /login swagger edit response types
-- [ ] redux should get user's info right after login
-- [ ] /login should return user data
-- [ ] decide whether should do login if there is token
+- [ ] слайдер заменить на полегче    
+- [ ] aborcontroller    
+- [ ] поиск по товарам    
+- [x] убрать формик    
+- [x] убрать яп    
+- [x] вынести селект в отдельный чанк    
+- [ ] /api/furniture changed for GET from POST    
+- [x] убpать модель мобильного меню и слайдов из бэкенда и роуты тоже и методы    
+- [x] remove /private prefix     
+- [x] unify success messages    
+- [ ] switch to prisma + postgres    
+- [ ] edit api endpoints on client    
+- [ ] confirm email via email    
+- [ ] profile picture?    
+- [ ] refactor server api    
+- [ ] добавить продукты    
+- [ ] image compressing    
+- [ ] should add notfound page    
+- [ ] switch from redux to react query?    
+- [ ] redirect to 404    
+- [ ] shuold get all colors and brands from backend in aside    
+- [ ] should add logging when accessing a route    
+- [ ] /login swagger edit response types    
+- [ ] redux should get user's info right after login    
+- [ ] /login should return user data (think of which)    
+- [ ] decide whether should do login if there is token    
+- [ ] should redirect to login after register    
+- [ ] should implement github-ci    
+- [ ] user should have the ability to confirm email ("emailConfirmed": boolean)
+- [ ] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
+- [ ] image name before uploads is incorrect
+- [ ] login returns image buffer but should not
+- [ ] remove cart and orders requests, they come with login

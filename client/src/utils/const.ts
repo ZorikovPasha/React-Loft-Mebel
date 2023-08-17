@@ -11,7 +11,7 @@ export const ROUTES = {
   SearchResult: '/search',
   Home: '/',
   NewProduct: '/product'
-}
+} as const
 
 export const Const = {
   phone: '8 (964) 89 99 119'

@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
-import { userFormValuesType } from '../types'
 import {
   FormDataType,
   ICartItemRequest,
@@ -9,7 +8,6 @@ import {
   IFavoritesResponse,
   IFurniture,
   IFurnitureResponse,
-  IGetUserDataResponse,
   ISuccessfullLoginResponse,
   ISuccessfullResponse,
   LoginCredsType,
@@ -62,9 +60,9 @@ class Api extends Axios {
         return error?.response?.data
       })
   }
-  put = <T, B>(url: string, data?: B): Promise<T> => {
+  put = <T, B>(url: string, data: B, config: AxiosRequestConfig): Promise<T> => {
     return this._axios
-      .put(url, data)
+      .put(url, data, config)
       .then(this.success)
       .catch((error: AxiosError<Error>) => {
         return error?.response?.data
@@ -110,7 +108,7 @@ class UserApi extends Api {
     return this.get('/api/cart')
   }
 
-  getUserData = (): Promise<IGetUserDataResponse> => {
+  getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {
     return this.get('/user')
   }
 
@@ -142,10 +140,8 @@ class UserApi extends Api {
     return this.delete('/api/cart', { productId: id })
   }
 
-  sendUserData = (
-    userFormValues: userFormValuesType
-  ): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
-    return this.put('/user', userFormValues)
+  updateUserData = (formData: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
+    return this.put('/user', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 
   makeOrder = (): Promise<ISuccessfullResponse | IErrorResponse> => {

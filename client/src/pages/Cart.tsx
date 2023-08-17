@@ -54,6 +54,26 @@ const Cart: React.FC = () => {
     document.documentElement.classList.remove('lock')
   }
 
+  const collectedItems = cartItems
+    ?.map((cartItem) => {
+      const currentItem = items.find((item) => item.id === cartItem.id)
+      if (!currentItem) {
+        return
+      }
+
+      return {
+        furnitureId: currentItem.id,
+        cartItemId: cartItem.id,
+        name: currentItem.name,
+        imageUrl: currentItem.image?.url ?? '',
+        price: parseFloat(currentItem.priceNew ? currentItem.priceNew : currentItem.priceOld),
+        quintity: cartItem.quintity,
+        dimension: currentItem.dimensions,
+        colors: currentItem.colors
+      }
+    })
+    .filter((c) => Boolean(c))
+
   return (
     <>
       {modalLoginOpened && (
@@ -79,24 +99,21 @@ const Cart: React.FC = () => {
                   <span className='cart__top-num'>Предметов: {quintity}</span>
                 </p>
               </div>
-              {cartItems?.map((cartItem) => {
-                const currItem = items.find((item) => item.id === cartItem.id)
-                if (currItem) {
-                  return (
-                    <CartItem
-                      cartItem={cartItem}
-                      item={currItem}
-                    />
-                  )
-                }
-              })}
+              {collectedItems.map((item) =>
+                item ? (
+                  <CartItem
+                    key={item.name}
+                    item={item}
+                  />
+                ) : null
+              )}
               <div className='cart__bottom'>
                 <p className='cart__bottom-total'>
                   Итоговая стоимость:
                   <span> {total} P</span>
                 </p>
                 <button
-                  className='cart__bottom-btn'
+                  className='btn'
                   onClick={onRegisterOrder}
                 >
                   Оформить заказ

@@ -17,7 +17,7 @@ export interface IField {
   value: string
   isValid: boolean
   required: boolean
-  type: 'text' | 'email' | 'tel'
+  type: 'text' | 'email' | 'tel' | 'password'
   placeholder: string
   customPlaceholder?: string
   className?: string

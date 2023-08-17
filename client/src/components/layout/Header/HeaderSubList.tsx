@@ -12,7 +12,7 @@ interface IHeaderSubList {
   rootElClass?: string
 }
 
-const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir, rootElClass }) => {
+export const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir, rootElClass }) => {
   return (
     <ul className={`sub-list ${rootElClass}`}>
       {items &&
@@ -22,7 +22,7 @@ const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir, rootElClass
             className='sub-list__item'
           >
             <Link
-              to={`${parentDir}`}
+              to={parentDir}
               className='sub-list__link'
             >
               {text}
@@ -32,5 +32,3 @@ const HeaderSubList: React.FC<IHeaderSubList> = ({ items, parentDir, rootElClass
     </ul>
   )
 }
-
-export default HeaderSubList

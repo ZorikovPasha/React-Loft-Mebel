@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Footer } from '../components/layout/Footer'
@@ -11,6 +11,7 @@ import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import '../scss/style.scss'
 import { getIsUserLoggedin } from '../redux/getters'
+import { ROUTES } from '../utils/const'
 
 export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
@@ -20,6 +21,8 @@ export const AppRouter = () => {
 
   const isAuth = useSelector(getIsUserLoggedin)
   useAuth()
+
+  console.log('isAuth', isAuth)
 
   return (
     <div className='wrapper'>
@@ -50,7 +53,7 @@ export const AppRouter = () => {
               />
             </React.Suspense>
           ))}
-          {isAuth &&
+          {isAuth ? (
             authRoutes.map(({ path, component, exact }) => (
               <React.Suspense
                 fallback={<Loader />}
@@ -62,7 +65,10 @@ export const AppRouter = () => {
                   exact={exact}
                 />
               </React.Suspense>
-            ))}
+            ))
+          ) : (
+            <Redirect to={ROUTES.Login} />
+          )}
         </main>
         <Footer />
       </BrowserRouter>

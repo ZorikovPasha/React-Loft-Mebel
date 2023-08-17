@@ -1,7 +1,7 @@
 import { Actions } from '../../types/actionsTypes'
-import { IUserState } from '../reducers/userReducer'
+import { IUserState, userActionType } from '../reducers/userReducer'
 
-export const loginUserActionCreator = (userData: IUserState) => ({
+export const loginUserActionCreator = (userData: Partial<IUserState>): userActionType => ({
   type: Actions.LOGIN,
   payload: userData
 })

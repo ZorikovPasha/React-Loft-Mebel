@@ -171,11 +171,12 @@ export class UserRouter {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: 'UserName was not provided | Email was not provided | Password was not provided | User already exists'
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   field: string
+ *                   message: string
  *       500:
  *         description: Internal server error
  *         content:
@@ -185,7 +186,6 @@ export class UserRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -240,7 +240,6 @@ export class UserRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -309,7 +308,6 @@ export class UserRouter {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 'This could be any string'
  */
 
 /**
@@ -382,5 +380,4 @@ export class UserRouter {
 *               properties:
 *                 message:
 *                   type: string
-*                   example: 'This could be any string'
 */

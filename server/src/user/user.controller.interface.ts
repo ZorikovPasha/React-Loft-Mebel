@@ -20,22 +20,9 @@ export interface IUpdateUserDto {
   street: string | undefined | null
   house: string | undefined | null
   apartment: string | undefined | null
-  photo: string | undefined | null
   emailConfirmed: boolean | undefined | null
   wantsToReceiveEmailUpdates: boolean | undefined | null
 }
-
-// interface IValidationError {
-//   value: string | number | undefined
-//   msg: string | undefined
-//   param: string
-//   location: "body" | string
-// }
-
-// interface IValidationResult {
-//   formatter: () => void
-//   errors: IValidationError[]
-// }
 
 export interface IUserPhoto {
   name: string
