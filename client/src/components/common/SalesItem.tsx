@@ -1,12 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { addFavoritesActionCreator, removeFavoritesActionCreator } from '../../redux/actions/favorites'
 import { addtemsActionCreator } from '../../redux/actions/cartItems'
 import { UserApiClient } from '../../api'
 import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { Link } from 'react-router-dom'
-import { getIsUserLoggedin } from '../../redux/getters'
+import { getUserData } from '../../redux/getters'
+import { editUserActionCreator } from '../../redux/actions/userAction'
 
 interface ISalesItemProps {
   product: IFurniture
@@ -17,19 +17,22 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
   const { id, image, name, type, priceOld, priceNew, dimensions, sale } = product
 
   const dispatch = useDispatch()
-  const isAuth = useSelector(getIsUserLoggedin)
+  const { isLoggedIn } = useSelector(getUserData)
 
   const onLikeProductClick = (): void => {
-    dispatch(addFavoritesActionCreator([id]))
+    const payload = {
+      favorites: [id]
+    }
+    dispatch(editUserActionCreator(payload))
 
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
         if (isSuccessfullResponse(dto)) {
           return
         }
-        removeFavoritesActionCreator([id])
+        editUserActionCreator(payload)
       })
-      .catch(() => removeFavoritesActionCreator([id]))
+      .catch(() => editUserActionCreator(payload))
   }
 
   const onAddToCartClick = async (): Promise<void> => {
@@ -42,7 +45,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
         }
       ])
     )
-    if (!isAuth) {
+    if (!isLoggedIn) {
       return
     }
 

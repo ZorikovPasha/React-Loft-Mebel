@@ -20,7 +20,7 @@ interface IHeaderMiddleProps extends IHeaderProps {
 }
 
 const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, items }) => {
-  // const isAuth = useSelector(getIsUserLoggedin)
+  // const { isLoggedin } = useSelector(getUserData)
   const { isLoggedIn, image } = useSelector(getUserData)
   const menuBtnRef = React.useRef(null)
 

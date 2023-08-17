@@ -22,7 +22,8 @@ export const Actions = {
   ORDER_STATUS: 'ORDER_STATUS',
   SET_ORDERS: 'SET_ORDERS',
   CART_LOADING: 'CART_LOADING',
-  RESET_PRODUCTS: 'RESET_PRODUCTS'
+  RESET_PRODUCTS: 'RESET_PRODUCTS',
+  EDIT_USER_DATA: 'EDIT_USER_DATA'
 } as const
 
 export type fetchItemsActionType = {

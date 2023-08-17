@@ -2,11 +2,11 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { SalesItem } from '../common/SalesItem'
-import { getProducts, getFavorites } from '../../redux/getters'
+import { getProducts, getUserData } from '../../redux/getters'
 
 export const Related: React.FC = () => {
   const items = useSelector(getProducts)
-  const { favorites } = useSelector(getFavorites)
+  const { favorites } = useSelector(getUserData)
 
   return (
     <div className='sales__items sales__items--product'>

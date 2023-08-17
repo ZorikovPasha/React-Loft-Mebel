@@ -10,7 +10,7 @@ import { publicRoutes, authRoutes, initialRoute } from './routes'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import '../scss/style.scss'
-import { getIsUserLoggedin } from '../redux/getters'
+import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
 
 export const AppRouter = () => {
@@ -19,10 +19,10 @@ export const AppRouter = () => {
   const dispatch = useDispatch()
   dispatch(fetchItemsThunkCreator())
 
-  const isAuth = useSelector(getIsUserLoggedin)
+  const { isLoggedIn } = useSelector(getUserData)
   useAuth()
 
-  console.log('isAuth', isAuth)
+  console.log('isAuth', isLoggedIn)
 
   return (
     <div className='wrapper'>
@@ -53,7 +53,7 @@ export const AppRouter = () => {
               />
             </React.Suspense>
           ))}
-          {isAuth ? (
+          {isLoggedIn ? (
             authRoutes.map(({ path, component, exact }) => (
               <React.Suspense
                 fallback={<Loader />}

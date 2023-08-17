@@ -11,11 +11,10 @@ import {
   getCartItems,
   getQuintity,
   getTotalCost,
-  getFavorites,
   getProducts,
   getOrderStatus,
   getCartLoadingState,
-  getIsUserLoggedin
+  getUserData
 } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
@@ -30,15 +29,14 @@ const Cart: React.FC = () => {
   const quintity = useSelector(getQuintity)
   const total = useSelector(getTotalCost)
   const items = useSelector(getProducts)
-  const { favorites } = useSelector(getFavorites)
+  const { favorites, isLoggedIn } = useSelector(getUserData)
   const isOrderMade = useSelector(getOrderStatus)
-  const isAuth = useSelector(getIsUserLoggedin)
   const isLoaded = useSelector(getCartLoadingState)
 
   const breadcrumbs = useBreadcrumbs()
 
   const onRegisterOrder = () => {
-    if (!isAuth) {
+    if (!isLoggedIn) {
       setModalLoginOpened(true)
       document.documentElement.classList.add('lock')
       return
@@ -87,7 +85,7 @@ const Cart: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='cart'>
         <div className='container'>
-          {!isLoaded && isAuth ? (
+          {!isLoaded && isLoggedIn ? (
             <Loader />
           ) : !cartItems.length ? (
             <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />

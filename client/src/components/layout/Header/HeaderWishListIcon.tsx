@@ -2,10 +2,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { getFavorites } from '../../../redux/getters'
+import { getUserData } from '../../../redux/getters'
 
 export const HeaderWishListIcon: React.FC = () => {
-  const { favorites } = useSelector(getFavorites)
+  const { favorites } = useSelector(getUserData)
 
   return (
     <Link

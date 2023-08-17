@@ -1,7 +1,7 @@
 import { Actions } from '../../types/actionsTypes'
 
 export type userActionType = {
-  type: typeof Actions.LOGIN | typeof Actions.LOGOUT
+  type: typeof Actions.LOGIN | typeof Actions.LOGOUT | typeof Actions.EDIT_USER_DATA
   payload: Partial<IUserState>
 }
 
@@ -48,9 +48,9 @@ export interface IUserState {
   wantsToReceiveEmailUpdates: boolean
   createdAt?: Date
   updatedAt?: Date
-  favorites: number[] | never[]
-  orders: IOrder[] | never[]
-  cart: ICartItem[] | never[]
+  favorites: number[]
+  orders: IOrder[]
+  cart: ICartItem[]
 }
 
 export const initialState: IUserState = {
@@ -74,12 +74,30 @@ export const initialState: IUserState = {
 
 const userReducer = (state = initialState, action: userActionType): IUserState => {
   switch (action.type) {
-    case Actions.LOGIN:
+    case Actions.LOGIN: {
+      const newFavorites =
+        action.payload.favorites?.reduce((accum: number[], next) => {
+          return state.favorites.includes(next) ? accum.filter((f) => f !== next) : [...accum, next]
+        }, []) ?? []
       return {
         ...state,
         ...action.payload,
+        favorites: [...state.favorites, ...newFavorites],
         isLoggedIn: true
       }
+    }
+    case Actions.EDIT_USER_DATA: {
+      const newFavorites =
+        action.payload.favorites?.reduce((accum: number[], next) => {
+          return state.favorites.includes(next) ? accum.filter((f) => f !== next) : [...accum, next]
+        }, []) ?? []
+
+      return {
+        ...state,
+        ...action.payload,
+        favorites: [...state.favorites, ...newFavorites]
+      }
+    }
     case Actions.LOGOUT:
       return initialState
     default:

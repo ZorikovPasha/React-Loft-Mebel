@@ -34,3 +34,4 @@ TODO!:
 - [ ] image name before uploads is incorrect
 - [ ] login returns image buffer but should not
 - [ ] remove cart and orders requests, they come with login
+- [ ] merge favorites reducer into user reducer

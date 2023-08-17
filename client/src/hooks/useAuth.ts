@@ -1,27 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  // addtemsActionCreator,
-  fetchingActionCreator,
-  ordersActionCreator
-} from '../redux/actions/cartItems'
-import {
-  addFavoritesActionCreator,
-  loadingActionCreator,
-  resetFavoritesActionCreator
-} from '../redux/actions/favorites'
 import { resetCartActionCreator } from '../redux/actions/cartItems'
-// import { addUserDataActionCreator } from '../redux/actions/userAction'
 import { UserApiClient } from '../api/'
-import { OrderInfoType } from '../types'
-import { loginUserActionCreator } from '../redux/actions/userAction'
-import { getIsUserLoggedin } from '../redux/getters'
+import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
+import { getUserData } from '../redux/getters'
 import { isSuccessfullLoginResponse } from '../api/types'
 
 export const useAuth = async (): Promise<void> => {
   const dispatch = useDispatch()
-  const isAuth = useSelector(getIsUserLoggedin)
+  const { isLoggedIn } = useSelector(getUserData)
 
   React.useEffect(() => {
     const token = localStorage.getItem('loft_furniture_token')
@@ -29,10 +17,13 @@ export const useAuth = async (): Promise<void> => {
       return
     }
 
+    console.log('further')
+
     UserApiClient.getUserData().then((data) => {
       if (!isSuccessfullLoginResponse(data)) {
         return
       }
+      console.log('2')
 
       dispatch(
         loginUserActionCreator({
@@ -60,24 +51,10 @@ export const useAuth = async (): Promise<void> => {
   }, [])
 
   React.useEffect(() => {
-    if (!isAuth) {
+    if (isLoggedIn) {
       return
     }
-
-    dispatch(resetFavoritesActionCreator())
-    UserApiClient.getFavorites().then((dto) => {
-      dispatch(addFavoritesActionCreator(dto.items.map(({ furnitureId }) => furnitureId)))
-      dispatch(loadingActionCreator(true))
-    })
-
+    dispatch(logoutUserActionCreator())
     dispatch(resetCartActionCreator())
-    UserApiClient.getCartItems().then(() => {
-      // dispatch(addtemsActionCreator(dto.items))
-      dispatch(fetchingActionCreator(true))
-    })
-
-    UserApiClient.getOrders<{ orders: OrderInfoType[] }>().then((orders) => {
-      dispatch(ordersActionCreator(orders.orders))
-    })
-  }, [isAuth])
+  }, [isLoggedIn])
 }

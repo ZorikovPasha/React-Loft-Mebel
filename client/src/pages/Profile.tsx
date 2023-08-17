@@ -6,7 +6,6 @@ import { useDropzone } from 'react-dropzone'
 import { UserApiClient } from '../api'
 import { getUserData } from '../redux/getters'
 import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
-import { resetFavoritesActionCreator } from '../redux/actions/favorites'
 import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
 import AppTextField from '../components/common/appTextField'
@@ -259,7 +258,6 @@ const Profile: React.FC = () => {
   const onLogout = () => {
     localStorage.removeItem('loft_furniture_token')
     dispatch(logoutUserActionCreator())
-    dispatch(resetFavoritesActionCreator())
     dispatch(resetCartActionCreator())
     history.push({ pathname: '/' })
   }
