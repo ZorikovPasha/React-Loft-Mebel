@@ -8,7 +8,7 @@ import { getUserData } from '../redux/getters'
 import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
 import { resetFavoritesActionCreator } from '../redux/actions/favorites'
 import { resetCartActionCreator } from '../redux/actions/cartItems'
-import { getEmailInputErrorMessage, validateEmail, validateTextInput } from '../utils'
+import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
 
@@ -37,7 +37,7 @@ const Profile: React.FC = () => {
     tag: 'input',
     showErrors: false,
     errorMessage: '',
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
+    getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
 
@@ -54,7 +54,7 @@ const Profile: React.FC = () => {
     tag: 'input',
     showErrors: false,
     errorMessage: '',
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
+    getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
 
@@ -88,7 +88,7 @@ const Profile: React.FC = () => {
     type: 'tel',
     showErrors: false,
     errorMessage: '',
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
+    getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
 
@@ -105,7 +105,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
+    getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
 
@@ -122,7 +122,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
+    getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
 
@@ -139,7 +139,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
+    getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
 
@@ -156,7 +156,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните поле'),
+    getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
 

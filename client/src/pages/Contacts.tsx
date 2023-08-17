@@ -5,7 +5,7 @@ import { UserApiClient } from '../api'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { ModalInfo } from '../components/common/ModalInfo'
 import { IField } from './SignUp'
-import { validateEmail, validateTextInput } from '../utils'
+import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
 import AppTextField from '../components/common/appTextField'
 
 const Contacts: React.FC = () => {
@@ -22,7 +22,8 @@ const Contacts: React.FC = () => {
       inputClassName: 'contacts__form-input',
       tag: 'input',
       showErrors: false,
-      getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
+      errorMessage: getTextInputErrorMessage(''),
+      getErrorMessage: getTextInputErrorMessage,
       validateFn: validateTextInput
     },
     email: {
@@ -37,8 +38,8 @@ const Contacts: React.FC = () => {
       className: 'contacts__form-block',
       inputClassName: 'contacts__form-input',
       showErrors: false,
-      getErrorMessage: (str: string) =>
-        str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
+      errorMessage: getEmailInputErrorMessage(''),
+      getErrorMessage: getEmailInputErrorMessage,
       validateFn: validateEmail
     },
     message: {
@@ -53,7 +54,8 @@ const Contacts: React.FC = () => {
       inputClassName: 'contacts__form-area',
       tag: 'textarea',
       showErrors: false,
-      getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
+      errorMessage: getTextInputErrorMessage(''),
+      getErrorMessage: getTextInputErrorMessage,
       validateFn: validateTextInput
     }
   } as const)

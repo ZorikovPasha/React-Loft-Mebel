@@ -51,9 +51,9 @@ export const useAuth = async (): Promise<void> => {
           wantsToReceiveEmailUpdates: data.user.wantsToReceiveEmailUpdates,
           createdAt: data.user.createdAt,
           updatedAt: data.user.updatedAt,
-          favorites: data.user.favorites,
-          orders: data.user.orders,
-          cart: data.user.cart
+          favorites: data.user.favorites ?? [],
+          orders: data.user.orders ?? [],
+          cart: data.user.cart ?? []
         })
       )
     })
