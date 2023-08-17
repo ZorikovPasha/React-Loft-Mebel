@@ -196,13 +196,13 @@ export const Aside: React.FC<IAsideProps> = ({
                 options={room.options}
                 onChange={onSelect(setRoom)}
               />
-              <h6 className='filter__title'>{material.label}</h6>
+              <h6 className='filter__title mt-30'>{material.label}</h6>
               <CustomSelect
                 value={material.value}
                 options={material.options}
                 onChange={onSelect(setMaterial)}
               />
-              <h6 className='filter__title'>{type.label}</h6>
+              <h6 className='filter__title mt-30'>{type.label}</h6>
               <CustomSelect
                 value={type.value}
                 options={type.options}

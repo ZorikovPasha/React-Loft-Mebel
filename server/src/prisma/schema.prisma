@@ -45,7 +45,7 @@ model User {
   house                      String?
   apartment                  String?
   photo                      Image?              @relation(fields: [photoId], references: [id])
-  photoId                    Int                 @unique
+  photoId                    Int?                @unique
   role                       Role                @default(BASIC)
   emailConfirmed             Boolean             @default(false)
   wantsToReceiveEmailUpdates Boolean             @default(false)

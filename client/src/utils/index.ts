@@ -35,5 +35,5 @@ export const getTextInputErrorMessage = (val: string) => {
 }
 
 export const getEmailInputErrorMessage = (str: string) => {
-  return str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : ''
+  return str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? '' : 'Введите корректный email'
 }

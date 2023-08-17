@@ -26,22 +26,72 @@ export interface SignUpCredsType {
 
 export type LoginCredsType = Omit<SignUpCredsType, 'userName'>
 
-export interface ISuccessfullLoginResponse {
-  token: string
+type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
+
+interface ICartItem {
+  id: number
+  furnitureId: number
+  cartId: number
+  quintity: number
 }
 
-export interface IGetUserDataResponse {
-  name: string | undefined
-  surname: string | undefined
-  userName: string | undefined
-  email: string | undefined
-  phone: string | undefined
-  city: string | undefined
-  street: string | undefined
-  house: string | undefined
-  apartment: string | undefined
-  emailConfirmed: boolean | undefined
-  createdAt: string | undefined
+interface IOrder {
+  id: number
+  userId: string
+  name: string
+  status: OrderStatusType
+  createdAt: Date
+  updatedAt: Date
+  items: {
+    id: number
+    furnitureId: number
+    orderId: number
+    quintity: number
+  }
+}
+
+export interface ISuccessfullLoginResponse {
+  token: string
+  user: {
+    id: string
+    name: string
+    surname: string
+    userName: string
+    email: string
+    phone: string
+    city: string
+    street: string
+    house: string
+    apartment: string
+    image: {
+      alternativeText: string
+      caption: string
+      createdAt: Date
+      data: {
+        type: 'Buffer'
+        data: Buffer
+      }
+      ext: string
+      hash: string
+      height: number
+      id: number
+      mime: string
+      name: string
+      provider: 'database'
+      size: number
+      updatedAt: Date
+      url: string
+      width: number
+    } | null
+    role: string
+    emailConfirmed: boolean
+    wantsToReceiveEmailUpdates: boolean
+    createdAt: Date
+    updatedAt: Date
+    favorites: number[] | never[] | null
+    orders: IOrder[] | never[] | null
+    cart: ICartItem[] | never[] | null
+  }
 }
 
 export type FormDataType = Omit<SignUpCredsType, 'password'> & { message: string }

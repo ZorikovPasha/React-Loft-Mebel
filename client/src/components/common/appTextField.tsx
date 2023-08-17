@@ -1,6 +1,6 @@
 import React from 'react'
 
-type InputType = 'text' | 'email' | 'tel'
+type InputType = 'text' | 'email' | 'tel' | 'password'
 type ElementType = 'input' | 'textarea'
 
 interface IInputProps {

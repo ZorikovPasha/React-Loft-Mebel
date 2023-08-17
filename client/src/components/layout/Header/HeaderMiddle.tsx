@@ -8,7 +8,7 @@ import { HeaderWishListIcon } from './HeaderWishListIcon'
 import { HeaderBagIcon } from './HeaderBagIcon'
 import { Const, ROUTES } from '../../../utils/const'
 import { IHeaderProps } from './Header'
-import { getIsUserLoggedin } from '../../../redux/getters'
+import { getUserData } from '../../../redux/getters'
 
 type ItemType = {
   name: string
@@ -20,8 +20,8 @@ interface IHeaderMiddleProps extends IHeaderProps {
 }
 
 const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, items }) => {
-  const isAuth = useSelector(getIsUserLoggedin)
-
+  // const isAuth = useSelector(getIsUserLoggedin)
+  const { isLoggedIn, image } = useSelector(getUserData)
   const menuBtnRef = React.useRef(null)
 
   React.useEffect(() => {
@@ -108,7 +108,7 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
             <HeaderWishListIcon />
             <HeaderBagIcon />
             <Link
-              to={isAuth ? '/profile' : '/login'}
+              to={isLoggedIn ? '/profile' : '/login'}
               className='user-header__link'
             >
               <img
@@ -157,13 +157,21 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
             <HeaderWishListIcon />
             <HeaderBagIcon />
             <Link
-              to={isAuth ? '/profile' : '/login'}
-              className='user-header__link user-header__link--hover'
+              to={isLoggedIn ? '/profile' : '/login'}
+              className='user-header__link user-header__link--profile user-header__link--hover'
             >
-              <img
-                src='/images/icons/profile.svg'
-                alt='profile'
-              />
+              {isLoggedIn && image ? (
+                <img
+                  className='user-header__picture'
+                  src={image.url}
+                  alt='profile'
+                />
+              ) : (
+                <img
+                  src='/images/icons/profile.svg'
+                  alt=''
+                />
+              )}
             </Link>
           </div>
         </div>

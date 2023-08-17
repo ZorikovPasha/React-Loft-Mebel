@@ -17,24 +17,46 @@ import { UserApiClient } from '../api/'
 import { OrderInfoType } from '../types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
 import { getIsUserLoggedin } from '../redux/getters'
+import { isSuccessfullLoginResponse } from '../api/types'
 
 export const useAuth = async (): Promise<void> => {
   const dispatch = useDispatch()
   const isAuth = useSelector(getIsUserLoggedin)
 
   React.useEffect(() => {
-    const checkAuth = async (): Promise<void> => {
-      const token = localStorage.getItem('token')
-      if (!token) {
+    const token = localStorage.getItem('loft_furniture_token')
+    if (!token) {
+      return
+    }
+
+    UserApiClient.getUserData().then((data) => {
+      if (!isSuccessfullLoginResponse(data)) {
         return
       }
 
-      UserApiClient.getUserData().then(() => {
-        dispatch(loginUserActionCreator())
-      })
-    }
-
-    checkAuth()
+      dispatch(
+        loginUserActionCreator({
+          id: data.user.id,
+          isLoggedIn: true,
+          name: data.user.name,
+          email: data.user.email,
+          surname: data.user.surname,
+          phone: data.user.phone,
+          city: data.user.city,
+          street: data.user.street,
+          house: data.user.house,
+          apartment: data.user.apartment,
+          image: data.user.image,
+          emailConfirmed: data.user.emailConfirmed,
+          wantsToReceiveEmailUpdates: data.user.wantsToReceiveEmailUpdates,
+          createdAt: data.user.createdAt,
+          updatedAt: data.user.updatedAt,
+          favorites: data.user.favorites,
+          orders: data.user.orders,
+          cart: data.user.cart
+        })
+      )
+    })
   }, [])
 
   React.useEffect(() => {
@@ -42,27 +64,20 @@ export const useAuth = async (): Promise<void> => {
       return
     }
 
-    const getData = async (): Promise<void> => {
-      dispatch(resetFavoritesActionCreator())
-      UserApiClient.getFavorites().then((dto) => {
-        dispatch(addFavoritesActionCreator(dto.items.map(({ furnitureId }) => furnitureId)))
-        dispatch(loadingActionCreator(true))
-      })
+    dispatch(resetFavoritesActionCreator())
+    UserApiClient.getFavorites().then((dto) => {
+      dispatch(addFavoritesActionCreator(dto.items.map(({ furnitureId }) => furnitureId)))
+      dispatch(loadingActionCreator(true))
+    })
 
-      dispatch(resetCartActionCreator())
-      UserApiClient.getCartItems().then(() => {
-        // dispatch(addtemsActionCreator(dto.items))
-        dispatch(fetchingActionCreator(true))
-      })
+    dispatch(resetCartActionCreator())
+    UserApiClient.getCartItems().then(() => {
+      // dispatch(addtemsActionCreator(dto.items))
+      dispatch(fetchingActionCreator(true))
+    })
 
-      // UserApiClient.getUserData().then((userData) => {
-      // dispatch(addUserDataActionCreator(userData))
-      // })
-
-      UserApiClient.getOrders<{ orders: OrderInfoType[] }>().then((orders) => {
-        dispatch(ordersActionCreator(orders.orders))
-      })
-    }
-    getData()
+    UserApiClient.getOrders<{ orders: OrderInfoType[] }>().then((orders) => {
+      dispatch(ordersActionCreator(orders.orders))
+    })
   }, [isAuth])
 }

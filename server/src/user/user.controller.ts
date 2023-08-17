@@ -2,10 +2,10 @@ import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
-import type { UploadedFile } from 'express-fileupload'
 import { injectable, inject } from 'inversify'
 import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
+import fileUpload from 'express-fileupload'
 
 import { LoggerService } from '../logger/logger.service.js'
 import { ApiError } from '../error/api.error.js'
@@ -18,8 +18,8 @@ import {
   IUserController,
   ResponseType
 } from './user.controller.interface.js'
-import fileUpload from 'express-fileupload'
 import { AppLocalsResponseType, AppResponse } from '../app/app.controller.interface.js'
+import { replaceSpacesWithUnderscores } from '../utils.js'
 
 const generateToken = (id: string, email: string, password: string): string | undefined => {
   const payload = {
@@ -51,14 +51,13 @@ export class UserController implements IUserController {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
       const errors = validationResult(req)
-      console.log('errors', errors)
-
-      // if (errors.errors.length) {
-      //   return res.json(errors.errors).status(400)
-      //   // return next(ApiError.badRequest('An error occured'), {})
-      // }
+      // const errors: { formatter: () => void; errors: Record<string, string>[] } = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+      }
       const { userName, email, password } = req.body
 
+      // TODO: validation result
       if (!userName) {
         return next(ApiError.badRequest('UserName was not provided'))
       }
@@ -72,7 +71,7 @@ export class UserController implements IUserController {
       }
       const candidate = await prismaClient.user.findFirst({
         where: {
-          email: email
+          OR: [{ email: email }, { userName: userName }]
         }
       })
 
@@ -118,6 +117,8 @@ export class UserController implements IUserController {
           data: photo
         })
       }
+
+      console.log('savedImage', savedImage)
 
       await prismaClient.user.create({
         data: {
@@ -165,9 +166,10 @@ export class UserController implements IUserController {
 
       const user = await prismaClient.user.findFirst({
         where: {
-          email: email
+          email: email.toLowerCase()
         }
       })
+
       if (!user) {
         return res
           .status(400)
@@ -183,18 +185,112 @@ export class UserController implements IUserController {
 
       const token = generateToken(user.id, email, password)
 
-      return res.json({ token: token })
+      const getImage = async (photoId: number | null) => {
+        if (!photoId) {
+          return
+        }
+        return await prismaClient.image.findFirst({
+          where: {
+            id: photoId
+          }
+        })
+      }
+
+      const [favorites, cart, orders, image] = await Promise.all([
+        prismaClient.favoriteFurniture.findMany({
+          where: {
+            userId: user.id
+          }
+        }),
+        prismaClient.cart.findFirst({
+          where: {
+            userId: user.id
+          }
+        }),
+        prismaClient.order.findMany({
+          where: {
+            userId: user.id
+          }
+        }),
+        getImage(user.photoId)
+      ])
+
+      let cartData
+      // id: number;
+      // furnitureId: number;
+      // cartId: number;
+      // quintity: number;[]
+      let ordersData
+      if (cart) {
+        const all = await Promise.all([
+          prismaClient.cartFurniture.findMany({
+            where: {
+              cartId: cart.id
+            }
+          }),
+          orders.map(async (order) => {
+            const productsInOrder = await prismaClient.orderedFurniture.findMany({
+              where: {
+                orderId: order.id
+              }
+            })
+
+            return {
+              ...order,
+              items: productsInOrder
+            }
+          })
+        ])
+        cartData = all[0]
+        ordersData = all[1]
+      }
+
+      // console.log('userData', userData);
+      return res.json({
+        token: token,
+        user: {
+          id: user.id,
+          name: user.name,
+          surname: user.surname,
+          email: user.email,
+          phone: user.phone,
+          city: user.city,
+          street: user.street,
+          house: user.house,
+          apartment: user.apartment,
+          image: image
+            ? {
+                id: image.id,
+                name: image.name,
+                alternativeText: image.alternativeText,
+                caption: image.caption,
+                width: image.width,
+                height: image.height,
+                hash: image.hash,
+                ext: image.ext,
+                size: image.size,
+                url: image.url,
+                mime: image.mime,
+                provider: image.provider,
+                createdAt: image.createdAt,
+                updatedAt: image.updatedAt
+              }
+            : null,
+          role: user.role,
+          emailConfirmed: user.emailConfirmed,
+          wantsToReceiveEmailUpdates: user.wantsToReceiveEmailUpdates,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          favorites: favorites.map((f) => f.furnitureId),
+          orders: ordersData ? ordersData : [],
+          cart: cart && cartData ? cartData : []
+        }
+      })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
     }
   }
-
-  // async confirmAuth(req: Request, res: Response) {
-  //   if (req.user) { // ??
-  //     res.status(200).json({ message: "Token is valid" })
-  //   }
-  // }
 
   async updateUserData(
     req: Request<{}, {}, IUpdateUserDto>,
@@ -218,13 +314,25 @@ export class UserController implements IUserController {
 
       console.log('req.body', req.body)
 
-      // filename: req.files.file.name,
-      // content: req.files.file.data
+      // type UserPropertiesNames =
+      //   "id"
+      //   | "name"
+      //   | "surname"
+      //   | "userName"
+      //   | "password"
+      //   | "email"
+      //   | "phone"
+      //   | "city"
+      //   | "street"
+      //   | "house"
+      //   | "apartment"
+      //   | "photoId"
+      //   | "role"
+      //   | "emailConfirmed"
+      //   | "wantsToReceiveEmailUpdates"
 
-      const photo = req.files && req.files.photo
-      console.log('req.files.photo', photo)
-
-      const set: Record<string, UploadedFile | string | boolean | undefined> = {}
+      const set: Record<string, string | number | boolean> = {}
+      // const set: (Without<UserUpdateInput, UserUncheckedUpdateInput> & UserUncheckedUpdateInput) | (Without<UserUncheckedUpdateInput, UserUpdateInput> & UserUpdateInput) = {}
       if (name !== null && typeof name !== 'undefined') {
         set.name = name
       }
@@ -249,12 +357,61 @@ export class UserController implements IUserController {
       if (emailConfirmed !== null && typeof emailConfirmed !== 'undefined') {
         set.emailConfirmed = emailConfirmed
       }
-      if (wantsToReceiveEmailUpdates !== null) {
+      if (
+        wantsToReceiveEmailUpdates !== null &&
+        typeof wantsToReceiveEmailUpdates !== 'undefined'
+      ) {
         set.wantsToReceiveEmailUpdates = wantsToReceiveEmailUpdates
       }
-      // if (photo !== null && typeof photo !== "undefined" && !Array.isArray(photo))  {
-      //   set.photo = photo
-      // }
+
+      let processedImageFromRequest: fileUpload.UploadedFile
+      const { image } = req.files || {}
+      let savedImage
+
+      if (image) {
+        if (Array.isArray(image)) {
+          processedImageFromRequest = image[0]
+        } else {
+          processedImageFromRequest = image
+        }
+
+        const imageDimensions = sizeOf(processedImageFromRequest.data)
+        const compressedImage = await sharp(processedImageFromRequest.data).toBuffer()
+
+        const imageNameWithoutExtension = processedImageFromRequest.name
+          .split('.')
+          .slice(0, -1)
+          .join('')
+        const processedImageNameWithoutExtension =
+          replaceSpacesWithUnderscores(imageNameWithoutExtension)
+        const imageExtension = processedImageFromRequest.name.split('.').pop()
+
+        const imageToSave = {
+          name: processedImageFromRequest.name,
+          alternativeText: '',
+          caption: '',
+          width: imageDimensions.width,
+          height: imageDimensions.height,
+          hash: processedImageFromRequest.md5,
+          ext: imageExtension ?? '',
+          mime: processedImageFromRequest.mimetype,
+          size: processedImageFromRequest.size / 1000,
+          url: `/uploads/${processedImageNameWithoutExtension}_${processedImageFromRequest.md5}.${imageExtension}`,
+          provider: 'database',
+          data: compressedImage
+        }
+
+        const _savedImage = await prismaClient.image.create({
+          data: imageToSave
+        })
+
+        savedImage = _savedImage
+        console.log('savedImage', savedImage)
+      }
+
+      if (image !== null && typeof image !== 'undefined' && !Array.isArray(image) && savedImage) {
+        set.photoId = savedImage.id
+      }
 
       console.log('set', set)
 
@@ -275,39 +432,107 @@ export class UserController implements IUserController {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
 
-      const {
-        name,
-        surname,
-        userName,
-        email,
-        phone,
-        city,
-        street,
-        house,
-        apartment,
-        photo,
-        emailConfirmed,
-        createdAt,
-        orders,
-        favorites
-      } = res.locals.user || {}
-      console.log('res.locals.user', res.locals.user)
+      const { id } = res.locals.user || {}
+
+      if (!id) {
+        return res.status(500).json({ message: 'Internal' })
+      }
+
+      const user = await prismaClient.user.findFirst({
+        where: {
+          id: id
+        }
+      })
+
+      if (!user) {
+        return res.status(404).json({ message: 'User was not found' })
+      }
+
+      const getImage = async (photoId: number | null) => {
+        if (!photoId) {
+          return
+        }
+        return await prismaClient.image.findFirst({
+          where: {
+            id: photoId
+          }
+        })
+      }
+
+      const [favorites, cart, orders, image] = await Promise.all([
+        prismaClient.favoriteFurniture.findMany({
+          where: {
+            userId: user.id
+          }
+        }),
+        prismaClient.cart.findFirst({
+          where: {
+            userId: user.id
+          }
+        }),
+        prismaClient.order.findMany({
+          where: {
+            userId: user.id
+          }
+        }),
+        getImage(user.photoId)
+      ])
+
+      let cartData
+      // id: number;
+      // furnitureId: number;
+      // cartId: number;
+      // quintity: number;[]
+      let ordersData
+      if (cart) {
+        const all = await Promise.all([
+          prismaClient.cartFurniture.findMany({
+            where: {
+              cartId: cart.id
+            }
+          }),
+          orders.map(async (order) => {
+            const productsInOrder = await prismaClient.orderedFurniture.findMany({
+              where: {
+                orderId: order.id
+              }
+            })
+
+            return {
+              ...order,
+              items: productsInOrder
+            }
+          })
+        ])
+        cartData = all[0]
+        ordersData = all[1]
+      }
 
       return res.json({
-        name,
-        surname,
-        userName,
-        email,
-        phone,
-        city,
-        street,
-        house,
-        apartment,
-        photo,
-        emailConfirmed,
-        createdAt,
-        orders,
-        favorites
+        user: {
+          id: user.id,
+          name: user.name,
+          surname: user.surname,
+          email: user.email,
+          phone: user.phone,
+          city: user.city,
+          street: user.street,
+          house: user.house,
+          apartment: user.apartment,
+          image: image
+            ? {
+                ...image
+              }
+            : null,
+          role: user.role,
+          emailConfirmed: user.emailConfirmed,
+          wantsToReceiveEmailUpdates: user.wantsToReceiveEmailUpdates,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          favorites: favorites.map((f) => f.furnitureId),
+          orders: ordersData ? ordersData : [],
+          cart: cart && cartData ? cartData : []
+        }
       })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)

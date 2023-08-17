@@ -16,7 +16,7 @@ const Login: React.FC = () => {
 
   const history = useHistory()
 
-  const _fields = React.useRef<Record<string, IField>>({
+  const fields = React.useRef<Record<string, IField>>({
     email: {
       tag: 'input',
       value: '',
@@ -39,7 +39,7 @@ const Login: React.FC = () => {
       labelClass: 'form__label',
       isValid: false,
       required: true,
-      type: 'text',
+      type: 'password',
       placeholder: 'Введите пароль',
       className: 'form-block',
       inputClassName: 'form-input',
@@ -51,16 +51,17 @@ const Login: React.FC = () => {
     }
   } as const)
 
-  const [form, setForm] = React.useState(_fields.current)
+  const [form, setForm] = React.useState(fields.current)
 
   const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const target = e.target
     setForm((prev) => ({
       ...prev,
       [name]: {
         ...prev[name],
-        value: e.target.value,
-        isValid: prev[name].validateFn(e.target.value),
-        errorMessage: prev[name].getErrorMessage(e.target.value),
+        value: target.value,
+        isValid: prev[name].validateFn(target.value),
+        errorMessage: prev[name].getErrorMessage(target.value),
         showErrors: true
       }
     }))
@@ -105,82 +106,106 @@ const Login: React.FC = () => {
       }
 
       if (isSuccessfullLoginResponse(data)) {
-        setForm(_fields.current)
+        setForm(fields.current)
         localStorage.setItem('loft_furniture_token', data.token)
-        dispatch(loginUserActionCreator(data))
+        dispatch(
+          loginUserActionCreator({
+            id: data.user.id,
+            isLoggedIn: true,
+            name: data.user.name,
+            email: data.user.email,
+            surname: data.user.surname,
+            phone: data.user.phone,
+            city: data.user.city,
+            street: data.user.street,
+            house: data.user.house,
+            apartment: data.user.apartment,
+            image: data.user.image
+              ? {
+                  name: data.user.image.name,
+                  url: `http://localhost:5000${data.user.image.url}`
+                }
+              : null,
+            emailConfirmed: data.user.emailConfirmed,
+            wantsToReceiveEmailUpdates: data.user.wantsToReceiveEmailUpdates,
+            createdAt: data.user.createdAt,
+            updatedAt: data.user.updatedAt,
+            favorites: data.user.favorites ?? [],
+            orders: data.user.orders ?? [],
+            cart: data.user.cart ?? []
+          })
+        )
         history.push({ pathname: ROUTES.Profile })
       }
     })
   }
 
   return (
-    <>
-      <div className='login'>
-        <div className='container'>
-          <div className='login__inner'>
-            <h1 className='login__title'>Login</h1>
-            <form
-              className='login__form form'
-              onSubmit={handleSubmit}
-            >
-              {Object.entries(form).map(([key, props]) => {
-                const {
-                  tag,
-                  required,
-                  placeholder,
-                  type,
-                  value,
-                  isValid,
-                  className,
-                  label,
-                  labelClass,
-                  errorMessage,
-                  inputWrapClass,
-                  inputClassName,
-                  showErrors
-                } = props
+    <div className='login'>
+      <div className='container'>
+        <div className='login__inner'>
+          <h1 className='login__title'>Login</h1>
+          <form
+            className='login__form form'
+            onSubmit={handleSubmit}
+          >
+            {Object.entries(form).map(([key, props]) => {
+              const {
+                tag,
+                required,
+                placeholder,
+                type,
+                value,
+                isValid,
+                className,
+                label,
+                labelClass,
+                errorMessage,
+                inputWrapClass,
+                inputClassName,
+                showErrors
+              } = props
 
-                const _showErrors = showErrors && !isValid && (required || Boolean(value))
-                return (
-                  <AppTextField
-                    elementType={tag}
-                    key={key}
-                    placeholder={placeholder}
-                    name={key as string}
-                    type={type}
-                    value={value}
-                    required={required}
-                    rootElclass={className}
-                    label={label}
-                    labelClass={labelClass}
-                    inputWrapClass={inputWrapClass}
-                    inputClassName={`${inputClassName} ${_showErrors ? 'input-text--error' : ''}`}
-                    showErrors={_showErrors}
-                    errorMessage={errorMessage}
-                    onChange={onChange(key)}
-                  />
-                )
-              })}
-              <button
-                className='login__form-btn btn'
-                type='submit'
-              >
-                Войти
-              </button>
-            </form>
-          </div>
-          <div className='login__bottom'>
-            <span className='login__new'>Новый пользователь? </span>
-            <Link
-              className='login__new-link'
-              to='/signup'
+              const _showErrors = showErrors && !isValid && (required || Boolean(value))
+              return (
+                <AppTextField
+                  elementType={tag}
+                  key={key}
+                  placeholder={placeholder}
+                  name={key as string}
+                  type={type}
+                  value={value}
+                  required={required}
+                  rootElclass={className}
+                  label={label}
+                  labelClass={labelClass}
+                  inputWrapClass={inputWrapClass}
+                  inputClassName={`${inputClassName} ${_showErrors ? 'form-input--error' : ''}`}
+                  showErrors={_showErrors}
+                  errorMessage={errorMessage}
+                  onChange={onChange(key)}
+                />
+              )
+            })}
+            <button
+              className='login__form-btn btn'
+              type='submit'
             >
-              Создать учетную запись
-            </Link>
-          </div>
+              Войти
+            </button>
+          </form>
+        </div>
+        <div className='login__bottom'>
+          <span className='login__new'>Новый пользователь? </span>
+          <Link
+            className='login__new-link'
+            to='/signup'
+          >
+            Создать учетную запись
+          </Link>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

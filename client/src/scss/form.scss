@@ -32,14 +32,8 @@
   text-align: left;
 }
 
-.form-error {
-  font-size: 13px;
-  line-height: 15px;
-  color: red;
-}
-
 .form-input--error {
-  border: 1px solid red;
+  border: 1px solid #D41367;
 }
 
 .form-block {
@@ -79,6 +73,14 @@
 
   &__checkbox-real:checked + .form__checkbox-fake {
     background: #209cee;
+  }
+
+  &__error {
+    font-size: 14px;
+    line-height: 17px;
+    display: block;
+    text-align: left;
+    color: #D41367;
   }
 
   &__checkbox-real:checked + .form__checkbox-fake::after {
