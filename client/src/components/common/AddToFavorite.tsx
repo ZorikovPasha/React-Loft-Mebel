@@ -1,10 +1,10 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getFavorites } from '../../redux/getters'
-import { addFavoritesActionCreator, removeFavoritesActionCreator } from '../../redux/actions/favorites'
+import { getUserData } from '../../redux/getters'
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
+import { editUserActionCreator } from '../../redux/actions/userAction'
 
 interface IProps {
   id: number
@@ -13,19 +13,25 @@ interface IProps {
 export const AddToFavorite: React.FC<IProps> = ({ id }) => {
   const dispatch = useDispatch()
 
-  const { favorites } = useSelector(getFavorites)
+  const { favorites } = useSelector(getUserData)
 
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
-    dispatch(addFavoritesActionCreator([id]))
+    const payload = {
+      favorites: [id]
+    }
+    dispatch(editUserActionCreator(payload))
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
         if (isSuccessfullResponse(dto)) {
           return
         }
-        removeFavoritesActionCreator([id])
+        const payload = {
+          favorites: [id]
+        }
+        editUserActionCreator(payload)
       })
-      .catch(() => removeFavoritesActionCreator([id]))
+      .catch(() => editUserActionCreator(payload))
   }
 
   return (

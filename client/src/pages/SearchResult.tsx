@@ -2,14 +2,14 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { getFavorites, getFilteredProductsByName } from '../redux/getters'
+import { getFilteredProductsByName, getUserData } from '../redux/getters'
 import { Empty } from '../components/common/Empty'
 import { SalesItem } from '../components/common/SalesItem'
 
 const SearchResult: React.FC = () => {
   const history = useHistory()
   const [searchValue, setSearchValue] = React.useState('')
-  const { favorites } = useSelector(getFavorites)
+  const { favorites } = useSelector(getUserData)
 
   const items = useSelector(getFilteredProductsByName(searchValue))
 

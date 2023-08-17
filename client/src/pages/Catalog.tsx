@@ -8,7 +8,7 @@ import { SalesItem } from '../components/common/SalesItem'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
-import { getFavorites } from '../redux/getters'
+import { getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
@@ -48,7 +48,7 @@ const Catalog: React.FC = () => {
 
   console.log('items', items)
 
-  const { favorites } = useSelector(getFavorites)
+  const { favorites } = useSelector(getUserData)
 
   const breadcrumbs = useBreadcrumbs()
 
