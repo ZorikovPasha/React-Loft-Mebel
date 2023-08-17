@@ -5,7 +5,7 @@ import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { UserApiClient } from '../api/'
 import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
-import { isSuccessfullLoginResponse } from '../api/types'
+import { isSuccessfullGetUserResponse } from '../api/types'
 
 export const useAuth = async (): Promise<void> => {
   const dispatch = useDispatch()
@@ -17,13 +17,10 @@ export const useAuth = async (): Promise<void> => {
       return
     }
 
-    console.log('further')
-
     UserApiClient.getUserData().then((data) => {
-      if (!isSuccessfullLoginResponse(data)) {
+      if (!isSuccessfullGetUserResponse(data)) {
         return
       }
-      console.log('2')
 
       dispatch(
         loginUserActionCreator({
@@ -37,7 +34,12 @@ export const useAuth = async (): Promise<void> => {
           street: data.user.street,
           house: data.user.house,
           apartment: data.user.apartment,
-          image: data.user.image,
+          image: data.user.image
+            ? {
+                name: data.user.image.name,
+                url: `http://localhost:5000${data.user.image?.url}`
+              }
+            : null,
           emailConfirmed: data.user.emailConfirmed,
           wantsToReceiveEmailUpdates: data.user.wantsToReceiveEmailUpdates,
           createdAt: data.user.createdAt,

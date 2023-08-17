@@ -1,17 +1,18 @@
 import React from 'react'
-import { BrowserRouter, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Footer } from '../components/layout/Footer'
 import { Loader } from '../components/common/Loader'
 import { MobMenu } from '../components/layout/MobMenu'
 import { Header } from '../components/layout/Header/Header'
-import { publicRoutes, authRoutes, initialRoute } from './routes'
+import { publicRoutes, authRoutes } from './routes'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import '../scss/style.scss'
 import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
+import Login from '../pages/Login'
 
 export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
@@ -22,11 +23,9 @@ export const AppRouter = () => {
   const { isLoggedIn } = useSelector(getUserData)
   useAuth()
 
-  console.log('isAuth', isLoggedIn)
-
   return (
-    <div className='wrapper'>
-      <BrowserRouter>
+    <BrowserRouter>
+      <div className='wrapper'>
         <MobMenu
           isMobMenuOpen={isMobMenuOpen}
           setMobMenuOpen={setMobMenuOpen}
@@ -36,11 +35,6 @@ export const AppRouter = () => {
           setMobMenuOpen={setMobMenuOpen}
         />
         <main className='main'>
-          <Route
-            path={initialRoute.path}
-            component={initialRoute.component}
-            exact={initialRoute.exact}
-          />
           {publicRoutes.map(({ path, component, exact }) => (
             <React.Suspense
               fallback={<Loader />}
@@ -67,11 +61,15 @@ export const AppRouter = () => {
               </React.Suspense>
             ))
           ) : (
-            <Redirect to={ROUTES.Login} />
+            <Route
+              path={ROUTES.Login}
+              component={Login}
+              exact
+            />
           )}
         </main>
         <Footer />
-      </BrowserRouter>
-    </div>
+      </div>
+    </BrowserRouter>
   )
 }

@@ -521,7 +521,20 @@ export class UserController implements IUserController {
           apartment: user.apartment,
           image: image
             ? {
-                ...image
+                id: image.id,
+                name: image.name,
+                alternativeText: image.alternativeText,
+                caption: image.caption,
+                width: image.width,
+                height: image.height,
+                hash: image.hash,
+                ext: image.ext,
+                size: image.size,
+                url: image.url,
+                mime: image.mime,
+                provider: image.provider,
+                createdAt: image.createdAt,
+                updatedAt: image.updatedAt
               }
             : null,
           role: user.role,

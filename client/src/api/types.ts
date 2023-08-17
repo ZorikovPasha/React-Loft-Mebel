@@ -50,8 +50,7 @@ interface IOrder {
   }
 }
 
-export interface ISuccessfullLoginResponse {
-  token: string
+export interface IUserResponse {
   user: {
     id: string
     name: string
@@ -92,6 +91,10 @@ export interface ISuccessfullLoginResponse {
     orders: IOrder[] | never[] | null
     cart: ICartItem[] | never[] | null
   }
+}
+
+export interface ISuccessfullLoginResponse extends IUserResponse {
+  token: string
 }
 
 export type FormDataType = Omit<SignUpCredsType, 'password'> & { message: string }
@@ -166,6 +169,13 @@ export const isSuccessfullLoginResponse = (
   data: IErrorsResponse | IErrorResponse | ISuccessfullLoginResponse
 ): data is ISuccessfullLoginResponse => {
   const property: keyof ISuccessfullLoginResponse = 'token'
+  return property in data
+}
+
+export const isSuccessfullGetUserResponse = (
+  data: IErrorsResponse | IErrorResponse | IUserResponse
+): data is IUserResponse => {
+  const property: keyof IUserResponse = 'user'
   return property in data
 }
 
