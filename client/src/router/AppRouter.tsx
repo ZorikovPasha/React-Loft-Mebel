@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Footer } from '../components/layout/Footer'
@@ -9,10 +9,8 @@ import { Header } from '../components/layout/Header/Header'
 import { publicRoutes, authRoutes } from './routes'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
-import '../scss/style.scss'
 import { getUserData } from '../redux/getters'
-import { ROUTES } from '../utils/const'
-import Login from '../pages/Login'
+import '../scss/style.scss'
 
 export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
@@ -35,38 +33,27 @@ export const AppRouter = () => {
           setMobMenuOpen={setMobMenuOpen}
         />
         <main className='main'>
-          {publicRoutes.map(({ path, component, exact }) => (
-            <React.Suspense
-              fallback={<Loader />}
-              key={path}
-            >
-              <Route
-                path={path}
-                component={component}
-                exact={exact}
-              />
-            </React.Suspense>
-          ))}
-          {isLoggedIn ? (
-            authRoutes.map(({ path, component, exact }) => (
-              <React.Suspense
-                fallback={<Loader />}
-                key={path}
-              >
+          <React.Suspense fallback={<Loader />}>
+            <Switch>
+              {isLoggedIn &&
+                authRoutes.map(({ path, component, exact }) => (
+                  <Route
+                    path={path}
+                    key={path}
+                    component={component}
+                    exact={exact}
+                  />
+                ))}
+              {publicRoutes.map(({ path, component, exact }) => (
                 <Route
                   path={path}
+                  key={path}
                   component={component}
                   exact={exact}
                 />
-              </React.Suspense>
-            ))
-          ) : (
-            <Route
-              path={ROUTES.Login}
-              component={Login}
-              exact
-            />
-          )}
+              ))}
+            </Switch>
+          </React.Suspense>
         </main>
         <Footer />
       </div>

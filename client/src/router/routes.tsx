@@ -2,6 +2,7 @@ import React from 'react'
 
 import { ROUTES } from '../utils/const'
 import { Main } from '../pages/Main'
+import { Page404 } from '../pages/404'
 const LazyCart = React.lazy(() => import('../pages/Cart'))
 const LazyCatalog = React.lazy(() => import('../pages/Catalog'))
 const LazyProduct = React.lazy(() => import('../pages/Product'))
@@ -37,13 +38,13 @@ export const publicRoutes: IRoute[] = [
     exact: false
   },
   {
-    path: ROUTES.Product,
-    component: LazyProduct,
+    path: ROUTES.NewProduct,
+    component: LazyNewProduct,
     exact: true
   },
   {
-    path: ROUTES.NewProduct,
-    component: LazyNewProduct,
+    path: ROUTES.Product,
+    component: LazyProduct,
     exact: true
   },
   {
@@ -74,13 +75,13 @@ export const publicRoutes: IRoute[] = [
   {
     path: ROUTES.SearchResult,
     component: LazyProfileSearchReult,
+    exact: true
+  },
+  {
+    path: '*',
+    component: Page404,
     exact: false
   }
-  // {
-  //   path: "*",
-  //   component: Main, //TODO: custom 404
-  //   exact: false
-  // }
 ]
 
 export const authRoutes: IRoute[] = [

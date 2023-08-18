@@ -245,7 +245,6 @@ export class UserController implements IUserController {
         ordersData = all[1]
       }
 
-      // console.log('userData', userData);
       return res.json({
         token: token,
         user: {
