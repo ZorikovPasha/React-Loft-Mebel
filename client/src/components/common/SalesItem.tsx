@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { addtemsActionCreator } from '../../redux/actions/cartItems'
 import { UserApiClient } from '../../api'
 import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { Link } from 'react-router-dom'
@@ -17,7 +16,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
   const { id, image, name, type, priceOld, priceNew, dimensions, sale } = product
 
   const dispatch = useDispatch()
-  const { isLoggedIn } = useSelector(getUserData)
+  const { isLoggedIn, favorites } = useSelector(getUserData)
 
   const onLikeProductClick = (): void => {
     const payload = {
@@ -25,26 +24,39 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     }
     dispatch(editUserActionCreator(payload))
 
-    UserApiClient.addFavoriteItem(id)
-      .then((dto) => {
-        if (isSuccessfullResponse(dto)) {
-          return
-        }
-        editUserActionCreator(payload)
-      })
-      .catch(() => editUserActionCreator(payload))
+    if (favorites.includes(id)) {
+      UserApiClient.deleteFavoriteItem(id)
+        .then((dto) => {
+          if (!isSuccessfullResponse(dto)) {
+            editUserActionCreator(payload)
+          }
+        })
+        .catch(() => editUserActionCreator(payload))
+    } else {
+      UserApiClient.addFavoriteItem(id)
+        .then((dto) => {
+          if (!isSuccessfullResponse(dto)) {
+            editUserActionCreator(payload)
+          }
+        })
+        .catch(() => editUserActionCreator(payload))
+    }
   }
 
   const onAddToCartClick = async (): Promise<void> => {
-    dispatch(
-      addtemsActionCreator([
+    const payload = {
+      cart: [
         {
           id: id,
+          furnitureId: id,
           quintity: 1,
           price: parseFloat(priceNew ? priceNew : priceOld)
         }
-      ])
-    )
+      ]
+    }
+
+    dispatch(editUserActionCreator(payload))
+
     if (!isLoggedIn) {
       return
     }
@@ -91,30 +103,32 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
           {priceNew ? <p className='item-sales__price-new'>{priceNew} ₽</p> : null}
           {priceOld ? <p className='item-sales__price-old'>{priceOld + ' ₽'}</p> : null}
         </div>
-        <div className='item-sales__bottom flex'>
-          <p className='item-sales__text'>Размеры</p>
-          <div className='item-sales__line'>
-            <div className='item-sales__size'>
-              <p className='item-sales__val'>ШИРИНА</p>
-              <p className='item-sales__num'>{dimensions?.width} СМ</p>
+        {dimensions ? (
+          <div className='item-sales__bottom flex'>
+            <p className='item-sales__text'>Размеры</p>
+            <div className='item-sales__line'>
+              <div className='item-sales__size'>
+                <p className='item-sales__val'>ШИРИНА</p>
+                <p className='item-sales__num'>{dimensions[0].width} СМ</p>
+              </div>
+              <div className='item-sales__size'>
+                <p className='item-sales__val'>ГЛУБИНА</p>
+                <p className='item-sales__num'>{dimensions[0].length} СМ</p>
+              </div>
+              <div className='item-sales__size'>
+                <p className='item-sales__val'>ВЫСОТА</p>
+                <p className='item-sales__num'>{dimensions[0].height} СМ</p>
+              </div>
             </div>
-            <div className='item-sales__size'>
-              <p className='item-sales__val'>ГЛУБИНА</p>
-              <p className='item-sales__num'>{dimensions?.length} СМ</p>
-            </div>
-            <div className='item-sales__size'>
-              <p className='item-sales__val'>ВЫСОТА</p>
-              <p className='item-sales__num'>{dimensions?.height} СМ</p>
-            </div>
+            <button
+              className='item-sales__tocart btn'
+              type='button'
+              onClick={onAddToCartClick}
+            >
+              Добавить в корзину
+            </button>
           </div>
-          <button
-            className='item-sales__tocart btn'
-            type='button'
-            onClick={onAddToCartClick}
-          >
-            Добавить в корзину
-          </button>
-        </div>
+        ) : null}
       </div>
     </div>
   )

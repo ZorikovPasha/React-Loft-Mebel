@@ -41,7 +41,3 @@ export const removeItemActionCreator: actionCreatorType<ICartItem> = (obj) => ({
   type: Actions.REMOVE_CART_ITEM,
   payload: obj
 })
-
-export const resetCartActionCreator: actionCreatorType<null> = () => ({
-  type: Actions.RESET_CART
-})

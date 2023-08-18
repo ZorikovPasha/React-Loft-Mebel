@@ -20,7 +20,6 @@ interface IHeaderMiddleProps extends IHeaderProps {
 }
 
 const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, items }) => {
-  // const { isLoggedin } = useSelector(getUserData)
   const { isLoggedIn, image } = useSelector(getUserData)
   const menuBtnRef = React.useRef(null)
 
@@ -51,132 +50,82 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
   }
 
   return (
-    <>
-      {headerMiddleTall ? (
-        <div className='header__mid header__mid--taller'>
-          <div
-            className='menu-btn'
-            onClick={onMobMenuBtnClick}
-            ref={menuBtnRef}
-          >
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <Link
-            to='/'
-            className='logo'
-          >
-            <img
-              src='/images/logo.svg'
-              alt='logo'
-            />
-          </Link>
-          <nav className='header__nav'>
-            <ul className='header__list'>
-              {items.map((item, idx) => (
-                <li
-                  key={`${item.name}_${idx}`}
-                  className='header__list-item'
-                >
-                  <Link
-                    to={item.link}
-                    className='header__list-link'
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <HeaderSearchForm inputSpec />
-          <div className='header__connect'>
-            <a
-              className='header__phone header__phone--black'
-              href='tel:89648999119'
-            >
-              {Const.phone}
-            </a>
-            <Link
-              className='header__delivery header__delivery--black'
-              to='/contacts'
-            >
-              Доставка
-            </Link>
-          </div>
-          <div className='header__user user-header'>
-            <HeaderWishListIcon />
-            <HeaderBagIcon />
-            <Link
-              to={isLoggedIn ? '/profile' : '/login'}
-              className='user-header__link'
-            >
-              <img
-                src='/images/icons/profile.svg'
-                alt='profile'
-              />
-            </Link>
-          </div>
-        </div>
-      ) : (
-        <div className='header__mid'>
-          <div
-            className='menu-btn'
-            onClick={onMobMenuBtnClick}
-          >
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <Link
-            to='/'
-            className='logo'
-          >
-            <img
-              src='/images/logo.svg'
-              alt='logo'
-            />
-          </Link>
+    <div className={`header__mid ${headerMiddleTall ? 'header__mid--taller' : ''}`}>
+      <div
+        className='menu-btn'
+        onClick={onMobMenuBtnClick}
+        ref={menuBtnRef}
+      >
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <Link
+        to='/'
+        className='logo'
+      >
+        <img
+          src='/images/logo.svg'
+          alt='logo'
+        />
+      </Link>
 
-          <HeaderSearchForm />
-          <div className='header__connect header__connect--mid'>
-            <a
-              className='header__phone header__phone--black'
-              href='tel:89648999119'
-            >
-              {Const.phone}
-            </a>
-            <Link
-              to='/about'
-              className='header__delivery header__delivery--black'
-            >
-              Доставка
-            </Link>
-          </div>
-          <div className='header__user user-header'>
-            <HeaderWishListIcon />
-            <HeaderBagIcon />
-            <Link
-              to={isLoggedIn ? '/profile' : '/login'}
-              className='user-header__link user-header__link--profile user-header__link--hover'
-            >
-              {isLoggedIn && image ? (
-                <img
-                  className='user-header__picture'
-                  src={image.url}
-                  alt='profile'
-                />
-              ) : (
-                <img
-                  src='/images/icons/profile.svg'
-                  alt=''
-                />
-              )}
-            </Link>
-          </div>
-        </div>
-      )}
-    </>
+      {headerMiddleTall ? (
+        <nav className='header__nav'>
+          <ul className='header__list'>
+            {items.map((item, idx) => (
+              <li
+                key={`${item.name}_${idx}`}
+                className='header__list-item'
+              >
+                <Link
+                  to={item.link}
+                  className='header__list-link'
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
+      <HeaderSearchForm inputSpec />
+      <div className='header__connect'>
+        <a
+          className='header__phone header__phone--black'
+          href='tel:89648999119'
+        >
+          {Const.phone}
+        </a>
+        <Link
+          className='header__delivery header__delivery--black'
+          to='/contacts'
+        >
+          Доставка
+        </Link>
+      </div>
+      <div className='header__user user-header'>
+        <HeaderWishListIcon />
+        <HeaderBagIcon />
+        <Link
+          to={isLoggedIn ? '/profile' : '/login'}
+          className='user-header__link user-header__link--profile user-header__link--hover'
+        >
+          {isLoggedIn && image ? (
+            <img
+              className='user-header__picture'
+              src={image.url}
+              alt='profile'
+            />
+          ) : (
+            <img
+              src='/images/icons/profile.svg'
+              alt=''
+            />
+          )}
+        </Link>
+      </div>
+    </div>
   )
 }
 

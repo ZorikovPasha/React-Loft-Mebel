@@ -8,6 +8,8 @@ import { IFurniture } from '../../api/types'
 
 export const fetchItemsThunkCreator = () // queryParams: string
 : ThunkAction<void, IProductsState, unknown, fetchItemsActionType> => {
+  console.log('fetchItemsThunkCreator')
+
   return async (dispatch: Dispatch<fetchItemsActionType>) => {
     const controller = new AbortController()
     const furniture = await UserApiClient.getFurniture(controller.signal)

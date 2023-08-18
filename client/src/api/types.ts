@@ -128,13 +128,15 @@ export interface IFurniture {
     createdAt: string
     updatedAt: string
   } | null
-  dimensions: {
-    id: number
-    furnitureId: number
-    width: number
-    length: number
-    height: number
-  } | null
+  dimensions:
+    | {
+        id: number
+        furnitureId: number
+        width: number
+        length: number
+        height: number
+      }[]
+    | null
 }
 
 export interface IFurnitureResponse {

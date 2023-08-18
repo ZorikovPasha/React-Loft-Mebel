@@ -13,7 +13,6 @@ export const getFilteredProductsByName =
 
 export const getCartItems = (state: RootState): ICartItem[] => state.cartItems.cartItems
 export const getTotalCost = (state: RootState): number => state.cartItems.totalCost
-export const getCartItemsQuintity = (state: RootState): number => state.cartItems.quintity
 export const getOrderStatus = (state: RootState): boolean => state.cartItems.isOrderMade
 export const getOrders = (state: RootState): OrderInfoType[] => state.cartItems.orders
 export const getCartLoadingState = (state: RootState): boolean => state.cartItems.isLoaded

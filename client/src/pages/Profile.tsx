@@ -6,7 +6,6 @@ import { useDropzone } from 'react-dropzone'
 import { UserApiClient } from '../api'
 import { getUserData } from '../redux/getters'
 import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
-import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
@@ -194,14 +193,78 @@ const Profile: React.FC = () => {
     })
   }, [user.image])
 
-  React.useEffect(() => setName((prev) => ({ ...prev, value: user.name })), [user.name])
-  React.useEffect(() => setSurname((prev) => ({ ...prev, value: user.surname })), [user.surname])
-  React.useEffect(() => setEmail((prev) => ({ ...prev, value: user.email })), [user.email])
-  React.useEffect(() => setPhone((prev) => ({ ...prev, value: user.phone })), [user.phone])
-  React.useEffect(() => setCity((prev) => ({ ...prev, value: user.city })), [user.city])
-  React.useEffect(() => setStreet((prev) => ({ ...prev, value: user.street })), [user.street])
-  React.useEffect(() => setHouse((prev) => ({ ...prev, value: user.house })), [user.house])
-  React.useEffect(() => setApartment((prev) => ({ ...prev, value: user.apartment })), [user.apartment])
+  React.useEffect(
+    () =>
+      setName((prev) => ({
+        ...prev,
+        value: user.name,
+        isValid: prev.validateFn(user.name)
+      })),
+    [user.name]
+  )
+  React.useEffect(
+    () =>
+      setSurname((prev) => ({
+        ...prev,
+        value: user.surname,
+        isValid: prev.validateFn(user.surname)
+      })),
+    [user.surname]
+  )
+  React.useEffect(
+    () =>
+      setEmail((prev) => ({
+        ...prev,
+        value: user.email,
+        isValid: prev.validateFn(user.email)
+      })),
+    [user.email]
+  )
+  React.useEffect(
+    () =>
+      setPhone((prev) => ({
+        ...prev,
+        value: user.phone,
+        isValid: prev.validateFn(user.phone)
+      })),
+    [user.phone]
+  )
+  React.useEffect(
+    () =>
+      setCity((prev) => ({
+        ...prev,
+        value: user.city,
+        isValid: prev.validateFn(user.city)
+      })),
+    [user.city]
+  )
+  React.useEffect(
+    () =>
+      setStreet((prev) => ({
+        ...prev,
+        value: user.street,
+        isValid: prev.validateFn(user.street)
+      })),
+    [user.street]
+  )
+  React.useEffect(
+    () =>
+      setHouse((prev) => ({
+        ...prev,
+        value: user.house,
+        isValid: prev.validateFn(user.house)
+      })),
+    [user.house]
+  )
+  React.useEffect(
+    () =>
+      setApartment((prev) => ({
+        ...prev,
+        value: user.apartment,
+        isValid: prev.validateFn(user.apartment)
+      })),
+    [user.apartment]
+  )
 
   const onChange =
     (setState: React.Dispatch<React.SetStateAction<IField>>) =>
@@ -249,22 +312,23 @@ const Profile: React.FC = () => {
       apartment: apartment.value,
       ...(profilePicture.url
         ? {
-            name: '',
-            url: profilePicture.url
+            image: {
+              name: '',
+              url: profilePicture.url
+            }
           }
         : {})
     }
 
+    console.log('payload', payload)
+
     dispatch(loginUserActionCreator(payload))
     UserApiClient.updateUserData(formData)
-      .then(() => {})
-      .catch(() => {})
   }
 
   const onLogout = () => {
     localStorage.removeItem('loft_furniture_token')
     dispatch(logoutUserActionCreator())
-    dispatch(resetCartActionCreator())
     history.push({ pathname: '/' })
   }
 

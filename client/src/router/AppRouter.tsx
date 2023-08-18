@@ -16,10 +16,15 @@ export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
 
   const dispatch = useDispatch()
-  dispatch(fetchItemsThunkCreator())
 
-  const { isLoggedIn } = useSelector(getUserData)
+  React.useLayoutEffect(() => {
+    dispatch(fetchItemsThunkCreator())
+  }, [])
+
+  const { isLoggedIn, cart } = useSelector(getUserData)
   useAuth()
+
+  console.log('cart', cart)
 
   return (
     <BrowserRouter>

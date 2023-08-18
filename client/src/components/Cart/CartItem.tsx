@@ -2,9 +2,9 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { addtemsActionCreator, removeItemActionCreator } from '../../redux/actions/cartItems'
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
+import { editUserActionCreator } from '../../redux/actions/userAction'
 
 interface ICartItemProps {
   item: {
@@ -15,12 +15,10 @@ interface ICartItemProps {
     price: number
     quintity: number
     dimension: {
-      id: number
-      furnitureId: number
       width: number
       length: number
       height: number
-    } | null
+    }[]
     colors: string[]
   }
 }
@@ -30,21 +28,28 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
   const dispatch = useDispatch()
 
   const onRemoveItemClick = () => {
-    const cartItem = {
-      id: cartItemId,
-      quintity,
-      price
+    const payload = {
+      cart: [
+        {
+          id: cartItemId,
+          furnitureId,
+          quintity
+        }
+      ]
     }
-    dispatch(removeItemActionCreator(cartItem))
-    UserApiClient.removeCartItem(cartItemId)
+
+    console.log('payload', payload)
+
+    dispatch(editUserActionCreator(payload))
+    UserApiClient.removeCartItem(furnitureId)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
           return
         }
 
-        addtemsActionCreator([cartItem])
+        editUserActionCreator(payload)
       })
-      .catch(() => addtemsActionCreator([cartItem]))
+      .catch(() => editUserActionCreator(payload))
   }
 
   const totalCost = price * quintity
@@ -88,7 +93,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
               <p className='info-feature__name'>Размер(Ш×Д×В):</p>
               {dimension ? (
                 <p className='info-feature__val'>
-                  {dimension.width} СМ × {dimension.length} СМ × {dimension.height} СМ
+                  {dimension[0].width} СМ × {dimension[0].length} СМ × {dimension[0].height} СМ
                 </p>
               ) : null}
             </div>

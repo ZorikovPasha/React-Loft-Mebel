@@ -47,7 +47,7 @@ export class AppController {
                 id: f.imageId
               }
             }),
-            prismaClient.furnitureDimension.findFirst({
+            prismaClient.furnitureDimension.findMany({
               where: {
                 id: f.id
               }
@@ -396,6 +396,15 @@ export class AppController {
         return next(ApiError.badRequest('Id was not provided'))
       }
 
+      const candidate = await prismaClient.favoriteFurniture.findFirst({
+        where: {
+          userId: res.locals.user.id,
+          furnitureId: id
+        }
+      })
+      if (candidate) {
+        return next(ApiError.badRequest('Item already exists'))
+      }
       await prismaClient.favoriteFurniture.create({
         data: {
           userId: res.locals.user.id,
@@ -418,14 +427,14 @@ export class AppController {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
 
-      const { id } = req.body
+      const { id } = req.body // this is product id
       if (!id) {
         return next(ApiError.badRequest('Id was not provided'))
       }
 
-      await prismaClient.favoriteFurniture.delete({
+      await prismaClient.favoriteFurniture.deleteMany({
         where: {
-          id: id
+          furnitureId: id
         }
       })
 

@@ -6,7 +6,6 @@ import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { SalesItem } from '../components/common/SalesItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
-import { Loader } from '../components/common/Loader'
 import { IFurniture } from '../api/types'
 
 const Favorites: React.FC = () => {
@@ -14,7 +13,7 @@ const Favorites: React.FC = () => {
 
   const items = useSelector(getProducts)
 
-  const { favorites, isLoggedIn } = useSelector(getUserData)
+  const { favorites } = useSelector(getUserData)
 
   const favoriteItems: IFurniture[] = []
   favorites.forEach((id) => {
@@ -37,20 +36,17 @@ const Favorites: React.FC = () => {
           </div>
         </div>
       </section>
-      {isLoggedIn ? (
-        <Loader />
-      ) : favorites.length ? (
+      {favorites.length ? (
         <section className='sales'>
           <div className='container'>
             <div className='sales__items sales__items--cart'>
-              {favoriteItems &&
-                favoriteItems?.map((item) => (
-                  <SalesItem
-                    key={item.id}
-                    product={item}
-                    isFavorite={true}
-                  />
-                ))}
+              {favoriteItems?.map((item) => (
+                <SalesItem
+                  key={item.id}
+                  product={item}
+                  isFavorite={true}
+                />
+              ))}
             </div>
           </div>
         </section>
