@@ -1,7 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { UserApiClient } from '../api'
 import { IField } from './SignUp'
@@ -10,10 +10,12 @@ import AppTextField from '../components/common/appTextField'
 import { ROUTES } from '../utils/const'
 import { isResponseWithErrors, isSuccessfullLoginResponse } from '../api/types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
+import { getUserData } from '../redux/getters'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
 
+  const { isLoggedIn } = useSelector(getUserData)
   const history = useHistory()
 
   const fields = React.useRef<Record<string, IField>>({
@@ -140,7 +142,9 @@ const Login: React.FC = () => {
     })
   }
 
-  return (
+  return isLoggedIn ? (
+    <Redirect to={ROUTES.Profile} />
+  ) : (
     <div className='login'>
       <div className='container'>
         <div className='login__inner'>

@@ -1,0 +1,19 @@
+.page404 {
+  min-height: 100%;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  padding-top: 80px;
+  padding-bottom: 80px;
+
+  &__404 {
+    font-size: 80px;
+    line-height: 100px;
+    color: #D41367;
+  }
+
+  &__link {
+    text-decoration: underline;
+    color: #209cee
+  }
+}

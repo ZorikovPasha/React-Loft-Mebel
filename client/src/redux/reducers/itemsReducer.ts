@@ -13,7 +13,7 @@ const initialState: IProductsState = {
   isError: false
 }
 
-const itemsReducer = (state = initialState, action: fetchItemsActionType): IProductsState => {
+export const itemsReducer = (state = initialState, action: fetchItemsActionType): IProductsState => {
   switch (action.type) {
     case Actions.SET_PRODUCTS:
       return {
@@ -24,5 +24,3 @@ const itemsReducer = (state = initialState, action: fetchItemsActionType): IProd
       return state
   }
 }
-
-export default itemsReducer

@@ -1,5 +1,6 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { ModalInfo } from '../components/common/ModalInfo'
 import { UserApiClient } from '../api'
@@ -12,6 +13,9 @@ import {
   validateTextInput
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
+import { isSuccessfullResponse } from '../api/types'
+import { getUserData } from '../redux/getters'
+import { ROUTES } from '../utils/const'
 
 export interface IField {
   value: string
@@ -34,6 +38,8 @@ export interface IField {
 
 const SignUp: React.FC = () => {
   const history = useHistory()
+
+  const { isLoggedIn } = useSelector(getUserData)
 
   const _fields = React.useRef<Record<string, IField>>({
     name: {
@@ -117,8 +123,11 @@ const SignUp: React.FC = () => {
       password: form.password.value
     }
 
-    UserApiClient.register(dto).then(() => {
+    UserApiClient.register(dto).then((data) => {
       // if (data.status === 200) {
+      if (!isSuccessfullResponse(data)) {
+        return
+      }
       document.documentElement.classList.add('lock')
       setModalSignUp(true)
       // }
@@ -131,7 +140,9 @@ const SignUp: React.FC = () => {
     setModalSignUp(false)
   }
 
-  return (
+  return isLoggedIn ? (
+    <Redirect to={ROUTES.Profile} />
+  ) : (
     <>
       <div className='signup'>
         <div className='container'>

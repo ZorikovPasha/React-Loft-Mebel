@@ -22,7 +22,7 @@ const initialState: ICartState = {
   isLoaded: false
 }
 
-const cartItemsReducer = (state = initialState, action: cartItemsActionType): ICartState => {
+export const cartItemsReducer = (state = initialState, action: cartItemsActionType): ICartState => {
   switch (action.type) {
     case Actions.REMOVE_CART_ITEM: {
       const remainingCartItems = state.cartItems.filter((item) => item.id !== action.payload.id)
@@ -106,5 +106,3 @@ const cartItemsReducer = (state = initialState, action: cartItemsActionType): IC
       return state
   }
 }
-
-export default cartItemsReducer

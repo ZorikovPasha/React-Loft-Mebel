@@ -9,12 +9,12 @@ import { Loader } from '../components/common/Loader'
 import { ModalInfo } from '../components/common/ModalInfo'
 import {
   getCartItems,
-  getQuintity,
   getTotalCost,
   getProducts,
   getOrderStatus,
   getCartLoadingState,
-  getUserData
+  getUserData,
+  getCartItemsQuintity
 } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
@@ -26,7 +26,7 @@ const Cart: React.FC = () => {
   const dispatch = useDispatch()
 
   const cartItems = useSelector(getCartItems)
-  const quintity = useSelector(getQuintity)
+  const quintity = useSelector(getCartItemsQuintity)
   const total = useSelector(getTotalCost)
   const items = useSelector(getProducts)
   const { favorites, isLoggedIn } = useSelector(getUserData)
