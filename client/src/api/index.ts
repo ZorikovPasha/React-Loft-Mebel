@@ -132,6 +132,10 @@ class UserApi extends Api {
     return this.post('/api/favorites', { id })
   }
 
+  deleteFavoriteItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
+    return this.delete('/api/favorites', { id })
+  }
+
   addItemToCart = (dto: ICartItemRequest): Promise<ISuccessfullResponse | IErrorResponse> => {
     return this.post('/api/cart', dto)
   }

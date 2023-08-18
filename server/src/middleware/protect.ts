@@ -43,6 +43,7 @@ export const protect = async (req: Request, res: Response, next: NextFunction): 
     res.locals.user = user
     next()
   } catch (error) {
+    // TODO: should add logging in protect
     return next(ApiError.internal(error as Error))
   }
 }

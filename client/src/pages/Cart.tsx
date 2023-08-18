@@ -5,33 +5,35 @@ import { SalesItem } from '../components/common/SalesItem'
 import { CartItem } from '../components/Cart/CartItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
-import { Loader } from '../components/common/Loader'
 import { ModalInfo } from '../components/common/ModalInfo'
-import {
-  getCartItems,
-  getTotalCost,
-  getProducts,
-  getOrderStatus,
-  getCartLoadingState,
-  getUserData,
-  getCartItemsQuintity
-} from '../redux/getters'
+import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
-import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { setOrderStatusActionCreator } from '../redux/actions/cartItems'
+
+interface ICollectedCartItem {
+  furnitureId: number
+  cartItemId: number
+  name: string
+  imageUrl: string
+  price: number
+  quintity: number
+  dimension: {
+    width: number
+    length: number
+    height: number
+  }[]
+  colors: string[]
+}
 
 const Cart: React.FC = () => {
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const dispatch = useDispatch()
 
-  const cartItems = useSelector(getCartItems)
-  const quintity = useSelector(getCartItemsQuintity)
-  const total = useSelector(getTotalCost)
   const items = useSelector(getProducts)
-  const { favorites, isLoggedIn } = useSelector(getUserData)
-  const isOrderMade = useSelector(getOrderStatus)
-  const isLoaded = useSelector(getCartLoadingState)
+  const { favorites, isLoggedIn, cart } = useSelector(getUserData)
+
+  console.log('cart', cart)
 
   const breadcrumbs = useBreadcrumbs()
 
@@ -43,7 +45,6 @@ const Cart: React.FC = () => {
     }
 
     UserApiClient.makeOrder()
-    dispatch(resetCartActionCreator())
     dispatch(setOrderStatusActionCreator(true))
   }
 
@@ -52,26 +53,37 @@ const Cart: React.FC = () => {
     document.documentElement.classList.remove('lock')
   }
 
-  const collectedItems = cartItems
-    ?.map((cartItem) => {
-      const currentItem = items.find((item) => item.id === cartItem.id)
+  const collectedItems =
+    cart?.reduce((accum: ICollectedCartItem[], next) => {
+      const currentItem = items.find((item) => item.id === next.furnitureId)
       if (!currentItem) {
-        return
+        return accum
       }
+      return [
+        ...accum,
+        {
+          furnitureId: currentItem.id,
+          cartItemId: next.id,
+          name: currentItem.name,
+          imageUrl: currentItem.image?.url ?? '',
+          price: parseFloat(currentItem.priceNew ? currentItem.priceNew : currentItem.priceOld),
+          quintity: next.quintity,
+          dimension: currentItem.dimensions?.map(({ width, length, height }) => ({ width, length, height })) ?? [],
+          colors: currentItem.colors
+        }
+      ]
+    }, []) ?? []
 
-      return {
-        furnitureId: currentItem.id,
-        cartItemId: cartItem.id,
-        name: currentItem.name,
-        imageUrl: currentItem.image?.url ?? '',
-        price: parseFloat(currentItem.priceNew ? currentItem.priceNew : currentItem.priceOld),
-        quintity: cartItem.quintity,
-        dimension: currentItem.dimensions,
-        colors: currentItem.colors
-      }
-    })
-    .filter((c) => Boolean(c))
+  const quintity = collectedItems.reduce((accum, next) => {
+    return accum + next.quintity
+  }, 0)
+  const total = collectedItems.reduce((accum, next) => {
+    return accum + next.price * next.quintity
+  }, 0)
 
+  console.log('collectedItems', collectedItems)
+
+  const youMayAlsoLikeThese = cart.length ? items.filter((item) => parseFloat(item.rating) > 4) : []
   return (
     <>
       {modalLoginOpened && (
@@ -85,26 +97,20 @@ const Cart: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='cart'>
         <div className='container'>
-          {!isLoaded && isLoggedIn ? (
-            <Loader />
-          ) : !cartItems.length ? (
-            <Empty text={`${isOrderMade ? 'Ваш заказ успешно добавлен!' : 'Вы ничего не добавили в корзину('}`} />
-          ) : (
+          {isLoggedIn && collectedItems.length ? (
             <>
               <div className='cart__top'>
                 <p>Ваша корзина</p>
                 <p>
-                  <span className='cart__top-num'>Предметов: {quintity}</span>
+                  <span className='cart__top-num'>Items: {quintity}</span>
                 </p>
               </div>
-              {collectedItems.map((item) =>
-                item ? (
-                  <CartItem
-                    key={item.name}
-                    item={item}
-                  />
-                ) : null
-              )}
+              {collectedItems.map((item) => (
+                <CartItem
+                  key={item.name}
+                  item={item}
+                />
+              ))}
               <div className='cart__bottom'>
                 <p className='cart__bottom-total'>
                   Итоговая стоимость:
@@ -118,30 +124,27 @@ const Cart: React.FC = () => {
                 </button>
               </div>
             </>
+          ) : (
+            <Empty text='Вы ничего не добавили в корзину(' />
           )}
         </div>
       </section>
-      {cartItems.length ? (
-        <section className='sales'>
+      {youMayAlsoLikeThese.length ? (
+        <section className='sales mt-30'>
           <div className='container'>
             <h3 className='sales__title'>Вам может понравиться</h3>
             <div className='sales__items sales__items--cart'>
-              {items &&
-                items
-                  .filter((item) => item.id < 4)
-                  .map((product) => (
-                    <SalesItem
-                      key={product.id}
-                      product={product}
-                      isFavorite={favorites.includes(product.id)}
-                    />
-                  ))}
+              {youMayAlsoLikeThese.map((product) => (
+                <SalesItem
+                  key={product.id}
+                  product={product}
+                  isFavorite={favorites.includes(product.id)}
+                />
+              ))}
             </div>
           </div>
         </section>
-      ) : (
-        ''
-      )}
+      ) : null}
     </>
   )
 }

@@ -39,6 +39,8 @@ const Catalog: React.FC = () => {
     const controller = new AbortController()
 
     setLoading(true)
+    console.log('catalog')
+
     UserApiClient.getFurniture(controller.signal).then((data) => {
       setItems(data.items)
       setLoading(false)

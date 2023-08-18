@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { resetCartActionCreator } from '../redux/actions/cartItems'
 import { UserApiClient } from '../api/'
 import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
@@ -57,6 +56,5 @@ export const useAuth = async (): Promise<void> => {
       return
     }
     dispatch(logoutUserActionCreator())
-    dispatch(resetCartActionCreator())
   }, [isLoggedIn])
 }

@@ -10,7 +10,6 @@ type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
 interface ICartItem {
   id: number
   furnitureId: number
-  cartId: number
   quintity: number
 }
 
@@ -89,13 +88,26 @@ const userReducer = (state = initialState, action: userActionType): IUserState =
     case Actions.EDIT_USER_DATA: {
       const newFavorites =
         action.payload.favorites?.reduce((accum: number[], next) => {
-          return state.favorites.includes(next) ? accum.filter((f) => f !== next) : [...accum, next]
+          return state.favorites.includes(next) ? state.favorites.filter((f) => f !== next) : [...state.favorites, next]
         }, []) ?? []
 
+      console.log('newFavorites', newFavorites)
+
+      const newItems: ICartItem[] = []
+      let rest: ICartItem[] = []
+      action.payload.cart?.forEach((item) => {
+        const candidate = state.cart.find((i) => i.furnitureId === item.furnitureId)
+        if (candidate) {
+          rest = state.cart.filter((i) => i.furnitureId !== item.furnitureId)
+        } else {
+          rest.push(item)
+        }
+      })
       return {
         ...state,
         ...action.payload,
-        favorites: [...state.favorites, ...newFavorites]
+        favorites: newFavorites,
+        cart: [...rest, ...newItems]
       }
     }
     case Actions.LOGOUT:

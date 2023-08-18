@@ -51,7 +51,6 @@ export class UserController implements IUserController {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
       const errors = validationResult(req)
-      // const errors: { formatter: () => void; errors: Record<string, string>[] } = validationResult(req)
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
       }
@@ -400,12 +399,13 @@ export class UserController implements IUserController {
           data: compressedImage
         }
 
+        console.log('imageToSave', imageToSave)
+
         const _savedImage = await prismaClient.image.create({
           data: imageToSave
         })
 
         savedImage = _savedImage
-        console.log('savedImage', savedImage)
       }
 
       if (image !== null && typeof image !== 'undefined' && !Array.isArray(image) && savedImage) {

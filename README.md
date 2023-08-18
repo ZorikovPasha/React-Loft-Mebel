@@ -7,14 +7,14 @@ TODO!:
 - [x] remove formik    
 - [x] removeyup    
 - [x] вынести селект в отдельный чанк    
-- [ ] /api/furniture changed for GET from POST    
+- [?] /api/furniture changed for GET from POST    
 - [x] убpать модель мобильного меню и слайдов из бэкенда и роуты тоже и методы    
 - [x] remove /private prefix     
 - [x] unify success messages    
 - [x] switch to prisma + postgres    
 - [ ] edit api endpoints on client    
 - [ ] confirm email via email    
-- [ ] profile picture?    
+- [x] profile picture?    
 - [ ] refactor server api    
 - [ ] добавить продукты    
 - [x] image compressing    
@@ -22,7 +22,7 @@ TODO!:
 - [ ] switch from redux to react query?    
 - [x] redirect to 404    
 - [x] shuold get all colors and brands from backend in aside    
-- [ ] should add logging when accessing a route    
+- [x] should add logging when accessing a route    
 - [ ] /login swagger edit response types    
 - [x] redux should get user's info right after login    
 - [x] /login should return user data (think of which)    
@@ -31,8 +31,18 @@ TODO!:
 - [ ] should implement github-ci    
 - [ ] user should have the ability to confirm email ("emailConfirmed": boolean)
 - [ ] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
-- [ ] image name before uploads is incorrect
+- [x] image name before uploads is incorrect
 - [x] login returns image buffer but should not
 - [x] remove cart and orders requests, they come with login
 - [x] merge favorites reducer into user reducer
 - [ ] add rewrite from /uploads to server
+- [x] after submit image icon is not changing
+- [ ] handle something went wrong when updating profile
+- [ ] add logging in protect
+- [ ] display orders
+- [ ] at the start two equal api call `api/furniture` in catalog
+- [ ] should display rating
+- [ ] should refine items' color and dimensions in cart
+- [x] cart item is not being removed from redux
+- [x] removing from favorites does not remove from redux
+- [ ] mark in swagger which id to send
