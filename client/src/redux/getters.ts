@@ -17,3 +17,4 @@ export const getOrderStatus = (state: RootState): boolean => state.cartItems.isO
 export const getOrders = (state: RootState): OrderInfoType[] => state.cartItems.orders
 export const getCartLoadingState = (state: RootState): boolean => state.cartItems.isLoaded
 export const getUserData = (state: RootState): IUserState => state.user
+export const getPathname = (state: RootState): string => state.pathname.pathname

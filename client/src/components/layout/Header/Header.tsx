@@ -19,11 +19,9 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
   ]
 
   const { location } = useHistory()
-  let showHeaderTop = false
+  const showHeaderTop = location.pathname === ROUTES.Home
 
-  if (location.pathname === ROUTES.Home) {
-    showHeaderTop = true
-  }
+  console.log('showHeaderTop', showHeaderTop)
 
   return (
     <header className='header'>

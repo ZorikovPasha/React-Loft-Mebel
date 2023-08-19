@@ -23,7 +23,8 @@ export const Actions = {
   SET_ORDERS: 'SET_ORDERS',
   CART_LOADING: 'CART_LOADING',
   RESET_PRODUCTS: 'RESET_PRODUCTS',
-  EDIT_USER_DATA: 'EDIT_USER_DATA'
+  EDIT_USER_DATA: 'EDIT_USER_DATA',
+  SET_PATHNAME: 'SET_PATHNAME'
 } as const
 
 export type fetchItemsActionType = {
@@ -68,3 +69,8 @@ export type cartItemsActionType =
     }
   | { type: typeof Actions.CART_LOADING; payload: boolean }
   | { type: typeof Actions.ORDER_STATUS; payload: boolean }
+
+export type pathnameActionType = {
+  type: typeof Actions.SET_PATHNAME
+  payload: string
+}

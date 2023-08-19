@@ -10,6 +10,7 @@ import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
 import { setOrderStatusActionCreator } from '../redux/actions/cartItems'
+import { setPathnameActionCreator } from '../redux/actions/pathname'
 
 interface ICollectedCartItem {
   furnitureId: number
@@ -33,9 +34,15 @@ const Cart: React.FC = () => {
   const items = useSelector(getProducts)
   const { favorites, isLoggedIn, cart } = useSelector(getUserData)
 
-  console.log('cart', cart)
-
   const breadcrumbs = useBreadcrumbs()
+
+  React.useLayoutEffect(() => {
+    dispatch(setPathnameActionCreator(window.location.pathname))
+
+    return () => {
+      dispatch(setPathnameActionCreator('whatever'))
+    }
+  }, [])
 
   const onRegisterOrder = () => {
     if (!isLoggedIn) {
@@ -81,8 +88,6 @@ const Cart: React.FC = () => {
     return accum + next.price * next.quintity
   }, 0)
 
-  console.log('collectedItems', collectedItems)
-
   const youMayAlsoLikeThese = cart.length ? items.filter((item) => parseFloat(item.rating) > 4) : []
   return (
     <>
@@ -97,7 +102,7 @@ const Cart: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='cart'>
         <div className='container'>
-          {isLoggedIn && collectedItems.length ? (
+          {collectedItems.length ? (
             <>
               <div className='cart__top'>
                 <p>Ваша корзина</p>
