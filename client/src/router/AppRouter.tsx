@@ -44,6 +44,7 @@ export const AppRouter = () => {
                 authRoutes.map(({ path, component, exact }) => (
                   <Route
                     path={path}
+                    key={path}
                     component={component}
                     exact={exact}
                   />
@@ -51,6 +52,7 @@ export const AppRouter = () => {
               {publicRoutes.map(({ path, component, exact }) => (
                 <Route
                   path={path}
+                  key={path}
                   component={component}
                   exact={exact}
                 />

@@ -2,26 +2,20 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
-import { UserApiClient } from '../api'
 import { ProductCard } from '../components/Product/ProductCard'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { ProductTabs } from '../components/Product/ProductTabs'
 import { Related } from '../components/Product/Related'
-import { IFurniture } from '../api/types'
+import { useSelector } from 'react-redux'
+import { getProducts } from '../redux/getters'
 
 const Product: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+  const products = useSelector(getProducts)
 
-  const [currentProduct, setCurrentProduct] = React.useState<IFurniture>()
   const breadcrumbs = useBreadcrumbs()
 
-  React.useEffect(() => {
-    const controller = new AbortController()
-    const signal = controller.signal
-
-    UserApiClient.getOneFurniture(id, signal).then((data) => setCurrentProduct(data))
-    return (): void => controller.abort()
-  }, [id])
+  const currentProduct = products.find((p) => p.id === Number(id))
 
   return (
     <>

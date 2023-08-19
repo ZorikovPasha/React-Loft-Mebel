@@ -22,7 +22,7 @@ TODO!:
 - [ ] switch from redux to react query?    
 - [x] redirect to 404    
 - [x] shuold get all colors and brands from backend in aside    
-- [x] should add logging when accessing a route    
+- [x] should add logging when accessing a route    E
 - [ ] /login swagger edit response types    
 - [x] redux should get user's info right after login    
 - [x] /login should return user data (think of which)    
@@ -50,3 +50,5 @@ TODO!:
 - [x] when not logged in items are not being added to cart 
 - [x] catalog aside close
 - [ ] cart items after login should be added to database?
+- [ ] productcard on buy nothing happens 
+- [ ] productcard  select is not working

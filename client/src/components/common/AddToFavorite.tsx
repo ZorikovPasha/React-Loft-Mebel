@@ -13,14 +13,23 @@ interface IProps {
 export const AddToFavorite: React.FC<IProps> = ({ id }) => {
   const dispatch = useDispatch()
 
-  const { favorites } = useSelector(getUserData)
+  console.log('id', id)
+
+  const { favorites, isLoggedIn } = useSelector(getUserData)
+
+  console.log('favorites', favorites)
 
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
     const payload = {
       favorites: [id]
     }
+
     dispatch(editUserActionCreator(payload))
+
+    if (!isLoggedIn) {
+      return
+    }
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
         if (isSuccessfullResponse(dto)) {
@@ -36,10 +45,13 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
 
   return (
     <button
-      className={`shop__wish ${favorites.includes(id) ? 'active' : ''}`}
+      className='shop__wish'
       onClick={onAddToFavoriteClick}
     >
-      Add to favorites
+      <img
+        src={favorites.includes(id) ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}
+        alt=''
+      />
     </button>
   )
 }

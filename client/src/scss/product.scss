@@ -1,21 +1,14 @@
 .product {
-  padding-bottom: 50px;
-
   &__inner {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  // .product__images
-
-  &__images {
-    width: calc(100% - 420px - 30px);
+    grid-template-columns: calc(100% - 490px) 460px;
+    grid-gap: 30px;
+    max-width: 100%;
   }
 
   // .product__slider
 
   &__slider {
-    padding: 60px 27px 45px;
+    padding: 45px 25px 45px;
   }
 
   // .product__slider-item
@@ -71,13 +64,6 @@
       max-width: 100px;
     }
   }
-
-  // .product__info
-
-  &__info {
-    margin-left: 30px;
-    min-width: 420px;
-  }
 }
 
 .info {
@@ -117,6 +103,8 @@
 
   &__features {
     margin-bottom: 20px;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-gap: 20px;
   }
 
   // .info__text-title
@@ -172,26 +160,7 @@
   // .shop__wish
 
   &__wish {
-    font-size: 12px;
-    line-height: 14px;
-    padding-left: 28px;
-    padding-right: 18px;
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translate(0, -50%);
-      width: 24px;
-      height: 22px;
-      background-image: url('/images/icons/wish.svg');
-    }
-
-    &.active::after {
-      background-image: url('/images/icons/wished.svg');
-    }
+    padding-left: 15px;
   }
 }
 
@@ -250,7 +219,7 @@
 }
 
 .product-tabs {
-  padding-bottom: 90px;
+  margin-top: 50px;
 
   // .product-tabs__toggle
 
@@ -341,6 +310,24 @@
   &__dots {
     flex-grow: 1;
     border-bottom: 1px dashed #686868;
+  }
+}
+
+.sales {
+  margin-top: 90px;
+  padding-bottom: 70px;
+
+  &__title {
+    font-weight: 400;
+    margin-bottom: 35px;
+  }
+
+  // .sales__items
+
+  &__items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 53px 30px;
   }
 }
 
