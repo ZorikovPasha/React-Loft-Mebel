@@ -39,7 +39,6 @@ const Catalog: React.FC = () => {
     const controller = new AbortController()
 
     setLoading(true)
-    console.log('catalog')
 
     UserApiClient.getFurniture(controller.signal).then((data) => {
       setItems(data.items)
@@ -47,8 +46,6 @@ const Catalog: React.FC = () => {
     })
     return () => controller.abort()
   }, [history.location.search])
-
-  console.log('items', items)
 
   const { favorites } = useSelector(getUserData)
 

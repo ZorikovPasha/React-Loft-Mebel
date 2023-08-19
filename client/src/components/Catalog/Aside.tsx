@@ -190,7 +190,7 @@ export const Aside: React.FC<IAsideProps> = ({
               onClick={onAsideCloseClick}
             />
             <React.Suspense fallback={<Loader />}>
-              <h6 className='filter__title'>{room.label}</h6>
+              <h6 className='filter__title mt-30'>{room.label}</h6>
               <CustomSelect
                 value={room.value}
                 options={room.options}

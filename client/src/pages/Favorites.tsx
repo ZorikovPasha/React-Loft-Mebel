@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
@@ -7,12 +7,13 @@ import { SalesItem } from '../components/common/SalesItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
 import { IFurniture } from '../api/types'
+import { setPathnameActionCreator } from '../redux/actions/pathname'
 
 const Favorites: React.FC = () => {
   const breadcrumbs = useBreadcrumbs()
+  const dispatch = useDispatch()
 
   const items = useSelector(getProducts)
-
   const { favorites } = useSelector(getUserData)
 
   const favoriteItems: IFurniture[] = []
@@ -22,6 +23,14 @@ const Favorites: React.FC = () => {
       favoriteItems.push(item)
     }
   })
+
+  React.useLayoutEffect(() => {
+    dispatch(setPathnameActionCreator(window.location.pathname))
+
+    return () => {
+      dispatch(setPathnameActionCreator('whatever'))
+    }
+  }, [])
 
   return (
     <>

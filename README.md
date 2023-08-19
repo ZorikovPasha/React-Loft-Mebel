@@ -15,7 +15,7 @@ TODO!:
 - [ ] edit api endpoints on client    
 - [ ] confirm email via email    
 - [x] profile picture?    
-- [ ] refactor server api    
+- [x] refactor server api    
 - [ ] добавить продукты    
 - [x] image compressing    
 - [x] should add notfound page    
@@ -46,3 +46,7 @@ TODO!:
 - [x] cart item is not being removed from redux
 - [x] removing from favorites does not remove from redux
 - [ ] mark in swagger which id to send
+- [x] mark cart and favorites icons
+- [x] when not logged in items are not being added to cart 
+- [x] catalog aside close
+- [ ] cart items after login should be added to database?
