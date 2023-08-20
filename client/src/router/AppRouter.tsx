@@ -16,9 +16,7 @@ export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
 
   const dispatch = useDispatch()
-  const { isLoggedIn, cart } = useSelector(getUserData)
-
-  console.log('cart', cart)
+  const { isLoggedIn } = useSelector(getUserData)
 
   React.useLayoutEffect(() => {
     dispatch(fetchItemsThunkCreator())

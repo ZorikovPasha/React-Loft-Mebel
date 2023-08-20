@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
 
   const { isLoggedIn } = useSelector(getUserData)
 
-  const _fields = React.useRef<Record<string, IField>>({
+  const fields = React.useRef<Record<string, IField>>({
     name: {
       value: '',
       label: 'Имя пользователя',
@@ -50,7 +50,7 @@ const SignUp: React.FC = () => {
       required: true,
       type: 'text',
       placeholder: 'Введите Имя пользователя',
-      className: 'form-block',
+      className: 'mt-20',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
@@ -67,7 +67,7 @@ const SignUp: React.FC = () => {
       required: true,
       type: 'email',
       placeholder: 'Введите электронную почту',
-      className: 'form-block',
+      className: 'mt-20',
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
@@ -83,7 +83,7 @@ const SignUp: React.FC = () => {
       required: true,
       type: 'text',
       placeholder: 'Введите пароль',
-      className: 'form-block',
+      className: 'mt-20',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
@@ -94,20 +94,19 @@ const SignUp: React.FC = () => {
   } as const)
 
   const [modalSignUp, setModalSignUp] = React.useState(false)
-  const [form, setForm] = React.useState(_fields.current)
+  const [form, setForm] = React.useState(fields.current)
 
   const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => {
-      return {
-        ...prev,
-        [name]: {
-          ...prev[name],
-          value: e.target.value,
-          isValid: prev[name].validateFn(e.target.value),
-          showErrors: true
-        }
+    const value = e.target.value
+    setForm((prev) => ({
+      ...prev,
+      [name]: {
+        ...prev[name],
+        value,
+        isValid: prev[name].validateFn(value),
+        showErrors: true
       }
-    })
+    }))
   }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -124,13 +123,11 @@ const SignUp: React.FC = () => {
     }
 
     UserApiClient.register(dto).then((data) => {
-      // if (data.status === 200) {
       if (!isSuccessfullResponse(data)) {
         return
       }
       document.documentElement.classList.add('lock')
       setModalSignUp(true)
-      // }
     })
   }
 
@@ -193,7 +190,7 @@ const SignUp: React.FC = () => {
               })}
               <button
                 type='submit'
-                className='signup__form-btn btn'
+                className='signup__form-btn btn mt-20'
               >
                 Зарегистрироваться
               </button>

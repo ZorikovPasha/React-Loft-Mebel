@@ -57,6 +57,7 @@ export interface ICreateFurnitureDto {
 export interface IAddCartItemDto {
   productId?: number
   quintity?: number
+  color?: string
 }
 
 export interface IRemoveCartItemDto {

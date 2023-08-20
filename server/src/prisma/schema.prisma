@@ -107,6 +107,7 @@ model CartFurniture {
   furnitureId Int
   cartId      Int
   quintity    Int
+  color String @default("")
   cart        Cart      @relation(fields: [cartId], references: [id])
 }
 

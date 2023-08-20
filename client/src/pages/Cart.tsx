@@ -24,7 +24,7 @@ interface ICollectedCartItem {
     length: number
     height: number
   }[]
-  colors: string[]
+  color: string
 }
 
 const Cart: React.FC = () => {
@@ -76,7 +76,7 @@ const Cart: React.FC = () => {
           price: parseFloat(currentItem.priceNew ? currentItem.priceNew : currentItem.priceOld),
           quintity: next.quintity,
           dimension: currentItem.dimensions?.map(({ width, length, height }) => ({ width, length, height })) ?? [],
-          colors: currentItem.colors
+          color: next.color
         }
       ]
     }, []) ?? []

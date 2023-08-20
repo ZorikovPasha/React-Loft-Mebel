@@ -505,10 +505,13 @@ export class AppController {
         return next({ status: 500, message: '' })
       }
 
-      const { quintity = 1, productId } = req.body
+      const { quintity = 1, productId, color = '' } = req.body
 
       if (!productId) {
         return next(ApiError.badRequest('Product id was not provided'))
+      }
+      if (!color) {
+        return next(ApiError.badRequest('Color id was not provided'))
       }
 
       let userCart = await prismaClient.cart.findFirst({
@@ -529,7 +532,8 @@ export class AppController {
         data: {
           furnitureId: productId,
           quintity: quintity,
-          cartId: userCart.id
+          cartId: userCart.id,
+          color
         }
       })
       return res.status(200).json({ success: true })

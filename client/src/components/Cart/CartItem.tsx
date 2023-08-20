@@ -1,10 +1,11 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
 import { editUserActionCreator } from '../../redux/actions/userAction'
+import { getUserData } from '../../redux/getters'
 
 interface ICartItemProps {
   item: {
@@ -19,21 +20,23 @@ interface ICartItemProps {
       length: number
       height: number
     }[]
-    colors: string[]
+    color: string
   }
 }
 
 export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
-  const { furnitureId, cartItemId, name, imageUrl, price, quintity, dimension, colors } = item
+  const { furnitureId, cartItemId, name, imageUrl, price, quintity, dimension, color } = item
   const dispatch = useDispatch()
 
+  const { isLoggedIn } = useSelector(getUserData)
   const onRemoveItemClick = () => {
     const payload = {
       cart: [
         {
           id: cartItemId,
           furnitureId,
-          quintity
+          quintity,
+          color
         }
       ]
     }
@@ -41,6 +44,11 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
     console.log('payload', payload)
 
     dispatch(editUserActionCreator(payload))
+
+    if (!isLoggedIn) {
+      return
+    }
+
     UserApiClient.removeCartItem(furnitureId)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
@@ -78,7 +86,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
             >
               <p className='info-feature__name'>Цвет:</p>
               <span
-                style={{ backgroundColor: colors[0] }}
+                style={{ backgroundColor: color }}
                 className='info-feature__color'
               ></span>
             </div>
