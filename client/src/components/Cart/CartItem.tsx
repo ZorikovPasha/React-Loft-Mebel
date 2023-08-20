@@ -41,8 +41,6 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
       ]
     }
 
-    console.log('payload', payload)
-
     dispatch(editUserActionCreator(payload))
 
     if (!isLoggedIn) {
@@ -109,8 +107,9 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
         </div>
         <div className='item__bottom'></div>
       </div>
-      <div
+      <button
         className='item__remove'
+        type='button'
         onClick={onRemoveItemClick}
       >
         <img
@@ -118,7 +117,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
           src='/images/icons/cross.svg'
           alt='cross'
         />
-      </div>
+      </button>
     </div>
   )
 }

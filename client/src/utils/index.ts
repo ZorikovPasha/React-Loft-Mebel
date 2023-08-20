@@ -37,3 +37,11 @@ export const getTextInputErrorMessage = (val: string) => {
 export const getEmailInputErrorMessage = (str: string) => {
   return str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? '' : 'Введите корректный email'
 }
+
+export const getQueryParams = (paramName: string) => {
+  if (typeof window !== `undefined`) {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    const params = Object.fromEntries(urlSearchParams.entries())
+    return params[paramName]
+  }
+}

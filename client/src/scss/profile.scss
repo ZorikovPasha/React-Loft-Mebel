@@ -28,7 +28,6 @@
   &__title {
     font-size: 24px;
     line-height: 30px;
-    margin-bottom: 30px;
   }
 
   &__total {
@@ -189,7 +188,54 @@
     bottom: 0;
     display: block;
     max-width: 100%;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__table {
+    overflow: hidden;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 1px;
+    border: 1px solid #209cee;
+    background-color: #209cee;
+    border-radius: 4px;
+    isolation: isolate;
+  }
+
+  &__table-image {
+    max-width: 50px;
+  }
+
+  &__table-cell {
+    min-height: 100%;
+    padding: 15px;
+    background-color: white;
+  } 
+  
+  &__order-total {
+    font-size: 18px;
+    line-height: 26px; 
+    font-weight: 500;
+  }
+
+  &__order-name {
+    font-size: 18px;
+    line-height: 26px; 
+    font-weight: 500;
+  }
+
+  &__table-color {
+    &::after {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      left: -2px;
+      bottom: -2px;
+      content: "";
+      border: 2px solid black;
+      border-radius: 50%;
+    }
   }
 }
 

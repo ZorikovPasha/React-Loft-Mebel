@@ -1,25 +1,58 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useDropzone } from 'react-dropzone'
 
 import { UserApiClient } from '../api'
-import { getUserData } from '../redux/getters'
+import { getProducts, getUserData } from '../redux/getters'
 import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
-import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
+import {
+  getEmailInputErrorMessage,
+  getQueryParams,
+  getTextInputErrorMessage,
+  validateEmail,
+  validateTextInput
+} from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
 
 interface IFile {
   file: File | null
   url: string | null
+  isTouched: boolean
+}
+
+interface IProductInOrder {
+  id: number
+  name: string
+  image: {
+    alternativeText: string
+    caption: string
+    createdAt: string
+    ext: string
+    hash: string
+    height: number
+    id: number
+    mime: string
+    name: string
+    provider: 'database'
+    size: number
+    updatedAt: string
+    url: string
+    width: number
+  } | null
+  quintity: number
+  color: string
+  price: number
 }
 
 const Profile: React.FC = () => {
   const fileProps = {
     file: null,
-    url: null
+    url: null,
+    isTouched: false
   }
+
   const tabs = ['personal', 'orders'] as const
 
   const nameProps: IField = {
@@ -159,24 +192,52 @@ const Profile: React.FC = () => {
   }
 
   const dispatch = useDispatch()
+
   const onDrop = React.useCallback((acceptedFiles: File[]) => {
     const reader = new FileReader()
     reader.readAsDataURL(acceptedFiles[0])
     reader.onload = (e: ProgressEvent<FileReader>) => {
       setProfilePicture({
         file: acceptedFiles[0],
-        url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null
+        url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null,
+        isTouched: true
       })
     }
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
   const history = useHistory()
 
+  const products = useSelector(getProducts)
   const user = useSelector(getUserData)
 
+  const collectedOrders = user.orders.map((o) => {
+    const items = o.items
+      .map((item) => {
+        const product = products.find((p) => p.id === item.furnitureId)
+        if (!product) {
+          return
+        }
+        return {
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          quintity: item.quintity,
+          color: item.color,
+          price: parseFloat(product.priceNew ? product.priceNew : product.priceOld)
+        }
+      })
+      .filter((item): item is IProductInOrder => Boolean(item))
+
+    return {
+      ...o,
+      items
+    }
+  })
+
+  const [profilePicture, setProfilePicture] = React.useState<IFile>(fileProps)
   const [name, setName] = React.useState(nameProps)
-  const [surname, setSurname] = React.useState(surnameProps)
   const [email, setEmail] = React.useState(emailProps)
+  const [surname, setSurname] = React.useState(surnameProps)
   const [phone, setPhone] = React.useState(phoneProps)
   const [city, setCity] = React.useState(cityProps)
   const [street, setStreet] = React.useState(streetProps)
@@ -184,10 +245,17 @@ const Profile: React.FC = () => {
   const [apartment, setApartment] = React.useState(apartmentProps)
 
   const [activeTab, setActiveTab] = React.useState<'personal' | 'orders'>('personal')
-  const [profilePicture, setProfilePicture] = React.useState<IFile>(fileProps)
+
+  React.useEffect(() => {
+    const tabParam = getQueryParams('tab')
+    if (tabParam === 'orders' || tabParam === 'personal') {
+      setActiveTab(tabParam)
+    }
+  }, [window.location.search])
 
   React.useEffect(() => {
     setProfilePicture({
+      isTouched: profilePicture.isTouched,
       file: null,
       url: user.image?.url ?? null
     })
@@ -274,16 +342,25 @@ const Profile: React.FC = () => {
         ...prev,
         value: target.value,
         isValid: prev.validateFn(target.value),
-        showErrors: true
+        showErrors: true,
+        isTouched: true
       }))
     }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
-    if (![name, surname, email, phone, house, street, house, apartment].every(({ isValid }) => isValid)) {
+    console.log('in')
+
+    if (![name, surname, email, phone, house, street, house].every(({ isValid, isTouched }) => isValid && isTouched)) {
       return
     }
+
+    if (!profilePicture.isTouched && profilePicture.file) {
+      return
+    }
+
+    console.log('further')
 
     const formData = new FormData()
     formData.append('name', name.value)
@@ -319,8 +396,6 @@ const Profile: React.FC = () => {
           }
         : {})
     }
-
-    console.log('payload', payload)
 
     dispatch(loginUserActionCreator(payload))
     UserApiClient.updateUserData(formData)
@@ -535,27 +610,50 @@ const Profile: React.FC = () => {
 
             {activeTab === 'orders' && (
               <div className='profile__orders orders'>
-                <h3 className='profile__title'>Мои заказы</h3>
-                <div className='orders__items'>
-                  <div className='orders__name heading'>Товар</div>
-                  <div className='orders__cost heading'>Цена</div>
-                  <div className='orders__date heading'>Дата</div>
-                  <div className='orders__status heading'>Статус</div>
-                  {/* {orders?.map(({ id, name, status }, idx) => (
-                          <React.Fragment key={idx}>
-                            <div className='orders__name'>
+                <h3 className='profile__title'>Мои заказы: {collectedOrders.length}</h3>
+                <div className='mt-30'>
+                  {collectedOrders.map(({ id, name, status, createdAt, items }) => (
+                    <div className='mt-10'>
+                      <div className='flex items-center justify-between'>
+                        <p className='profile__order-name'>
+                          Order name: {name} №{id}
+                        </p>
+                        <p className='profile__order-name'>Status: {status}</p>
+                        <p className='profile__order-name'>{new Date(createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <div className='profile__table grid items-center mt-10'>
+                        <p className='profile__table-cell'>Товар</p>
+                        <p className='profile__table-cell'>Цена</p>
+                        <p className='profile__table-cell'>Количество</p>
+                        <p className='profile__table-cell'>Цвет</p>
+                        {items.map(({ id, name, image, color, quintity, price }) => (
+                          <React.Fragment>
+                            <div className='profile__table-cell flex items-center'>
+                              <Link
+                                to={`/products/${id}`}
+                                className=''
+                              >
+                                <p>{name}</p>
+                              </Link>
                               <img
-                                className='orders__preview'
-                                src={imageUrl}
-                                alt='Furniture preview'
+                                className='profile__table-image'
+                                src={image ? `http://localhost:5000${image.url}` : ''}
+                                alt=''
                               />
-                              <Link to={`/products/${id}`}>{name}</Link>
                             </div>
-                            <div className='orders__cost'>{price}</div>
-                            <div className='orders__date'>{date.toString().substring(0, 10)}</div>
-                            <div className='orders__status'>{status}</div>
+                            <p className='profile__table-cell'>{price * quintity}</p>
+                            <p className='profile__table-cell'>{quintity}</p>
+                            <p className='profile__table-cell'>
+                              <span
+                                className='profile__table-color colors__checkbox-fake'
+                                style={{ backgroundColor: color ? color : '#fff' }}
+                              ></span>
+                            </p>
                           </React.Fragment>
-                        ))} */}
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

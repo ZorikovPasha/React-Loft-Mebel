@@ -63,7 +63,8 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
 
     UserApiClient.addItemToCart({
       productId: id,
-      quintity: 1
+      quintity: 1,
+      color: colors[0]
     })
   }
 

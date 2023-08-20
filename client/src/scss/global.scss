@@ -167,6 +167,14 @@ button {
   margin-top: 30px;
 }
 
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
 .grid {
   display: grid;
 }
@@ -179,18 +187,18 @@ button {
   display: inline-flex;
 }
 
-.mt-20 {
-  margin-top: 20px;
-}
-
 .justify-center {
   justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
 }
 
 .items-center {
   align-items: center;
 }
 
-.mt-10 {
-  margin-top: 10px;
+.relative {
+  position: relative;
 }

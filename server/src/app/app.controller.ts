@@ -617,7 +617,7 @@ export class AppController {
         return res.status(201).json({ success: true })
       }
 
-      const promises = await Promise.all([
+      const [currentProductsInCart, userOrder] = await Promise.all([
         prismaClient.cartFurniture.findMany({
           where: {
             cartId: cart.id
@@ -630,21 +630,39 @@ export class AppController {
           }
         })
       ])
-      const currentProductsInCart = promises[0]
-      const userOrder = promises[1]
 
-      await Promise.all(
-        currentProductsInCart.map(async ({ furnitureId, quintity }) => {
-          await prismaClient.orderedFurniture.create({
+      const productsInOrder = await Promise.all(
+        currentProductsInCart.map(async ({ furnitureId, quintity, color }) => {
+          return await prismaClient.orderedFurniture.create({
             data: {
               furnitureId,
               quintity,
-              orderId: userOrder.id
+              orderId: userOrder.id,
+              color
             }
           })
         })
       )
-      return res.status(201).json({ success: true })
+
+      await prismaClient.cartFurniture.deleteMany({
+        where: {
+          cartId: cart.id
+        }
+      }),
+        await prismaClient.cart.deleteMany({
+          where: {
+            userId: res.locals.user.id
+          }
+        })
+
+      const dto = {
+        order: {
+          ...userOrder,
+          items: productsInOrder
+        }
+      }
+
+      return res.status(201).json(dto)
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))

@@ -117,6 +117,7 @@ model OrderedFurniture {
   furnitureId Int
   orderId     Int
   quintity    Int
+  color String @default("")
   order       Order     @relation(fields: [orderId], references: [id])
 }
 

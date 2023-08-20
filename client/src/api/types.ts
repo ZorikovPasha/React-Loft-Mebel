@@ -41,14 +41,15 @@ interface IOrder {
   userId: string
   name: string
   status: OrderStatusType
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
   items: {
     id: number
     furnitureId: number
     orderId: number
     quintity: number
-  }
+    color: string
+  }[]
 }
 
 export interface IUserResponse {
@@ -67,10 +68,6 @@ export interface IUserResponse {
       alternativeText: string
       caption: string
       createdAt: Date
-      data: {
-        type: 'Buffer'
-        data: Buffer
-      }
       ext: string
       hash: string
       height: number
@@ -212,4 +209,32 @@ export interface IFavoritesResponse {
 export interface ICartItemRequest {
   quintity: number
   productId: number
+  color: string
+}
+
+export interface ISuccessfullMakeOrderResponse {
+  order: {
+    items:
+      | {
+          id: number
+          furnitureId: number
+          orderId: number
+          quintity: number
+          color: string
+        }[]
+      | null
+    id: number
+    name: string
+    createdAt: string
+    updatedAt: string
+    status: OrderStatusType
+    userId: string
+  }
+}
+
+export const isSuccessfullMakeOrderResponse = (
+  dto: ISuccessfullMakeOrderResponse | IErrorResponse
+): dto is ISuccessfullMakeOrderResponse => {
+  const propertyName: keyof ISuccessfullMakeOrderResponse = 'order'
+  return propertyName in dto
 }

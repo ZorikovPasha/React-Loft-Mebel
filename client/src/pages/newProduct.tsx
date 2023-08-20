@@ -390,8 +390,6 @@ const NewProduct = (): JSX.Element => {
 
     UserApiClient.createFurniture(formData)
       .then((data) => {
-        console.log('data', data)
-
         if (isSuccessfullResponse(data)) {
           setName(nameProps)
           setType(typeProps)
@@ -437,7 +435,7 @@ const NewProduct = (): JSX.Element => {
       })
       .catch((error) => {
         // something went wrong...
-        console.log('catch', error)
+        console.log('error', error)
       })
   }
 

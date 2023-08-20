@@ -27,6 +27,7 @@ export interface IField {
   className?: string
   inputClassName?: string
   tag: 'input' | 'textarea'
+  isTouched?: boolean
   getErrorMessage: (st: string) => string
   errorMessage: string
   label?: string

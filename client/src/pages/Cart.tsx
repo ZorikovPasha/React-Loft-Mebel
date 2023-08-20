@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import { SalesItem } from '../components/common/SalesItem'
 import { CartItem } from '../components/Cart/CartItem'
@@ -9,8 +10,11 @@ import { ModalInfo } from '../components/common/ModalInfo'
 import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
-import { setOrderStatusActionCreator } from '../redux/actions/cartItems'
 import { setPathnameActionCreator } from '../redux/actions/pathname'
+import { editUserActionCreator } from '../redux/actions/userAction'
+import { isSuccessfullMakeOrderResponse } from '../api/types'
+import { Loader } from '../components/common/Loader'
+import { ROUTES } from '../utils/const'
 
 interface ICollectedCartItem {
   furnitureId: number
@@ -28,13 +32,16 @@ interface ICollectedCartItem {
 }
 
 const Cart: React.FC = () => {
-  const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const dispatch = useDispatch()
 
+  const history = useHistory()
   const items = useSelector(getProducts)
   const { favorites, isLoggedIn, cart } = useSelector(getUserData)
 
   const breadcrumbs = useBreadcrumbs()
+
+  const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   React.useLayoutEffect(() => {
     dispatch(setPathnameActionCreator(window.location.pathname))
@@ -43,22 +50,6 @@ const Cart: React.FC = () => {
       dispatch(setPathnameActionCreator('whatever'))
     }
   }, [])
-
-  const onRegisterOrder = () => {
-    if (!isLoggedIn) {
-      setModalLoginOpened(true)
-      document.documentElement.classList.add('lock')
-      return
-    }
-
-    UserApiClient.makeOrder()
-    dispatch(setOrderStatusActionCreator(true))
-  }
-
-  const onLoginModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
-    setModalLoginOpened(false)
-    document.documentElement.classList.remove('lock')
-  }
 
   const collectedItems =
     cart?.reduce((accum: ICollectedCartItem[], next) => {
@@ -89,13 +80,49 @@ const Cart: React.FC = () => {
   }, 0)
 
   const youMayAlsoLikeThese = cart.length ? items.filter((item) => parseFloat(item.rating) > 4) : []
+
+  const onLoginModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+    setModalLoginOpened(false)
+    document.documentElement.classList.remove('lock')
+  }
+
+  const onRegisterOrder = () => {
+    if (!isLoggedIn) {
+      setModalLoginOpened(true)
+      document.documentElement.classList.add('lock')
+      return
+    }
+
+    setIsLoading(true)
+
+    UserApiClient.makeOrder().then((data) => {
+      setIsLoading(false)
+      if (!isSuccessfullMakeOrderResponse(data)) {
+        return
+      }
+
+      const payload = {
+        cart: [],
+        orders: [
+          {
+            ...data.order,
+            items: !data.order.items ? [] : data.order.items
+          }
+        ]
+      }
+      dispatch(editUserActionCreator(payload))
+      history.push(ROUTES.Profile + '?tab=orders')
+    })
+  }
+
   return (
     <>
+      {isLoading && <Loader />}
       {modalLoginOpened && (
         <ModalInfo
           text='Пожалуйста, войдите в свою учетную запись'
           title='Мы не знаем, кто вы'
-          link='/login'
+          link={ROUTES.Login}
           onModalClose={onLoginModalClose}
         />
       )}
