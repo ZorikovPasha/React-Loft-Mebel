@@ -22,11 +22,6 @@ export const addtemsActionCreator: actionCreatorType<ICartItem[]> = (payload) =>
   payload: payload
 })
 
-export const setOrderStatusActionCreator: actionCreatorType<boolean> = (payload) => ({
-  type: Actions.ORDER_STATUS,
-  payload: payload
-})
-
 export const ordersActionCreator: actionCreatorType<OrderInfoType[]> = (payload) => ({
   type: Actions.SET_ORDERS,
   payload: payload

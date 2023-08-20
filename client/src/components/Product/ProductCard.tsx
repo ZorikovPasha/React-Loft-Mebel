@@ -166,7 +166,8 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
 
     UserApiClient.addItemToCart({
       productId: id,
-      quintity: parseInt(form.quintity.value)
+      quintity: parseInt(form.quintity.value),
+      color: colorsState.value
     })
   }
 

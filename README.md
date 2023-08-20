@@ -12,7 +12,7 @@ TODO!:
 - [x] remove /private prefix     
 - [x] unify success messages    
 - [x] switch to prisma + postgres    
-- [ ] edit api endpoints on client    
+- [ ] edit api endpoints on client (also remove not used methods)    
 - [x] profile picture?    
 - [x] refactor server api    
 - [ ] добавить продукты    
@@ -38,10 +38,10 @@ TODO!:
 - [x] after submit image icon is not changing
 - [ ] handle something went wrong when updating profile
 - [ ] add logging in protect
-- [ ] display orders
+- [x] display orders
 - [ ] at the start two equal api call `api/furniture` in catalog
 - [ ] should display rating
-- [ ] should refine items' color and dimensions in cart
+- [x] should refine items' color and dimensions in cart
 - [x] cart item is not being removed from redux
 - [x] removing from favorites does not remove from redux
 - [ ] mark in swagger which id to send
@@ -54,3 +54,10 @@ TODO!:
 - [x] productcard should display colors in select (did in a row)
 - [x] product shoul be added to cart with colors
 - [ ] should refactor styles
+- [x] getOrders is not being used?
+- [x] after making order it is not dissappearing from cart
+- [ ] profile i can only send after filling in all fields
+- [x] should redirect to orders when making order
+- [ ] should show snackbars when error is occured
+- [ ] profile request should not be sent if there is no changes
+- [ ] should add feature to cancel order

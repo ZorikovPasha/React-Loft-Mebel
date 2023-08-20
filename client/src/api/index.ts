@@ -9,6 +9,7 @@ import {
   IFurniture,
   IFurnitureResponse,
   ISuccessfullLoginResponse,
+  ISuccessfullMakeOrderResponse,
   ISuccessfullResponse,
   LoginCredsType,
   SignUpCredsType
@@ -104,16 +105,8 @@ class UserApi extends Api {
     return this.get('/api/favorites')
   }
 
-  getCartItems = (): Promise<ICartItemsResponse> => {
-    return this.get('/api/cart')
-  }
-
   getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {
     return this.get('/user')
-  }
-
-  getOrders = <T>(): Promise<T> => {
-    return this.get('/api/orders')
   }
 
   getFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
@@ -136,6 +129,10 @@ class UserApi extends Api {
     return this.delete('/api/favorites', { id })
   }
 
+  getCartItems = (): Promise<ICartItemsResponse> => {
+    return this.get('/api/cart')
+  }
+
   addItemToCart = (dto: ICartItemRequest): Promise<ISuccessfullResponse | IErrorResponse> => {
     return this.post('/api/cart', dto)
   }
@@ -148,7 +145,7 @@ class UserApi extends Api {
     return this.put('/user', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 
-  makeOrder = (): Promise<ISuccessfullResponse | IErrorResponse> => {
+  makeOrder = (): Promise<ISuccessfullMakeOrderResponse | IErrorResponse> => {
     return this.post('/api/orders')
   }
 

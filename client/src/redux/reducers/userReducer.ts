@@ -5,7 +5,7 @@ export type userActionType = {
   payload: Partial<IUserState>
 }
 
-type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
+export type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
 
 interface ICartItem {
   id: number
@@ -19,14 +19,15 @@ interface IOrder {
   userId: string
   name: string
   status: OrderStatusType
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
   items: {
     id: number
     furnitureId: number
     orderId: number
     quintity: number
-  }
+    color: string
+  }[]
 }
 
 export interface IUserState {
@@ -105,8 +106,8 @@ const userReducer = (state = initialState, action: userActionType): IUserState =
       return {
         ...state,
         ...action.payload,
-        favorites: newFavorites,
-        cart: [...rest, ...newItems]
+        ...(action.payload.favorites && { favorites: newFavorites }),
+        ...(action.payload.cart && { cart: [...rest, ...newItems] })
       }
     }
     case Actions.LOGOUT:

@@ -21,8 +21,6 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
   const { location } = useHistory()
   const showHeaderTop = location.pathname === ROUTES.Home
 
-  console.log('showHeaderTop', showHeaderTop)
-
   return (
     <header className='header'>
       {showHeaderTop && <HeaderTop items={items} />}

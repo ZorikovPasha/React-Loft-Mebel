@@ -477,35 +477,36 @@ export class UserController implements IUserController {
         getImage(user.photoId)
       ])
 
-      let cartData
       // id: number;
       // furnitureId: number;
       // cartId: number;
       // quintity: number;[]
-      let ordersData
-      if (cart) {
-        const all = await Promise.all([
-          prismaClient.cartFurniture.findMany({
+      const cartData = cart
+        ? await prismaClient.cartFurniture.findMany({
             where: {
               cartId: cart.id
             }
-          }),
-          orders.map(async (order) => {
-            const productsInOrder = await prismaClient.orderedFurniture.findMany({
-              where: {
-                orderId: order.id
-              }
-            })
-
-            return {
-              ...order,
-              items: productsInOrder
-            }
           })
-        ])
-        cartData = all[0]
-        ordersData = all[1]
+        : []
+
+      console.log('orders', orders)
+
+      const ordersData = []
+
+      for (const order of orders) {
+        const productsInOrder = await prismaClient.orderedFurniture.findMany({
+          where: {
+            orderId: order.id
+          }
+        })
+
+        ordersData.push({
+          ...order,
+          items: productsInOrder
+        })
       }
+
+      console.log('ordersData', ordersData)
 
       return res.json({
         user: {
@@ -543,7 +544,7 @@ export class UserController implements IUserController {
           updatedAt: user.updatedAt,
           favorites: favorites.map((f) => f.furnitureId),
           orders: ordersData ? ordersData : [],
-          cart: cart && cartData ? cartData : []
+          cart: cartData
         }
       })
     } catch (error) {

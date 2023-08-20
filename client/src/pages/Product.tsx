@@ -18,8 +18,6 @@ const Product: React.FC = () => {
 
   const currentProduct = products.find((p) => p.id === Number(id))
 
-  console.log('currentProduct', currentProduct)
-
   return (
     <>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
