@@ -38,4 +38,15 @@
     content: '';
     background-image: url('/images/icons/check.svg');
   }
+
+  &__checkbox-real:checked + .colors__checkbox-fake::before {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    left: -2px;
+    bottom: -2px;
+    border: 2px solid #209cee;
+    border-radius: 50%;
+    content: '';
+  }
 }

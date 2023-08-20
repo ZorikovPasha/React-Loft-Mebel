@@ -11,6 +11,7 @@ interface ICartItem {
   id: number
   furnitureId: number
   quintity: number
+  color: string
 }
 
 interface IOrder {
@@ -90,8 +91,6 @@ const userReducer = (state = initialState, action: userActionType): IUserState =
         action.payload.favorites?.reduce((accum: number[], next) => {
           return state.favorites.includes(next) ? state.favorites.filter((f) => f !== next) : [...state.favorites, next]
         }, []) ?? []
-
-      console.log('newFavorites', newFavorites)
 
       const newItems: ICartItem[] = []
       let rest: ICartItem[] = []

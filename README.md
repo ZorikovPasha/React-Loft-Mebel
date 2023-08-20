@@ -13,21 +13,20 @@ TODO!:
 - [x] unify success messages    
 - [x] switch to prisma + postgres    
 - [ ] edit api endpoints on client    
-- [ ] confirm email via email    
 - [x] profile picture?    
 - [x] refactor server api    
 - [ ] добавить продукты    
 - [x] image compressing    
 - [x] should add notfound page    
-- [ ] switch from redux to react query?    
+- [?] switch from redux to react query?    
 - [x] redirect to 404    
 - [x] shuold get all colors and brands from backend in aside    
-- [x] should add logging when accessing a route    E
+- [x] should add logging when accessing a route  
 - [ ] /login swagger edit response types    
 - [x] redux should get user's info right after login    
 - [x] /login should return user data (think of which)    
-- [ ] decide whether should do login if there is token    
-- [ ] should redirect to login after register    
+- [x] decide whether should do login if there is token    
+- [x] should redirect to login after register (modals comes in)    
 - [ ] should implement github-ci    
 - [ ] user should have the ability to confirm email ("emailConfirmed": boolean)
 - [ ] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
@@ -50,5 +49,8 @@ TODO!:
 - [x] when not logged in items are not being added to cart 
 - [x] catalog aside close
 - [ ] cart items after login should be added to database?
-- [ ] productcard on buy nothing happens 
-- [ ] productcard  select is not working
+- [x] productcard on buy nothing happens (should add to cart) 
+- [x] productcard select is not working
+- [x] productcard should display colors in select (did in a row)
+- [x] product shoul be added to cart with colors
+- [ ] should refactor styles

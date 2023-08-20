@@ -1,11 +1,13 @@
 import React from 'react'
 import Slider, { Settings } from 'react-slick'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { AddToFavorite } from '../common/AddToFavorite'
-import { addtemsActionCreator } from '../../redux/actions/cartItems'
 import CustomSelect from '../common/CustomSelect'
 import { IFurniture } from '../../api/types'
+import { editUserActionCreator } from '../../redux/actions/userAction'
+import { UserApiClient } from '../../api'
+import { getUserData } from '../../redux/getters'
 
 interface IProductCardProps {
   product: IFurniture
@@ -86,12 +88,11 @@ interface ISelectField {
 
 export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const dispatch = useDispatch()
+  const { isLoggedIn } = useSelector(getUserData)
 
   const { id, name, type, priceNew, priceOld, colors, dimensions, image } = product
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
-
-  const colorsPrepared: ColorOptionType[] = colors.map((color) => ({ value: color, label: color }))
 
   const fields = React.useRef<Record<string, ISelectField>>({
     quintity: {
@@ -112,38 +113,61 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
           value: `${d.width} CM × ${d.length} CM × ${d.height} CM`,
           label: `${d.width} CM × ${d.length} CM × ${d.height} CM`
         })) ?? []
-    },
-    color: {
-      label: 'Цвет',
-      value: colorsPrepared[0].value,
-      options: colorsPrepared
     }
   })
+
+  const colorProps = {
+    label: 'Цвет',
+    value: colors[0],
+    options: colors
+  }
 
   const [nav1, setNav1] = React.useState<Slider>()
   const [nav2, setNav2] = React.useState<Slider>()
   const [form, setForm] = React.useState(fields.current)
+  const [colorsState, setColorsState] = React.useState(colorProps)
 
   const onSelect = (name: string) => (value: ColorOptionType | null) => {
     setForm((prev) => ({
       ...prev,
       [name]: {
-        ...prev.name,
+        ...prev[name],
         value: value?.value ?? ''
       }
+    }))
+  }
+
+  const onColor = (color: string) => () => {
+    setColorsState((prev) => ({
+      ...prev,
+      value: color
     }))
   }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
-    const dto = {
-      id,
-      quintity: Number(form.quintity.value),
-      price: parseFloat(priceNew ? priceNew : priceOld)
+    const payload = {
+      cart: [
+        {
+          id,
+          furnitureId: id,
+          color: colorsState.value,
+          quintity: parseInt(form.quintity.value)
+        }
+      ]
     }
 
-    dispatch(addtemsActionCreator([dto]))
+    dispatch(editUserActionCreator(payload))
+
+    if (!isLoggedIn) {
+      return
+    }
+
+    UserApiClient.addItemToCart({
+      productId: id,
+      quintity: parseInt(form.quintity.value)
+    })
   }
 
   return (
@@ -213,6 +237,26 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                       onChange={onSelect(key)}
                     />
                   </div>
+                ))}
+              </div>
+              <div className='colors'>
+                {colorsState.options.map((color) => (
+                  <label
+                    className='colors__item'
+                    key={color}
+                  >
+                    <input
+                      className='colors__checkbox-real'
+                      id={color}
+                      type='checkbox'
+                      checked={colorsState.value.includes(color)}
+                      onChange={onColor(color)}
+                    />
+                    <span
+                      className='colors__checkbox-fake'
+                      style={{ backgroundColor: color }}
+                    ></span>
+                  </label>
                 ))}
               </div>
             </form>

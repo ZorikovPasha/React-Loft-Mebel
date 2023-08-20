@@ -13,7 +13,7 @@ interface ISalesItemProps {
 }
 
 export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
-  const { id, image, name, type, priceOld, priceNew, dimensions, sale } = product
+  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors } = product
 
   const dispatch = useDispatch()
   const { isLoggedIn, favorites } = useSelector(getUserData)
@@ -47,10 +47,10 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     const payload = {
       cart: [
         {
-          id: id,
+          id,
           furnitureId: id,
           quintity: 1,
-          price: parseFloat(priceNew ? priceNew : priceOld)
+          color: colors[0]
         }
       ]
     }

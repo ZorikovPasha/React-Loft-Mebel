@@ -28,11 +28,12 @@ export type LoginCredsType = Omit<SignUpCredsType, 'userName'>
 
 type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
 
-interface ICartItem {
+interface ICartItemResponse {
   id: number
   furnitureId: number
   cartId: number
   quintity: number
+  color: string
 }
 
 interface IOrder {
@@ -89,7 +90,7 @@ export interface IUserResponse {
     updatedAt: Date
     favorites: number[] | never[] | null
     orders: IOrder[] | never[] | null
-    cart: ICartItem[] | never[] | null
+    cart: ICartItemResponse[] | never[] | null
   }
 }
 
