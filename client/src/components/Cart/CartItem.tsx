@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
-import { editUserActionCreator } from '../../redux/actions/userAction'
+import { addProductToCartActionCreator, removeProductFromCartActionCreator } from '../../redux/actions/userAction'
 import { getUserData } from '../../redux/getters'
 
 interface ICartItemProps {
@@ -28,34 +28,38 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
   const { furnitureId, cartItemId, name, imageUrl, price, quintity, dimension, color } = item
   const dispatch = useDispatch()
 
-  const { isLoggedIn } = useSelector(getUserData)
+  const { isLoggedIn, cart } = useSelector(getUserData)
+  console.log('cart', cart)
+
   const onRemoveItemClick = () => {
     const payload = {
-      cart: [
-        {
-          id: cartItemId,
-          furnitureId,
-          quintity,
-          color
-        }
-      ]
+      id: cartItemId,
+      furnitureId,
+      quintity,
+      color
     }
 
-    dispatch(editUserActionCreator(payload))
+    console.log('payload', payload)
+
+    dispatch(removeProductFromCartActionCreator(payload))
 
     if (!isLoggedIn) {
       return
     }
 
-    UserApiClient.removeCartItem(furnitureId)
+    const dto = {
+      productId: furnitureId,
+      color
+    }
+    UserApiClient.removeCartItem(dto)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
           return
         }
 
-        editUserActionCreator(payload)
+        addProductToCartActionCreator(payload)
       })
-      .catch(() => editUserActionCreator(payload))
+      .catch(() => addProductToCartActionCreator(payload))
   }
 
   const totalCost = price * quintity

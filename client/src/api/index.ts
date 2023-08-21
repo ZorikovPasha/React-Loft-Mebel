@@ -1,13 +1,12 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
 import {
   FormDataType,
+  ICancelOrderResponse,
   ICartItemRequest,
-  ICartItemsResponse,
   IErrorResponse,
   IErrorsResponse,
-  IFavoritesResponse,
-  IFurniture,
   IFurnitureResponse,
+  IRemoveCartItemDto,
   ISuccessfullLoginResponse,
   ISuccessfullMakeOrderResponse,
   ISuccessfullResponse,
@@ -61,7 +60,7 @@ class Api extends Axios {
         return error?.response?.data
       })
   }
-  put = <T, B>(url: string, data: B, config: AxiosRequestConfig): Promise<T> => {
+  put = <T, B>(url: string, data: B, config?: AxiosRequestConfig): Promise<T> => {
     return this._axios
       .put(url, data, config)
       .then(this.success)
@@ -101,20 +100,12 @@ class UserApi extends Api {
     return this.post('/user/login', credentials)
   }
 
-  getFavorites = (): Promise<IFavoritesResponse> => {
-    return this.get('/api/favorites')
-  }
-
   getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {
     return this.get('/user')
   }
 
   getFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
     return this.get(`/api/furniture/`, { signal })
-  }
-
-  getOneFurniture = (id: string, signal: AbortSignal): Promise<IFurniture> => {
-    return this.get(`/api/furniture/${id}`, { signal })
   }
 
   createFurniture = (dto: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
@@ -129,16 +120,12 @@ class UserApi extends Api {
     return this.delete('/api/favorites', { id })
   }
 
-  getCartItems = (): Promise<ICartItemsResponse> => {
-    return this.get('/api/cart')
-  }
-
   addItemToCart = (dto: ICartItemRequest): Promise<ISuccessfullResponse | IErrorResponse> => {
     return this.post('/api/cart', dto)
   }
 
-  removeCartItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.delete('/api/cart', { productId: id })
+  removeCartItem = (dto: IRemoveCartItemDto): Promise<ISuccessfullResponse | IErrorResponse> => {
+    return this.delete('/api/cart', dto)
   }
 
   updateUserData = (formData: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
@@ -147,6 +134,10 @@ class UserApi extends Api {
 
   makeOrder = (): Promise<ISuccessfullMakeOrderResponse | IErrorResponse> => {
     return this.post('/api/orders')
+  }
+
+  cancelOrder = (orderId: number): Promise<ICancelOrderResponse | IErrorResponse> => {
+    return this.put('/api/orders', { orderId })
   }
 
   // TODO: implement server logic

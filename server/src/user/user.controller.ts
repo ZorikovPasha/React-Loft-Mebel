@@ -91,7 +91,6 @@ export class UserController implements IUserController {
         }
 
         const imageDimensions = sizeOf(processedImageFromRequest.data)
-        console.log('imageDimensions', imageDimensions)
 
         const compressedImage = await sharp(processedImageFromRequest.data).toBuffer()
 
@@ -116,8 +115,6 @@ export class UserController implements IUserController {
           data: photo
         })
       }
-
-      console.log('savedImage', savedImage)
 
       await prismaClient.user.create({
         data: {
@@ -214,34 +211,32 @@ export class UserController implements IUserController {
         getImage(user.photoId)
       ])
 
-      let cartData
+      const cartData = cart
+        ? await prismaClient.cartFurniture.findMany({
+            where: {
+              cartId: cart.id
+            }
+          })
+        : null
+
       // id: number;
       // furnitureId: number;
       // cartId: number;
       // quintity: number;[]
-      let ordersData
-      if (cart) {
-        const all = await Promise.all([
-          prismaClient.cartFurniture.findMany({
-            where: {
-              cartId: cart.id
-            }
-          }),
-          orders.map(async (order) => {
-            const productsInOrder = await prismaClient.orderedFurniture.findMany({
-              where: {
-                orderId: order.id
-              }
-            })
 
-            return {
-              ...order,
-              items: productsInOrder
-            }
-          })
-        ])
-        cartData = all[0]
-        ordersData = all[1]
+      const ordersData = []
+
+      for (const order of orders) {
+        const productsInOrder = await prismaClient.orderedFurniture.findMany({
+          where: {
+            orderId: order.id
+          }
+        })
+
+        ordersData.push({
+          ...order,
+          items: productsInOrder
+        })
       }
 
       return res.json({
@@ -309,8 +304,6 @@ export class UserController implements IUserController {
         emailConfirmed,
         wantsToReceiveEmailUpdates
       } = req.body
-
-      console.log('req.body', req.body)
 
       // type UserPropertiesNames =
       //   "id"
@@ -399,8 +392,6 @@ export class UserController implements IUserController {
           data: compressedImage
         }
 
-        console.log('imageToSave', imageToSave)
-
         const _savedImage = await prismaClient.image.create({
           data: imageToSave
         })
@@ -411,8 +402,6 @@ export class UserController implements IUserController {
       if (image !== null && typeof image !== 'undefined' && !Array.isArray(image) && savedImage) {
         set.photoId = savedImage.id
       }
-
-      console.log('set', set)
 
       await prismaClient.user.update({
         where: {
@@ -489,8 +478,6 @@ export class UserController implements IUserController {
           })
         : []
 
-      console.log('orders', orders)
-
       const ordersData = []
 
       for (const order of orders) {
@@ -505,8 +492,6 @@ export class UserController implements IUserController {
           items: productsInOrder
         })
       }
-
-      console.log('ordersData', ordersData)
 
       return res.json({
         user: {

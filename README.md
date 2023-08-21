@@ -5,14 +5,14 @@ TODO!:
 - [x] aborcontroller    
 - [ ] поиск по товарам    
 - [x] remove formik    
-- [x] removeyup    
+- [x] remove yup    
 - [x] вынести селект в отдельный чанк    
 - [?] /api/furniture changed for GET from POST    
 - [x] убpать модель мобильного меню и слайдов из бэкенда и роуты тоже и методы    
 - [x] remove /private prefix     
 - [x] unify success messages    
 - [x] switch to prisma + postgres    
-- [ ] edit api endpoints on client (also remove not used methods)    
+- [ ] implement message from user
 - [x] profile picture?    
 - [x] refactor server api    
 - [ ] добавить продукты    
@@ -40,7 +40,7 @@ TODO!:
 - [ ] add logging in protect
 - [x] display orders
 - [ ] at the start two equal api call `api/furniture` in catalog
-- [ ] should display rating
+- [x] should display rating
 - [x] should refine items' color and dimensions in cart
 - [x] cart item is not being removed from redux
 - [x] removing from favorites does not remove from redux
@@ -59,5 +59,8 @@ TODO!:
 - [ ] profile i can only send after filling in all fields
 - [x] should redirect to orders when making order
 - [ ] should show snackbars when error is occured
-- [ ] profile request should not be sent if there is no changes
+- [x] profile request should not be sent if there is no changes
 - [ ] should add feature to cancel order
+- [x] /login sends back empry orders
+- [x] /product buy again removes it from cart 
+- [ ] isolate image preparing logic (and sending user data maybe? (/login & GET /user ))

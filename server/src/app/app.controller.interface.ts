@@ -62,9 +62,14 @@ export interface IAddCartItemDto {
 
 export interface IRemoveCartItemDto {
   productId?: number
+  color?: string
 }
 
 export type AppLocalsResponseType = Promise<void | Response<Record<string, string>, IAppLocals>>
+
+export interface ICancelOrderDto {
+  orderId: number
+}
 
 export interface IAppControllerInterface {
   mappedValues: Record<string, string>

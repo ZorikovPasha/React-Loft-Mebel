@@ -1,13 +1,22 @@
+import { OrderStatusType } from '../../api/types'
 import { Actions } from '../../types/actionsTypes'
 
 export type userActionType = {
-  type: typeof Actions.LOGIN | typeof Actions.LOGOUT | typeof Actions.EDIT_USER_DATA
+  type: typeof Actions.LOGIN | typeof Actions.LOGOUT | typeof Actions.EDIT_USER_DATA | typeof Actions.ADD_CART_ITEM
   payload: Partial<IUserState>
 }
 
-export type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
+export type addProductToCartActionType = {
+  type: typeof Actions.ADD_CART_ITEM
+  payload: ICartItem
+}
 
-interface ICartItem {
+export type removeProductToCartActionType = {
+  type: typeof Actions.REMOVE_CART_ITEM
+  payload: ICartItem
+}
+
+export interface ICartItem {
   id: number
   furnitureId: number
   quintity: number
@@ -73,7 +82,10 @@ export const initialState: IUserState = {
   cart: []
 }
 
-const userReducer = (state = initialState, action: userActionType): IUserState => {
+export const userReducer = (
+  state = initialState,
+  action: userActionType | addProductToCartActionType | removeProductToCartActionType
+): IUserState => {
   switch (action.type) {
     case Actions.LOGIN: {
       const newFavorites =
@@ -112,9 +124,30 @@ const userReducer = (state = initialState, action: userActionType): IUserState =
     }
     case Actions.LOGOUT:
       return initialState
+    case Actions.ADD_CART_ITEM: {
+      const payload = action.payload as ICartItem
+      const candidate = state.cart.find((item) => {
+        return item.furnitureId === payload.furnitureId && item.color === payload.color
+      })
+
+      if (candidate) {
+        candidate.quintity = candidate.quintity + payload.quintity
+      }
+      return {
+        ...state,
+        cart: candidate ? state.cart : [...state.cart, payload]
+      }
+    }
+    case Actions.REMOVE_CART_ITEM: {
+      const filteredProducts = state.cart.filter((p) => {
+        return p.furnitureId !== action.payload.furnitureId ? true : p.color !== action.payload.color
+      })
+      return {
+        ...state,
+        cart: filteredProducts
+      }
+    }
     default:
       return state
   }
 }
-
-export default userReducer

@@ -139,7 +139,7 @@ const Cart: React.FC = () => {
               </div>
               {collectedItems.map((item) => (
                 <CartItem
-                  key={item.name}
+                  key={item.name + item.color + item.quintity}
                   item={item}
                 />
               ))}
