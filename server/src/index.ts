@@ -14,6 +14,7 @@ import { App } from './app.js'
 import { AppRouter } from './app/app.router.js'
 import { UploadRouter } from './upload/upload.router.js'
 import { UserRouter } from './user/user.router.js'
+import { ImageService } from './image.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -53,6 +54,7 @@ const appModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(TYPES.UserRouter).to(UserRouter)
   bind(TYPES.UploadController).to(UploadController)
   bind(TYPES.AppController).to(AppController)
+  bind(TYPES.ImageService).to(ImageService)
   bind<App>(TYPES.App).to(App)
 })
 

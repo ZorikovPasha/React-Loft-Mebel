@@ -20,7 +20,7 @@ TODO!:
 - [x] should add notfound page    
 - [?] switch from redux to react query?    
 - [x] redirect to 404    
-- [x] shuold get all colors and brands from backend in aside    
+- [x] should get all colors and brands from backend in aside    
 - [x] should add logging when accessing a route  
 - [ ] /login swagger edit response types    
 - [x] redux should get user's info right after login    
@@ -63,4 +63,4 @@ TODO!:
 - [ ] should add feature to cancel order
 - [x] /login sends back empry orders
 - [x] /product buy again removes it from cart 
-- [ ] isolate image preparing logic (and sending user data maybe? (/login & GET /user ))
+- [x] isolate image preparing logic (and sending user data maybe? (/login & GET /user ))

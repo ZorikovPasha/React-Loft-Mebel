@@ -39,6 +39,26 @@ export interface IUserPhoto {
   data: Buffer
 }
 
+export interface IUser {
+  id: string
+  name: string
+  surname: string | null
+  userName: string
+  password: string
+  email: string
+  phone: string | null
+  city: string | null
+  street: string | null
+  house: string | null
+  apartment: string | null
+  photoId: number | null
+  role: 'BASIC' | 'EDITOR' | 'AUTHOR' | 'ADMIN'
+  emailConfirmed: boolean
+  wantsToReceiveEmailUpdates: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
 export type ResponseType = Promise<void | Response<Record<string, string>, Record<string, unknown>>>
 
 export interface IUserController {

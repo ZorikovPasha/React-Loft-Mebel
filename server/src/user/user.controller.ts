@@ -3,8 +3,6 @@ import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import { injectable, inject } from 'inversify'
-import sizeOf from 'buffer-image-size'
-import sharp from 'sharp'
 import fileUpload from 'express-fileupload'
 
 import { LoggerService } from '../logger/logger.service.js'
@@ -15,11 +13,12 @@ import {
   ILoginUserDto,
   IRegisterUserDto,
   IUpdateUserDto,
+  IUser,
   IUserController,
   ResponseType
 } from './user.controller.interface.js'
 import { AppLocalsResponseType, AppResponse } from '../app/app.controller.interface.js'
-import { replaceSpacesWithUnderscores } from '../utils.js'
+import { ImageService } from '../image.js'
 
 const generateToken = (id: string, email: string, password: string): string | undefined => {
   const payload = {
@@ -39,8 +38,104 @@ const generateToken = (id: string, email: string, password: string): string | un
 
 @injectable()
 export class UserController implements IUserController {
-  constructor(@inject(TYPES.ILoggerService) private logger: LoggerService) {
+  constructor(
+    @inject(TYPES.ILoggerService) private logger: LoggerService,
+    @inject(TYPES.ImageService) private imageService: ImageService
+  ) {
     this.logger = logger
+  }
+
+  async collectUserData(user: IUser) {
+    const getImage = async (photoId: number | null) => {
+      if (!photoId) {
+        return
+      }
+      return await prismaClient.image.findFirst({
+        where: {
+          id: photoId
+        }
+      })
+    }
+
+    const [favorites, cart, orders, image] = await Promise.all([
+      prismaClient.favoriteFurniture.findMany({
+        where: {
+          userId: user.id
+        }
+      }),
+      prismaClient.cart.findFirst({
+        where: {
+          userId: user.id
+        }
+      }),
+      prismaClient.order.findMany({
+        where: {
+          userId: user.id
+        }
+      }),
+      getImage(user.photoId)
+    ])
+
+    const cartData = cart
+      ? await prismaClient.cartFurniture.findMany({
+          where: {
+            cartId: cart.id
+          }
+        })
+      : []
+
+    const ordersData = []
+
+    for (const order of orders) {
+      const productsInOrder = await prismaClient.orderedFurniture.findMany({
+        where: {
+          orderId: order.id
+        }
+      })
+
+      ordersData.push({
+        ...order,
+        items: productsInOrder
+      })
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      surname: user.surname,
+      email: user.email,
+      phone: user.phone,
+      city: user.city,
+      street: user.street,
+      house: user.house,
+      apartment: user.apartment,
+      image: image
+        ? {
+            id: image.id,
+            name: image.name,
+            alternativeText: image.alternativeText,
+            caption: image.caption,
+            width: image.width,
+            height: image.height,
+            hash: image.hash,
+            ext: image.ext,
+            size: image.size,
+            url: image.url,
+            mime: image.mime,
+            provider: image.provider,
+            createdAt: image.createdAt,
+            updatedAt: image.updatedAt
+          }
+        : null,
+      role: user.role,
+      emailConfirmed: user.emailConfirmed,
+      wantsToReceiveEmailUpdates: user.wantsToReceiveEmailUpdates,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      favorites: favorites.map((f) => f.furnitureId),
+      orders: ordersData ? ordersData : [],
+      cart: cartData
+    }
   }
 
   async register(
@@ -90,29 +185,8 @@ export class UserController implements IUserController {
           processedImageFromRequest = req.files.photo
         }
 
-        const imageDimensions = sizeOf(processedImageFromRequest.data)
-
-        const compressedImage = await sharp(processedImageFromRequest.data).toBuffer()
-
-        const imageNameWithoutExtension = processedImageFromRequest.name.split('.').slice(0, -1)
-        const imageExtension = processedImageFromRequest.name.split('.').pop()
-        const photo = {
-          name: processedImageFromRequest.name,
-          alternativeText: '',
-          caption: '',
-          width: imageDimensions.width,
-          height: imageDimensions.height,
-          hash: processedImageFromRequest.md5,
-          ext: imageExtension ?? '',
-          mime: processedImageFromRequest.mimetype,
-          size: processedImageFromRequest.size / 1000,
-          url: `${process.env.SELF}/uploads/${imageNameWithoutExtension}_${processedImageFromRequest.md5}.${imageExtension}`,
-          provider: 'database',
-          data: compressedImage
-        }
-
         savedImage = await prismaClient.image.create({
-          data: photo
+          data: await this.imageService.prepare(processedImageFromRequest)
         })
       }
 
@@ -181,103 +255,9 @@ export class UserController implements IUserController {
 
       const token = generateToken(user.id, email, password)
 
-      const getImage = async (photoId: number | null) => {
-        if (!photoId) {
-          return
-        }
-        return await prismaClient.image.findFirst({
-          where: {
-            id: photoId
-          }
-        })
-      }
-
-      const [favorites, cart, orders, image] = await Promise.all([
-        prismaClient.favoriteFurniture.findMany({
-          where: {
-            userId: user.id
-          }
-        }),
-        prismaClient.cart.findFirst({
-          where: {
-            userId: user.id
-          }
-        }),
-        prismaClient.order.findMany({
-          where: {
-            userId: user.id
-          }
-        }),
-        getImage(user.photoId)
-      ])
-
-      const cartData = cart
-        ? await prismaClient.cartFurniture.findMany({
-            where: {
-              cartId: cart.id
-            }
-          })
-        : null
-
-      // id: number;
-      // furnitureId: number;
-      // cartId: number;
-      // quintity: number;[]
-
-      const ordersData = []
-
-      for (const order of orders) {
-        const productsInOrder = await prismaClient.orderedFurniture.findMany({
-          where: {
-            orderId: order.id
-          }
-        })
-
-        ordersData.push({
-          ...order,
-          items: productsInOrder
-        })
-      }
-
       return res.json({
         token: token,
-        user: {
-          id: user.id,
-          name: user.name,
-          surname: user.surname,
-          email: user.email,
-          phone: user.phone,
-          city: user.city,
-          street: user.street,
-          house: user.house,
-          apartment: user.apartment,
-          image: image
-            ? {
-                id: image.id,
-                name: image.name,
-                alternativeText: image.alternativeText,
-                caption: image.caption,
-                width: image.width,
-                height: image.height,
-                hash: image.hash,
-                ext: image.ext,
-                size: image.size,
-                url: image.url,
-                mime: image.mime,
-                provider: image.provider,
-                createdAt: image.createdAt,
-                updatedAt: image.updatedAt
-              }
-            : null,
-          role: user.role,
-          emailConfirmed: user.emailConfirmed,
-          wantsToReceiveEmailUpdates: user.wantsToReceiveEmailUpdates,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-          favorites: favorites.map((f) => f.furnitureId),
-          orders: ordersData ? ordersData : [],
-          cart: cart && cartData ? cartData : []
-        }
+        user: await this.collectUserData(user)
       })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
@@ -355,45 +335,12 @@ export class UserController implements IUserController {
         set.wantsToReceiveEmailUpdates = wantsToReceiveEmailUpdates
       }
 
-      let processedImageFromRequest: fileUpload.UploadedFile
       const { image } = req.files || {}
       let savedImage
 
       if (image) {
-        if (Array.isArray(image)) {
-          processedImageFromRequest = image[0]
-        } else {
-          processedImageFromRequest = image
-        }
-
-        const imageDimensions = sizeOf(processedImageFromRequest.data)
-        const compressedImage = await sharp(processedImageFromRequest.data).toBuffer()
-
-        const imageNameWithoutExtension = processedImageFromRequest.name
-          .split('.')
-          .slice(0, -1)
-          .join('')
-        const processedImageNameWithoutExtension =
-          replaceSpacesWithUnderscores(imageNameWithoutExtension)
-        const imageExtension = processedImageFromRequest.name.split('.').pop()
-
-        const imageToSave = {
-          name: processedImageFromRequest.name,
-          alternativeText: '',
-          caption: '',
-          width: imageDimensions.width,
-          height: imageDimensions.height,
-          hash: processedImageFromRequest.md5,
-          ext: imageExtension ?? '',
-          mime: processedImageFromRequest.mimetype,
-          size: processedImageFromRequest.size / 1000,
-          url: `/uploads/${processedImageNameWithoutExtension}_${processedImageFromRequest.md5}.${imageExtension}`,
-          provider: 'database',
-          data: compressedImage
-        }
-
         const _savedImage = await prismaClient.image.create({
-          data: imageToSave
+          data: await this.imageService.prepare(Array.isArray(image) ? image[0] : image)
         })
 
         savedImage = _savedImage
@@ -436,101 +383,8 @@ export class UserController implements IUserController {
         return res.status(404).json({ message: 'User was not found' })
       }
 
-      const getImage = async (photoId: number | null) => {
-        if (!photoId) {
-          return
-        }
-        return await prismaClient.image.findFirst({
-          where: {
-            id: photoId
-          }
-        })
-      }
-
-      const [favorites, cart, orders, image] = await Promise.all([
-        prismaClient.favoriteFurniture.findMany({
-          where: {
-            userId: user.id
-          }
-        }),
-        prismaClient.cart.findFirst({
-          where: {
-            userId: user.id
-          }
-        }),
-        prismaClient.order.findMany({
-          where: {
-            userId: user.id
-          }
-        }),
-        getImage(user.photoId)
-      ])
-
-      // id: number;
-      // furnitureId: number;
-      // cartId: number;
-      // quintity: number;[]
-      const cartData = cart
-        ? await prismaClient.cartFurniture.findMany({
-            where: {
-              cartId: cart.id
-            }
-          })
-        : []
-
-      const ordersData = []
-
-      for (const order of orders) {
-        const productsInOrder = await prismaClient.orderedFurniture.findMany({
-          where: {
-            orderId: order.id
-          }
-        })
-
-        ordersData.push({
-          ...order,
-          items: productsInOrder
-        })
-      }
-
       return res.json({
-        user: {
-          id: user.id,
-          name: user.name,
-          surname: user.surname,
-          email: user.email,
-          phone: user.phone,
-          city: user.city,
-          street: user.street,
-          house: user.house,
-          apartment: user.apartment,
-          image: image
-            ? {
-                id: image.id,
-                name: image.name,
-                alternativeText: image.alternativeText,
-                caption: image.caption,
-                width: image.width,
-                height: image.height,
-                hash: image.hash,
-                ext: image.ext,
-                size: image.size,
-                url: image.url,
-                mime: image.mime,
-                provider: image.provider,
-                createdAt: image.createdAt,
-                updatedAt: image.updatedAt
-              }
-            : null,
-          role: user.role,
-          emailConfirmed: user.emailConfirmed,
-          wantsToReceiveEmailUpdates: user.wantsToReceiveEmailUpdates,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-          favorites: favorites.map((f) => f.furnitureId),
-          orders: ordersData ? ordersData : [],
-          cart: cartData
-        }
+        user: await this.collectUserData(user)
       })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
