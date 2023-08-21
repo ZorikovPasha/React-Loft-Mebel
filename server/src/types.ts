@@ -7,5 +7,6 @@ export const TYPES = {
   AppRouter: Symbol.for('AppRouter'),
   UploadController: Symbol.for('UploadController'),
   UploadRouter: Symbol.for('UploadRouter'),
-  UserRouter: Symbol.for('UserRouter')
+  UserRouter: Symbol.for('UserRouter'),
+  ImageService: Symbol.for('ImageService')
 }

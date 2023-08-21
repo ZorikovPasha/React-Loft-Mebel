@@ -1,7 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import fileUpload from 'express-fileupload'
-import sizeOf from 'buffer-image-size'
-import sharp from 'sharp'
 import { injectable, inject } from 'inversify'
 
 import { ApiError } from '../error/api.error.js'
@@ -18,7 +15,8 @@ import {
   IRemoveCartItemDto
 } from './app.controller.interface.js'
 import { ResponseType } from '../user/user.controller.interface.js'
-import { deserializeDimensionsFromString, replaceSpacesWithUnderscores } from '../utils.js'
+import { deserializeDimensionsFromString } from '../utils.js'
+import { ImageService } from '../image.js'
 
 interface IError {
   message: string
@@ -29,7 +27,10 @@ interface IError {
 export class AppController {
   // private mappedValues: Record<string, string>
 
-  constructor(@inject(TYPES.ILoggerService) private logger: LoggerService) {
+  constructor(
+    @inject(TYPES.ILoggerService) private logger: LoggerService,
+    @inject(TYPES.ImageService) private imageService: ImageService
+  ) {
     // this.mappedValues = values
     this.logger = logger
   }
@@ -227,7 +228,6 @@ export class AppController {
         })
       }
 
-      let processedImageFromRequest: fileUpload.UploadedFile
       const { image } = req.files || {}
 
       if (!image) {
@@ -239,37 +239,6 @@ export class AppController {
 
       if (errors.length) {
         return res.status(400).json({ errors })
-      }
-
-      if (Array.isArray(image)) {
-        processedImageFromRequest = image[0]
-      } else {
-        processedImageFromRequest = image
-      }
-
-      const imageDimensions = sizeOf(processedImageFromRequest.data)
-      const compressedImage = await sharp(processedImageFromRequest.data).toBuffer()
-
-      const imageNameWithoutExtension = processedImageFromRequest.name
-        .split('.')
-        .slice(0, -1)
-        .join('')
-      const processedImageNameWithoutExtension =
-        replaceSpacesWithUnderscores(imageNameWithoutExtension)
-      const imageExtension = processedImageFromRequest.name.split('.').pop()
-      const imageToSave = {
-        name: processedImageFromRequest.name,
-        alternativeText: '',
-        caption: '',
-        width: imageDimensions.width,
-        height: imageDimensions.height,
-        hash: processedImageFromRequest.md5,
-        ext: imageExtension ?? '',
-        mime: processedImageFromRequest.mimetype,
-        size: processedImageFromRequest.size / 1000,
-        url: `/uploads/${processedImageNameWithoutExtension}_${processedImageFromRequest.md5}.${imageExtension}`,
-        provider: 'database',
-        data: compressedImage
       }
 
       const deserializedSale = sale === '1'
@@ -289,7 +258,7 @@ export class AppController {
       }
 
       const savedImage = await prismaClient.image.create({
-        data: imageToSave
+        data: await this.imageService.prepare(Array.isArray(image) ? image[0] : image)
       })
 
       const savedFurniture = await prismaClient.furniture.create({
