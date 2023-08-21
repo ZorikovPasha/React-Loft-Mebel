@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AddToFavorite } from '../common/AddToFavorite'
 import CustomSelect from '../common/CustomSelect'
 import { IFurniture } from '../../api/types'
-import { editUserActionCreator } from '../../redux/actions/userAction'
+import { addProductToCartActionCreator } from '../../redux/actions/userAction'
 import { UserApiClient } from '../../api'
 import { getUserData } from '../../redux/getters'
 
@@ -90,7 +90,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const dispatch = useDispatch()
   const { isLoggedIn } = useSelector(getUserData)
 
-  const { id, name, type, priceNew, priceOld, colors, dimensions, image } = product
+  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating } = product
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
@@ -148,17 +148,13 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     e.preventDefault()
 
     const payload = {
-      cart: [
-        {
-          id,
-          furnitureId: id,
-          color: colorsState.value,
-          quintity: parseInt(form.quintity.value)
-        }
-      ]
+      id,
+      furnitureId: id,
+      color: colorsState.value,
+      quintity: parseInt(form.quintity.value)
     }
 
-    dispatch(editUserActionCreator(payload))
+    dispatch(addProductToCartActionCreator(payload))
 
     if (!isLoggedIn) {
       return
@@ -170,6 +166,8 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
       color: colorsState.value
     })
   }
+
+  const ratingWidth = (parseFloat(rating) / 5) * 95
 
   return (
     <section className='product'>
@@ -217,6 +215,64 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             <div className='info__star'></div>
             <h1 className='info__title'>{name}</h1>
             <p className='info__category'>{type}</p>
+            <div className='flex info__rating-parent'>
+              <img
+                className='info__rating-img'
+                src='/images/icons/star.svg'
+                alt=''
+              />
+              <img
+                className='info__rating-img'
+                src='/images/icons/star.svg'
+                alt=''
+              />
+              <img
+                className='info__rating-img'
+                src='/images/icons/star.svg'
+                alt=''
+              />
+              <img
+                className='info__rating-img'
+                src='/images/icons/star.svg'
+                alt=''
+              />
+              <img
+                className='info__rating-img'
+                src='/images/icons/star.svg'
+                alt=''
+              />
+
+              <div
+                style={{ width: ratingWidth }}
+                className='flex info__rating-child'
+              >
+                <img
+                  className='info__rating-img'
+                  src='/images/icons/star-black.svg'
+                  alt=''
+                />
+                <img
+                  className='info__rating-img'
+                  src='/images/icons/star-black.svg'
+                  alt=''
+                />
+                <img
+                  className='info__rating-img'
+                  src='/images/icons/star-black.svg'
+                  alt=''
+                />
+                <img
+                  className='info__rating-img'
+                  src='/images/icons/star-black.svg'
+                  alt=''
+                />
+                <img
+                  className='info__rating-img'
+                  src='/images/icons/star-black.svg'
+                  alt=''
+                />
+              </div>
+            </div>
             <form onSubmit={handleSubmit}>
               <div className='info__shop shop'>
                 <p className='shop__price'>{priceNew ? priceNew : priceOld} P</p>

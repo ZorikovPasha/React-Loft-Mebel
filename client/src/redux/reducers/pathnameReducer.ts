@@ -1,4 +1,4 @@
-import { Actions, pathnameActionType } from '../../types/actionsTypes'
+import { Actions, IPathnameAction } from '../../types/actionsTypes'
 
 export interface IPathnameState {
   pathname: string
@@ -8,7 +8,7 @@ const initialState: IPathnameState = {
   pathname: '/'
 }
 
-export const pathnameReducer = (state = initialState, action: pathnameActionType): IPathnameState => {
+export const pathnameReducer = (state = initialState, action: IPathnameAction): IPathnameState => {
   switch (action.type) {
     case Actions.SET_PATHNAME:
       return {

@@ -26,7 +26,7 @@ export interface SignUpCredsType {
 
 export type LoginCredsType = Omit<SignUpCredsType, 'userName'>
 
-type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
+export type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
 
 interface ICartItemResponse {
   id: number
@@ -36,20 +36,23 @@ interface ICartItemResponse {
   color: string
 }
 
-interface IOrder {
+interface IOrderResponse {
   id: number
   userId: string
   name: string
   status: OrderStatusType
   createdAt: string
   updatedAt: string
-  items: {
-    id: number
-    furnitureId: number
-    orderId: number
-    quintity: number
-    color: string
-  }[]
+  items:
+    | {
+        id: number
+        furnitureId: number
+        orderId: number
+        quintity: number
+        color: string
+      }[]
+    | null
+    | undefined
 }
 
 export interface IUserResponse {
@@ -86,7 +89,7 @@ export interface IUserResponse {
     createdAt: Date
     updatedAt: Date
     favorites: number[] | never[] | null
-    orders: IOrder[] | never[] | null
+    orders: IOrderResponse[] | never[] | null
     cart: ICartItemResponse[] | never[] | null
   }
 }
@@ -189,23 +192,6 @@ export const isStringPropertyname = (obj: Record<string, unknown>, key: string):
   return key in obj
 }
 
-export interface ICartItemsResponse {
-  items: {
-    id: number
-    furnitureId: number
-    cartId: number
-    quintity: number
-  }[]
-}
-
-export interface IFavoritesResponse {
-  items: {
-    id: number
-    userId: string
-    furnitureId: number
-  }[]
-}
-
 export interface ICartItemRequest {
   quintity: number
   productId: number
@@ -230,6 +216,20 @@ export interface ISuccessfullMakeOrderResponse {
     status: OrderStatusType
     userId: string
   }
+}
+
+export interface ICancelOrderResponse {
+  id: number
+  userId: string
+  name: string
+  status: 'CANCELED' | string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface IRemoveCartItemDto {
+  productId: number
+  color: string
 }
 
 export const isSuccessfullMakeOrderResponse = (

@@ -5,7 +5,7 @@ import { UserApiClient } from '../../api'
 import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { Link } from 'react-router-dom'
 import { getUserData } from '../../redux/getters'
-import { editUserActionCreator } from '../../redux/actions/userAction'
+import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
 
 interface ISalesItemProps {
   product: IFurniture
@@ -45,17 +45,13 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
 
   const onAddToCartClick = async (): Promise<void> => {
     const payload = {
-      cart: [
-        {
-          id,
-          furnitureId: id,
-          quintity: 1,
-          color: colors[0]
-        }
-      ]
+      id,
+      furnitureId: id,
+      quintity: 1,
+      color: colors[0]
     }
 
-    dispatch(editUserActionCreator(payload))
+    dispatch(addProductToCartActionCreator(payload))
 
     if (!isLoggedIn) {
       return

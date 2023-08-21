@@ -12,6 +12,7 @@ import {
   AppLocalsResponseType,
   AppResponse,
   IAddCartItemDto,
+  ICancelOrderDto,
   ICreateFurnitureDto,
   IFurnitureDimension,
   IRemoveCartItemDto
@@ -528,14 +529,34 @@ export class AppController {
         })
       }
 
-      await prismaClient.cartFurniture.create({
-        data: {
+      const candidate = await prismaClient.cartFurniture.findFirst({
+        where: {
           furnitureId: productId,
-          quintity: quintity,
-          cartId: userCart.id,
           color
         }
       })
+
+      if (candidate) {
+        await prismaClient.cartFurniture.updateMany({
+          where: {
+            furnitureId: productId,
+            color
+          },
+          data: {
+            quintity: candidate.quintity + quintity
+          }
+        })
+      } else {
+        await prismaClient.cartFurniture.create({
+          data: {
+            furnitureId: productId,
+            quintity: quintity,
+            cartId: userCart.id,
+            color
+          }
+        })
+      }
+
       return res.status(200).json({ success: true })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
@@ -555,7 +576,7 @@ export class AppController {
         return next({ status: 500, message: '' })
       }
 
-      const { productId } = req.body
+      const { productId, color } = req.body
       if (!productId) {
         return next(ApiError.badRequest('Product id was not provided'))
       }
@@ -573,26 +594,11 @@ export class AppController {
       await prismaClient.cartFurniture.deleteMany({
         where: {
           furnitureId: productId,
+          color,
           cartId: userCart.id
         }
       })
       return res.status(200).json({ success: true })
-    } catch (err) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
-      return next(ApiError.internal(err as Error))
-    }
-  }
-
-  async getOrders(req: Request, res: Response, next: NextFunction): ResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      const orders = await prismaClient.order.findMany({
-        where: {
-          userId: res.locals.user.id
-        }
-      })
-      return res.json({ items: orders })
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))
@@ -669,31 +675,33 @@ export class AppController {
     }
   }
 
-  async deleteOrder(
-    req: Request<{}, {}, { id: number }>,
+  async cancelOrder(
+    req: Request<{}, {}, ICancelOrderDto>,
     res: AppResponse,
     next: NextFunction
   ): AppLocalsResponseType {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
 
-      if (!res.locals.user) {
-        return next({ status: 500, message: '' })
+      const { orderId } = req.body
+
+      if (!orderId) {
+        return next(ApiError.badRequest('Order id was not provided'))
       }
 
-      const { id } = req.body
-
-      await prismaClient.order.delete({
+      const order = await prismaClient.order.update({
         where: {
-          id: id,
-          userId: res.locals.user.id
+          id: orderId
+        },
+        data: {
+          status: 'CANCELED'
         }
       })
 
-      return res.status(200).json({ success: true })
-    } catch (err) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
-      return next(ApiError.internal(err as Error))
+      return res.status(204).json({ order })
+    } catch (error) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
+      return next(ApiError.internal(error as Error))
     }
   }
 }

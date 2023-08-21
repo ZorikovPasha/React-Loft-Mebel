@@ -152,7 +152,11 @@
     display: block;
     font-weight: 500;
     cursor: pointer;
-    margin: 54px 0 6px;
+    margin: 50px 0 6px;
+
+    &:hover {
+      color: #209cee;;
+    }
   }
 
   // .item-sales__type

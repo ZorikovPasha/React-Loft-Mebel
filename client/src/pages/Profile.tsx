@@ -350,8 +350,6 @@ const Profile: React.FC = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
-    console.log('in')
-
     if (![name, surname, email, phone, house, street, house].every(({ isValid, isTouched }) => isValid && isTouched)) {
       return
     }
@@ -359,8 +357,6 @@ const Profile: React.FC = () => {
     if (!profilePicture.isTouched && profilePicture.file) {
       return
     }
-
-    console.log('further')
 
     const formData = new FormData()
     formData.append('name', name.value)
@@ -399,6 +395,10 @@ const Profile: React.FC = () => {
 
     dispatch(loginUserActionCreator(payload))
     UserApiClient.updateUserData(formData)
+  }
+
+  const onCancelOrder = (orderId: number) => () => {
+    UserApiClient.cancelOrder(orderId).then(() => {})
   }
 
   const onLogout = () => {
@@ -615,9 +615,22 @@ const Profile: React.FC = () => {
                   {collectedOrders.map(({ id, name, status, createdAt, items }) => (
                     <div className='mt-10'>
                       <div className='flex items-center justify-between'>
-                        <p className='profile__order-name'>
-                          Order name: {name} №{id}
-                        </p>
+                        <div className='flex items-center'>
+                          <p className='profile__order-name'>
+                            Order name: {name} №{id}
+                          </p>
+                          <button
+                            className='profile__order-cancel flex items-center justify-center'
+                            type='button'
+                            onClick={onCancelOrder(id)}
+                          >
+                            <img
+                              src='/images/icons/cross.svg'
+                              alt=''
+                            />
+                          </button>
+                        </div>
+
                         <p className='profile__order-name'>Status: {status}</p>
                         <p className='profile__order-name'>{new Date(createdAt).toLocaleDateString()}</p>
                       </div>

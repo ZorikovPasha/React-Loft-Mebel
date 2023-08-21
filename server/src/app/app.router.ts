@@ -59,19 +59,14 @@ export class AppRouter {
         handler: [protect, this.appController.deleteFavouriteItem.bind(this.appController)]
       },
       {
-        method: 'get',
-        endpoint: '/orders',
-        handler: [protect, this.appController.getOrders.bind(this.appController)]
-      },
-      {
         method: 'post',
         endpoint: '/orders',
         handler: [protect, this.appController.addOrder.bind(this.appController)]
       },
       {
-        method: 'delete',
+        method: 'put',
         endpoint: '/orders',
-        handler: [protect, this.appController.deleteOrder.bind(this.appController)]
+        handler: [protect, this.appController.cancelOrder.bind(this.appController)]
       },
       {
         method: 'get',
