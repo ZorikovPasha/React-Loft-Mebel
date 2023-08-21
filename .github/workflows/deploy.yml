@@ -1,0 +1,31 @@
+name: Building apps
+on: [push]
+jobs: 
+  building_front:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Building..
+        uses: actions/checkout@v3
+      - run: |
+          ls -la
+          cd client
+          ls -la
+          node -v
+          npm ci
+          npm run lintstyles
+          npm run lint
+          npm run typecheck
+          npm run test
+          npm run build
+  building_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Building..
+        uses: actions/checkout@v3
+      - run: |
+          ls -la
+          cd server
+          npm ci
+          npm run lint
+          npm run build
+
