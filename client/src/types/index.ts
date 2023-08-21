@@ -1,8 +1,3 @@
-export type CartItemType = {
-  id: number
-  quintity: number
-}
-
 export type BreadcrumbsLinkType = {
   name: string
   href: string
@@ -15,15 +10,4 @@ export type submitValuesType = {
   material: string
   room: string
   type: string
-}
-
-export type userFormValuesType = {
-  name: string
-  email: string
-  surname: string
-  phone: string
-  city: string
-  street: string
-  house: string
-  apartment: string
 }
