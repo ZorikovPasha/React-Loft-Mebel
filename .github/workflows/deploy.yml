@@ -4,8 +4,10 @@ jobs:
   building_front:
     runs-on: ubuntu-latest
     steps:
-      - name: Building..
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
       - run: |
           ls -la
           cd client
@@ -20,8 +22,10 @@ jobs:
   building_backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Building..
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
       - run: |
           ls -la
           cd server
