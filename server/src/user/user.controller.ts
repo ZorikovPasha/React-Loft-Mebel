@@ -71,6 +71,9 @@ export class UserController implements IUserController {
       prismaClient.order.findMany({
         where: {
           userId: user.id
+        },
+        orderBy: {
+          createdAt: 'desc'
         }
       }),
       getImage(user.photoId)

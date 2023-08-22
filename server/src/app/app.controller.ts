@@ -658,7 +658,7 @@ export class AppController {
         return next(ApiError.badRequest('Order id was not provided'))
       }
 
-      const order = await prismaClient.order.update({
+      await prismaClient.order.update({
         where: {
           id: orderId
         },
@@ -667,7 +667,7 @@ export class AppController {
         }
       })
 
-      return res.status(204).json({ order })
+      return res.status(204).json({ success: true })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))

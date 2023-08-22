@@ -60,7 +60,7 @@ TODO!:
 - [x] should redirect to orders when making order
 - [ ] should show snackbars when error is occured
 - [x] profile request should not be sent if there is no changes
-- [ ] should add feature to cancel order
+- [x] should add feature to cancel order
 - [x] /login sends back empry orders
 - [x] /product buy again removes it from cart 
 - [x] isolate image preparing logic (and sending user data maybe? (/login & GET /user ))

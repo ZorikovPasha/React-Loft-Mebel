@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone'
 
 import { UserApiClient } from '../api'
 import { getProducts, getUserData } from '../redux/getters'
-import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
+import { editOrderActionCreator, loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
 import {
   getEmailInputErrorMessage,
   getQueryParams,
@@ -398,7 +398,18 @@ const Profile: React.FC = () => {
   }
 
   const onCancelOrder = (orderId: number) => () => {
-    UserApiClient.cancelOrder(orderId).then(() => {})
+    UserApiClient.cancelOrder(orderId).then(() => {
+      const candidate = user.orders.find((o) => o.id === orderId)
+      if (!candidate) {
+        return
+      }
+      dispatch(
+        editOrderActionCreator({
+          ...candidate,
+          status: 'CANCELED'
+        })
+      )
+    })
   }
 
   const onLogout = () => {
@@ -614,24 +625,34 @@ const Profile: React.FC = () => {
                 <div className='mt-30'>
                   {collectedOrders.map(({ id, name, status, createdAt, items }) => (
                     <div className='mt-10'>
-                      <div className='flex items-center justify-between'>
+                      <div className='profile__orders-info grid items-center justify-between'>
                         <div className='flex items-center'>
                           <p className='profile__order-name'>
                             Order name: {name} №{id}
                           </p>
-                          <button
-                            className='profile__order-cancel flex items-center justify-center'
-                            type='button'
-                            onClick={onCancelOrder(id)}
-                          >
-                            <img
-                              src='/images/icons/cross.svg'
-                              alt=''
-                            />
-                          </button>
+                          {status !== 'CANCELED' && (
+                            <button
+                              className='profile__order-cancel flex items-center justify-center'
+                              type='button'
+                              aria-label='Cancel order'
+                              title='Cancel order'
+                              onClick={onCancelOrder(id)}
+                            >
+                              <img
+                                src='/images/icons/cross.svg'
+                                alt=''
+                              />
+                            </button>
+                          )}
                         </div>
 
-                        <p className='profile__order-name'>Status: {status}</p>
+                        <p
+                          className={`profile__order-name ${
+                            status === 'CANCELED' ? 'profile__order-name--red' : 'profile__order-name--blue'
+                          }`}
+                        >
+                          Status: {status}
+                        </p>
                         <p className='profile__order-name'>{new Date(createdAt).toLocaleDateString()}</p>
                       </div>
                       <div className='profile__table grid items-center mt-10'>

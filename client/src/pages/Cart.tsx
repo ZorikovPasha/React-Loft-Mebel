@@ -36,7 +36,7 @@ const Cart: React.FC = () => {
 
   const history = useHistory()
   const items = useSelector(getProducts)
-  const { favorites, isLoggedIn, cart } = useSelector(getUserData)
+  const { favorites, isLoggedIn, cart, orders } = useSelector(getUserData)
 
   const breadcrumbs = useBreadcrumbs()
 
@@ -104,6 +104,7 @@ const Cart: React.FC = () => {
       const payload = {
         cart: [],
         orders: [
+          ...orders,
           {
             ...data.order,
             items: !data.order.items ? [] : data.order.items
