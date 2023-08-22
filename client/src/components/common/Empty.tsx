@@ -6,8 +6,8 @@ interface IEmpty {
 
 export const Empty: React.FC<IEmpty> = ({ text }) => {
   return (
-    <div className='favorites__empty'>
-      <p className='favorites__empty-text'>{text}</p>
+    <div className='favorites__empty flex items-center justify-center'>
+      <p className='favorites__empty-text relative'>{text}</p>
     </div>
   )
 }

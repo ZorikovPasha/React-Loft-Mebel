@@ -125,7 +125,7 @@ const Catalog: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='catalog'>
         <div className='container'>
-          <div className='catalog__inner'>
+          <div className='flex align-start'>
             {
               <Aside
                 colors={colors}
@@ -139,7 +139,7 @@ const Catalog: React.FC = () => {
               />
             }
             <div className='catalog__body'>
-              <div className='catalog__controls controls'>
+              <div className='catalog__controls controls flex'>
                 <button
                   className='controls__toggle-aside'
                   onClick={onBtnClick}

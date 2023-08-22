@@ -1,15 +1,10 @@
 .popup-message {
   @extend %pop-up;
-
   display: none;
-
-  // .popup-message__body
 
   &__body {
     @extend %pop-up-body;
   }
-
-  // .popup-message__close
 
   &__close {
     position: absolute;
@@ -17,19 +12,13 @@
     right: 15px;
   }
 
-  // .popup-message__title
-
   &__title {
     margin-bottom: 16px;
   }
 
-  // .popup-message__text
-
   &__text {
     margin-bottom: 20px;
   }
-
-  // .popup-message__btn
 
   &__btn {
     display: block;

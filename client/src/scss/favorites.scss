@@ -1,8 +1,5 @@
 .favorites {
   &__empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     min-height: 300px;
     height: 40vh;
     background-image: url('/images/chair.png');
@@ -12,12 +9,17 @@
   }
 
   &__empty-text {
-    position: relative;
     z-index: 1;
     font-weight: 700;
     font-size: 36px;
     line-height: 42px;
     text-align: center;
+
+    @media (width <=767px) {
+        font-size: 25px;
+        line-height: 31px;
+    }
+    
 
     &::before {
       transform: scaleX(0);
@@ -38,12 +40,5 @@
       transform: scaleX(1);
       transform-origin: bottom left;
     }
-  }
-}
-
-@media (width <=767px) {
-  .favorites__empty-text {
-    font-size: 25px;
-    line-height: 31px;
   }
 }

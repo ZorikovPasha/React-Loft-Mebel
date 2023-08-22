@@ -1,15 +1,15 @@
 .signup {
-  padding: 88px 0 79px;
+  padding: 90px 0 80px;
 
-  // .signup__inner
+  @media (width <=540px) {
+      padding: 30px 0 45px;
+  }
 
   &__inner {
     max-width: 315px;
     margin: 0 auto;
     text-align: center;
   }
-
-  // .signup__title
 
   &__title {
     font-weight: 400;
@@ -23,16 +23,8 @@
     }
   }
 
-  // .signup__form-btn
-
   &__form-btn {
     width: 100%;
     padding: 12px 42px 9px;
-  }
-}
-
-@media (width <=540px) {
-  .signup {
-    padding: 30px 0 45px;
   }
 }

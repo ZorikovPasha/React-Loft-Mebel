@@ -1,15 +1,9 @@
 .catalog {
-  &__inner {
-    display: flex;
-    align-items: flex-start;
-  }
-
   &__body {
     flex-grow: 1;
   }
 
   &__controls {
-    display: flex;
     justify-content: flex-end;
 
     @media (width <=992px) {

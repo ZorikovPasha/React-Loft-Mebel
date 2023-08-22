@@ -1,37 +1,75 @@
 .contacts {
   padding: 20px 0 70px;
 
-  // .contacts__title
+  
+
+  @media (width <=510px) {
+      padding-bottom: 40px;
+    }
+
+    @media (width <=450px) {
+        iframe {
+          height: 250px;
+        }
+      }
 
   &__title {
     font-weight: 400;
     margin-bottom: 35px;
   }
 
-  // .contacts__inner
-
   &__inner {
     display: flex;
     margin-bottom: 50px;
-  }
 
-  // .contacts__form
+    @media (width <=992px) {
+        justify-content: space-between;
+      }
+
+      @media (width <=680px) {
+          flex-direction: column;
+        }
+  }
 
   &__form {
     max-width: 457px;
+
+    @media (width <=680px) {
+        margin-left: 30px;
+        margin-bottom: 24px;
+    }
+
+    @media (width <=510px) {
+        margin-left: 0;
+      }
+    
   }
 
   &__form-block {
     position: relative;
     padding-top: 15px;
+
+    @media (width <=450px) {
+        width: 100%;
+      }
   }
 
-  // .contacts__form-line
+  &__form-block + &__form-block {
+    @media (width <=450px) {
+        margin-left: 0;
+        margin-top: 15px;
+      }
+  }
+
 
   &__form-line {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+
+    @media (width <=450px) {
+        flex-direction: column;
+      }
   }
 
   &__form-error {
@@ -40,16 +78,12 @@
     left: 0;
   }
 
-  // .contacts__form-label
-
   &__form-label {
     font-size: 12px;
     line-height: 14px;
     width: calc((100% - 10px) / 2);
     color: #969696;
   }
-
-  // .contacts__form-input
 
   &__form-input {
     display: inline-block;
@@ -78,8 +112,6 @@
     margin-left: 10px;
   }
 
-  // .contacts__form-area
-
   &__form-area {
     display: inline-block;
     width: 100%;
@@ -105,21 +137,15 @@
     }
   }
 
-  // .contacts__form-bottom
-
   &__form-bottom {
     display: flex;
     justify-content: flex-end;
   }
 
-  // .contacts__form-file
-
   &__form-file {
     display: flex;
     margin-right: 20px;
   }
-
-  // .contacts__form-btn
 
   &__form-btn {
     font-size: 13px;
@@ -129,20 +155,29 @@
     background: #245462;
   }
 
-  // .contacts__items
-
   &__items {
     padding-top: 21px;
-    margin-left: 99px;
-  }
+    margin-left: 100px;
 
-  // .contacts__line
+    @media (width <=992px) {
+        margin-left: 30px;
+      }
+
+      @media (width <=510px) {
+          margin-left: 0;
+      }
+      
+  }
 
   &__line {
     margin-bottom: 23px;
-  }
 
-  // .contacts__tel
+    @media (width <=992px) {
+        display: flex;
+        flex-direction: column;
+      }
+    
+  }
 
   &__tel {
     font-size: 14px;
@@ -151,6 +186,10 @@
     padding-left: 24px;
     position: relative;
 
+    @media (width <=992px) {
+        margin-bottom: 15px;
+      }
+    
     &::after {
       content: '';
       position: absolute;
@@ -161,8 +200,6 @@
       background-image: url('/images/icons/phone-black.svg');
     }
   }
-
-  // .contacts__mail
 
   &__mail {
     font-size: 14px;
@@ -180,8 +217,6 @@
       background-image: url('/images/icons/mail.svg');
     }
   }
-
-  // .contacts__link
 
   &__link {
     position: relative;
@@ -224,70 +259,5 @@
     background: #fff;
     cursor: pointer;
     box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
-  }
-}
-
-@media (width <=992px) {
-  .contacts__inner {
-    justify-content: space-between;
-  }
-
-  .contacts__line {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .contacts__tel {
-    margin-bottom: 15px;
-  }
-
-  .contacts__items {
-    margin-left: 30px;
-  }
-}
-
-@media (width <=680px) {
-  .contacts__inner {
-    flex-direction: column;
-  }
-
-  .contacts__form {
-    margin-left: 30px;
-    margin-bottom: 24px;
-  }
-}
-
-@media (width <=510px) {
-  .contacts {
-    padding-bottom: 40px;
-  }
-
-  .contacts__form {
-    margin-left: 0;
-  }
-
-  .contacts__items {
-    margin-left: 0;
-  }
-}
-
-@media (width <=450px) {
-  .contacts__form-line {
-    flex-direction: column;
-  }
-
-  .contacts__form-block {
-    width: 100%;
-  }
-
-  .contacts__form-block + .contacts__form-block {
-    margin-left: 0;
-    margin-top: 15px;
-  }
-
-  .contacts {
-    iframe {
-      height: 250px;
-    }
   }
 }

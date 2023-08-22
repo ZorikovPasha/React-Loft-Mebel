@@ -21,7 +21,7 @@ const SearchResult: React.FC = () => {
     <>
       <div className='search-results'>
         <div className='container'>
-          <div className='search-results__top'>
+          <div className='mt-30'>
             <h1 className='search-results__title'>Результаты поиска</h1>
           </div>
 
@@ -40,6 +40,7 @@ const SearchResult: React.FC = () => {
               <Empty text='Ничего не найдено' />
             )}
           </div>
+          <div className='mt-40' />
         </div>
       </div>
     </>
