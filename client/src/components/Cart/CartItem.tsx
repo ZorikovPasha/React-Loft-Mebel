@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
-import { addProductToCartActionCreator, removeProductFromCartActionCreator } from '../../redux/actions/userAction'
+import { removeProductFromCartActionCreator } from '../../redux/actions/userAction'
 import { getUserData } from '../../redux/getters'
 
 interface ICartItemProps {
@@ -28,21 +28,9 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
   const { furnitureId, cartItemId, name, imageUrl, price, quintity, dimension, color } = item
   const dispatch = useDispatch()
 
-  const { isLoggedIn, cart } = useSelector(getUserData)
-  console.log('cart', cart)
+  const { isLoggedIn } = useSelector(getUserData)
 
   const onRemoveItemClick = () => {
-    const payload = {
-      id: cartItemId,
-      furnitureId,
-      quintity,
-      color
-    }
-
-    console.log('payload', payload)
-
-    dispatch(removeProductFromCartActionCreator(payload))
-
     if (!isLoggedIn) {
       return
     }
@@ -51,15 +39,24 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
       productId: furnitureId,
       color
     }
+
     UserApiClient.removeCartItem(dto)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
-          return
+          return window.alert('Something went wrong!(')
+        }
+        const payload = {
+          id: cartItemId,
+          furnitureId,
+          quintity,
+          color
         }
 
-        addProductToCartActionCreator(payload)
+        dispatch(removeProductFromCartActionCreator(payload))
       })
-      .catch(() => addProductToCartActionCreator(payload))
+      .catch(() => {
+        window.alert('Something went wrong!(')
+      })
   }
 
   const totalCost = price * quintity
@@ -69,7 +66,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
       <div className='item__box'>
         <img
           className='item__box-image'
-          src={`http://localhost:5000${imageUrl}`}
+          src={import.meta.env.VITE_BACKEND + imageUrl}
           alt='furniture'
         />
         <div className='item__info'>

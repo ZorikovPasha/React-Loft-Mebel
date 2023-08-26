@@ -3,9 +3,9 @@ import { NextFunction, Router, Response, Request } from 'express'
 import { inject, injectable } from 'inversify'
 
 import { UserController } from './user.controller.js'
-import { protect } from '../middleware/protect.js'
 import { TYPES } from '../types.js'
 import { LoggerService } from '../logger/logger.service.js'
+import { Protector } from '../middleware/protect.js'
 
 interface IItem {
   endpoint: string
@@ -23,7 +23,8 @@ export class UserRouter {
 
   constructor(
     @inject(TYPES.ILoggerService) private logger: LoggerService,
-    @inject(TYPES.UserController) private userController: UserController
+    @inject(TYPES.UserController) private userController: UserController,
+    @inject(TYPES.ProtectService) private protectService: Protector
   ) {
     this._router = Router()
     const values: IItem[] = [
@@ -31,29 +32,133 @@ export class UserRouter {
         method: 'post',
         endpoint: '/register',
         handler: [
-          check('userName', 'User name provided is empty').notEmpty(),
-          check('email', 'Email is incorrect').normalizeEmail().notEmpty().isEmail(),
-          check('password', 'Password should have at least 8 characters').isLength({
-            min: 8,
-            max: 52
-          }),
+          check('userName', 'User name provided is empty').isString().trim().notEmpty(),
+          check('email', 'Email is incorrect')
+            .trim()
+            .notEmpty()
+            .isString()
+            .normalizeEmail()
+            .isEmail(),
+          check('password', 'Password should have at least 8 characters')
+            .isString()
+            .trim()
+            .notEmpty()
+            .isLength({
+              min: 8,
+              max: 52
+            }),
           this.userController.register.bind(userController)
         ]
       },
       {
         method: 'post',
         endpoint: '/login',
-        handler: [this.userController.login.bind(userController)]
+        handler: [
+          check('email', 'Email is incorrect')
+            .trim()
+            .notEmpty()
+            .isString()
+            .normalizeEmail()
+            .isEmail(),
+          check('password', 'Password should have at least 8 characters')
+            .isString()
+            .trim()
+            .notEmpty()
+            .isLength({
+              min: 8,
+              max: 52
+            }),
+          this.userController.login.bind(userController)
+        ]
       },
       {
         method: 'get',
         endpoint: '/',
-        handler: [protect, this.userController.getUserData.bind(userController)]
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.getUserData.bind(userController)
+        ]
       },
       {
         method: 'put',
         endpoint: '/',
-        handler: [protect, userController.updateUserData.bind(userController)]
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          userController.updateUserData.bind(userController)
+        ]
+      },
+      {
+        method: 'get',
+        endpoint: '/favorites',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.getFavorites.bind(this.userController)
+        ]
+      },
+      {
+        method: 'post',
+        endpoint: '/favorites',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.addFavoriteItem.bind(this.userController)
+        ]
+      },
+      {
+        method: 'delete',
+        endpoint: '/favorites',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.deleteFavouriteItem.bind(this.userController)
+        ]
+      },
+      {
+        method: 'post',
+        endpoint: '/orders',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.addOrder.bind(this.userController)
+        ]
+      },
+      {
+        method: 'put',
+        endpoint: '/orders',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.cancelOrder.bind(this.userController)
+        ]
+      },
+      {
+        method: 'get',
+        endpoint: '/cart',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.getCartItems.bind(this.userController)
+        ]
+      },
+      {
+        method: 'post',
+        endpoint: '/cart',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.addCartItem.bind(this.userController)
+        ]
+      },
+      {
+        method: 'delete',
+        endpoint: '/cart',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.removeCartItem.bind(this.userController)
+        ]
+      },
+      {
+        method: 'post',
+        endpoint: '/request',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          check('message', 'Message was not provided').isString().trim().notEmpty(),
+          this.userController.makeRequest.bind(this.userController)
+        ]
       }
     ]
 
@@ -381,3 +486,460 @@ export class UserRouter {
 *                 message:
 *                   type: string
 */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Favorites
+ *   description: The favorite furniture managing API
+ * /user/favorites/:
+ *   get:
+ *     summary: Getting favorites
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     id: number
+ *                     example: 1
+ *                   userId:
+ *                     id: number
+ *                     example: 1
+ *                   furnitureId:
+ *                     id: number
+ *                     example: 2
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Favorites
+ *   description: The favorite furniture managing API
+ * /user/favorites/:
+ *   post:
+ *     summary: Add favorites
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Id was not provided"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Favorites
+ *   description: The favorite furniture managing API
+ * /user/favorites/:
+ *   delete:
+ *     summary: Deleteing favorites
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Id was not provided"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: The orders managing API
+ * /user/orders/:
+ *   get:
+ *     summary: Getting user's orders
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Orders.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     id: number
+ *                     example: 1
+ *                   userId:
+ *                     id: number
+ *                     example: 1
+ *                   name:
+ *                     id: string
+ *                     example: "Order"
+ *                   status:
+ *                     id: string
+ *                     example: "Created"
+ *                   createdAt:
+ *                     id: string
+ *                     example: ""
+ *                   updatedAt:
+ *                     id: string
+ *                     example: ""
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: The orders managing API
+ * /user/orders/:
+ *   post:
+ *     summary: Create order
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     responses:
+ *       201:
+ *         description: Orders.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: The orders managing API
+ * /user/orders/:
+ *   delete:
+ *     summary: Deleteing user's order
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Orders.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Cart
+ *   description: The cart managing API
+ * /user/cart/:
+ *   get:
+ *     summary: Getting items in cart
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Cart items.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     id: number
+ *                     example: 1
+ *                   furnitureId:
+ *                     id: number
+ *                     example: 1
+ *                   cartId:
+ *                     id: number
+ *                     example: 1
+ *                   quintity:
+ *                     id: number
+ *                     example: 10
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Cart
+ *   description: The cart managing API
+ * /user/cart/:
+ *   post:
+ *     summary: Adding item to cart
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: number
+ *                 example: 2
+ *               quintity:
+ *                 type: number
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Created cart items.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: Bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Product id was not provided'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Cart
+ *   description: The cart managing API
+ * /user/cart/:
+ *   delete:
+ *     summary: Remove item from cart
+ *     tags: [Cart]
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         description: an authorization header
+ *         required: true
+ *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: number
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Cart items.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: boolean
+ *       400:
+ *         description: Bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Product id was not provided'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */

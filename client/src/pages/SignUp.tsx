@@ -123,13 +123,17 @@ const SignUp: React.FC = () => {
       password: form.password.value
     }
 
-    UserApiClient.register(dto).then((data) => {
-      if (!isSuccessfullResponse(data)) {
-        return
-      }
-      document.documentElement.classList.add('lock')
-      setModalSignUp(true)
-    })
+    UserApiClient.register(dto)
+      .then((data) => {
+        if (!isSuccessfullResponse(data)) {
+          return window.alert('Something went wrong!(')
+        }
+        document.documentElement.classList.add('lock')
+        setModalSignUp(true)
+      })
+      .catch(() => {
+        return window.alert('Something went wrong!(')
+      })
   }
 
   const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {

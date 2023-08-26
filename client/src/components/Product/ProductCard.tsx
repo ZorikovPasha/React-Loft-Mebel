@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { AddToFavorite } from '../common/AddToFavorite'
 import CustomSelect from '../common/CustomSelect'
-import { IFurniture } from '../../api/types'
+import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { addProductToCartActionCreator } from '../../redux/actions/userAction'
 import { UserApiClient } from '../../api'
 import { getUserData } from '../../redux/getters'
@@ -147,15 +147,6 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
-    const payload = {
-      id,
-      furnitureId: id,
-      color: colorsState.value,
-      quintity: parseInt(form.quintity.value)
-    }
-
-    dispatch(addProductToCartActionCreator(payload))
-
     if (!isLoggedIn) {
       return
     }
@@ -165,6 +156,23 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
       quintity: parseInt(form.quintity.value),
       color: colorsState.value
     })
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return window.alert('Something went wrong!(')
+        }
+
+        const payload = {
+          id,
+          furnitureId: id,
+          color: colorsState.value,
+          quintity: parseInt(form.quintity.value)
+        }
+
+        dispatch(addProductToCartActionCreator(payload))
+      })
+      .catch(() => {
+        return window.alert('Something went wrong!(')
+      })
   }
 
   const ratingWidth = (parseFloat(rating) / 5) * 95
@@ -186,7 +194,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                   key={url}
                 >
                   <img
-                    src={`http://localhost:5000${url}`}
+                    src={import.meta.env.VITE_BACKEND + url}
                     alt='furniture'
                   />
                 </div>
@@ -204,7 +212,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                   key={url}
                 >
                   <img
-                    src={`http://localhost:5000${url}`}
+                    src={import.meta.env.VITE_BACKEND + url}
                     alt='furniture thumb'
                   />
                 </div>

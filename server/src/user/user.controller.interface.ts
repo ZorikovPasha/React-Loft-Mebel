@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
+import { User } from '@prisma/client'
 
 export interface IRegisterUserDto {
-  userName?: string
-  email?: string
-  password?: string
+  userName?: string | unknown | null
+  email?: string | unknown | null
+  password?: string | unknown | null
 }
 
 export interface ILoginUserDto {
-  email?: string
-  password?: string
+  email?: string | unknown | null
+  password?: string | unknown | null
 }
 
 export interface IUpdateUserDto {
@@ -24,42 +25,36 @@ export interface IUpdateUserDto {
   wantsToReceiveEmailUpdates: boolean | undefined | null
 }
 
-export interface IUserPhoto {
-  name: string
-  alternativeText: string
-  caption: string
-  width: number
-  height: number
-  hash: string
-  ext: string
-  mime: string
-  size: number
-  url: string
-  provider: string
-  data: Buffer
+interface IAppLocals {
+  user: User | undefined
 }
 
-export interface IUser {
-  id: string
-  name: string
-  surname: string | null
-  userName: string
-  password: string
-  email: string
-  phone: string | null
-  city: string | null
-  street: string | null
-  house: string | null
-  apartment: string | null
-  photoId: number | null
-  role: 'BASIC' | 'EDITOR' | 'AUTHOR' | 'ADMIN'
-  emailConfirmed: boolean
-  wantsToReceiveEmailUpdates: boolean
-  createdAt: Date
-  updatedAt: Date
+export interface IAddCartItemDto {
+  productId?: number
+  quintity?: number
+  color?: string
+}
+
+export interface IRemoveCartItemDto {
+  productId?: number
+  color?: string
+}
+
+export interface ICancelOrderDto {
+  orderId: number
+}
+
+export interface AppResponse extends Response {
+  locals: IAppLocals
 }
 
 export type ResponseType = Promise<void | Response<Record<string, string>, Record<string, unknown>>>
+
+export type AppLocalsResponseType = Promise<void | Response<Record<string, string>, IAppLocals>>
+
+export interface IRequestDto {
+  message: string | unknown | undefined | null
+}
 
 export interface IUserController {
   register: (
@@ -73,4 +68,30 @@ export interface IUserController {
   updateUserData: (req: Request<{}, {}, IUpdateUserDto>, res: Response, next: NextFunction) => void
 
   getUserData: (req: Request, res: Response, next: NextFunction) => void
+
+  getFavorites: (req: Request, res: AppResponse, next: NextFunction) => void
+
+  getCartItems: (req: Request, res: AppResponse, next: NextFunction) => void
+
+  addCartItem: (req: Request<{}, {}, IAddCartItemDto>, res: AppResponse, next: NextFunction) => void
+
+  removeCartItem: (
+    req: Request<{}, {}, IRemoveCartItemDto>,
+    res: AppResponse,
+    next: NextFunction
+  ) => void
+
+  addOrder: (req: Request, res: AppResponse, next: NextFunction) => void
+
+  addFavoriteItem: (
+    req: Request<{}, {}, { id?: number }>,
+    res: Response,
+    next: NextFunction
+  ) => void
+
+  deleteFavouriteItem: (
+    req: Request<{}, {}, { id?: number }>,
+    res: Response,
+    next: NextFunction
+  ) => void
 }

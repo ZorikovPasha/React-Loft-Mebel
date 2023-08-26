@@ -113,19 +113,19 @@ class UserApi extends Api {
   }
 
   addFavoriteItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.post('/api/favorites', { id })
+    return this.post('/user/favorites', { id })
   }
 
   deleteFavoriteItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.delete('/api/favorites', { id })
+    return this.delete('/user/favorites', { id })
   }
 
   addItemToCart = (dto: ICartItemRequest): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.post('/api/cart', dto)
+    return this.post('/user/cart', dto)
   }
 
   removeCartItem = (dto: IRemoveCartItemDto): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.delete('/api/cart', dto)
+    return this.delete('/user/cart', dto)
   }
 
   updateUserData = (formData: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
@@ -133,16 +133,15 @@ class UserApi extends Api {
   }
 
   makeOrder = (): Promise<ISuccessfullMakeOrderResponse | IErrorResponse> => {
-    return this.post('/api/orders')
+    return this.post('/user/orders')
   }
 
   cancelOrder = (orderId: number): Promise<ICancelOrderResponse | IErrorResponse> => {
-    return this.put('/api/orders', { orderId })
+    return this.put('/user/orders', { orderId })
   }
 
-  // TODO: implement server logic
-  sendMessage = (formData: FormDataType): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.post('/private/message', formData)
+  sendMessage = (formData: FormDataType): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
+    return this.post('/user/request', formData)
   }
 }
 

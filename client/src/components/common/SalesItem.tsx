@@ -22,37 +22,35 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     const payload = {
       favorites: [id]
     }
-    dispatch(editUserActionCreator(payload))
 
     if (favorites.includes(id)) {
       UserApiClient.deleteFavoriteItem(id)
         .then((dto) => {
           if (!isSuccessfullResponse(dto)) {
-            editUserActionCreator(payload)
+            return window.alert('Something went wrong!(')
           }
+
+          editUserActionCreator(payload)
         })
-        .catch(() => editUserActionCreator(payload))
+        .catch(() => {
+          return window.alert('Something went wrong!(')
+        })
     } else {
       UserApiClient.addFavoriteItem(id)
         .then((dto) => {
           if (!isSuccessfullResponse(dto)) {
-            editUserActionCreator(payload)
+            return window.alert('Something went wrong!(')
           }
+
+          editUserActionCreator(payload)
         })
-        .catch(() => editUserActionCreator(payload))
+        .catch(() => {
+          return window.alert('Something went wrong!(')
+        })
     }
   }
 
   const onAddToCartClick = async (): Promise<void> => {
-    const payload = {
-      id,
-      furnitureId: id,
-      quintity: 1,
-      color: colors[0]
-    }
-
-    dispatch(addProductToCartActionCreator(payload))
-
     if (!isLoggedIn) {
       return
     }
@@ -62,6 +60,23 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
       quintity: 1,
       color: colors[0]
     })
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return window.alert('Something went wrong!(')
+        }
+
+        const payload = {
+          id,
+          furnitureId: id,
+          quintity: 1,
+          color: colors[0]
+        }
+
+        dispatch(addProductToCartActionCreator(payload))
+      })
+      .catch(() => {
+        return window.alert('Something went wrong!(')
+      })
   }
 
   let discount = 0
@@ -84,7 +99,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
       <div className='item-sales__box'>
         <div className='item-sales__img'>
           <img
-            src={image ? `http://localhost:5000${image.url}` : ''}
+            src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
             alt='furniture'
           />
         </div>

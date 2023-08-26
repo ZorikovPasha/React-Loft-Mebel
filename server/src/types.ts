@@ -8,5 +8,7 @@ export const TYPES = {
   UploadController: Symbol.for('UploadController'),
   UploadRouter: Symbol.for('UploadRouter'),
   UserRouter: Symbol.for('UserRouter'),
-  ImageService: Symbol.for('ImageService')
+  ImageService: Symbol.for('ImageService'),
+  Prisma: Symbol.for('PrismaService'),
+  ProtectService: Symbol.for('ProtectService')
 }

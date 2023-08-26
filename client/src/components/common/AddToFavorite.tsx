@@ -17,26 +17,25 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
 
   const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
-    const payload = {
-      favorites: [id]
-    }
-
-    dispatch(editUserActionCreator(payload))
 
     if (!isLoggedIn) {
       return
     }
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
-        if (isSuccessfullResponse(dto)) {
-          return
+        if (!isSuccessfullResponse(dto)) {
+          return window.alert('Something went wrong!(')
         }
+
         const payload = {
           favorites: [id]
         }
-        editUserActionCreator(payload)
+
+        dispatch(editUserActionCreator(payload))
       })
-      .catch(() => editUserActionCreator(payload))
+      .catch(() => {
+        window.alert('Something went wrong!(')
+      })
   }
 
   return (

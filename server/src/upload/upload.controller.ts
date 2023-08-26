@@ -2,14 +2,17 @@ import { NextFunction, Request, Response } from 'express'
 import { injectable, inject } from 'inversify'
 
 import { ApiError } from '../error/api.error.js'
-import { prismaClient } from '../prisma/client.js'
 import { LoggerService } from '../logger/logger.service.js'
 import { TYPES } from '../types.js'
 import { IUploadController } from './upload.controller.interface.js'
+import { PrismaService } from '../prisma.service.js'
 
 @injectable()
 export class UploadController implements IUploadController {
-  constructor(@inject(TYPES.ILoggerService) public logger: LoggerService) {}
+  constructor(
+    @inject(TYPES.ILoggerService) public logger: LoggerService,
+    @inject(TYPES.Prisma) private prisma: PrismaService
+  ) {}
 
   async getUpload(
     req: Request<{ url?: string }, {}, {}>,
@@ -23,7 +26,7 @@ export class UploadController implements IUploadController {
         return next(ApiError.badRequest('Url was not provided'))
       }
 
-      const media = await prismaClient.image.findFirst({
+      const media = await this.prisma.client.image.findFirst({
         where: {
           url: `/uploads/${req.params.url}`
         }

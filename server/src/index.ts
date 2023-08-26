@@ -15,6 +15,8 @@ import { AppRouter } from './app/app.router.js'
 import { UploadRouter } from './upload/upload.router.js'
 import { UserRouter } from './user/user.router.js'
 import { ImageService } from './image.js'
+import { PrismaService } from './prisma.service.js'
+import { Protector } from './middleware/protect.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -47,15 +49,17 @@ const options = {
 const specs = swaggerJsdoc(options)
 
 const appModule = new ContainerModule((bind: interfaces.Bind) => {
-  bind(TYPES.ILoggerService).to(LoggerService)
+  bind(TYPES.ILoggerService).to(LoggerService).inSingletonScope()
   bind(TYPES.AppRouter).to(AppRouter)
   bind(TYPES.UserController).to(UserController)
   bind(TYPES.UploadRouter).to(UploadRouter)
   bind(TYPES.UserRouter).to(UserRouter)
   bind(TYPES.UploadController).to(UploadController)
   bind(TYPES.AppController).to(AppController)
-  bind(TYPES.ImageService).to(ImageService)
-  bind<App>(TYPES.App).to(App)
+  bind(TYPES.ImageService).to(ImageService).inSingletonScope()
+  bind(TYPES.Prisma).to(PrismaService).inSingletonScope()
+  bind(TYPES.ProtectService).to(Protector).inSingletonScope()
+  bind<App>(TYPES.App).to(App).inSingletonScope()
 })
 
 type BootstrapType = () => {

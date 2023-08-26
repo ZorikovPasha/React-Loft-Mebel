@@ -15,6 +15,7 @@ import {
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
+import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/types'
 
 interface IFile {
   file: File | null
@@ -374,42 +375,61 @@ const Profile: React.FC = () => {
     // formData.append("emailConfirmed", emailConfirmed)
     // formData.append("wantsToReceiveEmailUpdates", wantsToReceiveEmailUpdates)
 
-    const payload = {
-      name: name.value,
-      surname: surname.value,
-      email: email.value,
-      phone: phone.value,
-      city: city.value,
-      street: street.value,
-      house: house.value,
-      apartment: apartment.value,
-      ...(profilePicture.url
-        ? {
-            image: {
-              name: '',
-              url: profilePicture.url
-            }
-          }
-        : {})
-    }
-
-    dispatch(loginUserActionCreator(payload))
+    // loader (in button maybe?)
+    // snack on success and on error
     UserApiClient.updateUserData(formData)
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return window.alert('Something went wrong!(')
+        }
+
+        const payload = {
+          name: name.value,
+          surname: surname.value,
+          email: email.value,
+          phone: phone.value,
+          city: city.value,
+          street: street.value,
+          house: house.value,
+          apartment: apartment.value,
+          ...(profilePicture.url
+            ? {
+                image: {
+                  name: '',
+                  url: profilePicture.url
+                }
+              }
+            : {})
+        }
+
+        dispatch(loginUserActionCreator(payload))
+      })
+      .catch(() => {
+        window.alert('Something went wrong!(')
+      })
   }
 
   const onCancelOrder = (orderId: number) => () => {
-    UserApiClient.cancelOrder(orderId).then(() => {
-      const candidate = user.orders.find((o) => o.id === orderId)
-      if (!candidate) {
-        return
-      }
-      dispatch(
-        editOrderActionCreator({
+    UserApiClient.cancelOrder(orderId)
+      .then((dto) => {
+        if (!isSuccessfullCancelOrderResponse(dto)) {
+          return window.alert('Something went wrong!(')
+        }
+
+        const candidate = user.orders.find((o) => o.id === orderId)
+        if (!candidate) {
+          return
+        }
+
+        const payload = {
           ...candidate,
           status: 'CANCELED'
-        })
-      )
-    })
+        } as const
+        dispatch(editOrderActionCreator(payload))
+      })
+      .then(() => {
+        window.alert('Something went wrong!(')
+      })
   }
 
   const onLogout = () => {
@@ -671,7 +691,7 @@ const Profile: React.FC = () => {
                               </Link>
                               <img
                                 className='profile__table-image'
-                                src={image ? `http://localhost:5000${image.url}` : ''}
+                                src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
                                 alt=''
                               />
                             </div>

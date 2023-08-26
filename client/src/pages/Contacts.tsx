@@ -7,6 +7,7 @@ import { ModalInfo } from '../components/common/ModalInfo'
 import { IField } from './SignUp'
 import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
 import AppTextField from '../components/common/appTextField'
+import { isSuccessfullResponse } from '../api/types'
 
 const Contacts: React.FC = () => {
   const fields = React.useRef<Record<string, IField>>({
@@ -96,10 +97,18 @@ const Contacts: React.FC = () => {
       email: email.value,
       message: message.value
     }
-    UserApiClient.sendMessage(dto).then(() => {
-      document.documentElement.classList.add('lock')
-      setModalOpened(true)
-    })
+    UserApiClient.sendMessage(dto)
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return window.alert('Something went wrong!(')
+        }
+
+        document.documentElement.classList.add('lock')
+        setModalOpened(true)
+      })
+      .catch(() => {
+        return window.alert('Something went wrong!(')
+      })
   }
 
   const showNameInputError = name.showErrors && !name.isValid && (name.required || Boolean(name.value))

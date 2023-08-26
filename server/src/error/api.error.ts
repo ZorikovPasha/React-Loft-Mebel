@@ -1,5 +1,3 @@
-import { Response } from 'express'
-
 export class ApiError {
   status: number
   message: string
@@ -16,10 +14,7 @@ export class ApiError {
     return new ApiError(500, error.message)
   }
 
-  public static notAuthorized(
-    res: Response,
-    message: string
-  ): Response<{ message: string }, Record<string, unknown>> {
-    return res.status(401).json({ message })
+  public static notAuthorized(message: string): ApiError {
+    return new ApiError(401, message)
   }
 }

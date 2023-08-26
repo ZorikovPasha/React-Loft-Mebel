@@ -95,25 +95,29 @@ const Cart: React.FC = () => {
 
     setIsLoading(true)
 
-    UserApiClient.makeOrder().then((data) => {
-      setIsLoading(false)
-      if (!isSuccessfullMakeOrderResponse(data)) {
-        return
-      }
+    UserApiClient.makeOrder()
+      .then((data) => {
+        setIsLoading(false)
+        if (!isSuccessfullMakeOrderResponse(data)) {
+          return
+        }
 
-      const payload = {
-        cart: [],
-        orders: [
-          ...orders,
-          {
-            ...data.order,
-            items: !data.order.items ? [] : data.order.items
-          }
-        ]
-      }
-      dispatch(editUserActionCreator(payload))
-      history.push(ROUTES.Profile + '?tab=orders')
-    })
+        const payload = {
+          cart: [],
+          orders: [
+            ...orders,
+            {
+              ...data.order,
+              items: !data.order.items ? [] : data.order.items
+            }
+          ]
+        }
+        dispatch(editUserActionCreator(payload))
+        history.push(ROUTES.Profile + '?tab=orders')
+      })
+      .then(() => {
+        window.alert('Something went wrong!(')
+      })
   }
 
   return (

@@ -46,21 +46,22 @@ TODO!:
 - [x] /login sends back empry orders
 - [x] /product buy again removes it from cart 
 - [x] isolate image preparing logic (and sending user data maybe? (/login & GET /user ))
-- [ ] add remaining products    
-- [ ] profile i can only send after filling in all fields
-- [ ] should refactor styles
-- [ ] cart items after login should be added to database?
-- [ ] mark in swagger which id to send
-- [ ] add logging in protect
+- [x] should refactor styles
+- [x] add logging in protect (and refactor it)
+- [x] add rewrite from /uploads to server
+- [x] implement message from user
+- [x] inject prisma client
+- [x] change api to `/user/orders`, `/user/cart`, etc...
+- [x] substitute types from prisma/client insteead of hand made types
+- [ ] at the start two equal api call `api/furniture` in catalog
 - [ ] should show snackbars when error is occured
 - [ ] handle something went wrong when updating profile
-- [ ] add rewrite from /uploads to server
-- [ ] at the start two equal api call `api/furniture` in catalog
-- [ ] /login swagger edit response types    
-- [ ] implement message from user
 - [ ] should add search     
-- [ ] should implement github-ci    
 - [ ] user should have the ability to confirm email ("emailConfirmed": boolean)
 - [ ] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
+- [ ] add remaining products    
+- [ ] mark in swagger which id to send
+- [ ] /login swagger edit response types   
+- [ ] should implement github-ci    
 - [ ] should add tests
 

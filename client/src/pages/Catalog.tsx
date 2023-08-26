@@ -40,10 +40,14 @@ const Catalog: React.FC = () => {
 
     setLoading(true)
 
-    UserApiClient.getFurniture(controller.signal).then((data) => {
-      setItems(data.items)
-      setLoading(false)
-    })
+    UserApiClient.getFurniture(controller.signal)
+      .then((data) => {
+        setItems(data.items)
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
     return () => controller.abort()
   }, [history.location.search])
 

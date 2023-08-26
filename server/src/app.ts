@@ -12,6 +12,7 @@ import fileUpload from 'express-fileupload'
 import { TYPES } from './types.js'
 import { LoggerService } from './logger/logger.service.js'
 import { UploadRouter } from './upload/upload.router.js'
+import { PrismaService } from './prisma.service.js'
 
 @injectable()
 export class App {
@@ -23,12 +24,13 @@ export class App {
     @inject(TYPES.ILoggerService) private logger: LoggerService,
     @inject(TYPES.AppRouter) private appRouter: AppRouter,
     @inject(TYPES.UploadRouter) private uploadRouter: UploadRouter,
-    @inject(TYPES.UserRouter) private userRouter: UserRouter
+    @inject(TYPES.UserRouter) private userRouter: UserRouter,
+    @inject(TYPES.Prisma) private prisma: PrismaService
   ) {
     this.port = process.env.PORT ? parseInt(process.env.PORT) : 5000
   }
 
-  public init(specs: {} | Record<string, unknown>): void {
+  public async init(specs: {} | Record<string, unknown>): Promise<void> {
     this.app = express()
 
     this.app.use(cors())
@@ -41,6 +43,7 @@ export class App {
     this.app.use('/uploads', this.uploadRouter.router)
     this.app.use(errorHandler)
 
+    await this.prisma.connect()
     this.server = this.app.listen(this.port)
     this.logger.log(`🔥 Server has been started on 0.0.0.0:${this.port} 🔥`)
   }

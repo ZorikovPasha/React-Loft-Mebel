@@ -154,7 +154,7 @@ const Login: React.FC = () => {
           image: image
             ? {
                 name: image.name,
-                url: `http://localhost:5000${image.url}`
+                url: import.meta.env.VITE_BACKEND + image.url
               }
             : null,
           emailConfirmed: emailConfirmed,
