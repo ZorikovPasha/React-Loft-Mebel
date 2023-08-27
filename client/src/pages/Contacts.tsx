@@ -25,13 +25,12 @@ const Contacts: React.FC = () => {
     name: {
       value: '',
       label: 'Ваше имя',
-      labelClass: 'contacts__form-label',
+      labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'text',
       placeholder: 'Введите ваше имя',
-      className: 'contacts__form-block',
-      inputClassName: 'contacts__form-input',
+      inputClassName: 'form-input',
       tag: 'input',
       showErrors: false,
       errorMessage: getTextInputErrorMessage(''),
@@ -42,13 +41,13 @@ const Contacts: React.FC = () => {
       tag: 'input',
       value: '',
       label: 'Ваш e-mail',
-      labelClass: 'contacts__form-label',
+      labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'email',
       placeholder: 'Введите ваш e-mail',
-      className: 'contacts__form-block',
-      inputClassName: 'contacts__form-input',
+      className: 'mt-30',
+      inputClassName: 'form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
       getErrorMessage: getEmailInputErrorMessage,
@@ -57,13 +56,13 @@ const Contacts: React.FC = () => {
     message: {
       value: '',
       label: 'Сообщение',
-      labelClass: 'contacts__form-label',
+      labelClass: 'form__label',
+      className: 'mt-30',
       isValid: false,
       required: true,
       type: 'text',
       placeholder: 'Напишите ваше сообщение',
-      className: 'contacts__form-block',
-      inputClassName: 'contacts__form-area',
+      inputClassName: 'form-input',
       tag: 'textarea',
       showErrors: false,
       errorMessage: getTextInputErrorMessage(''),
@@ -139,46 +138,44 @@ const Contacts: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='contacts'>
         <div className='container'>
-          <h4 className='contacts__title'>Let's connect</h4>
-          <div className='contacts__inner'>
+          <h4 className='contacts__title'>Leave your request here and we will reach out to you as soon as possible!</h4>
+          <div className='contacts__inner grid mt-40'>
             <form
               className='contacts__form'
               onSubmit={handleSubmit}
             >
-              <div className='contacts__form-line'>
-                <AppTextField
-                  elementType={name.tag}
-                  placeholder={name.placeholder}
-                  name='name'
-                  type={name.type}
-                  value={name.value}
-                  required={name.required}
-                  rootElclass={name.className}
-                  label={name.label}
-                  labelClass={name.labelClass}
-                  inputWrapClass={name.inputWrapClass}
-                  inputClassName={`${name.inputClassName} ${showNameInputError ? 'input-text--error' : ''}`}
-                  showErrors={showNameInputError}
-                  errorMessage={name.getErrorMessage(name.value)}
-                  onChange={onChange('name')}
-                />
-                <AppTextField
-                  elementType={email.tag}
-                  placeholder={email.placeholder}
-                  name='email'
-                  type={email.type}
-                  value={email.value}
-                  required={email.required}
-                  rootElclass={email.className}
-                  label={email.label}
-                  labelClass={email.labelClass}
-                  inputWrapClass={email.inputWrapClass}
-                  inputClassName={`${email.inputClassName} ${showEmailInputError ? 'input-text--error' : ''}`}
-                  showErrors={showEmailInputError}
-                  errorMessage={email.getErrorMessage(name.value)}
-                  onChange={onChange('email')}
-                />
-              </div>
+              <AppTextField
+                elementType={name.tag}
+                placeholder={name.placeholder}
+                name='name'
+                type={name.type}
+                value={name.value}
+                required={name.required}
+                rootElclass={name.className}
+                label={name.label}
+                labelClass={name.labelClass}
+                inputWrapClass={name.inputWrapClass}
+                inputClassName={`${name.inputClassName} ${showNameInputError ? 'input-text--error' : ''}`}
+                showErrors={showNameInputError}
+                errorMessage={name.getErrorMessage(name.value)}
+                onChange={onChange('name')}
+              />
+              <AppTextField
+                elementType={email.tag}
+                placeholder={email.placeholder}
+                name='email'
+                type={email.type}
+                value={email.value}
+                required={email.required}
+                rootElclass={email.className}
+                label={email.label}
+                labelClass={email.labelClass}
+                inputWrapClass={email.inputWrapClass}
+                inputClassName={`${email.inputClassName} ${showEmailInputError ? 'input-text--error' : ''}`}
+                showErrors={showEmailInputError}
+                errorMessage={email.getErrorMessage(name.value)}
+                onChange={onChange('email')}
+              />
               <AppTextField
                 elementType={message.tag}
                 placeholder={message.placeholder}
@@ -195,24 +192,25 @@ const Contacts: React.FC = () => {
                 errorMessage={message.getErrorMessage(message.value)}
                 onChange={onChange('message')}
               />
-              <div className='contacts__form-bottom'>
-                <label className='contacts__form-file form-file'>
+              <div className='contacts__form-bottom flex items-center mt-30'>
+                <label className='contacts__form-file form-file flex'>
                   <input
                     className='form-file__real'
                     type='file'
                   />
-                  <span className='form-file__fake'>Прикрепить файл</span>
+                  <span className='btn-hollow'>Add file</span>
                 </label>
                 <button
-                  className='contacts__form-btn'
+                  title='Submit'
+                  className='btn'
                   type='submit'
                 >
-                  Отправить
+                  Submit
                 </button>
               </div>
             </form>
-            <div className='contacts__items'>
-              <div className='contacts__line'>
+            <div>
+              <div className='contacts__line flex items-center'>
                 <a
                   className='contacts__tel'
                   href='tel:89648999119'
@@ -227,15 +225,15 @@ const Contacts: React.FC = () => {
                 </a>
               </div>
               <a
-                className='contacts__link'
+                className='contacts__link mt-20'
                 href='https://www.instagram.com/?hl=en'
               >
                 INSTAGRAM
               </a>
-              <p className='contacts__text'>Адрес: г. Анапа, Анапское шоссе, 30 Ж/К Черное море</p>
+              <p className='contacts__text mt-20'>Адрес: г. Анапа, Анапское шоссе, 30 Ж/К Черное море</p>
             </div>
           </div>
-          <h4 className='contacts__title'>Адрес нашей компании</h4>
+          <h4 className='contacts__title mt-40'>Адрес нашей компании</h4>
           <div style={{ position: 'relative', overflow: 'hidden' }}>
             <a
               href='https://yandex.ru/maps/org/loft_mebel/168358311332/?utm_medium=mapframe&utm_source=maps'

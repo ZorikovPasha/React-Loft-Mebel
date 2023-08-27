@@ -54,11 +54,11 @@ TODO!:
 - [x] change api to `/user/orders`, `/user/cart`, etc...
 - [x] substitute types from prisma/client insteead of hand made types
 - [ ] at the start two equal api call `api/furniture` in catalog
-- [ ] should show snackbars when error is occured
-- [ ] handle something went wrong when updating profile
+- [x] should show snackbars when error is occured
+- [x] handle something went wrong when updating profile
 - [ ] should add search     
 - [ ] user should have the ability to confirm email ("emailConfirmed": boolean)
-- [ ] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
+- [x] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
 - [ ] add remaining products    
 - [ ] mark in swagger which id to send
 - [ ] /login swagger edit response types   
@@ -66,4 +66,4 @@ TODO!:
 - [ ] should add tests
 - [ ] add universal button component to set type, title, aria-label automatically
 - [ ] check for z-indexes everywhere
-- [ ] /contacts form redesign
+- [x] /contacts form redesign
