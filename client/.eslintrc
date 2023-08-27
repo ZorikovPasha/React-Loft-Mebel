@@ -11,9 +11,6 @@
 		"plugin:prettier/recommended"
 	],
 	"rules": {
-		"@typescript-eslint/explicit-function-return-type": [
-			"warn"
-		],
 		"prettier/prettier": [
 			"error",
 			{
