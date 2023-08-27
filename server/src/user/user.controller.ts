@@ -329,7 +329,7 @@ export class UserController implements IUserController {
         wantsToReceiveEmailUpdates !== null &&
         typeof wantsToReceiveEmailUpdates !== 'undefined'
       ) {
-        set.wantsToReceiveEmailUpdates = wantsToReceiveEmailUpdates
+        set.wantsToReceiveEmailUpdates = wantsToReceiveEmailUpdates === '1'
       }
 
       const { image } = req.files || {}
@@ -354,7 +354,7 @@ export class UserController implements IUserController {
         data: set
       })
 
-      return res.status(204).json({ success: true })
+      return res.json({ success: true }).status(204)
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))

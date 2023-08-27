@@ -1,12 +1,11 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import { SalesItem } from '../components/common/SalesItem'
 import { CartItem } from '../components/Cart/CartItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
-import { ModalInfo } from '../components/common/ModalInfo'
 import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
@@ -15,6 +14,22 @@ import { editUserActionCreator } from '../redux/actions/userAction'
 import { isSuccessfullMakeOrderResponse } from '../api/types'
 import { Loader } from '../components/common/Loader'
 import { ROUTES } from '../utils/const'
+import { Modal } from '../components/common/Modal'
+
+const ModalContent: React.FC = () => {
+  return (
+    <>
+      <h3 className='popup-message__title'>Мы не знаем, кто вы</h3>
+      <p className='popup-message__text'>Пожалуйста, войдите в свою учетную запись</p>
+      <Link
+        to={ROUTES.Login}
+        className='popup-message__btn'
+      >
+        Войти
+      </Link>
+    </>
+  )
+}
 
 interface ICollectedCartItem {
   furnitureId: number
@@ -81,7 +96,7 @@ const Cart: React.FC = () => {
 
   const youMayAlsoLikeThese = cart.length ? items.filter((item) => parseFloat(item.rating) > 4) : []
 
-  const onLoginModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const onLoginModalClose = () => {
     setModalLoginOpened(false)
     document.documentElement.classList.remove('lock')
   }
@@ -124,11 +139,9 @@ const Cart: React.FC = () => {
     <>
       {isLoading && <Loader />}
       {modalLoginOpened && (
-        <ModalInfo
-          text='Пожалуйста, войдите в свою учетную запись'
-          title='Мы не знаем, кто вы'
-          link={ROUTES.Login}
+        <Modal
           onModalClose={onLoginModalClose}
+          content={<ModalContent />}
         />
       )}
       <Breadcrumbs breadcrumbs={breadcrumbs} />

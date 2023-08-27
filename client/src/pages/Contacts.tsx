@@ -3,11 +3,20 @@ import React from 'react'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
-import { ModalInfo } from '../components/common/ModalInfo'
 import { IField } from './SignUp'
 import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { isSuccessfullResponse } from '../api/types'
+import { Modal } from '../components/common/Modal'
+
+const ModalContent: React.FC = () => {
+  return (
+    <>
+      <h3 className='popup-message__title'>Сообщение отправлено</h3>
+      <p className='popup-message__text'>Мы с вами свяжемся</p>
+    </>
+  )
+}
 
 const Contacts: React.FC = () => {
   const fields = React.useRef<Record<string, IField>>({
@@ -66,7 +75,7 @@ const Contacts: React.FC = () => {
   const breadcrumbs = useBreadcrumbs()
   const { name, email, message } = form
 
-  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const onModalClose = () => {
     document.documentElement.classList.remove('lock')
     setModalOpened(false)
   }
@@ -118,9 +127,8 @@ const Contacts: React.FC = () => {
   return (
     <>
       {isModalOpened && (
-        <ModalInfo
-          title='Сообщение отправлено'
-          text='Мы с вами свяжемся'
+        <Modal
+          content={<ModalContent />}
           onModalClose={onModalClose}
         />
       )}

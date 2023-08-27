@@ -22,7 +22,7 @@ export interface IUpdateUserDto {
   house: string | undefined | null
   apartment: string | undefined | null
   emailConfirmed: boolean | undefined | null
-  wantsToReceiveEmailUpdates: boolean | undefined | null
+  wantsToReceiveEmailUpdates: string | undefined | null
 }
 
 interface IAppLocals {

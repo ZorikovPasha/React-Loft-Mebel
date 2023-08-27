@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone'
 
 import { UserApiClient } from '../api'
 import { getProducts, getUserData } from '../redux/getters'
-import { editOrderActionCreator, loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
+import { editOrderActionCreator, editUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
 import {
   getEmailInputErrorMessage,
   getQueryParams,
@@ -16,6 +16,7 @@ import {
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
 import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/types'
+import { Modal } from '../components/common/Modal'
 
 interface IFile {
   file: File | null
@@ -45,6 +46,72 @@ interface IProductInOrder {
   quintity: number
   color: string
   price: number
+}
+
+const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) => {
+  const dispatch = useDispatch()
+
+  const [agreedToGetEmails, setAgreedToGetEmails] = React.useState(true)
+
+  const onCheckbox = () => {
+    setAgreedToGetEmails((prev) => !prev)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const formData = new FormData()
+
+    formData.append('wantsToReceiveEmailUpdates', agreedToGetEmails ? '1' : '0')
+
+    UserApiClient.updateUserData(formData)
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return window.alert('Something went wrong!(')
+        }
+
+        const payload = {
+          wantsToReceiveEmailUpdates: agreedToGetEmails
+        }
+
+        dispatch(editUserActionCreator(payload))
+        localStorage.setItem('decidedOnRecieveingEmails', '1')
+        onModalClose()
+      })
+      .catch(() => {
+        window.alert('Something went wrong!(')
+      })
+  }
+
+  return (
+    <>
+      <h3 className='popup-message__title'>Do you wish to get our email updates and special events only for you?</h3>
+      <p className='popup-message__text'>We promise to email you no more than once a week.</p>
+
+      <form
+        className='popup__agree-form flex'
+        onSubmit={handleSubmit}
+      >
+        <label className='form__label'>
+          <input
+            className='form__checkbox-real'
+            type='checkbox'
+            checked={agreedToGetEmails}
+            onChange={onCheckbox}
+          />
+          <span className='form__checkbox-fake'></span>
+          <span className='form__text'>I agree to recieve email newsletter.</span>
+        </label>
+
+        <button
+          className='btn mt-20'
+          type='submit'
+        >
+          Submit choice
+        </button>
+      </form>
+    </>
+  )
 }
 
 const Profile: React.FC = () => {
@@ -246,6 +313,20 @@ const Profile: React.FC = () => {
   const [apartment, setApartment] = React.useState(apartmentProps)
 
   const [activeTab, setActiveTab] = React.useState<'personal' | 'orders'>('personal')
+  const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
+
+  React.useEffect(() => {
+    const decidedOnRecieveingEmails = localStorage.getItem('decidedOnRecieveingEmails')
+
+    if (decidedOnRecieveingEmails === '1') {
+      return
+    }
+
+    window.setTimeout(() => {
+      document.body.classList.add('lock')
+      setModalLoginOpened(true)
+    }, 3000)
+  }, [])
 
   React.useEffect(() => {
     const tabParam = getQueryParams('tab')
@@ -402,7 +483,7 @@ const Profile: React.FC = () => {
             : {})
         }
 
-        dispatch(loginUserActionCreator(payload))
+        dispatch(editUserActionCreator(payload))
       })
       .catch(() => {
         window.alert('Something went wrong!(')
@@ -434,6 +515,7 @@ const Profile: React.FC = () => {
 
   const onLogout = () => {
     localStorage.removeItem('loft_furniture_token')
+    localStorage.remove('decidedOnRecieveingEmails')
     dispatch(logoutUserActionCreator())
     history.push({ pathname: '/' })
   }
@@ -442,8 +524,20 @@ const Profile: React.FC = () => {
     setActiveTab(tab)
   }
 
+  const onLoginModalClose = () => {
+    setModalLoginOpened(false)
+    document.body.classList.remove('lock')
+  }
+
   return (
     <>
+      {modalLoginOpened && (
+        <Modal
+          content={<ModalContent onModalClose={onLoginModalClose} />}
+          onModalClose={onLoginModalClose}
+        />
+      )}
+
       <section className='profile'>
         <div className='container'>
           <div className='profile__controls flex'>

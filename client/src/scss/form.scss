@@ -72,10 +72,6 @@
     padding-left: 10px;
   }
 
-  &__checkbox-real:checked + .form__checkbox-fake {
-    background: #209cee;
-  }
-
   &__error {
     font-size: 14px;
     line-height: 17px;

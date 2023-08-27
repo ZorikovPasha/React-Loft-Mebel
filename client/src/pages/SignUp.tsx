@@ -1,8 +1,7 @@
 import React from 'react'
-import { useHistory, Redirect } from 'react-router-dom'
+import { useHistory, Redirect, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { ModalInfo } from '../components/common/ModalInfo'
 import { UserApiClient } from '../api'
 import {
   getEmailInputErrorMessage,
@@ -16,6 +15,7 @@ import AppTextField from '../components/common/appTextField'
 import { isSuccessfullResponse } from '../api/types'
 import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
+import { Modal } from '../components/common/Modal'
 
 export interface IField {
   value: string
@@ -35,6 +35,28 @@ export interface IField {
   inputWrapClass?: string
   showErrors: boolean
   validateFn: (str: string) => boolean
+}
+
+const ModalContent: React.FC<{ onModalClose: React.MouseEventHandler<HTMLButtonElement> }> = ({ onModalClose }) => {
+  return (
+    <>
+      <h3 className='popup-message__title'>Вы успешно зарегистрировались</h3>
+      <p className='popup-message__text'>Перейти ко входу..</p>
+      <button
+        className='popup-message__btn'
+        onClick={onModalClose}
+      >
+        Войти
+      </button>
+
+      <Link
+        to={ROUTES.Login}
+        className='popup-message__btn'
+      >
+        Войти
+      </Link>
+    </>
+  )
 }
 
 const SignUp: React.FC = () => {
@@ -136,8 +158,8 @@ const SignUp: React.FC = () => {
       })
   }
 
-  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
-    history.push({ pathname: '/login' })
+  const onModalClose = () => {
+    history.push({ pathname: ROUTES.Login })
     document.documentElement.classList.remove('lock')
     setModalSignUp(false)
   }
@@ -204,10 +226,8 @@ const SignUp: React.FC = () => {
         </div>
       </div>
       {modalSignUp && (
-        <ModalInfo
-          hasButton={true}
-          title='Вы успешно зарегистрировались'
-          text='Перейти ко входу..'
+        <Modal
+          content={<ModalContent onModalClose={onModalClose} />}
           onModalClose={onModalClose}
         />
       )}

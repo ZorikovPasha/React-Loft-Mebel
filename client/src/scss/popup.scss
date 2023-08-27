@@ -1,9 +1,10 @@
-.popup-message {
+.popup {
   @extend %pop-up;
   display: none;
 
   &__body {
     @extend %pop-up-body;
+    border-radius: 4px;
   }
 
   &__close {
@@ -13,7 +14,11 @@
   }
 
   &__title {
-    margin-bottom: 16px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    text-align: center;
+    font-size: 22px;
+    line-height: 28px;
   }
 
   &__text {
@@ -39,5 +44,9 @@
     &:focus {
       background-color: rgba($main, 0.5);
     }
+  }
+
+  &__agree-form {
+    flex-direction: column;
   }
 }
