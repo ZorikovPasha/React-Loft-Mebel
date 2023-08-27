@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory, Redirect, Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { UserApiClient } from '../api'
 import {
@@ -16,6 +16,7 @@ import { isSuccessfullResponse } from '../api/types'
 import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
 
 export interface IField {
   value: string
@@ -116,6 +117,8 @@ const SignUp: React.FC = () => {
     }
   } as const)
 
+  const dispatch = useDispatch()
+
   const [modalSignUp, setModalSignUp] = React.useState(false)
   const [form, setForm] = React.useState(fields.current)
 
@@ -148,13 +151,13 @@ const SignUp: React.FC = () => {
     UserApiClient.register(dto)
       .then((data) => {
         if (!isSuccessfullResponse(data)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
         document.documentElement.classList.add('lock')
         setModalSignUp(true)
       })
       .catch(() => {
-        return window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 

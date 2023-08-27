@@ -8,6 +8,7 @@ import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { addProductToCartActionCreator } from '../../redux/actions/userAction'
 import { UserApiClient } from '../../api'
 import { getUserData } from '../../redux/getters'
+import { toggleSnackbarOpen } from '../../redux/actions/errors'
 
 interface IProductCardProps {
   product: IFurniture
@@ -148,7 +149,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     e.preventDefault()
 
     if (!isLoggedIn) {
-      return
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
     UserApiClient.addItemToCart({
@@ -158,7 +159,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     })
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
 
         const payload = {
@@ -171,7 +172,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
         dispatch(addProductToCartActionCreator(payload))
       })
       .catch(() => {
-        return window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 
@@ -286,6 +287,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                 <p className='shop__price'>{priceNew ? priceNew : priceOld} P</p>
                 <button
                   className='shop__btn btn'
+                  title='Buy product'
                   type='submit'
                 >
                   Купить

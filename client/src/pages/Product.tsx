@@ -7,7 +7,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { ProductTabs } from '../components/Product/ProductTabs'
 import { useSelector } from 'react-redux'
 import { getProducts, getUserData } from '../redux/getters'
-import { SalesItem } from '../components/common/SalesItem'
+import { Card } from '../components/common/SalesItem'
 
 const Product: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -31,7 +31,7 @@ const Product: React.FC = () => {
             {products
               .filter((item) => parseFloat(item.rating) > 4.1)
               .map((product) => (
-                <SalesItem
+                <Card
                   key={product.id}
                   product={product}
                   isFavorite={favorites.includes(product.id)}

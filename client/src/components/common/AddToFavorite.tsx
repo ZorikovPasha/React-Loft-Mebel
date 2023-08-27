@@ -5,6 +5,7 @@ import { getUserData } from '../../redux/getters'
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
 import { editUserActionCreator } from '../../redux/actions/userAction'
+import { toggleSnackbarOpen } from '../../redux/actions/errors'
 
 interface IProps {
   id: number
@@ -15,16 +16,17 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
 
   const { favorites, isLoggedIn } = useSelector(getUserData)
 
-  const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
+  const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
 
     if (!isLoggedIn) {
-      return
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
+
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
 
         const payload = {
@@ -34,7 +36,7 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
         dispatch(editUserActionCreator(payload))
       })
       .catch(() => {
-        window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 

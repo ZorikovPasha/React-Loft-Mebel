@@ -171,7 +171,7 @@ const About: React.FC = () => {
               </div>
             </div>
             <div className='about__economy-item flex'>
-              <div className='about__economy-item-box'>
+              <div className='about__economy-box'>
                 <h6 className='about__economy-item-title'>Силы. </h6>
                 <p className='about__economy-item-text'>
                   Закупим оптом или закажем на фабрике, избавив от длительных обсуждений заказа с исполнителем. Курируем
@@ -180,7 +180,7 @@ const About: React.FC = () => {
               </div>
             </div>
             <div className='about__economy-item flex'>
-              <div className='about__economy-item-box'>
+              <div className='about__economy-box'>
                 <h6 className='about__economy-item-title'>Деньги.</h6>
                 <p className='about__economy-item-text'>Вы точно купите мебель дешевле, чем в розницу.</p>
               </div>

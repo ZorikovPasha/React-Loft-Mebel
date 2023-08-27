@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 
-import { SalesItem } from '../components/common/SalesItem'
+import { Card } from '../components/common/SalesItem'
 import { CartItem } from '../components/Cart/CartItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
@@ -15,6 +15,7 @@ import { isSuccessfullMakeOrderResponse } from '../api/types'
 import { Loader } from '../components/common/Loader'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
 
 const ModalContent: React.FC = () => {
   return (
@@ -114,7 +115,7 @@ const Cart: React.FC = () => {
       .then((data) => {
         setIsLoading(false)
         if (!isSuccessfullMakeOrderResponse(data)) {
-          return
+          return dispatch(toggleSnackbarOpen())
         }
 
         const payload = {
@@ -131,7 +132,7 @@ const Cart: React.FC = () => {
         history.push(ROUTES.Profile + '?tab=orders')
       })
       .then(() => {
-        window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 
@@ -185,7 +186,7 @@ const Cart: React.FC = () => {
             <h3 className='sales__title'>Вам может понравиться</h3>
             <div className='sales__items sales__items--cart'>
               {youMayAlsoLikeThese.map((product) => (
-                <SalesItem
+                <Card
                   key={product.id}
                   product={product}
                   isFavorite={favorites.includes(product.id)}

@@ -1,0 +1,31 @@
+.snackbar {
+  position: fixed;
+  z-index: 2;
+  top: 300px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 400px;
+  border-radius: 4px;
+  padding: 15px;
+  background-color: #D41367;
+  box-shadow: 0 1px 9px rgba(0, 0, 0, 0.3);
+
+  &--blue {
+    background-color: #209cee;
+  }
+
+  &__p {
+    font-size: 18px;
+    line-height: 24px;
+    color: white;
+  }
+
+  &__button {
+    width: 20px;
+    margin-left: 15px;
+
+    img {
+      width: 100%;
+    }
+  }
+}

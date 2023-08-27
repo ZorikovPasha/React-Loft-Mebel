@@ -17,6 +17,7 @@ import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
 import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/types'
 import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
 
 interface IFile {
   file: File | null
@@ -67,7 +68,7 @@ const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) 
     UserApiClient.updateUserData(formData)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
 
         const payload = {
@@ -79,7 +80,7 @@ const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) 
         onModalClose()
       })
       .catch(() => {
-        window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 
@@ -454,14 +455,12 @@ const Profile: React.FC = () => {
       formData.append('image', profilePicture.file)
     }
     // formData.append("emailConfirmed", emailConfirmed)
-    // formData.append("wantsToReceiveEmailUpdates", wantsToReceiveEmailUpdates)
 
     // loader (in button maybe?)
-    // snack on success and on error
     UserApiClient.updateUserData(formData)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
 
         const payload = {
@@ -486,7 +485,7 @@ const Profile: React.FC = () => {
         dispatch(editUserActionCreator(payload))
       })
       .catch(() => {
-        window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 
@@ -494,7 +493,7 @@ const Profile: React.FC = () => {
     UserApiClient.cancelOrder(orderId)
       .then((dto) => {
         if (!isSuccessfullCancelOrderResponse(dto)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
 
         const candidate = user.orders.find((o) => o.id === orderId)
@@ -509,13 +508,13 @@ const Profile: React.FC = () => {
         dispatch(editOrderActionCreator(payload))
       })
       .then(() => {
-        window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 
   const onLogout = () => {
     localStorage.removeItem('loft_furniture_token')
-    localStorage.remove('decidedOnRecieveingEmails')
+    localStorage.removeItem('decidedOnRecieveingEmails')
     dispatch(logoutUserActionCreator())
     history.push({ pathname: '/' })
   }

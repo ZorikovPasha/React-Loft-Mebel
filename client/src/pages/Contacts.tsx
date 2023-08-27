@@ -8,6 +8,8 @@ import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, val
 import AppTextField from '../components/common/appTextField'
 import { isSuccessfullResponse } from '../api/types'
 import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { useDispatch } from 'react-redux'
 
 const ModalContent: React.FC = () => {
   return (
@@ -70,6 +72,8 @@ const Contacts: React.FC = () => {
     }
   } as const)
 
+  const dispatch = useDispatch()
+
   const [isModalOpened, setModalOpened] = React.useState(false)
   const [form, setForm] = React.useState(fields.current)
   const breadcrumbs = useBreadcrumbs()
@@ -108,15 +112,15 @@ const Contacts: React.FC = () => {
     }
     UserApiClient.sendMessage(dto)
       .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return window.alert('Something went wrong!(')
+        if (isSuccessfullResponse(dto)) {
+          document.documentElement.classList.add('lock')
+          setModalOpened(true)
         }
 
-        document.documentElement.classList.add('lock')
-        setModalOpened(true)
+        dispatch(toggleSnackbarOpen())
       })
       .catch(() => {
-        return window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 

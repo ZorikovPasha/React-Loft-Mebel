@@ -4,7 +4,9 @@ import { HexColorPicker } from 'react-colorful'
 import AppTextField from '../components/common/appTextField'
 import CustomSelect from '../components/common/CustomSelect'
 import { UserApiClient } from '../api'
-import { isResponseWithErrors, isStringPropertyname, isSuccessfullResponse } from '../api/types'
+import { isResponseWithErrors, isSuccessfullResponse } from '../api/types'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { useDispatch } from 'react-redux'
 
 interface ISelectOption {
   label: string
@@ -204,6 +206,8 @@ const NewProduct = (): JSX.Element => {
     type: 'file'
   }
 
+  const dispatch = useDispatch()
+
   const [name, setName] = React.useState(nameProps)
   const [type, setType] = React.useState(typeProps)
   const [priceOld, setPriceOld] = React.useState(priceOldProps)
@@ -217,7 +221,6 @@ const NewProduct = (): JSX.Element => {
   const [dimensions, setDimensions] = React.useState(dimensionsProps)
   const [image, setImage] = React.useState(imageProps)
   const [activeColor, setActiveColor] = React.useState(0)
-  // const [errorMessages, setErrorMessages] = React.useState([])
 
   const lastPickedColor = colors.value.length ? colors.value[colors.value.length - 1] : '#fff'
   const imageExtension = image.value ? image.value.name.split('.').slice(-1) : ''
@@ -405,38 +408,49 @@ const NewProduct = (): JSX.Element => {
           setImage(imageProps)
           setActiveColor(0)
         } else if (isResponseWithErrors(data)) {
-          const hashmap = {
-            name: setName,
-            type: setType,
-            priceOld: setPriceOld,
-            priceNew: setPriceNew,
-            colors: setColors,
-            rating: setRating,
-            sale: setSale,
-            room: setRoom,
-            material: setMaterial,
-            brand: setBrand,
-            dimensions: setDimensions,
-            image: setImage
-          }
-
-          // const [activeColor, setActiveColor] = React.useState(0)
-
           data.errors?.forEach((error) => {
-            if (!isStringPropertyname(hashmap, error.field ?? '')) {
-              return
+            if (error.field === 'name') {
+              setName((prev) => ({ ...prev, isValid: false }))
             }
-            // const name = error.field as keyof typeof hashmap
-            // hashmap[name]()
+            if (error.field === 'type') {
+              setType((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'priceOld') {
+              setPriceOld((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'priceNew') {
+              setPriceNew((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'colors') {
+              setColors((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'rating') {
+              setRating((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'sale') {
+              setSale((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'room') {
+              setRoom((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'material') {
+              setMaterial((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'brand') {
+              setBrand((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'dimensions') {
+              setDimensions((prev) => ({ ...prev, isValid: false }))
+            }
+            if (error.field === 'image') {
+              setImage((prev) => ({ ...prev, isValid: false }))
+            }
           })
         } else {
-          // something went wrong...
+          dispatch(toggleSnackbarOpen())
         }
       })
-      .catch((error) => {
-        // something went wrong...
-        console.log('error', error)
-      })
+      .catch(() => dispatch(toggleSnackbarOpen()))
   }
 
   return (

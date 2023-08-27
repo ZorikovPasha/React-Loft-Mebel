@@ -11,6 +11,7 @@ import { ROUTES } from '../utils/const'
 import { isResponseWithErrors, isSuccessfullLoginResponse } from '../api/types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
@@ -81,94 +82,98 @@ const Login: React.FC = () => {
       password: form.password.value
     }
 
-    UserApiClient.login(dto).then((data) => {
-      if (isResponseWithErrors(data)) {
-        data.errors?.forEach((error) => {
-          if (error.field === 'email') {
-            setForm((prev) => ({
-              ...prev,
-              email: {
-                ...prev.email,
-                isValid: false,
-                errorMessage: error.message ?? ''
-              }
-            }))
-          }
-          if (error.field === 'password') {
-            setForm((prev) => ({
-              ...prev,
-              password: {
-                ...prev.password,
-                isValid: false,
-                errorMessage: error.message ?? ''
-              }
-            }))
-          }
-        })
-      }
-
-      if (isSuccessfullLoginResponse(data)) {
-        setForm(fields.current)
-        localStorage.setItem('loft_furniture_token', data.token)
-        const {
-          id,
-          name,
-          email,
-          surname,
-          phone,
-          city,
-          street,
-          house,
-          apartment,
-          orders,
-          image,
-          emailConfirmed,
-          favorites,
-          wantsToReceiveEmailUpdates,
-          cart,
-          updatedAt,
-          createdAt
-        } = data.user
-
-        const processedOrders =
-          orders?.map((o) => ({
-            id: o.id,
-            userId: o.userId,
-            name: o.name,
-            status: o.status,
-            createdAt: o.createdAt,
-            updatedAt: o.updatedAt,
-            items: o.items ?? []
-          })) ?? []
-        const payload = {
-          id: id,
-          isLoggedIn: true,
-          name: name,
-          email: email,
-          surname: surname,
-          phone: phone,
-          city: city,
-          street: street,
-          house: house,
-          apartment: apartment,
-          image: image
-            ? {
-                name: image.name,
-                url: import.meta.env.VITE_BACKEND + image.url
-              }
-            : null,
-          emailConfirmed: emailConfirmed,
-          wantsToReceiveEmailUpdates: wantsToReceiveEmailUpdates,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          favorites: favorites ?? [],
-          orders: processedOrders,
-          cart: cart ?? []
+    UserApiClient.login(dto)
+      .then((data) => {
+        if (isResponseWithErrors(data)) {
+          data.errors?.forEach((error) => {
+            if (error.field === 'email') {
+              setForm((prev) => ({
+                ...prev,
+                email: {
+                  ...prev.email,
+                  isValid: false,
+                  errorMessage: error.message ?? ''
+                }
+              }))
+            }
+            if (error.field === 'password') {
+              setForm((prev) => ({
+                ...prev,
+                password: {
+                  ...prev.password,
+                  isValid: false,
+                  errorMessage: error.message ?? ''
+                }
+              }))
+            }
+          })
         }
-        dispatch(loginUserActionCreator(payload))
-        history.push({ pathname: ROUTES.Profile })
-      }
-    })
+
+        if (isSuccessfullLoginResponse(data)) {
+          setForm(fields.current)
+          localStorage.setItem('loft_furniture_token', data.token)
+          const {
+            id,
+            name,
+            email,
+            surname,
+            phone,
+            city,
+            street,
+            house,
+            apartment,
+            orders,
+            image,
+            emailConfirmed,
+            favorites,
+            wantsToReceiveEmailUpdates,
+            cart,
+            updatedAt,
+            createdAt
+          } = data.user
+
+          const processedOrders =
+            orders?.map((o) => ({
+              id: o.id,
+              userId: o.userId,
+              name: o.name,
+              status: o.status,
+              createdAt: o.createdAt,
+              updatedAt: o.updatedAt,
+              items: o.items ?? []
+            })) ?? []
+          const payload = {
+            id: id,
+            isLoggedIn: true,
+            name: name,
+            email: email,
+            surname: surname,
+            phone: phone,
+            city: city,
+            street: street,
+            house: house,
+            apartment: apartment,
+            image: image
+              ? {
+                  name: image.name,
+                  url: import.meta.env.VITE_BACKEND + image.url
+                }
+              : null,
+            emailConfirmed: emailConfirmed,
+            wantsToReceiveEmailUpdates: wantsToReceiveEmailUpdates,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            favorites: favorites ?? [],
+            orders: processedOrders,
+            cart: cart ?? []
+          }
+          dispatch(loginUserActionCreator(payload))
+          history.push({ pathname: ROUTES.Profile })
+        } else {
+          dispatch(toggleSnackbarOpen())
+        }
+      })
+      .catch(() => dispatch(toggleSnackbarOpen()))
   }
 
   return isLoggedIn ? (

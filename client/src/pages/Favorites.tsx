@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
-import { SalesItem } from '../components/common/SalesItem'
+import { Card } from '../components/common/SalesItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
 import { IFurniture } from '../api/types'
@@ -50,7 +50,7 @@ const Favorites: React.FC = () => {
           <div className='container'>
             <div className='sales__items sales__items--cart'>
               {favoriteItems?.map((item) => (
-                <SalesItem
+                <Card
                   key={item.id}
                   product={item}
                   isFavorite={true}

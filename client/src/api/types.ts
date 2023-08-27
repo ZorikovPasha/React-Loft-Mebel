@@ -147,8 +147,8 @@ export interface IFurnitureResponse {
 export interface IErrorsResponse {
   errors:
     | {
-        field: string | null
-        message: string | null
+        field: string
+        message: string
       }[]
     | null
 }

@@ -6,53 +6,57 @@ import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { Link } from 'react-router-dom'
 import { getUserData } from '../../redux/getters'
 import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
+import { toggleSnackbarOpen } from '../../redux/actions/errors'
 
 interface ISalesItemProps {
   product: IFurniture
   isFavorite: boolean
 }
 
-export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
+export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
   const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors } = product
 
   const dispatch = useDispatch()
   const { isLoggedIn, favorites } = useSelector(getUserData)
 
-  const onLikeProductClick = (): void => {
+  const onLikeProductClick = () => {
+    if (!isLoggedIn) {
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
+    }
+
     const payload = {
       favorites: [id]
     }
 
     if (favorites.includes(id)) {
-      UserApiClient.deleteFavoriteItem(id)
+      return UserApiClient.deleteFavoriteItem(id)
         .then((dto) => {
           if (!isSuccessfullResponse(dto)) {
-            return window.alert('Something went wrong!(')
+            return dispatch(toggleSnackbarOpen())
           }
 
           editUserActionCreator(payload)
         })
         .catch(() => {
-          return window.alert('Something went wrong!(')
-        })
-    } else {
-      UserApiClient.addFavoriteItem(id)
-        .then((dto) => {
-          if (!isSuccessfullResponse(dto)) {
-            return window.alert('Something went wrong!(')
-          }
-
-          editUserActionCreator(payload)
-        })
-        .catch(() => {
-          return window.alert('Something went wrong!(')
+          dispatch(toggleSnackbarOpen())
         })
     }
+    UserApiClient.addFavoriteItem(id)
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        editUserActionCreator(payload)
+      })
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
-  const onAddToCartClick = async (): Promise<void> => {
+  const onAddToCartClick = async () => {
     if (!isLoggedIn) {
-      return
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
     UserApiClient.addItemToCart({
@@ -62,7 +66,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     })
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
 
         const payload = {
@@ -75,7 +79,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
         dispatch(addProductToCartActionCreator(payload))
       })
       .catch(() => {
-        return window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 
@@ -93,6 +97,8 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
         </div>
       ) : null}
       <button
+        title='Like product'
+        type='button'
         className={`item-sales__like ${isFavorite ? 'active' : ''}`}
         onClick={onLikeProductClick}
       />
@@ -135,6 +141,7 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
             <button
               className='item-sales__tocart btn'
               type='button'
+              title='Add product to cart'
               onClick={onAddToCartClick}
             >
               Добавить в корзину
@@ -145,5 +152,3 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
     </div>
   )
 })
-
-SalesItem.displayName = 'SalesItem'

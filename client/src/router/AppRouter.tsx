@@ -11,6 +11,7 @@ import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import { getUserData } from '../redux/getters'
 import '../scss/style.scss'
+import { Snackbar } from '../components/common/snackBar'
 
 export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
@@ -27,6 +28,8 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <div className='wrapper'>
+        <Snackbar />
+
         <MobMenu
           isMobMenuOpen={isMobMenuOpen}
           setMobMenuOpen={setMobMenuOpen}

@@ -146,10 +146,10 @@
   box-shadow: 0 1px 9px rgb(0 0 0 / 11%);
 
   @media (width <=510px) {
-      position: relative;
-      padding: 40px 0 0;
-      background: #fff;
-    }
+    position: relative;
+    padding: 40px 0 0;
+    background: #fff;
+  }
 
   &:hover  &__bottom {
     z-index: 10;
@@ -174,11 +174,8 @@
     }
   }
 
-  // .item-sales__like
-
   &__like {
     position: absolute;
-    z-index: 5;
     top: 21px;
     right: 16px;
     width: 24px;
@@ -230,8 +227,6 @@
     }
   }
 
-  // .item-sales__type
-
   &__type {
     display: block;
     font-size: 11px;
@@ -239,8 +234,6 @@
     margin-top: auto;
     margin-bottom: 9px;
   }
-
-  // .item-sales__price
 
   &__price {
     display: flex;
@@ -253,13 +246,10 @@
     margin-right: 6px;
 
     @media (width <=510px) {
-        font-size: 13px;
-        line-height: 15px;
-      }
-    
+      font-size: 13px;
+      line-height: 15px;
+    }
   }
-
-  // .item-sales__price-old
 
   &__price-old {
     font-weight: 500;
@@ -268,8 +258,6 @@
     text-decoration-line: line-through;
     color: #ccc;
   }
-
-  // .item-sales__bottom
 
   &__bottom {
     position: absolute;
@@ -334,16 +322,12 @@
     }
   }
 
-  // .item-sales__val
-
   &__val {
     font-size: 9px;
     line-height: 11px;
     color: #c4c4c4;
     margin-bottom: 8px;
   }
-
-  // .item-sales__num
 
   &__num {
     font-size: 9px;

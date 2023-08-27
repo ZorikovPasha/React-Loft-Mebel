@@ -6,6 +6,7 @@ import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
 import { removeProductFromCartActionCreator } from '../../redux/actions/userAction'
 import { getUserData } from '../../redux/getters'
+import { toggleSnackbarOpen } from '../../redux/actions/errors'
 
 interface ICartItemProps {
   item: {
@@ -26,9 +27,9 @@ interface ICartItemProps {
 
 export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
   const { furnitureId, cartItemId, name, imageUrl, price, quintity, dimension, color } = item
-  const dispatch = useDispatch()
-
   const { isLoggedIn } = useSelector(getUserData)
+
+  const dispatch = useDispatch()
 
   const onRemoveItemClick = () => {
     if (!isLoggedIn) {
@@ -43,7 +44,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
     UserApiClient.removeCartItem(dto)
       .then((dto) => {
         if (!isSuccessfullResponse(dto)) {
-          return window.alert('Something went wrong!(')
+          return dispatch(toggleSnackbarOpen())
         }
         const payload = {
           id: cartItemId,
@@ -55,7 +56,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
         dispatch(removeProductFromCartActionCreator(payload))
       })
       .catch(() => {
-        window.alert('Something went wrong!(')
+        dispatch(toggleSnackbarOpen())
       })
   }
 

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { Aside } from '../components/Catalog/Aside'
 import { SortPopup } from '../components/Catalog/SortPopup'
-import { SalesItem } from '../components/common/SalesItem'
+import { Card } from '../components/common/SalesItem'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
@@ -158,7 +158,7 @@ const Catalog: React.FC = () => {
               ) : items.length ? (
                 <div className='catalog__items'>
                   {items.map((item) => (
-                    <SalesItem
+                    <Card
                       key={item.id}
                       product={item}
                       isFavorite={favorites.includes(item.id)}
