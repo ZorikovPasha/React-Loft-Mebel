@@ -6,6 +6,7 @@ import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
 import { editUserActionCreator } from '../../redux/actions/userAction'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
+import { Button } from './Button'
 
 interface IProps {
   id: number
@@ -41,7 +42,9 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
   }
 
   return (
-    <button
+    <Button
+      title='Add to favorites'
+      type='button'
       className='shop__wish'
       onClick={onAddToFavoriteClick}
     >
@@ -49,6 +52,6 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
         src={favorites.includes(id) ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}
         alt=''
       />
-    </button>
+    </Button>
   )
 }

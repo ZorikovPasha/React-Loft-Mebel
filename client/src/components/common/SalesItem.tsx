@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import { getUserData } from '../../redux/getters'
 import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
+import { Button } from './Button'
 
 interface ISalesItemProps {
   product: IFurniture
@@ -96,12 +97,17 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
           <div className='label-sales__body'>-{discount}%</div>
         </div>
       ) : null}
-      <button
+      <Button
         title='Like product'
         type='button'
-        className={`item-sales__like ${isFavorite ? 'active' : ''}`}
+        className='item-sales__like'
         onClick={onLikeProductClick}
-      />
+      >
+        <img
+          src={isFavorite ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}
+          alt=''
+        />
+      </Button>
       <div className='item-sales__box'>
         <div className='item-sales__img'>
           <img
@@ -138,14 +144,14 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
                 <p className='item-sales__num'>{dimensions[0].height} СМ</p>
               </div>
             </div>
-            <button
+            <Button
               className='item-sales__tocart btn'
               type='button'
               title='Add product to cart'
               onClick={onAddToCartClick}
             >
-              Добавить в корзину
-            </button>
+              Add to cart
+            </Button>
           </div>
         ) : null}
       </div>

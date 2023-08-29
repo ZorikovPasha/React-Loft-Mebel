@@ -6,7 +6,7 @@ import { Footer } from '../components/layout/Footer'
 import { Loader } from '../components/common/Loader'
 import { MobMenu } from '../components/layout/MobMenu'
 import { Header } from '../components/layout/Header/Header'
-import { publicRoutes, authRoutes } from './routes'
+import { publicRoutes, authRoutes, WithPathname } from './routes'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import { getUserData } from '../redux/getters'
@@ -46,7 +46,7 @@ export const AppRouter = () => {
                   <Route
                     path={path}
                     key={path}
-                    component={component}
+                    render={() => <WithPathname>{component}</WithPathname>}
                     exact={exact}
                   />
                 ))}
@@ -54,7 +54,7 @@ export const AppRouter = () => {
                 <Route
                   path={path}
                   key={path}
-                  component={component}
+                  render={() => <WithPathname>{component}</WithPathname>}
                   exact={exact}
                 />
               ))}

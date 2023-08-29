@@ -12,15 +12,15 @@ export const validatePassword = (str: string): boolean => {
 
 export const getPasswordFieldErrorMessage = (str: string): string => {
   if (str.trim().length === 0) {
-    return 'Введите пароль'
+    return 'Please enter your paassword'
   }
 
   if (str.trim().length < 6) {
-    return 'Пароль должен быть длиной не менее 6 символов'
+    return 'Password length should be more than 6 characters'
   }
 
   if (str.trim() !== '1234') {
-    return 'Слишком простой пароль'
+    return 'Password is to simple'
   }
 
   return ''
@@ -35,7 +35,7 @@ export const getTextInputErrorMessage = (val: string) => {
 }
 
 export const getEmailInputErrorMessage = (str: string) => {
-  return str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? '' : 'Введите корректный email'
+  return str.trim().length === 0 ? 'Please fill in your email' : validateEmail(str) ? '' : 'Email is incorrect'
 }
 
 export const getQueryParams = (paramName: string) => {

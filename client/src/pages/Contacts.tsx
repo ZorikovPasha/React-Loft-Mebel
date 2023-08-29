@@ -10,6 +10,7 @@ import { isSuccessfullResponse } from '../api/types'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { useDispatch } from 'react-redux'
+import { Button } from '../components/common/Button'
 
 const ModalContent: React.FC = () => {
   return (
@@ -45,7 +46,7 @@ const Contacts: React.FC = () => {
       isValid: false,
       required: true,
       type: 'email',
-      placeholder: 'Введите ваш e-mail',
+      placeholder: 'Your e-mail',
       className: 'mt-30',
       inputClassName: 'form-input',
       showErrors: false,
@@ -100,6 +101,19 @@ const Contacts: React.FC = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
+    setForm((prev) => {
+      return Object.entries(prev).reduce(
+        (accum, [key, props]) => ({
+          ...accum,
+          [key]: {
+            ...props,
+            showErrors: true
+          }
+        }),
+        {}
+      )
+    })
+
     if (!Object.values(form).every(({ isValid }) => isValid)) {
       return
     }
@@ -150,12 +164,12 @@ const Contacts: React.FC = () => {
                 name='name'
                 type={name.type}
                 value={name.value}
-                required={name.required}
+                required={false}
                 rootElclass={name.className}
                 label={name.label}
                 labelClass={name.labelClass}
                 inputWrapClass={name.inputWrapClass}
-                inputClassName={`${name.inputClassName} ${showNameInputError ? 'input-text--error' : ''}`}
+                inputClassName={`${name.inputClassName} ${showNameInputError ? 'form-input--error' : ''}`}
                 showErrors={showNameInputError}
                 errorMessage={name.getErrorMessage(name.value)}
                 onChange={onChange('name')}
@@ -166,12 +180,12 @@ const Contacts: React.FC = () => {
                 name='email'
                 type={email.type}
                 value={email.value}
-                required={email.required}
+                required={false}
                 rootElclass={email.className}
                 label={email.label}
                 labelClass={email.labelClass}
                 inputWrapClass={email.inputWrapClass}
-                inputClassName={`${email.inputClassName} ${showEmailInputError ? 'input-text--error' : ''}`}
+                inputClassName={`${email.inputClassName} ${showEmailInputError ? 'form-input--error' : ''}`}
                 showErrors={showEmailInputError}
                 errorMessage={email.getErrorMessage(name.value)}
                 onChange={onChange('email')}
@@ -182,12 +196,12 @@ const Contacts: React.FC = () => {
                 name='message'
                 type={message.type}
                 value={message.value}
-                required={message.required}
+                required={false}
                 rootElclass={message.className}
                 label={message.label}
                 labelClass={message.labelClass}
                 inputWrapClass={message.inputWrapClass}
-                inputClassName={`${message.inputClassName} ${showMessageInputError ? 'input-text--error' : ''}`}
+                inputClassName={`${message.inputClassName} ${showMessageInputError ? 'form-input--error' : ''}`}
                 showErrors={showMessageInputError}
                 errorMessage={message.getErrorMessage(message.value)}
                 onChange={onChange('message')}
@@ -200,13 +214,13 @@ const Contacts: React.FC = () => {
                   />
                   <span className='btn-hollow'>Add file</span>
                 </label>
-                <button
+                <Button
                   title='Submit'
                   className='btn'
                   type='submit'
                 >
                   Submit
-                </button>
+                </Button>
               </div>
             </form>
             <div>
@@ -233,8 +247,11 @@ const Contacts: React.FC = () => {
               <p className='contacts__text mt-20'>Адрес: г. Анапа, Анапское шоссе, 30 Ж/К Черное море</p>
             </div>
           </div>
-          <h4 className='contacts__title mt-40'>Адрес нашей компании</h4>
-          <div style={{ position: 'relative', overflow: 'hidden' }}>
+          <h4 className='contacts__title mt-40'>We are at: </h4>
+          <div
+            className='mt-40'
+            style={{ position: 'relative', overflow: 'hidden' }}
+          >
             <a
               href='https://yandex.ru/maps/org/loft_mebel/168358311332/?utm_medium=mapframe&utm_source=maps'
               style={{ color: '#eee', fontSize: '12px', position: 'absolute', top: '0px' }}

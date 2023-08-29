@@ -12,6 +12,8 @@ import { isResponseWithErrors, isSuccessfullLoginResponse } from '../api/types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { Button } from '../components/common/Button'
+import { Loader } from '../components/common/Loader'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
@@ -55,6 +57,7 @@ const Login: React.FC = () => {
   } as const)
 
   const [form, setForm] = React.useState(fields.current)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target
@@ -73,6 +76,19 @@ const Login: React.FC = () => {
   const handleSubmit: React.MouseEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
+    setForm((prev) => {
+      return Object.entries(prev).reduce(
+        (accum, [key, props]) => ({
+          ...accum,
+          [key]: {
+            ...props,
+            showErrors: true
+          }
+        }),
+        {}
+      )
+    })
+
     if (!Object.values(form).every(({ isValid }) => isValid)) {
       return
     }
@@ -82,8 +98,10 @@ const Login: React.FC = () => {
       password: form.password.value
     }
 
+    setIsLoading(true)
     UserApiClient.login(dto)
       .then((data) => {
+        setIsLoading(false)
         if (isResponseWithErrors(data)) {
           data.errors?.forEach((error) => {
             if (error.field === 'email') {
@@ -173,13 +191,17 @@ const Login: React.FC = () => {
           dispatch(toggleSnackbarOpen())
         }
       })
-      .catch(() => dispatch(toggleSnackbarOpen()))
+      .catch(() => {
+        setIsLoading(false)
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   return isLoggedIn ? (
     <Redirect to={ROUTES.Profile} />
   ) : (
     <div className='login'>
+      {isLoading && <Loader rootElClass='loader--fixed' />}
       <div className='container'>
         <div className='login__inner'>
           <h1 className='login__title'>Login</h1>
@@ -213,7 +235,7 @@ const Login: React.FC = () => {
                   name={key as string}
                   type={type}
                   value={value}
-                  required={required}
+                  required={false}
                   rootElclass={className}
                   label={label}
                   labelClass={labelClass}
@@ -225,21 +247,22 @@ const Login: React.FC = () => {
                 />
               )
             })}
-            <button
+            <Button
+              title='Log in'
               className='login__form-btn btn'
               type='submit'
             >
-              Войти
-            </button>
+              Log in
+            </Button>
           </form>
         </div>
         <div className='login__bottom'>
-          <span className='login__new'>Новый пользователь? </span>
+          <span className='login__new'>Dont have an account? </span>
           <Link
             className='login__new-link'
             to='/signup'
           >
-            Создать учетную запись
+            Sign up
           </Link>
         </div>
       </div>

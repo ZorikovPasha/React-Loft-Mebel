@@ -9,6 +9,7 @@ import { addProductToCartActionCreator } from '../../redux/actions/userAction'
 import { UserApiClient } from '../../api'
 import { getUserData } from '../../redux/getters'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
+import { Button } from '../common/Button'
 
 interface IProductCardProps {
   product: IFurniture
@@ -16,7 +17,12 @@ interface IProductCardProps {
 
 const SliderPrevArrow: React.FC = () => {
   return (
-    <button className='slick-btn slick-prev'>
+    <Button
+      className='slick-btn slick-prev'
+      title='Previous slide'
+      type='button'
+      onClick={() => ({})}
+    >
       <svg
         width='9'
         height='14'
@@ -30,13 +36,18 @@ const SliderPrevArrow: React.FC = () => {
           strokeLinecap='square'
         />
       </svg>
-    </button>
+    </Button>
   )
 }
 
 const SliderNextArrow: React.FC = () => {
   return (
-    <button className='slick-btn slick-next'>
+    <Button
+      className='slick-btn slick-next'
+      type='button'
+      title='Next slide'
+      onClick={() => ({})}
+    >
       <svg
         width='8'
         height='14'
@@ -50,7 +61,7 @@ const SliderNextArrow: React.FC = () => {
           strokeLinecap='square'
         />
       </svg>
-    </button>
+    </Button>
   )
 }
 
@@ -285,13 +296,13 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             <form onSubmit={handleSubmit}>
               <div className='info__shop shop'>
                 <p className='shop__price'>{priceNew ? priceNew : priceOld} P</p>
-                <button
+                <Button
                   className='shop__btn btn'
                   title='Buy product'
                   type='submit'
                 >
-                  Купить
-                </button>
+                  Buy
+                </Button>
                 <AddToFavorite id={id} />
               </div>
               <div className='info__features grid'>

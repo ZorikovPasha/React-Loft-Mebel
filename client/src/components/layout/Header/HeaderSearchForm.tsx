@@ -1,5 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { Button } from '../../common/Button'
 
 interface IHeaderSearchFormProps {
   inputSpec?: boolean
@@ -30,7 +31,9 @@ export const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }
         value={searchValue}
         onChange={onSearchValChange}
       />
-      <button
+
+      <Button
+        title='Search'
         className='header__search'
         type='submit'
       >
@@ -38,7 +41,7 @@ export const HeaderSearchForm: React.FC<IHeaderSearchFormProps> = ({ inputSpec }
           src='/images/icons/search.svg'
           alt='search'
         />
-      </button>
+      </Button>
     </form>
   )
 }

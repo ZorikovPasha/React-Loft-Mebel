@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom'
 export const Footer: React.FC = () => {
   const footerLists = [
     [
-      { name: 'Кухни', link: '/catalog/kitchens' },
-      { name: 'Спальни', link: '/catalog/bedroom' },
-      { name: 'Гостинные', link: '/catalog/living' }
+      { name: 'Кухни', link: '/catalog?room=kitchens' },
+      { name: 'Спальни', link: '/catalog?room=bedroom' },
+      { name: 'Гостинные', link: '/catalog?room=living' }
     ],
     [
-      { name: 'Прихожие', link: '/catalog/hall' },
-      { name: 'Офисная мебель', link: '/catalog/office' },
-      { name: 'Детская', link: '/catalog/children' }
+      { name: 'Прихожие', link: '/catalog?room=hall' },
+      { name: 'Офисная мебель', link: '/catalog?room=office' },
+      { name: 'Детская', link: '/catalog?room=children' }
     ],
     [
       { name: 'Шкафы', link: '/catalog/cabinets' },
@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
         <div className='footer__inner'>
           <div className='footer__main'>
             <div className='footer__column'>
-              <p className='footer__title'>НАВИГАЦИЯ</p>
+              <p className='footer__title'>MENU</p>
               <div className='footer__box'>
                 {footerLists.map((list) => (
                   <ul

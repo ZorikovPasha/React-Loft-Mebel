@@ -8,7 +8,7 @@ import { HeaderWishListIcon } from './HeaderWishListIcon'
 import { HeaderBagIcon } from './HeaderBagIcon'
 import { Const, ROUTES } from '../../../utils/const'
 import { IHeaderProps } from './Header'
-import { getUserData } from '../../../redux/getters'
+import { getPathname, getUserData } from '../../../redux/getters'
 
 type ItemType = {
   name: string
@@ -40,6 +40,10 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
   const { location } = useHistory()
   let headerMiddleTall = false
 
+  const pathname = useSelector(getPathname)
+
+  const isLoginOrSignupPage = pathname === ROUTES.Login || pathname === ROUTES.Signup
+
   if (
     location.pathname === ROUTES.Contacts ||
     location.pathname === ROUTES.Catalog ||
@@ -50,7 +54,7 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
   }
 
   return (
-    <div className={`header__mid ${headerMiddleTall ? 'header__mid--taller' : ''}`}>
+    <div className='header__mid'>
       <div
         className='menu-btn'
         onClick={onMobMenuBtnClick}
@@ -119,7 +123,7 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
             />
           ) : (
             <img
-              src='/images/icons/profile.svg'
+              src={isLoginOrSignupPage ? '/images/icons/profile-icon.svg' : '/images/icons/profile.svg'}
               alt=''
             />
           )}

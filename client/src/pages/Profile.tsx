@@ -18,6 +18,7 @@ import { IField } from './SignUp'
 import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/types'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { Button } from '../components/common/Button'
 
 interface IFile {
   file: File | null
@@ -104,12 +105,13 @@ const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) 
           <span className='form__text'>I agree to recieve email newsletter.</span>
         </label>
 
-        <button
+        <Button
+          title='Submit choice'
           className='btn mt-20'
           type='submit'
         >
           Submit choice
-        </button>
+        </Button>
       </form>
     </>
   )
@@ -542,24 +544,26 @@ const Profile: React.FC = () => {
           <div className='profile__controls flex'>
             <div className='profile__tabs flex'>
               {tabs.map((t) => (
-                <button
+                <Button
                   className={`profile__tab ${t === activeTab ? 'profile__tab--active' : ''} btn`}
                   key={t}
                   type='button'
+                  title={t}
                   onClick={onTab(t)}
                 >
                   {t}
-                </button>
+                </Button>
               ))}
             </div>
 
-            <button
+            <Button
               className='profile__logout btn btn--danger'
               type='button'
+              title='Log out'
               onClick={onLogout}
             >
-              Выйти
-            </button>
+              Log out
+            </Button>
           </div>
           <div className='profile__box'>
             {activeTab === 'personal' && (
@@ -722,12 +726,13 @@ const Profile: React.FC = () => {
                     errorMessage={apartment.getErrorMessage(apartment.value)}
                     onChange={onChange(setApartment)}
                   />
-                  <button
+                  <Button
+                    title='Edit'
                     className='btn'
                     type='submit'
                   >
-                    Изменить
-                  </button>
+                    Edit
+                  </Button>
                 </form>
               </>
             )}
@@ -744,7 +749,7 @@ const Profile: React.FC = () => {
                             Order name: {name} №{id}
                           </p>
                           {status !== 'CANCELED' && (
-                            <button
+                            <Button
                               className='profile__order-cancel flex items-center justify-center'
                               type='button'
                               aria-label='Cancel order'
@@ -755,7 +760,7 @@ const Profile: React.FC = () => {
                                 src='/images/icons/cross.svg'
                                 alt=''
                               />
-                            </button>
+                            </Button>
                           )}
                         </div>
 

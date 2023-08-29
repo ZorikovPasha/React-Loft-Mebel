@@ -250,17 +250,3 @@
     object-position: center;
   }
 }
-
-@media (width <=510px) {
-  .sales__items--cart {
-    display: block;
-
-    .item-sales {
-      width: 220px !important;
-    }
-  }
-
-  .sales {
-    padding-bottom: 40px;
-  }
-}

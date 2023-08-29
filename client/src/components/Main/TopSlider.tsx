@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Slider from 'react-slick'
+import { Button } from '../common/Button'
 
 interface IArrowProps {
   onClick: (() => void) | undefined
@@ -8,9 +9,10 @@ interface IArrowProps {
 
 const SliderPrevArrow: React.FC<IArrowProps> = ({ onClick }) => {
   return (
-    <button
+    <Button
       type='button'
       className='slick-btn slick-prev'
+      title='Previous slide'
       onClick={onClick}
     >
       <svg
@@ -27,13 +29,14 @@ const SliderPrevArrow: React.FC<IArrowProps> = ({ onClick }) => {
           fill='white'
         />
       </svg>
-    </button>
+    </Button>
   )
 }
 
 const SliderNextArrow: React.FC<IArrowProps> = ({ onClick }) => {
   return (
-    <button
+    <Button
+      title='NExt slide'
       type='button'
       className='slick-btn slick-next'
       onClick={onClick}
@@ -52,7 +55,7 @@ const SliderNextArrow: React.FC<IArrowProps> = ({ onClick }) => {
           fill='white'
         />
       </svg>
-    </button>
+    </Button>
   )
 }
 

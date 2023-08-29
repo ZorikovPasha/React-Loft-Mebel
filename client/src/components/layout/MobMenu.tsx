@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../utils/const'
+import { Button } from '../common/Button'
 
 interface IMobMenuProps {
   isMobMenuOpen: boolean
@@ -99,10 +100,17 @@ export const MobMenu: React.FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen
       <div className={`mob-menu__body ${isMobMenuOpen ? 'opened' : ''}`}>
         <div className='mob-menu__top'>
           <h5 className='mob-menu__title'>Меню</h5>
-          <button
+          <Button
+            title='Close mobile menu'
+            type='button'
             className='mob-menu__close'
             onClick={onMobMenuCloseClick}
-          />
+          >
+            <img
+              src='/images/mob-menu/close.svg'
+              alt=''
+            />
+          </Button>
         </div>
         <ul className='mob-menu__list'>
           {mobMenu.top.map(({ name, link, imgLink }) => (

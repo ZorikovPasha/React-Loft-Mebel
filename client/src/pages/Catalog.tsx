@@ -14,11 +14,12 @@ import { submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { UserApiClient } from '../api'
 import { IFurniture } from '../api/types'
+import { Button } from '../components/common/Button'
 
 const Catalog: React.FC = () => {
   const history = useHistory()
 
-  const asideToggleRef = React.useRef(null)
+  const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
 
   const filters = React.useRef({
     room: '',
@@ -144,13 +145,15 @@ const Catalog: React.FC = () => {
             }
             <div className='catalog__body'>
               <div className='catalog__controls controls flex'>
-                <button
+                <Button
                   className='controls__toggle-aside'
+                  title='Filter'
+                  type='button'
+                  selfRef={asideToggleRef}
                   onClick={onBtnClick}
-                  ref={asideToggleRef}
                 >
-                  Фильтр
-                </button>
+                  Filter
+                </Button>
                 <SortPopup onSelectSortType={onSelectSortType} />
               </div>
               {isLoading ? (

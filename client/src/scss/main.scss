@@ -139,6 +139,20 @@
   }
 }
 
+@media (width <=510px) {
+  .sales__items--cart {
+    display: block;
+
+    .item-sales {
+      width: 220px !important;
+    }
+  }
+
+  .sales {
+    padding-bottom: 40px;
+  }
+}
+
 .item-sales {
   position: relative;
   padding: 74px 0 0;
@@ -180,11 +194,6 @@
     right: 16px;
     width: 24px;
     height: 21px;
-    background-image: url('/images/icons/wish.svg');
-
-    &.active {
-      background-image: url('/images/icons/wished.svg');
-    }
   }
 
   &__box {

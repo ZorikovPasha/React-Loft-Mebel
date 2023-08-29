@@ -233,3 +233,32 @@ button {
 .align-start {
   align-items: flex-start;
 }
+
+
+// z indexes
+
+.home__promo-content {
+  z-index: 2;  
+}
+
+.sub-list {
+  z-index: 3;
+}
+
+.sort-list {
+  z-index: 3;
+}
+
+.aside {
+  @media (width <=992px) {
+    z-index: 3;
+  }
+}
+
+.mob-menu {
+  z-index: 4;
+}
+
+.snackbar {
+  z-index: 4;
+}

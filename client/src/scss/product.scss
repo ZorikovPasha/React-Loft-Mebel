@@ -4,8 +4,8 @@
   }
 
   @media (width <=766px) {
-      padding-left: 0;
-    }
+    padding-left: 0;
+  }
   
   &__inner {
     grid-template-columns: calc(100% - 490px) 460px;
@@ -13,27 +13,27 @@
     max-width: 100%;
 
     @media (width <=992px) {
-        flex-wrap: wrap;
+      flex-wrap: wrap;
     }
   }
 
   &__info {
     @media (width <=992px) {
-        min-width: none;
-        margin-left: 0;
-      }
+      min-width: none;
+      margin-left: 0;
+    }
 
-      @media (width <=766px) {
-          min-width: 100%;
-        }
+    @media (width <=766px) {
+      min-width: 100%;
+    }
   } 
 
   &__slider {
     padding: 45px 25px 45px;
 
     @media (width <=992px) {
-        padding: 40px 0 35px;
-      }
+      padding: 40px 0 35px;
+    }
   }
 
   &__slider-item {
@@ -52,26 +52,26 @@
 
   &__images {
     @media (width <=992px) {
-        width: 718px;
-        margin-bottom: 40px;
-      }
+      width: 718px;
+      margin-bottom: 40px;
+    }
 
-      @media (width <=766px) {
-          width: 100%;
-        }
+    @media (width <=766px) {
+      width: 100%;
+    }
   }
 
   &__thumbs {
     padding: 0 28px;
 
     @media (width <=510px) {
-        padding: 0;
-      }
+      padding: 0;
+    }
 
     .slick-btn {
       position: absolute;
       top: 50%;
-      z-index: 4;
+      z-index: 1;
       transform: translate(0, -50%);
       cursor: pointer;
 
@@ -94,10 +94,10 @@
     }
 
     @media (width <=510px) {
-        img {
-          max-width: 83px;
-        }
+      img {
+        max-width: 83px;
       }
+    }
   }
 
   &__thumb {
@@ -119,9 +119,9 @@
     margin-bottom: 10px;
 
     @media (width <=510px) {
-        font-size: 16px;
-        line-height: 19px;
-      }
+      font-size: 16px;
+      line-height: 19px;
+    }
   }
 
   &__category {
@@ -131,10 +131,9 @@
     margin-bottom: 15px;
 
     @media (width <=510px) {
-        font-size: 9px;
-        line-height: 11px;
-      }
-    
+      font-size: 9px;
+      line-height: 11px;
+    }
   }
 
   &__shop {
@@ -191,9 +190,9 @@
     white-space: nowrap;
 
     @media (width <=510px) {
-        font-size: 16px;
-        line-height: 19px;
-      }
+      font-size: 16px;
+      line-height: 19px;
+    }
   }
 
   &__btn {
@@ -219,8 +218,8 @@
     padding-left: 15px;
 
     @media (width <=510px) {
-        font-size: 0;
-      }
+      font-size: 0;
+    }
   }
 }
 
@@ -246,8 +245,8 @@
   }
 
   @media (width <=510px) {
-      margin-top: 20px;
-    }
+    margin-top: 20px;
+  }
 
   &__select-quintity {
     width: 50px;
@@ -312,9 +311,9 @@
     }
 
     @media (width <=510px) {
-        font-size: 12px;
-        line-height: 14px;
-      }
+      font-size: 12px;
+      line-height: 14px;
+    }
   }
 
   &__title + &__title {
@@ -336,13 +335,13 @@
     max-width: 430px;
 
     @media (width <=1200px) {
-        margin-left: 10px;
-      }
+      margin-left: 10px;
+    }
 
-      @media (width <=992px) {
-          margin-left: 0;
-          margin-top: 23px;
-        }
+    @media (width <=992px) {
+      margin-left: 0;
+      margin-top: 23px;
+    }
   }
 
   &__row {
@@ -351,8 +350,8 @@
     grid-column-gap: 0;
 
     @media (width <=510px) {
-        grid-template-columns: 160px 1fr;
-      }
+      grid-template-columns: 160px 1fr;
+    }
   }
 
   &__row + &__row {
@@ -365,12 +364,13 @@
     width: 286px;
 
     @media (width <=1200px) {
-        min-width: 265px;
-      }
-      @media (width <=510px) {
-          width: 160px;
-          min-width: 160px;
-        }
+      min-width: 265px;
+    }
+     
+    @media (width <=510px) {
+      width: 160px;
+      min-width: 160px;
+    }
   }
 
   &__text {
@@ -379,18 +379,18 @@
     color: #686868;
 
     @media (width <=1200px) {
-        font-size: 14px;
-        line-height: 15px;
+      font-size: 14px;
+      line-height: 15px;
     }
 
     @media (width <=766px) {
-        white-space: initial;
-      }
+      white-space: initial;
+    }
 
-      @media (width <=510px) {
-          font-size: 12px;
-          line-height: 14px;
-        }
+    @media (width <=510px) {
+      font-size: 12px;
+      line-height: 14px;
+    }
 
     span {
       white-space: nowrap;
@@ -448,11 +448,11 @@
     }
 
     @media (width <=766px) {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      grid-template-columns: repeat(2, 1fr);
+    }
 
-      @media (width <=510px) {
-          grid-gap: 20px 8px;
-        }
+    @media (width <=510px) {
+      grid-gap: 20px 8px;
+    }
   }
 }

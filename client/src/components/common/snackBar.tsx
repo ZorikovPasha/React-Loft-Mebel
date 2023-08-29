@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getError } from '../../redux/getters'
 import { toggleSnackbarClose } from '../../redux/actions/errors'
+import { Button } from './Button'
 
 export const Snackbar: React.FC = () => {
   const timeout = 4000
@@ -32,7 +33,7 @@ export const Snackbar: React.FC = () => {
   return toggleSnackbar ? (
     <div className={`snackbar flex items-center justify-between ${variant === 'warning' ? 'snackbar--blue' : ''}`}>
       <p className='snackbar__p'>{message}</p>
-      <button
+      <Button
         className='snackbar__button'
         type='button'
         title='Close snackbar'
@@ -42,7 +43,7 @@ export const Snackbar: React.FC = () => {
           src='/images/icons/cross-white.svg'
           alt='close snackbar'
         />
-      </button>
+      </Button>
     </div>
   ) : null
 }

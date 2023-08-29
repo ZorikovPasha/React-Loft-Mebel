@@ -408,7 +408,6 @@
 
 .sub-list {
   position: absolute;
-  z-index: 999;
   top: 100%;
   left: 0;
   display: none;
@@ -419,7 +418,7 @@
   background-color: #fff;
 
   @media (width <=1200px) {
-      text-align: left;
+    text-align: left;
   }
 
   &--rightside {
@@ -453,38 +452,29 @@
   }
 
   @media (width <=510px) {
-      img {
-        width: 100px;
-        height: 22px;
-        object-fit: contain;
-      }
+    img {
+      width: 100px;
+      height: 22px;
+      object-fit: contain;
     }
+  }
 }
 
 .menu-btn {
   @media (width <=992px) {
-      display: block;
+    display: block;
   }
 }
 
 .categories__item:hover {
-    background: #245462;
-    color: #fff;
+  background: #245462;
+  color: #fff;
 
-    path {
-      fill: white;
-    }
-
-    .sub-list {
-      display: block;
-    }
+  path {
+    fill: white;
   }
 
-
-// @media (width <=766px) {
-//   .header__bottom--toremove {
-//     display: none;
-//   }
-// }
-
-
+  .sub-list {
+    display: block;
+  }
+}

@@ -7,6 +7,7 @@ import { isSuccessfullResponse } from '../../api/types'
 import { removeProductFromCartActionCreator } from '../../redux/actions/userAction'
 import { getUserData } from '../../redux/getters'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
+import { Button } from '../common/Button'
 
 interface ICartItemProps {
   item: {
@@ -109,7 +110,8 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
         </div>
         <div className='item__bottom'></div>
       </div>
-      <button
+      <Button
+        title='Remove product from cart'
         className='item__remove'
         type='button'
         onClick={onRemoveItemClick}
@@ -119,7 +121,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
           src='/images/icons/cross.svg'
           alt='cross'
         />
-      </button>
+      </Button>
     </div>
   )
 }

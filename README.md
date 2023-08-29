@@ -64,6 +64,8 @@ TODO!:
 - [ ] /login swagger edit response types   
 - [ ] should implement github-ci    
 - [ ] should add tests
-- [ ] add universal button component to set type, title, aria-label automatically
-- [ ] check for z-indexes everywhere
+- [x] add universal button component to set type, title, aria-label automatically
+- [x] check for z-indexes everywhere
 - [x] /contacts form redesign
+- [ ] should disable buttons and inputs while making submit requests
+- [ ] should add reviews for furniture?

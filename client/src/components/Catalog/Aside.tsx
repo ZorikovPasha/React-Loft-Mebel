@@ -3,6 +3,7 @@ import React from 'react'
 import { submitValuesType } from '../../types'
 import { Loader } from '../common/Loader'
 import { capitalizeFirstLetter } from '../../utils'
+import { Button } from '../common/Button'
 const CustomSelect = React.lazy(() => import('../common/CustomSelect'))
 
 interface IAsideProps {
@@ -185,10 +186,17 @@ export const Aside: React.FC<IAsideProps> = ({
           onSubmit={handleSubmit}
         >
           <div className='aside__filter filter'>
-            <button
+            <Button
+              title='Close aside'
+              type='button'
               className='aside__close'
               onClick={onAsideCloseClick}
-            />
+            >
+              <img
+                src='/images/mob-menu/close.svg'
+                alt='close icon'
+              />
+            </Button>
             <React.Suspense fallback={<Loader />}>
               <h6 className='filter__title mt-30'>{room.label}</h6>
               <CustomSelect
@@ -256,12 +264,14 @@ export const Aside: React.FC<IAsideProps> = ({
               ))}
             </div>
           </div>
-          <button
+
+          <Button
+            title='Filter'
             className='btn mt-20'
             type='submit'
           >
             Подобрать
-          </button>
+          </Button>
         </form>
       </div>
     </aside>
