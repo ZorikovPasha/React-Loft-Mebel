@@ -2,15 +2,8 @@ name: Building apps
 on: [push, workflow_dispatch]
 jobs: 
   building_front:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: whoami
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -24,42 +17,27 @@ jobs:
           npm run test
           npm run build
           ls -la
-      # Deploy to Netlify using our production secrets
-      - name: Deploy to netlify
-        uses: netlify/actions/cli@master
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        with:
-          args: deploy --dir=./client/dist --prod
-          secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
   building_backend:
-    runs-on: ubuntu-latest
-    services:
-      # Label used to access the service container
-      postgres:
-        # Docker Hub image
-        image: postgres
-        # Provide the password for postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps TCP port 5432 on service container to the host
-          - 5432:5432
-      nginx:
-        # Docker Hub image
-        image: nginx
-        ports:
-          # Maps TCP port 5432 on service container to the host
-          - 80:80
-    env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/loft_furniture?schema=public
+    runs-on: self-hosted
+    # services:
+    #   postgres:
+    #     image: postgres
+    #     env:
+    #       POSTGRES_USER: postgres
+    #       POSTGRES_PASSWORD: postgres
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 5432:5432
+    #   nginx:
+    #     image: nginx
+    #     ports:
+    #       - 80:80
+    # env:
+    #   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/loft_furniture?schema=public
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -68,7 +46,9 @@ jobs:
       - run: |
           cd server
           npm ci
-          npx prisma db:push
+          cd src
+          npx prisma db push
+          cd ..
           npm run lint
           npm run build
           npm run start
