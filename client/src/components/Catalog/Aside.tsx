@@ -270,7 +270,7 @@ export const Aside: React.FC<IAsideProps> = ({
             className='btn mt-20'
             type='submit'
           >
-            Подобрать
+            Find
           </Button>
         </form>
       </div>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
-import { Card } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
 import { IFurniture } from '../api/types'

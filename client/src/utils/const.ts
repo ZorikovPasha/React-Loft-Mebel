@@ -16,3 +16,10 @@ export const ROUTES = {
 export const Const = {
   phone: '8 (964) 89 99 119'
 }
+
+export const SCREEN_SIZES = {
+  desktop: 1200,
+  tablet_medium: 992,
+  tablet: 767,
+  mobile: 320
+}

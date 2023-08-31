@@ -13,3 +13,4 @@ export const getFilteredProductsByName =
 export const getUserData = (state: RootState): IUserState => state.user
 export const getPathname = (state: RootState): string => state.pathname.pathname
 export const getError = (state: RootState): IErrorsState => state.errors
+export const getSearch = (state: RootState) => state.search

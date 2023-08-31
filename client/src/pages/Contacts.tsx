@@ -244,7 +244,7 @@ const Contacts: React.FC = () => {
               >
                 INSTAGRAM
               </a>
-              <p className='contacts__text mt-20'>Адрес: г. Анапа, Анапское шоссе, 30 Ж/К Черное море</p>
+              <p className='contacts__text mt-20'>4550 W Pico Blvd unit d-101, Los Angeles, CA 90019, United States</p>
             </div>
           </div>
           <h4 className='contacts__title mt-40'>We are at: </h4>
@@ -252,33 +252,14 @@ const Contacts: React.FC = () => {
             className='mt-40'
             style={{ position: 'relative', overflow: 'hidden' }}
           >
-            <a
-              href='https://yandex.ru/maps/org/loft_mebel/168358311332/?utm_medium=mapframe&utm_source=maps'
-              style={{ color: '#eee', fontSize: '12px', position: 'absolute', top: '0px' }}
-            >
-              Loft Мебель
-            </a>
-            <a
-              href='https://yandex.ru/maps/1107/anapa/category/furniture_store/184107871/?utm_medium=mapframe&utm_source=maps'
-              style={{ color: '#eee', fontSize: '12px', position: 'absolute', top: '14px' }}
-            >
-              Магазин мебели в Анапе
-            </a>
-            <a
-              href='https://yandex.ru/maps/1107/anapa/category/cabinet_furniture/184107869/?utm_medium=mapframe&utm_source=maps'
-              style={{ color: '#eee', fontSize: '12px', position: 'absolute', top: '28px' }}
-            >
-              Корпусная мебель в Анапе
-            </a>
             <iframe
-              title='Магазин мебели в Анапе'
-              src='https://yandex.ru/map-widget/v1/-/CCUqI-Sv8C'
+              src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11924.956793041905!2d-118.34089996714462!3d34.04931641174938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b8f9d3d4c22b%3A0xccfafde3d3e0445e!2sLowe&#39;s%20Home%20Improvement!5e0!3m2!1sen!2sru!4v1693492192505!5m2!1sen!2sru'
               width='100%'
-              height='400'
-              frame-border='1'
-              allowFullScreen={true}
-              style={{ position: 'relative' }}
-            />
+              height='450'
+              allowFullScreen={false}
+              loading='lazy'
+              referrerPolicy='no-referrer-when-downgrade'
+            ></iframe>
           </div>
         </div>
       </section>

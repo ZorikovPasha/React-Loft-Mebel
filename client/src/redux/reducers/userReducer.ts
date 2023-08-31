@@ -106,10 +106,14 @@ export const userReducer = (
     }
 
     case Actions.EDIT_USER_DATA: {
-      const newFavorites =
-        action.payload.favorites?.reduce((accum: number[], next) => {
-          return state.favorites.includes(next) ? state.favorites.filter((f) => f !== next) : [...state.favorites, next]
-        }, []) ?? []
+      let newFavorites: number[] = []
+
+      action.payload.favorites?.map((next) => {
+        newFavorites = state.favorites.includes(next)
+          ? state.favorites.filter((f) => f !== next)
+          : [...state.favorites, next]
+      }, []) ?? []
+
       return {
         ...state,
         ...action.payload,

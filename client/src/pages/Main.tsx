@@ -20,8 +20,8 @@ export const Main: React.FC = () => {
           <source src='/images/promo.mp4' />
         </video>
         <div className='home__promo-content'>
-          <p className='home__promo-text'>Новый коллекция ярких решений для вашего интерьера.</p>
-          <p className='home__promo-label'>Украсьте вашу жизнь</p>
+          <p className='home__promo-text'>New aestetic collection for your homes.</p>
+          <p className='home__promo-label'>Explore now</p>
         </div>
       </div>
       <div className='home__gallery gallery'>
@@ -37,7 +37,7 @@ export const Main: React.FC = () => {
                 className='gallery__item-link'
                 to='/catalog?room=bedroom'
               >
-                Перейти к гостинной мебели
+                Explore bedrooms
               </Link>
             </div>
             <div className='gallery__item'>
@@ -50,7 +50,7 @@ export const Main: React.FC = () => {
                 className='gallery__item-link'
                 to='/catalog?room=office'
               >
-                Перейти к офисным креслам
+                Explore office furniture
               </Link>
             </div>
             <div className='gallery__item'>
@@ -63,7 +63,7 @@ export const Main: React.FC = () => {
                 className='gallery__item-link'
                 to='/catalog?room=kitchen'
               >
-                Перейти к кухонным уголкам
+                Explore kitchens
               </Link>
             </div>
             <div className='gallery__item'>
@@ -76,7 +76,7 @@ export const Main: React.FC = () => {
                 className='gallery__item-link'
                 to='/catalog?room=living'
               >
-                Перейти к модульным гостинным
+                Explore living rooms
               </Link>
             </div>
             <div className='gallery__item'>
@@ -89,7 +89,7 @@ export const Main: React.FC = () => {
                 className='gallery__item-link'
                 to='/catalog?room=bedroom'
               >
-                Перейти к спальным гарнитурам
+                Explore bedroom furniture
               </Link>
             </div>
           </div>

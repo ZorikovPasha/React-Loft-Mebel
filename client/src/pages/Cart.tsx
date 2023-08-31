@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 
-import { Card } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 import { CartItem } from '../components/Cart/CartItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'

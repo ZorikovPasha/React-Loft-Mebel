@@ -12,74 +12,64 @@ export const MobMenu: React.FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen
   const mobMenu = {
     top: [
       {
-        name: 'Главная',
+        name: 'Home',
         link: ROUTES.Home,
         imgLink: '/images/mob-menu/home.svg'
       },
       {
-        name: 'О нас',
+        name: 'About us',
         link: ROUTES.About,
         imgLink: '/images/mob-menu/info.svg'
       },
       {
-        name: 'Контакты',
+        name: 'Contacts',
         link: ROUTES.Contacts,
         imgLink: '/images/mob-menu/contacts.svg'
       }
     ],
     body: [
       {
-        name: 'Кухни',
+        name: 'Kitchens',
         link: '/catalog/kitchens',
         imgLink: '/images/mob-menu/kitchen.svg'
       },
       {
-        name: 'Спальни',
+        name: 'Bedrooms',
         link: '/catalog/bedroom',
         imgLink: '/images/mob-menu/bedroom.svg'
       },
       {
-        name: 'Гостинные',
+        name: 'Living rooms',
         link: '/catalog/living',
         imgLink: '/images/mob-menu/livingroom.svg'
       },
       {
-        name: 'Прихожие',
+        name: 'Halls',
         link: '/catalog/hall',
         imgLink: '/images/mob-menu/closet.svg'
       },
       {
-        name: 'Офисная мебель',
+        name: 'Office',
         link: '/catalog/office',
         imgLink: '/images/mob-menu/office.svg'
       },
       {
-        name: 'Детская',
+        name: 'Children',
         link: '/catalog/children',
         imgLink: '/images/mob-menu/children.svg'
       },
       {
-        name: 'Акция',
+        name: 'Sale',
         link: '/catalog/new',
         imgLink: '/images/mob-menu/promo.svg'
       },
       {
-        name: 'Новинки',
+        name: 'New arrivals',
         link: '/catalog/new',
         imgLink: '/images/mob-menu/new.svg'
       },
       {
-        name: 'Матрасы',
-        link: '/catalog/mattresses',
-        imgLink: '/images/mob-menu/mattress.svg'
-      },
-      {
-        name: 'Мягкая мебель',
-        link: '/catalog/upholstered',
-        imgLink: '/images/mob-menu/armchair.svg'
-      },
-      {
-        name: 'Шкафы',
+        name: 'Cabinets',
         link: '/catalog/cabinets',
         imgLink: '/images/mob-menu/cupboard.svg'
       }
@@ -99,7 +89,7 @@ export const MobMenu: React.FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen
     <div className={`mob-menu ${isMobMenuOpen ? 'opened' : ''}`}>
       <div className={`mob-menu__body ${isMobMenuOpen ? 'opened' : ''}`}>
         <div className='mob-menu__top'>
-          <h5 className='mob-menu__title'>Меню</h5>
+          <h5 className='mob-menu__title'>Menu</h5>
           <Button
             title='Close mobile menu'
             type='button'
@@ -134,7 +124,7 @@ export const MobMenu: React.FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen
             </li>
           ))}
         </ul>
-        <p className='mob-menu__subtitle'>Категории</p>
+        <p className='mob-menu__subtitle'>Categories</p>
         <ul className='mob-menu__list'>
           {mobMenu.body.map(({ name, link, imgLink }) => (
             <li

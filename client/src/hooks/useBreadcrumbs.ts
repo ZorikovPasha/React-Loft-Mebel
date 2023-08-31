@@ -2,16 +2,16 @@ import { BreadcrumbsLinkType } from '../types'
 import { useHistory } from 'react-router'
 
 const matchingPoints = [
-  { link: 'catalog', name: 'Каталог' },
-  { link: 'promo', name: 'Акция' },
-  { link: 'cart', name: 'Корзина' },
-  { link: 'products', name: 'Товары' },
-  { link: 'favorites', name: 'Избранное' },
-  { link: 'contacts', name: 'Контакты' },
-  { link: 'about', name: 'О нас' },
-  { link: 'profile', name: 'Личный кабинет' },
-  { link: 'login', name: 'Вход' },
-  { link: 'ышптгз', name: 'Регистрация' }
+  { link: 'catalog', name: 'Catalog' },
+  { link: 'promo', name: 'Sale' },
+  { link: 'cart', name: 'Cart' },
+  { link: 'products', name: 'Products' },
+  { link: 'favorites', name: 'Favorites' },
+  { link: 'contacts', name: 'Contacts' },
+  { link: 'about', name: 'About us' },
+  { link: 'profile', name: 'Profile' },
+  { link: 'login', name: 'Login' },
+  { link: 'signup', name: 'Sign up' }
 ]
 
 export const useBreadcrumbs = (): BreadcrumbsLinkType[] => {

@@ -3,6 +3,10 @@
     height: 600px;
     margin-bottom: 30px;
 
+    @media #{$mobile} {
+      height: 400px;
+    }
+
     &::after {
       content: '';
       position: absolute;

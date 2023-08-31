@@ -8,7 +8,8 @@ export const Actions = {
   LOGOUT: 'LOGOUT',
   EDIT_USER_DATA: 'EDIT_USER_DATA',
   SET_PATHNAME: 'SET_PATHNAME',
-  EDIT_ORDER: 'EDIT_ORDER'
+  EDIT_ORDER: 'EDIT_ORDER',
+  SEARCH: 'SEARCH'
 } as const
 
 export type fetchItemsActionType = {

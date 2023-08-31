@@ -16,7 +16,7 @@
     "incremental": true,
     "strictNullChecks": true,
     "noErrorTruncation": false,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
 
     /* Linting */
     "strict": true,

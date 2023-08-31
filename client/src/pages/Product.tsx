@@ -7,7 +7,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { ProductTabs } from '../components/Product/ProductTabs'
 import { useSelector } from 'react-redux'
 import { getProducts, getUserData } from '../redux/getters'
-import { Card } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 
 const Product: React.FC = () => {
   const { id } = useParams<{ id: string }>()

@@ -56,7 +56,7 @@ TODO!:
 - [ ] at the start two equal api call `api/furniture` in catalog
 - [x] should show snackbars when error is occured
 - [x] handle something went wrong when updating profile
-- [ ] should add search     
+- [x] should add search     
 - [x] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
 - [ ] add remaining products    
 - [ ] mark in swagger which id to send
@@ -65,4 +65,4 @@ TODO!:
 - [x] add universal button component to set type, title, aria-label automatically
 - [x] check for z-indexes everywhere
 - [x] /contacts form redesign
-- [ ] should disable buttons and inputs while making submit requests
+- [x] should disable buttons and inputs while making submit requests

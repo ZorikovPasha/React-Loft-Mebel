@@ -1,14 +1,14 @@
-import React, { FC, MouseEventHandler } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 
-import { HeaderSearchForm } from './HeaderSearchForm'
+import { Search } from './Search'
 import { HeaderWishListIcon } from './HeaderWishListIcon'
 import { HeaderBagIcon } from './HeaderBagIcon'
-import { Const, ROUTES } from '../../../utils/const'
+import { Const, ROUTES, SCREEN_SIZES } from '../../../utils/const'
 import { IHeaderProps } from './Header'
 import { getPathname, getUserData } from '../../../redux/getters'
+import { useScreenSize } from '../../../hooks/useScreenSize'
 
 type ItemType = {
   name: string
@@ -19,9 +19,11 @@ interface IHeaderMiddleProps extends IHeaderProps {
   items: ItemType[]
 }
 
-const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, items }) => {
+export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
   const { isLoggedIn, image } = useSelector(getUserData)
   const menuBtnRef = React.useRef(null)
+
+  const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
 
   React.useEffect(() => {
     document.body.onclick = function (e: MouseEvent): void {
@@ -32,68 +34,38 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
     }
   }, [])
 
-  const onMobMenuBtnClick: MouseEventHandler<HTMLDivElement> = (): void => {
+  const onMobMenuBtnClick = (): void => {
     setMobMenuOpen(true)
     document.documentElement.classList.add('lock')
   }
-
-  const { location } = useHistory()
-  let headerMiddleTall = false
 
   const pathname = useSelector(getPathname)
 
   const isLoginOrSignupPage = pathname === ROUTES.Login || pathname === ROUTES.Signup
 
-  if (
-    location.pathname === ROUTES.Contacts ||
-    location.pathname === ROUTES.Catalog ||
-    location.pathname === ROUTES.Product ||
-    location.pathname === ROUTES.About
-  ) {
-    headerMiddleTall = true
-  }
-
   return (
     <div className='header__mid'>
-      <div
-        className='menu-btn'
+      <button
+        type='button'
+        className='header__menu-btn'
         onClick={onMobMenuBtnClick}
         ref={menuBtnRef}
       >
         <div></div>
         <div></div>
         <div></div>
-      </div>
+      </button>
       <Link
         to='/'
-        className='logo'
+        className='header__logo'
       >
         <img
-          src='/images/logo.svg'
+          src={isNotMobile ? '/images/logo.svg' : '/images/icons/footer-logo.svg'}
           alt='logo'
         />
       </Link>
 
-      {headerMiddleTall ? (
-        <nav className='header__nav'>
-          <ul className='header__list'>
-            {items.map((item, idx) => (
-              <li
-                key={`${item.name}_${idx}`}
-                className='header__list-item'
-              >
-                <Link
-                  to={item.link}
-                  className='header__list-link'
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      ) : null}
-      <HeaderSearchForm inputSpec />
+      <Search />
       <div className='header__connect'>
         <a
           className='header__phone header__phone--black'
@@ -101,18 +73,12 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
         >
           {Const.phone}
         </a>
-        <Link
-          className='header__delivery header__delivery--black'
-          to='/contacts'
-        >
-          Доставка
-        </Link>
       </div>
-      <div className='header__user user-header'>
+      <div className='flex justify-between items-center'>
         <HeaderWishListIcon />
         <HeaderBagIcon />
         <Link
-          to={isLoggedIn ? '/profile' : '/login'}
+          to={isLoggedIn ? ROUTES.Profile : ROUTES.Login}
           className='user-header__link user-header__link--profile user-header__link--hover'
         >
           {isLoggedIn && image ? (
@@ -132,5 +98,3 @@ const HeaderMiddle: FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, i
     </div>
   )
 }
-
-export default HeaderMiddle

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { Aside } from '../components/Catalog/Aside'
 import { SortPopup } from '../components/Catalog/SortPopup'
-import { Card } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { getFilteredProductsByName, getUserData } from '../redux/getters'
 import { Empty } from '../components/common/Empty'
-import { Card } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 
 const SearchResult: React.FC = () => {
   const history = useHistory()

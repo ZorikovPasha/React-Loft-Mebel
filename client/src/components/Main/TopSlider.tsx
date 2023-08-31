@@ -68,15 +68,15 @@ export type Text = {
 export const TopSlider: React.FC = () => {
   const slides = [
     {
-      title: 'Гостинные',
+      title: 'Living rooms',
       imageUrl: '/images/top-bg-1.jpg'
     },
     {
-      title: 'Кухни',
+      title: 'Kithens',
       imageUrl: '/images/top-bg-2.jpg'
     },
     {
-      title: 'Спальни',
+      title: 'Bedrooms',
       imageUrl: '/images/top-bg-3.jpg'
     }
   ]
@@ -113,7 +113,7 @@ export const TopSlider: React.FC = () => {
             <div className='top__slider-box'>
               <h1 className='top__title'>{title}</h1>
               <Link
-                className='top__btn'
+                className='btn'
                 to='/catalog/kitchens'
               >
                 Go to catalog

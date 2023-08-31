@@ -288,7 +288,7 @@ const NewProduct = (): JSX.Element => {
     setActiveColor((prev) => prev + 1)
   }
 
-  const onDeleteColor = (idx: number) => () => {
+  const onDeleteColor = (currentColor: string) => () => {
     let shouldDeleteColor = true
 
     setColors((prev) => {
@@ -299,7 +299,7 @@ const NewProduct = (): JSX.Element => {
 
       return {
         ...prev,
-        value: prev.value.filter((color, index) => index !== idx)
+        value: prev.value.filter((color) => color !== currentColor)
       }
     })
 
@@ -316,6 +316,7 @@ const NewProduct = (): JSX.Element => {
 
       return {
         ...prev,
+        // @ts-expect-error unused parameter in function
         value: prev.value.filter((d, index) => index !== idx)
       }
     })
@@ -332,7 +333,7 @@ const NewProduct = (): JSX.Element => {
     (idx: number, dimension: 'width' | 'length' | 'height') => (e: React.ChangeEvent<HTMLInputElement>) => {
       const target = e.target
       setDimensions((prev) => {
-        const dimensionToEdit = prev.value.find((d, index) => index === idx)
+        const dimensionToEdit = prev.value[idx]
 
         if (!dimensionToEdit) {
           return prev
@@ -554,7 +555,7 @@ const NewProduct = (): JSX.Element => {
                       } btn`}
                       type='button'
                       title='Delete color'
-                      onClick={onDeleteColor(idx)}
+                      onClick={onDeleteColor(c)}
                     >
                       <>
                         <svg
@@ -856,7 +857,7 @@ const NewProduct = (): JSX.Element => {
                   type='file'
                   onChange={onFile}
                 />
-                <span className='btn'>Прикрепить файл</span>
+                <span className='btn'>Add file</span>
               </label>
             </div>
           </div>
