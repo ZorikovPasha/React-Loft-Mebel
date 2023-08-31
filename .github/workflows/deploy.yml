@@ -15,29 +15,29 @@ jobs:
           npm run lint
           npm run typecheck
           npm run test
-          npm run build
-          ls -la
+          docker build -t front
+
+  preparing_database:
+    runs-on: self-hosted
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/loft_furniture?schema=public
+
+    
   building_backend:
     runs-on: self-hosted
-    # services:
-    #   postgres:
-    #     image: postgres
-    #     env:
-    #       POSTGRES_USER: postgres
-    #       POSTGRES_PASSWORD: postgres
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 5432:5432
-    #   nginx:
-    #     image: nginx
-    #     ports:
-    #       - 80:80
-    # env:
-    #   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/loft_furniture?schema=public
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -45,11 +45,20 @@ jobs:
           node-version: 16.14.2
       - run: |
           cd server
+          touch .env
+          echo JWT_EXPIRATION="2h" >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+          echo SELF="http://localhost:5000" >> .env
+          echo DATABASE_URL="postgresql://postgres:postgres@localhost:5432/loft_furniture?schema=public" >> .env
+          cat .env
           npm ci
           cd src
           npx prisma db push
           cd ..
           npm run lint
-          npm run build
-          npm run start
-
+          docker build -t backend
+  start_services:
+    runs-on: self-hosted
+    steps:
+      - run: |
+          docker-compose up -d
