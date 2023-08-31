@@ -1,8 +1,10 @@
 import { Actions } from '../../types/actionsTypes'
 import {
   ICartItem,
+  IOrder,
   IUserState,
   addProductToCartActionType,
+  editOrderActionType,
   removeProductToCartActionType,
   userActionType
 } from '../reducers/userReducer'
@@ -29,5 +31,10 @@ export const addProductToCartActionCreator = (payload: ICartItem): addProductToC
 
 export const removeProductFromCartActionCreator = (payload: ICartItem): removeProductToCartActionType => ({
   type: Actions.REMOVE_CART_ITEM,
+  payload: payload
+})
+
+export const editOrderActionCreator = (payload: IOrder): editOrderActionType => ({
+  type: Actions.EDIT_ORDER,
   payload: payload
 })

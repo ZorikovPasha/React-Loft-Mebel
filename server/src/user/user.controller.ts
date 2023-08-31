@@ -1,24 +1,28 @@
 import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
-import { validationResult } from 'express-validator'
+import { validationResult, matchedData } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import { injectable, inject } from 'inversify'
-import fileUpload from 'express-fileupload'
+import { User } from '@prisma/client'
 
 import { LoggerService } from '../logger/logger.service.js'
 import { ApiError } from '../error/api.error.js'
-import { prismaClient } from '../prisma/client.js'
 import { TYPES } from '../types.js'
 import {
+  AppLocalsResponseType,
+  AppResponse,
+  IAddCartItemDto,
+  ICancelOrderDto,
   ILoginUserDto,
   IRegisterUserDto,
+  IRemoveCartItemDto,
+  IRequestDto,
   IUpdateUserDto,
-  IUser,
   IUserController,
   ResponseType
 } from './user.controller.interface.js'
-import { AppLocalsResponseType, AppResponse } from '../app/app.controller.interface.js'
 import { ImageService } from '../image.js'
+import { PrismaService } from '../prisma.service.js'
 
 const generateToken = (id: string, email: string, password: string): string | undefined => {
   const payload = {
@@ -40,17 +44,16 @@ const generateToken = (id: string, email: string, password: string): string | un
 export class UserController implements IUserController {
   constructor(
     @inject(TYPES.ILoggerService) private logger: LoggerService,
-    @inject(TYPES.ImageService) private imageService: ImageService
-  ) {
-    this.logger = logger
-  }
+    @inject(TYPES.ImageService) private imageService: ImageService,
+    @inject(TYPES.Prisma) private prisma: PrismaService
+  ) {}
 
-  async collectUserData(user: IUser) {
+  async collectUserData(user: User) {
     const getImage = async (photoId: number | null) => {
       if (!photoId) {
         return
       }
-      return await prismaClient.image.findFirst({
+      return await this.prisma.client.image.findFirst({
         where: {
           id: photoId
         }
@@ -58,26 +61,29 @@ export class UserController implements IUserController {
     }
 
     const [favorites, cart, orders, image] = await Promise.all([
-      prismaClient.favoriteFurniture.findMany({
+      this.prisma.client.favoriteFurniture.findMany({
         where: {
           userId: user.id
         }
       }),
-      prismaClient.cart.findFirst({
+      this.prisma.client.cart.findFirst({
         where: {
           userId: user.id
         }
       }),
-      prismaClient.order.findMany({
+      this.prisma.client.order.findMany({
         where: {
           userId: user.id
+        },
+        orderBy: {
+          createdAt: 'desc'
         }
       }),
       getImage(user.photoId)
     ])
 
     const cartData = cart
-      ? await prismaClient.cartFurniture.findMany({
+      ? await this.prisma.client.cartFurniture.findMany({
           where: {
             cartId: cart.id
           }
@@ -87,7 +93,7 @@ export class UserController implements IUserController {
     const ordersData = []
 
     for (const order of orders) {
-      const productsInOrder = await prismaClient.orderedFurniture.findMany({
+      const productsInOrder = await this.prisma.client.orderedFurniture.findMany({
         where: {
           orderId: order.id
         }
@@ -146,24 +152,29 @@ export class UserController implements IUserController {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
       const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
-      }
-      const { userName, email, password } = req.body
 
-      // TODO: validation result
-      if (!userName) {
+      if (!errors.isEmpty()) {
+        const dto = errors
+          .array({ onlyFirstError: true })
+          .map((props) => ({ field: props.param, message: props.msg }))
+
+        this.logger.error(`${req.method} [${req.path}], Error: ${dto}`)
+        return res.status(400).json({ errors: dto })
+      }
+
+      const { userName, email, password } = matchedData(req)
+
+      if (!userName || typeof userName !== 'string') {
         return next(ApiError.badRequest('UserName was not provided'))
       }
-
-      if (!email) {
+      if (!email || typeof email !== 'string') {
         return next(ApiError.badRequest('Email was not provided'))
       }
-
-      if (!password) {
+      if (!password || typeof password !== 'string') {
         return next(ApiError.badRequest('Password was not provided'))
       }
-      const candidate = await prismaClient.user.findFirst({
+
+      const candidate = await this.prisma.client.user.findFirst({
         where: {
           OR: [{ email: email }, { userName: userName }]
         }
@@ -176,21 +187,14 @@ export class UserController implements IUserController {
       const hashedPassword = await bcrypt.hash(password, 10)
 
       let savedImage
-      if (req.files && req.files.photo) {
-        let processedImageFromRequest: fileUpload.UploadedFile
-
-        if (Array.isArray(req.files.photo)) {
-          processedImageFromRequest = req.files.photo[0]
-        } else {
-          processedImageFromRequest = req.files.photo
-        }
-
-        savedImage = await prismaClient.image.create({
-          data: await this.imageService.prepare(processedImageFromRequest)
+      const { photo } = req.files || {}
+      if (photo) {
+        savedImage = await this.prisma.client.image.create({
+          data: await this.imageService.prepare(Array.isArray(photo) ? photo[0] : photo)
         })
       }
 
-      await prismaClient.user.create({
+      await this.prisma.client.user.create({
         data: {
           name: '',
           surname: '',
@@ -207,7 +211,7 @@ export class UserController implements IUserController {
       })
       return res.status(201).json({ success: true })
     } catch (error) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
+      this.logger.error(`${req.method} [${req.path}], Error: ${error}`)
       return next(ApiError.internal(error as Error))
     }
   }
@@ -220,21 +224,31 @@ export class UserController implements IUserController {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
 
-      const { email, password } = req.body
+      const errors = validationResult(req)
 
-      if (!password) {
+      if (!errors.isEmpty()) {
+        const dto = errors
+          .array({ onlyFirstError: true })
+          .map((props) => ({ field: props.param, message: props.msg }))
+
+        this.logger.error(`${req.method} [${req.path}], Error: ${dto}`)
+        return res.status(400).json({ errors: dto })
+      }
+
+      const { email, password } = matchedData(req)
+
+      if (!email || typeof email !== 'string') {
+        return res
+          .status(400)
+          .json({ errors: [{ field: 'email', message: 'Email was not provided' }] })
+      }
+      if (!password || typeof password !== 'string') {
         return res
           .status(400)
           .json({ errors: [{ field: 'password', message: 'Password was not provided' }] })
       }
 
-      if (!email) {
-        return res
-          .status(400)
-          .json({ errors: [{ field: 'email', message: 'Email was not provided' }] })
-      }
-
-      const user = await prismaClient.user.findFirst({
+      const user = await this.prisma.client.user.findFirst({
         where: {
           email: email.toLowerCase()
         }
@@ -254,6 +268,7 @@ export class UserController implements IUserController {
       }
 
       const token = generateToken(user.id, email, password)
+      // const jwt = this.signJwt({}, "")
 
       return res.json({
         token: token,
@@ -285,25 +300,7 @@ export class UserController implements IUserController {
         wantsToReceiveEmailUpdates
       } = req.body
 
-      // type UserPropertiesNames =
-      //   "id"
-      //   | "name"
-      //   | "surname"
-      //   | "userName"
-      //   | "password"
-      //   | "email"
-      //   | "phone"
-      //   | "city"
-      //   | "street"
-      //   | "house"
-      //   | "apartment"
-      //   | "photoId"
-      //   | "role"
-      //   | "emailConfirmed"
-      //   | "wantsToReceiveEmailUpdates"
-
       const set: Record<string, string | number | boolean> = {}
-      // const set: (Without<UserUpdateInput, UserUncheckedUpdateInput> & UserUncheckedUpdateInput) | (Without<UserUncheckedUpdateInput, UserUpdateInput> & UserUpdateInput) = {}
       if (name !== null && typeof name !== 'undefined') {
         set.name = name
       }
@@ -332,14 +329,14 @@ export class UserController implements IUserController {
         wantsToReceiveEmailUpdates !== null &&
         typeof wantsToReceiveEmailUpdates !== 'undefined'
       ) {
-        set.wantsToReceiveEmailUpdates = wantsToReceiveEmailUpdates
+        set.wantsToReceiveEmailUpdates = wantsToReceiveEmailUpdates === '1'
       }
 
       const { image } = req.files || {}
       let savedImage
 
       if (image) {
-        const _savedImage = await prismaClient.image.create({
+        const _savedImage = await this.prisma.client.image.create({
           data: await this.imageService.prepare(Array.isArray(image) ? image[0] : image)
         })
 
@@ -350,13 +347,14 @@ export class UserController implements IUserController {
         set.photoId = savedImage.id
       }
 
-      await prismaClient.user.update({
+      await this.prisma.client.user.update({
         where: {
           email: res.locals.user.email
         },
         data: set
       })
-      return res.status(204).json({ success: true })
+
+      return res.json({ success: true }).status(204)
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
@@ -370,12 +368,12 @@ export class UserController implements IUserController {
       const { id } = res.locals.user || {}
 
       if (!id) {
-        return res.status(500).json({ message: 'Internal' })
+        return res.status(500).json({ message: 'Internal server error' })
       }
 
-      const user = await prismaClient.user.findFirst({
+      const user = await this.prisma.client.user.findFirst({
         where: {
-          id: id
+          id
         }
       })
 
@@ -390,5 +388,350 @@ export class UserController implements IUserController {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))
     }
+  }
+
+  async getFavorites(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      if (!res.locals.user) {
+        return next({ status: 500, message: '' })
+      }
+
+      const favorites = await this.prisma.client.favoriteFurniture.findMany({
+        where: {
+          userId: res.locals.user.id
+        }
+      })
+      return res.json({ items: favorites })
+    } catch (error) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
+      return next(ApiError.internal(error as Error))
+    }
+  }
+
+  async addFavoriteItem(
+    req: Request<{}, {}, { id?: number }>,
+    res: Response,
+    next: NextFunction
+  ): ResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      const { id } = req.body // this is product id
+      if (!id) {
+        return next(ApiError.badRequest('Id was not provided'))
+      }
+
+      const candidate = await this.prisma.client.favoriteFurniture.findFirst({
+        where: {
+          userId: res.locals.user.id,
+          furnitureId: id
+        }
+      })
+      if (candidate) {
+        return next(ApiError.badRequest('Item already exists'))
+      }
+      await this.prisma.client.favoriteFurniture.create({
+        data: {
+          userId: res.locals.user.id,
+          furnitureId: id
+        }
+      })
+
+      return res.status(200).json({ success: true })
+    } catch (err) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
+      return next(ApiError.internal(err as Error))
+    }
+  }
+
+  async deleteFavouriteItem(
+    req: Request<{}, {}, { id?: number }>,
+    res: Response,
+    next: NextFunction
+  ): ResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      const { id } = req.body // this is product id
+      if (!id) {
+        return next(ApiError.badRequest('Id was not provided'))
+      }
+
+      await this.prisma.client.favoriteFurniture.deleteMany({
+        where: {
+          furnitureId: id
+        }
+      })
+
+      return res.status(200).json({ success: true })
+    } catch (err) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
+      return next(ApiError.internal(err as Error))
+    }
+  }
+
+  async addOrder(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      if (!res.locals.user) {
+        return next({ status: 500, message: '' })
+      }
+
+      const cart = await this.prisma.client.cart.findFirst({
+        where: {
+          userId: res.locals.user.id
+        }
+      })
+
+      if (!cart) {
+        return res.status(201).json({ success: true })
+      }
+
+      const [currentProductsInCart, userOrder] = await Promise.all([
+        this.prisma.client.cartFurniture.findMany({
+          where: {
+            cartId: cart.id
+          }
+        }),
+        this.prisma.client.order.create({
+          data: {
+            userId: res.locals.user.id,
+            name: 'Order'
+          }
+        })
+      ])
+
+      const productsInOrder = await Promise.all(
+        currentProductsInCart.map(async ({ furnitureId, quintity, color }) => {
+          return await this.prisma.client.orderedFurniture.create({
+            data: {
+              furnitureId,
+              quintity,
+              orderId: userOrder.id,
+              color
+            }
+          })
+        })
+      )
+
+      await this.prisma.client.cartFurniture.deleteMany({
+        where: {
+          cartId: cart.id
+        }
+      })
+      // await this.prisma.client.cart.deleteMany({
+      //   where: {
+      //     userId: res.locals.user.id
+      //   }
+      // })
+
+      const dto = {
+        order: {
+          ...userOrder,
+          items: productsInOrder
+        }
+      }
+
+      return res.status(201).json(dto)
+    } catch (err) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
+      return next(ApiError.internal(err as Error))
+    }
+  }
+
+  async cancelOrder(
+    req: Request<{}, {}, ICancelOrderDto>,
+    res: AppResponse,
+    next: NextFunction
+  ): AppLocalsResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      const { orderId } = req.body
+
+      if (!orderId) {
+        return next(ApiError.badRequest('Order id was not provided'))
+      }
+
+      await this.prisma.client.order.update({
+        where: {
+          id: orderId
+        },
+        data: {
+          status: 'CANCELED'
+        }
+      })
+
+      return res.status(204).json({ success: true })
+    } catch (error) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
+      return next(ApiError.internal(error as Error))
+    }
+  }
+
+  async getCartItems(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      if (!res.locals.user) {
+        return next({ status: 500, message: '' })
+      }
+
+      const userCart = await this.prisma.client.cart.findFirst({
+        where: {
+          userId: res.locals.user.id
+        }
+      })
+
+      if (!userCart) {
+        return res.json({ items: [] })
+      }
+
+      const cartFurniture = this.prisma.client.cartFurniture.findMany({
+        where: {
+          cartId: userCart.id
+        }
+      })
+
+      return res.json({ items: cartFurniture })
+    } catch (error) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
+      return next(ApiError.internal(error as Error))
+    }
+  }
+
+  async addCartItem(
+    req: Request<{}, {}, IAddCartItemDto>,
+    res: AppResponse,
+    next: NextFunction
+  ): AppLocalsResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      if (!res.locals.user) {
+        return next({ status: 500, message: '' })
+      }
+
+      const { quintity = 1, productId, color = '' } = req.body
+
+      if (!productId) {
+        return next(ApiError.badRequest('Product id was not provided'))
+      }
+      if (!color) {
+        return next(ApiError.badRequest('Color id was not provided'))
+      }
+
+      let userCart = await this.prisma.client.cart.findFirst({
+        where: {
+          userId: res.locals.user.id
+        }
+      })
+
+      if (!userCart) {
+        userCart = await this.prisma.client.cart.create({
+          data: {
+            userId: res.locals.user.id
+          }
+        })
+      }
+
+      const candidate = await this.prisma.client.cartFurniture.findFirst({
+        where: {
+          furnitureId: productId,
+          color
+        }
+      })
+
+      if (candidate) {
+        await this.prisma.client.cartFurniture.updateMany({
+          where: {
+            furnitureId: productId,
+            color
+          },
+          data: {
+            quintity: candidate.quintity + quintity
+          }
+        })
+      } else {
+        await this.prisma.client.cartFurniture.create({
+          data: {
+            furnitureId: productId,
+            quintity: quintity,
+            cartId: userCart.id,
+            color
+          }
+        })
+      }
+
+      return res.status(200).json({ success: true })
+    } catch (error) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
+      return next(ApiError.internal(error as Error))
+    }
+  }
+
+  async removeCartItem(
+    req: Request<{}, {}, IRemoveCartItemDto>,
+    res: AppResponse,
+    next: NextFunction
+  ): AppLocalsResponseType {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      if (!res.locals.user) {
+        return next({ status: 500, message: '' })
+      }
+
+      const { productId, color } = req.body
+      if (!productId) {
+        return next(ApiError.badRequest('Product id was not provided'))
+      }
+      if (!color) {
+        return next(ApiError.badRequest('Color was not provided'))
+      }
+
+      const userCart = await this.prisma.client.cart.findFirst({
+        where: {
+          userId: res.locals.user.id
+        }
+      })
+
+      if (!userCart) {
+        return res.status(200).json({ success: true })
+      }
+
+      await this.prisma.client.cartFurniture.deleteMany({
+        where: {
+          furnitureId: productId,
+          color,
+          cartId: userCart.id
+        }
+      })
+      return res.status(200).json({ success: true })
+    } catch (err) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
+      return next(ApiError.internal(err as Error))
+    }
+  }
+
+  async makeRequest(req: Request<{}, {}, IRequestDto>, res: AppResponse) {
+    this.logger.log(`[${req.method}] ${req.path}`)
+
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      const dto = errors
+        .array({ onlyFirstError: true })
+        .map((props) => ({ field: props.param, message: props.msg }))
+      return res.status(400).json({ errors: dto })
+    }
+
+    const data: Record<'message', string> = matchedData(req)
+
+    console.log('data.message', data.message)
+
+    return res.status(200).json({ success: true })
   }
 }

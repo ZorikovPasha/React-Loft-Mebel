@@ -33,6 +33,10 @@ body {
   }
 }
 
+textarea {
+  resize: none;
+}
+
 #root {
   min-height: 100%;
   display: flex;
@@ -78,13 +82,9 @@ button {
 .breadcrumbs {
   padding: 0 0 20px;
 
-  // .breadcrumbs__list
-
   &__list {
     display: flex;
   }
-
-  // .breadcrumbs__item
 
   &__item {
     position: relative;
@@ -126,7 +126,7 @@ button {
   line-height: 22px;
   display: inline-block;
   cursor: pointer;
-  padding: 18px 35px;
+  padding: 14px 30px;
 
   &:hover,
   &:focus {
@@ -147,6 +147,29 @@ button {
   }
 }
 
+.btn-hollow {
+  background-color: #fff;
+  border: 1px solid #209cee;
+  border-radius: 5px;
+  font-size: 18px;
+  line-height: 22px;
+  display: inline-block;
+  cursor: pointer;
+  padding: 14px 30px;
+  transition: 0.3s;
+
+  &:hover,
+  &:focus {
+    color: #FFF;
+    background-color: rgba(#209cee, 0.9);
+  }
+
+  &:active {
+    background-color: #fff;
+    color: #414141;
+  }
+}
+
 
 @media (width <=510px) {
   .breadcrumbs__item:not(:last-child) {
@@ -161,6 +184,10 @@ button {
     display: block;
     margin-right: 7px;
   }
+}
+
+.mt-40 {
+  margin-top: 40px;
 }
 
 .mt-30 {
@@ -201,4 +228,40 @@ button {
 
 .relative {
   position: relative;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.highlight {
+  background: #209cee;
+}
+
+// z indexes
+
+.home__promo-content {
+  z-index: 2;  
+}
+
+.sub-list {
+  z-index: 3;
+}
+
+.sort-list {
+  z-index: 3;
+}
+
+.aside {
+  @media (width <=992px) {
+    z-index: 3;
+  }
+}
+
+.mob-menu {
+  z-index: 4;
+}
+
+.snackbar {
+  z-index: 4;
 }

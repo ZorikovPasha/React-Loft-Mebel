@@ -16,6 +16,11 @@ export type removeProductToCartActionType = {
   payload: ICartItem
 }
 
+export type editOrderActionType = {
+  type: typeof Actions.EDIT_ORDER
+  payload: IOrder
+}
+
 export interface ICartItem {
   id: number
   furnitureId: number
@@ -23,7 +28,7 @@ export interface ICartItem {
   color: string
 }
 
-interface IOrder {
+export interface IOrder {
   id: number
   userId: string
   name: string
@@ -84,7 +89,7 @@ export const initialState: IUserState = {
 
 export const userReducer = (
   state = initialState,
-  action: userActionType | addProductToCartActionType | removeProductToCartActionType
+  action: userActionType | addProductToCartActionType | removeProductToCartActionType | editOrderActionType
 ): IUserState => {
   switch (action.type) {
     case Actions.LOGIN: {
@@ -99,31 +104,26 @@ export const userReducer = (
         isLoggedIn: true
       }
     }
-    case Actions.EDIT_USER_DATA: {
-      const newFavorites =
-        action.payload.favorites?.reduce((accum: number[], next) => {
-          return state.favorites.includes(next) ? state.favorites.filter((f) => f !== next) : [...state.favorites, next]
-        }, []) ?? []
 
-      const newItems: ICartItem[] = []
-      let rest: ICartItem[] = []
-      action.payload.cart?.forEach((item) => {
-        const candidate = state.cart.find((i) => i.furnitureId === item.furnitureId)
-        if (candidate) {
-          rest = state.cart.filter((i) => i.furnitureId !== item.furnitureId)
-        } else {
-          rest.push(item)
-        }
-      })
+    case Actions.EDIT_USER_DATA: {
+      let newFavorites: number[] = []
+
+      action.payload.favorites?.map((next) => {
+        newFavorites = state.favorites.includes(next)
+          ? state.favorites.filter((f) => f !== next)
+          : [...state.favorites, next]
+      }, []) ?? []
+
       return {
         ...state,
         ...action.payload,
-        ...(action.payload.favorites && { favorites: newFavorites }),
-        ...(action.payload.cart && { cart: [...rest, ...newItems] })
+        ...(action.payload.favorites && { favorites: newFavorites })
       }
     }
+
     case Actions.LOGOUT:
       return initialState
+
     case Actions.ADD_CART_ITEM: {
       const payload = action.payload as ICartItem
       const candidate = state.cart.find((item) => {
@@ -138,6 +138,7 @@ export const userReducer = (
         cart: candidate ? state.cart : [...state.cart, payload]
       }
     }
+
     case Actions.REMOVE_CART_ITEM: {
       const filteredProducts = state.cart.filter((p) => {
         return p.furnitureId !== action.payload.furnitureId ? true : p.color !== action.payload.color
@@ -147,6 +148,14 @@ export const userReducer = (
         cart: filteredProducts
       }
     }
+
+    case Actions.EDIT_ORDER: {
+      return {
+        ...state,
+        orders: state.orders.map((o) => (o.id === action.payload.id ? { ...o, ...action.payload } : o))
+      }
+    }
+
     default:
       return state
   }

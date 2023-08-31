@@ -1,66 +1,68 @@
 Furniture E-commerce store project
 
 TODO!: 
-- [x] слайдер заменить на полегче    
 - [x] aborcontroller    
-- [ ] поиск по товарам    
 - [x] remove formik    
 - [x] remove yup    
-- [x] вынести селект в отдельный чанк    
-- [?] /api/furniture changed for GET from POST    
-- [x] убpать модель мобильного меню и слайдов из бэкенда и роуты тоже и методы    
+- [x] move select to its own chunk    
+- [x] /api/furniture changed for GET from POST    
+- [x] mobile  menu points should not come from backend  
 - [x] remove /private prefix     
 - [x] unify success messages    
 - [x] switch to prisma + postgres    
-- [ ] implement message from user
 - [x] profile picture?    
 - [x] refactor server api    
-- [ ] добавить продукты    
 - [x] image compressing    
 - [x] should add notfound page    
-- [?] switch from redux to react query?    
 - [x] redirect to 404    
 - [x] should get all colors and brands from backend in aside    
 - [x] should add logging when accessing a route  
-- [ ] /login swagger edit response types    
 - [x] redux should get user's info right after login    
 - [x] /login should return user data (think of which)    
 - [x] decide whether should do login if there is token    
 - [x] should redirect to login after register (modals comes in)    
-- [ ] should implement github-ci    
-- [ ] user should have the ability to confirm email ("emailConfirmed": boolean)
-- [ ] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
 - [x] image name before uploads is incorrect
 - [x] login returns image buffer but should not
 - [x] remove cart and orders requests, they come with login
 - [x] merge favorites reducer into user reducer
-- [ ] add rewrite from /uploads to server
 - [x] after submit image icon is not changing
-- [ ] handle something went wrong when updating profile
-- [ ] add logging in protect
 - [x] display orders
-- [ ] at the start two equal api call `api/furniture` in catalog
 - [x] should display rating
 - [x] should refine items' color and dimensions in cart
 - [x] cart item is not being removed from redux
 - [x] removing from favorites does not remove from redux
-- [ ] mark in swagger which id to send
 - [x] mark cart and favorites icons
 - [x] when not logged in items are not being added to cart 
 - [x] catalog aside close
-- [ ] cart items after login should be added to database?
 - [x] productcard on buy nothing happens (should add to cart) 
 - [x] productcard select is not working
 - [x] productcard should display colors in select (did in a row)
 - [x] product shoul be added to cart with colors
-- [ ] should refactor styles
 - [x] getOrders is not being used?
 - [x] after making order it is not dissappearing from cart
-- [ ] profile i can only send after filling in all fields
 - [x] should redirect to orders when making order
-- [ ] should show snackbars when error is occured
 - [x] profile request should not be sent if there is no changes
-- [ ] should add feature to cancel order
+- [x] should add feature to cancel order
 - [x] /login sends back empry orders
 - [x] /product buy again removes it from cart 
 - [x] isolate image preparing logic (and sending user data maybe? (/login & GET /user ))
+- [x] should refactor styles
+- [x] add logging in protect (and refactor it)
+- [x] add rewrite from /uploads to server
+- [x] implement message from user
+- [x] inject prisma client
+- [x] change api to `/user/orders`, `/user/cart`, etc...
+- [x] substitute types from prisma/client insteead of hand made types
+- [ ] at the start two equal api call `api/furniture` in catalog
+- [x] should show snackbars when error is occured
+- [x] handle something went wrong when updating profile
+- [x] should add search     
+- [x] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
+- [ ] add remaining products    
+- [ ] mark in swagger which id to send
+- [ ] /login swagger edit response types   
+- [ ] should implement github-ci    
+- [x] add universal button component to set type, title, aria-label automatically
+- [x] check for z-indexes everywhere
+- [x] /contacts form redesign
+- [x] should disable buttons and inputs while making submit requests

@@ -6,55 +6,58 @@ import { IFurniture, isSuccessfullResponse } from '../../api/types'
 import { Link } from 'react-router-dom'
 import { getUserData } from '../../redux/getters'
 import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
+import { toggleSnackbarOpen } from '../../redux/actions/errors'
+import { Button } from './Button'
 
 interface ISalesItemProps {
   product: IFurniture
   isFavorite: boolean
 }
 
-export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
+export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
   const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors } = product
 
   const dispatch = useDispatch()
   const { isLoggedIn, favorites } = useSelector(getUserData)
 
-  const onLikeProductClick = (): void => {
+  const onLikeProductClick = () => {
+    if (!isLoggedIn) {
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
+    }
+
     const payload = {
       favorites: [id]
     }
-    dispatch(editUserActionCreator(payload))
 
     if (favorites.includes(id)) {
-      UserApiClient.deleteFavoriteItem(id)
+      return UserApiClient.deleteFavoriteItem(id)
         .then((dto) => {
           if (!isSuccessfullResponse(dto)) {
-            editUserActionCreator(payload)
+            return dispatch(toggleSnackbarOpen())
           }
+
+          editUserActionCreator(payload)
         })
-        .catch(() => editUserActionCreator(payload))
-    } else {
-      UserApiClient.addFavoriteItem(id)
-        .then((dto) => {
-          if (!isSuccessfullResponse(dto)) {
-            editUserActionCreator(payload)
-          }
+        .catch(() => {
+          dispatch(toggleSnackbarOpen())
         })
-        .catch(() => editUserActionCreator(payload))
     }
+    UserApiClient.addFavoriteItem(id)
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        editUserActionCreator(payload)
+      })
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
-  const onAddToCartClick = async (): Promise<void> => {
-    const payload = {
-      id,
-      furnitureId: id,
-      quintity: 1,
-      color: colors[0]
-    }
-
-    dispatch(addProductToCartActionCreator(payload))
-
+  const onAddToCartClick = async () => {
     if (!isLoggedIn) {
-      return
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
     UserApiClient.addItemToCart({
@@ -62,6 +65,23 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
       quintity: 1,
       color: colors[0]
     })
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        const payload = {
+          id,
+          furnitureId: id,
+          quintity: 1,
+          color: colors[0]
+        }
+
+        dispatch(addProductToCartActionCreator(payload))
+      })
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   let discount = 0
@@ -77,14 +97,21 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
           <div className='label-sales__body'>-{discount}%</div>
         </div>
       ) : null}
-      <button
-        className={`item-sales__like ${isFavorite ? 'active' : ''}`}
+      <Button
+        title='Like product'
+        type='button'
+        className='item-sales__like'
         onClick={onLikeProductClick}
-      />
+      >
+        <img
+          src={isFavorite ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}
+          alt=''
+        />
+      </Button>
       <div className='item-sales__box'>
         <div className='item-sales__img'>
           <img
-            src={image ? `http://localhost:5000${image.url}` : ''}
+            src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
             alt='furniture'
           />
         </div>
@@ -117,18 +144,17 @@ export const SalesItem: React.FC<ISalesItemProps> = React.memo(({ product, isFav
                 <p className='item-sales__num'>{dimensions[0].height} СМ</p>
               </div>
             </div>
-            <button
+            <Button
               className='item-sales__tocart btn'
               type='button'
+              title='Add product to cart'
               onClick={onAddToCartClick}
             >
-              Добавить в корзину
-            </button>
+              Add to cart
+            </Button>
           </div>
         ) : null}
       </div>
     </div>
   )
 })
-
-SalesItem.displayName = 'SalesItem'

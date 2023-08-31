@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { Aside } from '../components/Catalog/Aside'
 import { SortPopup } from '../components/Catalog/SortPopup'
-import { SalesItem } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
@@ -14,11 +14,12 @@ import { submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { UserApiClient } from '../api'
 import { IFurniture } from '../api/types'
+import { Button } from '../components/common/Button'
 
 const Catalog: React.FC = () => {
   const history = useHistory()
 
-  const asideToggleRef = React.useRef(null)
+  const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
 
   const filters = React.useRef({
     room: '',
@@ -40,10 +41,14 @@ const Catalog: React.FC = () => {
 
     setLoading(true)
 
-    UserApiClient.getFurniture(controller.signal).then((data) => {
-      setItems(data.items)
-      setLoading(false)
-    })
+    UserApiClient.getFurniture(controller.signal)
+      .then((data) => {
+        setItems(data.items)
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
     return () => controller.abort()
   }, [history.location.search])
 
@@ -125,7 +130,7 @@ const Catalog: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='catalog'>
         <div className='container'>
-          <div className='catalog__inner'>
+          <div className='flex align-start'>
             {
               <Aside
                 colors={colors}
@@ -139,14 +144,16 @@ const Catalog: React.FC = () => {
               />
             }
             <div className='catalog__body'>
-              <div className='catalog__controls controls'>
-                <button
+              <div className='catalog__controls controls flex'>
+                <Button
                   className='controls__toggle-aside'
+                  title='Filter'
+                  type='button'
+                  selfRef={asideToggleRef}
                   onClick={onBtnClick}
-                  ref={asideToggleRef}
                 >
-                  Фильтр
-                </button>
+                  Filter
+                </Button>
                 <SortPopup onSelectSortType={onSelectSortType} />
               </div>
               {isLoading ? (
@@ -154,7 +161,7 @@ const Catalog: React.FC = () => {
               ) : items.length ? (
                 <div className='catalog__items'>
                   {items.map((item) => (
-                    <SalesItem
+                    <Card
                       key={item.id}
                       product={item}
                       isFavorite={favorites.includes(item.id)}

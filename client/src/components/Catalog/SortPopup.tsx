@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from '../common/Button'
 
 interface ISortPopupProps {
   onSelectSortType: (cat: string) => void
@@ -23,7 +24,7 @@ export const SortPopup: React.FC<ISortPopupProps> = ({ onSelectSortType }) => {
   const [isSortPopupVisible, toggleSortPopupVisibility] = React.useState(false)
   const [activeCat, setActiveCat] = React.useState<string>('asc')
 
-  const popupRef = React.useRef(null)
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null)
 
   const onSortBtnClick = (): void => {
     toggleSortPopupVisibility(!isSortPopupVisible)
@@ -38,7 +39,7 @@ export const SortPopup: React.FC<ISortPopupProps> = ({ onSelectSortType }) => {
   React.useEffect(() => {
     const handleOutsidePopupClick = (e: MouseEvent): void => {
       const path = e.path || (e.composedPath && e.composedPath())
-      toggleSortPopupVisibility((prev) => (prev && !path.includes(popupRef.current) ? false : prev))
+      toggleSortPopupVisibility((prev) => (prev && !path.includes(buttonRef.current) ? false : prev))
     }
 
     document.body.addEventListener('click', handleOutsidePopupClick)
@@ -49,25 +50,32 @@ export const SortPopup: React.FC<ISortPopupProps> = ({ onSelectSortType }) => {
   }, [])
 
   return (
-    <button
+    <Button
       className='controls__sort'
+      selfRef={buttonRef}
+      title='Sort'
+      type='button'
       onClick={onSortBtnClick}
-      ref={popupRef}
     >
-      Сортировать: <span className='controls__sort-choice'>{items.find((item) => item.value === activeCat)?.text}</span>
-      {isSortPopupVisible && (
-        <ul className='sort-list'>
-          {items.map(({ value, text }) => (
-            <li
-              className={`sort-list__item ${activeCat === value ? 'active' : ''}`}
-              onClick={onListItemClick(value)}
-              key={value}
-            >
-              {text}
-            </li>
-          ))}
-        </ul>
-      )}
-    </button>
+      <>
+        Сортировать:{' '}
+        <span className='controls__sort-choice'>{items.find((item) => item.value === activeCat)?.text}</span>
+        {isSortPopupVisible ? (
+          <ul className='sort-list'>
+            {items.map(({ value, text }) => (
+              <li
+                className={`sort-list__item ${activeCat === value ? 'active' : ''}`}
+                onClick={onListItemClick(value)}
+                key={value}
+              >
+                {text}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          ''
+        )}
+      </>
+    </Button>
   )
 }

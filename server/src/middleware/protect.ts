@@ -1,49 +1,52 @@
 import jwt from 'jsonwebtoken'
-import type { JwtPayload } from 'jsonwebtoken'
 import { NextFunction, Request, Response } from 'express'
+import { inject, injectable } from 'inversify'
 
-import { prismaClient } from '../prisma/client.js'
 import { ApiError } from '../error/api.error.js'
+import { IProtector, UncodedPayload } from './protect.interface.js'
+import { TYPES } from '../types.js'
+import { LoggerService } from '../logger/logger.service.js'
+import { PrismaService } from '../prisma.service.js'
 
-interface UncodedPayload extends JwtPayload {
-  id?: string
-  email?: string
-  password?: string
-}
+@injectable()
+export class Protector implements IProtector {
+  constructor(
+    @inject(TYPES.ILoggerService) private logger: LoggerService,
+    @inject(TYPES.Prisma) private prisma: PrismaService
+  ) {}
 
-type ReturnType = Promise<void | Response<
-  {
-    message: string
-  },
-  Record<string, unknown>
->>
+  async checkAuthorization(req: Request, res: Response, next: NextFunction) {
+    this.logger.log(`[Protector]: [${req.method}] ${req.path}`)
 
-export const protect = async (req: Request, res: Response, next: NextFunction): ReturnType => {
-  if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
-    return ApiError.notAuthorized(res, 'Not authorized')
-  }
-
-  const token = req.headers.authorization.split(' ')[1]
-
-  if (!token) {
-    return ApiError.notAuthorized(res, 'Token was not provided')
-  }
-
-  try {
-    const uncodedPayload = jwt.verify(token, process.env.JWT_SECRET ?? '') as UncodedPayload
-
-    const user = await prismaClient.user.findFirst({
-      where: {
-        id: uncodedPayload.id
-      }
-    })
-    if (!user) {
-      return ApiError.notAuthorized(res, 'User was not found')
+    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
+      return res.status(401).json('Token was not provided')
     }
-    res.locals.user = user
-    next()
-  } catch (error) {
-    // TODO: should add logging in protect
-    return next(ApiError.internal(error as Error))
+
+    const token = req.headers.authorization.split(' ')[1]
+
+    if (!token) {
+      return res.status(401).json('Token was not provided')
+    }
+
+    try {
+      const uncodedPayload = jwt.verify(token, process.env.JWT_SECRET ?? '') as UncodedPayload
+      // const uncodedPayload = jwt.verify(token, process.env.JWT_SECRET ?? '', (error, payload) => {}) as UncodedPayload
+
+      const user = await this.prisma.client.user.findFirst({
+        where: {
+          id: uncodedPayload.id
+        }
+      })
+      if (!user) {
+        return res.status(401).json('User was not found')
+      }
+      res.locals.user = user
+      next()
+    } catch (error) {
+      this.logger.error(`[Protector]: ${req.method} [${req.path}], Error 401 : ${error}`)
+      if (error instanceof Error) {
+        return next(ApiError.badRequest(error.message))
+      }
+    }
   }
 }

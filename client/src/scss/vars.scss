@@ -1,9 +1,12 @@
 $main: #245462;
 $text: #414141;
 
+$mobile: '(max-width: 768px)';
+$tablet: '(max-width: 1200px)';
+
 %pop-up {
   position: fixed;
-  z-index: 996;
+  z-index: 4;
   top: 0;
   right: 0;
   left: 0;

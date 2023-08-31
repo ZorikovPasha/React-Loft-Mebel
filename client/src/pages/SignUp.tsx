@@ -1,8 +1,7 @@
 import React from 'react'
-import { useHistory, Redirect } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useHistory, Redirect, Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { ModalInfo } from '../components/common/ModalInfo'
 import { UserApiClient } from '../api'
 import {
   getEmailInputErrorMessage,
@@ -16,6 +15,9 @@ import AppTextField from '../components/common/appTextField'
 import { isSuccessfullResponse } from '../api/types'
 import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
+import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { Button } from '../components/common/Button'
 
 export interface IField {
   value: string
@@ -37,6 +39,21 @@ export interface IField {
   validateFn: (str: string) => boolean
 }
 
+const ModalContent: React.FC = () => {
+  return (
+    <>
+      <h3 className='popup-message__title'>You successfully signed up</h3>
+      <p className='popup-message__text'>Go to log in</p>
+      <Link
+        to={ROUTES.Login}
+        className='popup-message__btn'
+      >
+        Log in
+      </Link>
+    </>
+  )
+}
+
 const SignUp: React.FC = () => {
   const history = useHistory()
 
@@ -45,12 +62,12 @@ const SignUp: React.FC = () => {
   const fields = React.useRef<Record<string, IField>>({
     name: {
       value: '',
-      label: 'Имя пользователя',
+      label: 'Name',
       labelClass: 'signup__form-label form-label',
       isValid: false,
       required: true,
       type: 'text',
-      placeholder: 'Введите Имя пользователя',
+      placeholder: 'Enter your name',
       className: 'mt-20',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
@@ -62,12 +79,12 @@ const SignUp: React.FC = () => {
     email: {
       tag: 'input',
       value: '',
-      label: 'Электронная почта',
+      label: 'Email',
       labelClass: 'signup__form-label form-label',
       isValid: false,
       required: true,
       type: 'email',
-      placeholder: 'Введите электронную почту',
+      placeholder: 'Enter email',
       className: 'mt-20',
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
@@ -78,12 +95,12 @@ const SignUp: React.FC = () => {
     },
     password: {
       value: '',
-      label: 'Пароль',
+      label: 'Password',
       labelClass: 'signup__form-label form-label',
       isValid: false,
       required: true,
-      type: 'text',
-      placeholder: 'Введите пароль',
+      type: 'password',
+      placeholder: 'Enter password',
       className: 'mt-20',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
@@ -93,6 +110,8 @@ const SignUp: React.FC = () => {
       validateFn: validatePassword
     }
   } as const)
+
+  const dispatch = useDispatch()
 
   const [modalSignUp, setModalSignUp] = React.useState(false)
   const [form, setForm] = React.useState(fields.current)
@@ -113,6 +132,19 @@ const SignUp: React.FC = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
+    setForm((prev) => {
+      return Object.entries(prev).reduce(
+        (accum, [key, props]) => ({
+          ...accum,
+          [key]: {
+            ...props,
+            showErrors: true
+          }
+        }),
+        {}
+      )
+    })
+
     if (!Object.values(form).every(({ isValid }) => isValid)) {
       return
     }
@@ -123,17 +155,21 @@ const SignUp: React.FC = () => {
       password: form.password.value
     }
 
-    UserApiClient.register(dto).then((data) => {
-      if (!isSuccessfullResponse(data)) {
-        return
-      }
-      document.documentElement.classList.add('lock')
-      setModalSignUp(true)
-    })
+    UserApiClient.register(dto)
+      .then((data) => {
+        if (!isSuccessfullResponse(data)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+        document.documentElement.classList.add('lock')
+        setModalSignUp(true)
+      })
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
-  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
-    history.push({ pathname: '/login' })
+  const onModalClose = () => {
+    history.push({ pathname: ROUTES.Login })
     document.documentElement.classList.remove('lock')
     setModalSignUp(false)
   }
@@ -145,7 +181,7 @@ const SignUp: React.FC = () => {
       <div className='signup'>
         <div className='container'>
           <div className='signup__inner'>
-            <h1 className='signup__title'>Регистрация</h1>
+            <h1 className='signup__title'>Sign up</h1>
 
             <form
               className='signup__form from'
@@ -182,28 +218,27 @@ const SignUp: React.FC = () => {
                     label={label}
                     labelClass={labelClass}
                     inputWrapClass={inputWrapClass}
-                    inputClassName={`${inputClassName} ${_showErrors ? 'input-text--error' : ''}`}
+                    inputClassName={`${inputClassName} ${_showErrors ? 'form-input--error' : ''}`}
                     showErrors={_showErrors}
                     errorMessage={getErrorMessage(value)}
                     onChange={onChange(key)}
                   />
                 )
               })}
-              <button
+              <Button
+                title='Sign up'
                 type='submit'
                 className='signup__form-btn btn mt-20'
               >
-                Зарегистрироваться
-              </button>
+                Sign up
+              </Button>
             </form>
           </div>
         </div>
       </div>
       {modalSignUp && (
-        <ModalInfo
-          hasButton={true}
-          title='Вы успешно зарегистрировались'
-          text='Перейти ко входу..'
+        <Modal
+          content={<ModalContent />}
           onModalClose={onModalClose}
         />
       )}

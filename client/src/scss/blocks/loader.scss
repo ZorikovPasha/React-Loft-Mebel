@@ -1,14 +1,22 @@
 .loader {
-  display: flex;
-  align-items: center;
   min-height: 200px;
+
+  &--fixed {
+    min-height: auto;
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+  }
 }
 
 .dots {
   width: 12px;
   height: 12px;
   margin: 0 auto;
-  background: #000;
+  background: white;
   border-radius: 50%;
   box-shadow:
     20px 0 #0002,

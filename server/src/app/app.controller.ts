@@ -2,21 +2,17 @@ import { NextFunction, Request, Response } from 'express'
 import { injectable, inject } from 'inversify'
 
 import { ApiError } from '../error/api.error.js'
-import { prismaClient } from '../prisma/client.js'
 import { LoggerService } from '../logger/logger.service.js'
 import { TYPES } from '../types.js'
 import {
-  AppLocalsResponseType,
-  AppResponse,
-  IAddCartItemDto,
-  ICancelOrderDto,
+  IAppControllerInterface,
   ICreateFurnitureDto,
-  IFurnitureDimension,
-  IRemoveCartItemDto
+  IFurnitureDimension
 } from './app.controller.interface.js'
 import { ResponseType } from '../user/user.controller.interface.js'
 import { deserializeDimensionsFromString } from '../utils.js'
 import { ImageService } from '../image.js'
+import { PrismaService } from '../prisma.service.js'
 
 interface IError {
   message: string
@@ -24,32 +20,30 @@ interface IError {
 }
 
 @injectable()
-export class AppController {
+export class AppController implements IAppControllerInterface {
   // private mappedValues: Record<string, string>
 
   constructor(
-    @inject(TYPES.ILoggerService) private logger: LoggerService,
-    @inject(TYPES.ImageService) private imageService: ImageService
-  ) {
-    // this.mappedValues = values
-    this.logger = logger
-  }
+    @inject(TYPES.ILoggerService) public logger: LoggerService,
+    @inject(TYPES.ImageService) public imageService: ImageService,
+    @inject(TYPES.Prisma) private prisma: PrismaService
+  ) {}
 
   async getFilteredFurniture(req: Request, res: Response, next: NextFunction): ResponseType {
     try {
       this.logger.log(`[${req.method}] ${req.path}`)
 
-      const furniture = await prismaClient.furniture.findMany()
+      const furniture = await this.prisma.client.furniture.findMany()
 
       const dto = await Promise.all(
         furniture.map(async (f) => {
           const [image, dimensions] = await Promise.all([
-            prismaClient.image.findFirst({
+            this.prisma.client.image.findFirst({
               where: {
                 id: f.imageId
               }
             }),
-            prismaClient.furnitureDimension.findMany({
+            this.prisma.client.furnitureDimension.findMany({
               where: {
                 id: f.id
               }
@@ -244,6 +238,10 @@ export class AppController {
       const deserializedSale = sale === '1'
       const deserializedColors = colors?.split(';') ?? []
 
+      const savedImage = await this.prisma.client.image.create({
+        data: await this.imageService.prepare(Array.isArray(image) ? image[0] : image)
+      })
+
       const furniture = {
         name,
         type,
@@ -254,25 +252,19 @@ export class AppController {
         sale: deserializedSale,
         room,
         material,
-        brand
+        brand,
+        imageId: savedImage.id
       }
 
-      const savedImage = await prismaClient.image.create({
-        data: await this.imageService.prepare(Array.isArray(image) ? image[0] : image)
-      })
-
-      const savedFurniture = await prismaClient.furniture.create({
-        data: {
-          ...furniture,
-          imageId: savedImage.id
-        }
+      const savedFurniture = await this.prisma.client.furniture.create({
+        data: furniture
       })
 
       await Promise.all(
         data
           .filter((d): d is IFurnitureDimension => Boolean(d))
           .map(async (d) => {
-            const dimensionIndatabase = await prismaClient.furnitureDimension.findFirst({
+            const dimensionIndatabase = await this.prisma.client.furnitureDimension.findFirst({
               where: {
                 width: d.width,
                 height: d.height,
@@ -281,7 +273,7 @@ export class AppController {
             })
 
             if (!dimensionIndatabase) {
-              await prismaClient.furnitureDimension.create({
+              await this.prisma.client.furnitureDimension.create({
                 data: {
                   furnitureId: savedFurniture.id,
                   width: d.width,
@@ -311,7 +303,7 @@ export class AppController {
       if (!req.query.id) {
         return next(ApiError.badRequest('Id was not provided'))
       }
-      const furnitureItem = await prismaClient.furniture.findFirst({
+      const furnitureItem = await this.prisma.client.furniture.findFirst({
         where: {
           id: parseInt(req.query.id)
         }
@@ -340,334 +332,13 @@ export class AppController {
       if (Number.isNaN(processedId)) {
         return next(ApiError.badRequest('Incorrect id was provided'))
       }
-      await prismaClient.furniture.delete({
+      await this.prisma.client.furniture.delete({
         where: {
           id: processedId
         }
       })
 
       return res.status(200).json({ success: true })
-    } catch (error) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
-      return next(ApiError.internal(error as Error))
-    }
-  }
-
-  async addFavoriteItem(
-    req: Request<{}, {}, { id?: number }>,
-    res: Response,
-    next: NextFunction
-  ): ResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      const { id } = req.body
-      if (!id) {
-        return next(ApiError.badRequest('Id was not provided'))
-      }
-
-      const candidate = await prismaClient.favoriteFurniture.findFirst({
-        where: {
-          userId: res.locals.user.id,
-          furnitureId: id
-        }
-      })
-      if (candidate) {
-        return next(ApiError.badRequest('Item already exists'))
-      }
-      await prismaClient.favoriteFurniture.create({
-        data: {
-          userId: res.locals.user.id,
-          furnitureId: id
-        }
-      })
-
-      return res.status(200).json({ success: true })
-    } catch (err) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
-      return next(ApiError.internal(err as Error))
-    }
-  }
-
-  async deleteFavouriteItem(
-    req: Request<{}, {}, { id?: number }>,
-    res: Response,
-    next: NextFunction
-  ): ResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      const { id } = req.body // this is product id
-      if (!id) {
-        return next(ApiError.badRequest('Id was not provided'))
-      }
-
-      await prismaClient.favoriteFurniture.deleteMany({
-        where: {
-          furnitureId: id
-        }
-      })
-
-      return res.status(200).json({ success: true })
-    } catch (err) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
-      return next(ApiError.internal(err as Error))
-    }
-  }
-
-  async getFavorites(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      const favorites = await prismaClient.favoriteFurniture.findMany({
-        where: {
-          userId: res.locals.user?.id
-        }
-      })
-      return res.json({ items: favorites })
-    } catch (error) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
-      return next(ApiError.internal(error as Error))
-    }
-  }
-
-  // :TODO: this should return cart items getting orders
-  async getCartItems(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      if (!res.locals.user) {
-        return next({ status: 500, message: '' })
-      }
-
-      const userCart = await prismaClient.cart.findFirst({
-        where: {
-          userId: res.locals.user.id
-        }
-      })
-
-      if (!userCart) {
-        return res.json({ items: [] })
-      }
-
-      const cartFurniture = prismaClient.cartFurniture.findMany({
-        where: {
-          cartId: userCart.id
-        }
-      })
-
-      return res.json({ items: cartFurniture })
-    } catch (error) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
-      return next(ApiError.internal(error as Error))
-    }
-  }
-
-  async addCartItem(
-    req: Request<{}, {}, IAddCartItemDto>,
-    res: AppResponse,
-    next: NextFunction
-  ): AppLocalsResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      if (!res.locals.user) {
-        return next({ status: 500, message: '' })
-      }
-
-      const { quintity = 1, productId, color = '' } = req.body
-
-      if (!productId) {
-        return next(ApiError.badRequest('Product id was not provided'))
-      }
-      if (!color) {
-        return next(ApiError.badRequest('Color id was not provided'))
-      }
-
-      let userCart = await prismaClient.cart.findFirst({
-        where: {
-          userId: res.locals.user.id
-        }
-      })
-
-      if (!userCart) {
-        userCart = await prismaClient.cart.create({
-          data: {
-            userId: res.locals.user.id
-          }
-        })
-      }
-
-      const candidate = await prismaClient.cartFurniture.findFirst({
-        where: {
-          furnitureId: productId,
-          color
-        }
-      })
-
-      if (candidate) {
-        await prismaClient.cartFurniture.updateMany({
-          where: {
-            furnitureId: productId,
-            color
-          },
-          data: {
-            quintity: candidate.quintity + quintity
-          }
-        })
-      } else {
-        await prismaClient.cartFurniture.create({
-          data: {
-            furnitureId: productId,
-            quintity: quintity,
-            cartId: userCart.id,
-            color
-          }
-        })
-      }
-
-      return res.status(200).json({ success: true })
-    } catch (error) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
-      return next(ApiError.internal(error as Error))
-    }
-  }
-
-  async removeCartItem(
-    req: Request<{}, {}, IRemoveCartItemDto>,
-    res: AppResponse,
-    next: NextFunction
-  ): AppLocalsResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      if (!res.locals.user) {
-        return next({ status: 500, message: '' })
-      }
-
-      const { productId, color } = req.body
-      if (!productId) {
-        return next(ApiError.badRequest('Product id was not provided'))
-      }
-
-      const userCart = await prismaClient.cart.findFirst({
-        where: {
-          userId: res.locals.user.id
-        }
-      })
-
-      if (!userCart) {
-        return res.status(200).json({ success: true })
-      }
-
-      await prismaClient.cartFurniture.deleteMany({
-        where: {
-          furnitureId: productId,
-          color,
-          cartId: userCart.id
-        }
-      })
-      return res.status(200).json({ success: true })
-    } catch (err) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
-      return next(ApiError.internal(err as Error))
-    }
-  }
-
-  async addOrder(req: Request, res: AppResponse, next: NextFunction): AppLocalsResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      if (!res.locals.user) {
-        return next({ status: 500, message: '' })
-      }
-
-      const cart = await prismaClient.cart.findFirst({
-        where: {
-          userId: res.locals.user.id
-        }
-      })
-
-      if (!cart) {
-        return res.status(201).json({ success: true })
-      }
-
-      const [currentProductsInCart, userOrder] = await Promise.all([
-        prismaClient.cartFurniture.findMany({
-          where: {
-            cartId: cart.id
-          }
-        }),
-        prismaClient.order.create({
-          data: {
-            userId: res.locals.user.id,
-            name: 'Order'
-          }
-        })
-      ])
-
-      const productsInOrder = await Promise.all(
-        currentProductsInCart.map(async ({ furnitureId, quintity, color }) => {
-          return await prismaClient.orderedFurniture.create({
-            data: {
-              furnitureId,
-              quintity,
-              orderId: userOrder.id,
-              color
-            }
-          })
-        })
-      )
-
-      await prismaClient.cartFurniture.deleteMany({
-        where: {
-          cartId: cart.id
-        }
-      }),
-        await prismaClient.cart.deleteMany({
-          where: {
-            userId: res.locals.user.id
-          }
-        })
-
-      const dto = {
-        order: {
-          ...userOrder,
-          items: productsInOrder
-        }
-      }
-
-      return res.status(201).json(dto)
-    } catch (err) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
-      return next(ApiError.internal(err as Error))
-    }
-  }
-
-  async cancelOrder(
-    req: Request<{}, {}, ICancelOrderDto>,
-    res: AppResponse,
-    next: NextFunction
-  ): AppLocalsResponseType {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      const { orderId } = req.body
-
-      if (!orderId) {
-        return next(ApiError.badRequest('Order id was not provided'))
-      }
-
-      const order = await prismaClient.order.update({
-        where: {
-          id: orderId
-        },
-        data: {
-          status: 'CANCELED'
-        }
-      })
-
-      return res.status(204).json({ order })
     } catch (error) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
       return next(ApiError.internal(error as Error))

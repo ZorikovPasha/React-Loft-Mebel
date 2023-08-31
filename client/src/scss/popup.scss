@@ -1,15 +1,11 @@
-.popup-message {
+.popup {
   @extend %pop-up;
-
   display: none;
-
-  // .popup-message__body
 
   &__body {
     @extend %pop-up-body;
+    border-radius: 4px;
   }
-
-  // .popup-message__close
 
   &__close {
     position: absolute;
@@ -17,19 +13,17 @@
     right: 15px;
   }
 
-  // .popup-message__title
-
   &__title {
-    margin-bottom: 16px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+    text-align: center;
+    font-size: 22px;
+    line-height: 28px;
   }
-
-  // .popup-message__text
 
   &__text {
     margin-bottom: 20px;
   }
-
-  // .popup-message__btn
 
   &__btn {
     display: block;
@@ -50,5 +44,9 @@
     &:focus {
       background-color: rgba($main, 0.5);
     }
+  }
+
+  &__agree-form {
+    flex-direction: column;
   }
 }

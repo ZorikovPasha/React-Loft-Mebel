@@ -1,20 +1,36 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
-import { SalesItem } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 import { CartItem } from '../components/Cart/CartItem'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
-import { ModalInfo } from '../components/common/ModalInfo'
 import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
-import { setPathnameActionCreator } from '../redux/actions/pathname'
 import { editUserActionCreator } from '../redux/actions/userAction'
 import { isSuccessfullMakeOrderResponse } from '../api/types'
 import { Loader } from '../components/common/Loader'
 import { ROUTES } from '../utils/const'
+import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { Button } from '../components/common/Button'
+
+const ModalContent: React.FC = () => {
+  return (
+    <>
+      <h3 className='popup-message__title'>We do not know who you are(</h3>
+      <p className='popup-message__text'>Please log in.</p>
+      <Link
+        to={ROUTES.Login}
+        className='popup-message__btn'
+      >
+        Log in
+      </Link>
+    </>
+  )
+}
 
 interface ICollectedCartItem {
   furnitureId: number
@@ -36,20 +52,12 @@ const Cart: React.FC = () => {
 
   const history = useHistory()
   const items = useSelector(getProducts)
-  const { favorites, isLoggedIn, cart } = useSelector(getUserData)
+  const { favorites, isLoggedIn, cart, orders } = useSelector(getUserData)
 
   const breadcrumbs = useBreadcrumbs()
 
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-
-  React.useLayoutEffect(() => {
-    dispatch(setPathnameActionCreator(window.location.pathname))
-
-    return () => {
-      dispatch(setPathnameActionCreator('whatever'))
-    }
-  }, [])
 
   const collectedItems =
     cart?.reduce((accum: ICollectedCartItem[], next) => {
@@ -81,7 +89,7 @@ const Cart: React.FC = () => {
 
   const youMayAlsoLikeThese = cart.length ? items.filter((item) => parseFloat(item.rating) > 4) : []
 
-  const onLoginModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const onLoginModalClose = () => {
     setModalLoginOpened(false)
     document.documentElement.classList.remove('lock')
   }
@@ -95,35 +103,38 @@ const Cart: React.FC = () => {
 
     setIsLoading(true)
 
-    UserApiClient.makeOrder().then((data) => {
-      setIsLoading(false)
-      if (!isSuccessfullMakeOrderResponse(data)) {
-        return
-      }
+    UserApiClient.makeOrder()
+      .then((data) => {
+        setIsLoading(false)
+        if (!isSuccessfullMakeOrderResponse(data)) {
+          return dispatch(toggleSnackbarOpen())
+        }
 
-      const payload = {
-        cart: [],
-        orders: [
-          {
-            ...data.order,
-            items: !data.order.items ? [] : data.order.items
-          }
-        ]
-      }
-      dispatch(editUserActionCreator(payload))
-      history.push(ROUTES.Profile + '?tab=orders')
-    })
+        const payload = {
+          cart: [],
+          orders: [
+            ...orders,
+            {
+              ...data.order,
+              items: !data.order.items ? [] : data.order.items
+            }
+          ]
+        }
+        dispatch(editUserActionCreator(payload))
+        history.push(ROUTES.Profile + '?tab=orders')
+      })
+      .then(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   return (
     <>
       {isLoading && <Loader />}
       {modalLoginOpened && (
-        <ModalInfo
-          text='Пожалуйста, войдите в свою учетную запись'
-          title='Мы не знаем, кто вы'
-          link={ROUTES.Login}
+        <Modal
           onModalClose={onLoginModalClose}
+          content={<ModalContent />}
         />
       )}
       <Breadcrumbs breadcrumbs={breadcrumbs} />
@@ -132,7 +143,7 @@ const Cart: React.FC = () => {
           {collectedItems.length ? (
             <>
               <div className='cart__top'>
-                <p>Ваша корзина</p>
+                <p>Your cart:</p>
                 <p>
                   <span className='cart__top-num'>Items: {quintity}</span>
                 </p>
@@ -145,29 +156,31 @@ const Cart: React.FC = () => {
               ))}
               <div className='cart__bottom'>
                 <p className='cart__bottom-total'>
-                  Итоговая стоимость:
+                  Total cost:
                   <span> {total} P</span>
                 </p>
-                <button
+                <Button
+                  title='Submit order'
+                  type='button'
                   className='btn'
                   onClick={onRegisterOrder}
                 >
-                  Оформить заказ
-                </button>
+                  Submit order
+                </Button>
               </div>
             </>
           ) : (
-            <Empty text='Вы ничего не добавили в корзину(' />
+            <Empty text='There is nothing in here(' />
           )}
         </div>
       </section>
       {youMayAlsoLikeThese.length ? (
         <section className='sales mt-30'>
           <div className='container'>
-            <h3 className='sales__title'>Вам может понравиться</h3>
+            <h6 className='sales__title'>You may also like:</h6>
             <div className='sales__items sales__items--cart'>
               {youMayAlsoLikeThese.map((product) => (
-                <SalesItem
+                <Card
                   key={product.id}
                   product={product}
                   isFavorite={favorites.includes(product.id)}

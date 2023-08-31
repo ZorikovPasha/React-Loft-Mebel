@@ -3,6 +3,8 @@ import React from 'react'
 import { ROUTES } from '../utils/const'
 import { Main } from '../pages/Main'
 import { Page404 } from '../pages/404'
+import { useDispatch } from 'react-redux'
+import { setPathnameActionCreator } from '../redux/actions/pathname'
 const LazyCart = React.lazy(() => import('../pages/Cart'))
 const LazyCatalog = React.lazy(() => import('../pages/Catalog'))
 const LazyProduct = React.lazy(() => import('../pages/Product'))
@@ -17,69 +19,79 @@ const LazyNewProduct = React.lazy(() => import('../pages/newProduct'))
 
 interface IRoute {
   path: string
-  component: React.FC | React.LazyExoticComponent<React.FC>
+  component: React.ReactElement
   exact: boolean
+}
+
+export const WithPathname: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+  const dispatch = useDispatch()
+
+  React.useEffect(() => {
+    dispatch(setPathnameActionCreator(window.location.pathname))
+  }, [])
+
+  return <>{children}</>
 }
 
 export const publicRoutes: IRoute[] = [
   {
     path: ROUTES.Home,
-    component: Main,
+    component: <Main />,
     exact: true
   },
   {
     path: ROUTES.Cart,
-    component: LazyCart,
+    component: <LazyCart />,
     exact: true
   },
   {
     path: ROUTES.Catalog,
-    component: LazyCatalog,
+    component: <LazyCatalog />,
     exact: false
   },
   {
     path: ROUTES.NewProduct,
-    component: LazyNewProduct,
+    component: <LazyNewProduct />,
     exact: true
   },
   {
     path: ROUTES.Product,
-    component: LazyProduct,
+    component: <LazyProduct />,
     exact: true
   },
   {
     path: ROUTES.Favorites,
-    component: LazyFavorites,
+    component: <LazyFavorites />,
     exact: true
   },
   {
     path: ROUTES.About,
-    component: LazyAbout,
+    component: <LazyAbout />,
     exact: true
   },
   {
     path: ROUTES.Contacts,
-    component: LazyContacts,
+    component: <LazyContacts />,
     exact: true
   },
   {
     path: ROUTES.Login,
-    component: LazyLogin,
+    component: <LazyLogin />,
     exact: true
   },
   {
     path: ROUTES.Signup,
-    component: LazySignup,
+    component: <LazySignup />,
     exact: true
   },
   {
     path: ROUTES.SearchResult,
-    component: LazyProfileSearchReult,
+    component: <LazyProfileSearchReult />,
     exact: true
   },
   {
     path: '*',
-    component: Page404,
+    component: <Page404 />,
     exact: false
   }
 ]
@@ -87,7 +99,7 @@ export const publicRoutes: IRoute[] = [
 export const authRoutes: IRoute[] = [
   {
     path: ROUTES.Profile,
-    component: LazyProfile,
+    component: <LazyProfile />,
     exact: true
   }
 ]

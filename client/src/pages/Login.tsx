@@ -11,6 +11,9 @@ import { ROUTES } from '../utils/const'
 import { isResponseWithErrors, isSuccessfullLoginResponse } from '../api/types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { Button } from '../components/common/Button'
+import { Loader } from '../components/common/Loader'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
@@ -22,12 +25,12 @@ const Login: React.FC = () => {
     email: {
       tag: 'input',
       value: '',
-      label: 'Электронная почта',
+      label: 'Email',
       labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'email',
-      placeholder: 'Введите электронную почту',
+      placeholder: 'Enter email',
       className: 'form-block',
       inputClassName: 'form-input',
       showErrors: false,
@@ -37,12 +40,12 @@ const Login: React.FC = () => {
     },
     password: {
       value: '',
-      label: 'Пароль',
+      label: 'Password',
       labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'password',
-      placeholder: 'Введите пароль',
+      placeholder: 'Enter password',
       className: 'form-block',
       inputClassName: 'form-input',
       tag: 'input',
@@ -54,6 +57,7 @@ const Login: React.FC = () => {
   } as const)
 
   const [form, setForm] = React.useState(fields.current)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target
@@ -72,6 +76,19 @@ const Login: React.FC = () => {
   const handleSubmit: React.MouseEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
+    setForm((prev) => {
+      return Object.entries(prev).reduce(
+        (accum, [key, props]) => ({
+          ...accum,
+          [key]: {
+            ...props,
+            showErrors: true
+          }
+        }),
+        {}
+      )
+    })
+
     if (!Object.values(form).every(({ isValid }) => isValid)) {
       return
     }
@@ -81,100 +98,110 @@ const Login: React.FC = () => {
       password: form.password.value
     }
 
-    UserApiClient.login(dto).then((data) => {
-      if (isResponseWithErrors(data)) {
-        data.errors?.forEach((error) => {
-          if (error.field === 'email') {
-            setForm((prev) => ({
-              ...prev,
-              email: {
-                ...prev.email,
-                isValid: false,
-                errorMessage: error.message ?? ''
-              }
-            }))
-          }
-          if (error.field === 'password') {
-            setForm((prev) => ({
-              ...prev,
-              password: {
-                ...prev.password,
-                isValid: false,
-                errorMessage: error.message ?? ''
-              }
-            }))
-          }
-        })
-      }
-
-      if (isSuccessfullLoginResponse(data)) {
-        setForm(fields.current)
-        localStorage.setItem('loft_furniture_token', data.token)
-        const {
-          id,
-          name,
-          email,
-          surname,
-          phone,
-          city,
-          street,
-          house,
-          apartment,
-          orders,
-          image,
-          emailConfirmed,
-          favorites,
-          wantsToReceiveEmailUpdates,
-          cart,
-          updatedAt,
-          createdAt
-        } = data.user
-
-        const processedOrders =
-          orders?.map((o) => ({
-            id: o.id,
-            userId: o.userId,
-            name: o.name,
-            status: o.status,
-            createdAt: o.createdAt,
-            updatedAt: o.updatedAt,
-            items: o.items ?? []
-          })) ?? []
-        const payload = {
-          id: id,
-          isLoggedIn: true,
-          name: name,
-          email: email,
-          surname: surname,
-          phone: phone,
-          city: city,
-          street: street,
-          house: house,
-          apartment: apartment,
-          image: image
-            ? {
-                name: image.name,
-                url: `http://localhost:5000${image.url}`
-              }
-            : null,
-          emailConfirmed: emailConfirmed,
-          wantsToReceiveEmailUpdates: wantsToReceiveEmailUpdates,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          favorites: favorites ?? [],
-          orders: processedOrders,
-          cart: cart ?? []
+    setIsLoading(true)
+    UserApiClient.login(dto)
+      .then((data) => {
+        setIsLoading(false)
+        if (isResponseWithErrors(data)) {
+          data.errors?.forEach((error) => {
+            if (error.field === 'email') {
+              setForm((prev) => ({
+                ...prev,
+                email: {
+                  ...prev.email,
+                  isValid: false,
+                  errorMessage: error.message ?? ''
+                }
+              }))
+            }
+            if (error.field === 'password') {
+              setForm((prev) => ({
+                ...prev,
+                password: {
+                  ...prev.password,
+                  isValid: false,
+                  errorMessage: error.message ?? ''
+                }
+              }))
+            }
+          })
         }
-        dispatch(loginUserActionCreator(payload))
-        history.push({ pathname: ROUTES.Profile })
-      }
-    })
+
+        if (isSuccessfullLoginResponse(data)) {
+          setForm(fields.current)
+          localStorage.setItem('loft_furniture_token', data.token)
+          const {
+            id,
+            name,
+            email,
+            surname,
+            phone,
+            city,
+            street,
+            house,
+            apartment,
+            orders,
+            image,
+            emailConfirmed,
+            favorites,
+            wantsToReceiveEmailUpdates,
+            cart,
+            updatedAt,
+            createdAt
+          } = data.user
+
+          const processedOrders =
+            orders?.map((o) => ({
+              id: o.id,
+              userId: o.userId,
+              name: o.name,
+              status: o.status,
+              createdAt: o.createdAt,
+              updatedAt: o.updatedAt,
+              items: o.items ?? []
+            })) ?? []
+          const payload = {
+            id: id,
+            isLoggedIn: true,
+            name: name,
+            email: email,
+            surname: surname,
+            phone: phone,
+            city: city,
+            street: street,
+            house: house,
+            apartment: apartment,
+            image: image
+              ? {
+                  name: image.name,
+                  url: import.meta.env.VITE_BACKEND + image.url
+                }
+              : null,
+            emailConfirmed: emailConfirmed,
+            wantsToReceiveEmailUpdates: wantsToReceiveEmailUpdates,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            favorites: favorites ?? [],
+            orders: processedOrders,
+            cart: cart ?? []
+          }
+          dispatch(loginUserActionCreator(payload))
+          history.push({ pathname: ROUTES.Profile })
+        } else {
+          dispatch(toggleSnackbarOpen())
+        }
+      })
+      .catch(() => {
+        setIsLoading(false)
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   return isLoggedIn ? (
     <Redirect to={ROUTES.Profile} />
   ) : (
     <div className='login'>
+      {isLoading && <Loader rootElClass='loader--fixed' />}
       <div className='container'>
         <div className='login__inner'>
           <h1 className='login__title'>Login</h1>
@@ -208,7 +235,7 @@ const Login: React.FC = () => {
                   name={key as string}
                   type={type}
                   value={value}
-                  required={required}
+                  required={false}
                   rootElclass={className}
                   label={label}
                   labelClass={labelClass}
@@ -220,21 +247,22 @@ const Login: React.FC = () => {
                 />
               )
             })}
-            <button
+            <Button
+              title='Log in'
               className='login__form-btn btn'
               type='submit'
             >
-              Войти
-            </button>
+              Log in
+            </Button>
           </form>
         </div>
         <div className='login__bottom'>
-          <span className='login__new'>Новый пользователь? </span>
+          <span className='login__new'>Dont have an account? </span>
           <Link
             className='login__new-link'
             to='/signup'
           >
-            Создать учетную запись
+            Sign up
           </Link>
         </div>
       </div>

@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom'
 export const Footer: React.FC = () => {
   const footerLists = [
     [
-      { name: 'Кухни', link: '/catalog/kitchens' },
-      { name: 'Спальни', link: '/catalog/bedroom' },
-      { name: 'Гостинные', link: '/catalog/living' }
+      { name: 'Kithens', link: '/catalog?room=kitchens' },
+      { name: 'Bedrooms', link: '/catalog?room=bedroom' },
+      { name: 'Living rooms', link: '/catalog?room=living' }
     ],
     [
-      { name: 'Прихожие', link: '/catalog/hall' },
-      { name: 'Офисная мебель', link: '/catalog/office' },
-      { name: 'Детская', link: '/catalog/children' }
+      { name: 'Halls', link: '/catalog?room=hall' },
+      { name: 'Office', link: '/catalog?room=office' },
+      { name: 'Chidren', link: '/catalog?room=children' }
     ],
     [
-      { name: 'Шкафы', link: '/catalog/cabinets' },
-      { name: 'Матрасы', link: '/catalog/mattresses' },
-      { name: 'Мягкая мебель', link: '/catalog/upholstered' }
+      { name: 'cabinets', link: '/catalog/cabinets' },
+      { name: 'Mattresses', link: '/catalog/mattresses' },
+      { name: 'Soft furniture', link: '/catalog/upholstered' }
     ]
   ]
 
@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
         <div className='footer__inner'>
           <div className='footer__main'>
             <div className='footer__column'>
-              <p className='footer__title'>НАВИГАЦИЯ</p>
+              <p className='footer__title'>MENU</p>
               <div className='footer__box'>
                 {footerLists.map((list) => (
                   <ul
@@ -57,7 +57,7 @@ export const Footer: React.FC = () => {
                   alt='logo'
                 />
               </div>
-              <p className='footer__address'>г. Анапа, Анапское шоссе, 30 Ж/К Черное море</p>
+              <p className='footer__address'>4550 W Pico Blvd unit d-101, Los Angeles, CA 90019, United States</p>
             </div>
           </div>
           <div className='footer__bottom bottom-footer'>
@@ -66,22 +66,16 @@ export const Footer: React.FC = () => {
                 to='/catalog/new'
                 className='bottom-footer__text bottom-footer__text--promo'
               >
-                Акция
+                Sale
               </Link>
               <Link
                 to='/catalog/new'
                 className='bottom-footer__text'
               >
-                Новинки
+                New arrivals
               </Link>
             </div>
             <div className='bottom-footer__contacts'>
-              <a
-                className='bottom-footer__phone'
-                href='tel:89648999119'
-              >
-                8 (964) 89 99 119
-              </a>
               <a
                 className='bottom-footer__link'
                 href='#'

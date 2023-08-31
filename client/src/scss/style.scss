@@ -6,19 +6,20 @@
 
 // blocks
 @import "./blocks/aslide.scss";
-@import "./blocks/brands-filter.scss";
 @import "./blocks/colors.scss";
 @import "./blocks/controls.scss";
 @import "./blocks/filter.scss";
 @import "./blocks/pagination.scss";
 @import "./blocks/sort-list.scss";
-@import 'loader';
+@import './blocks/loader';
 @import 'form';
 @import 'animate';
 @import 'mobile';
 @import 'header';
 @import 'footer';
 @import 'popup';
+@import './blocks/orders.scss';
+@import './blocks/snackbar.scss';
 
 // pages
 @import 'main';
@@ -32,6 +33,5 @@
 @import 'login';
 @import 'signup';
 @import 'profile';
-@import 'search-results';
 @import 'newproduct';
 @import './blocks/page404';

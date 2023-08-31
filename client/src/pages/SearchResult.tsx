@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { getFilteredProductsByName, getUserData } from '../redux/getters'
 import { Empty } from '../components/common/Empty'
-import { SalesItem } from '../components/common/SalesItem'
+import { Card } from '../components/common/card'
 
 const SearchResult: React.FC = () => {
   const history = useHistory()
@@ -21,7 +21,7 @@ const SearchResult: React.FC = () => {
     <>
       <div className='search-results'>
         <div className='container'>
-          <div className='search-results__top'>
+          <div className='mt-30'>
             <h1 className='search-results__title'>Результаты поиска</h1>
           </div>
 
@@ -29,7 +29,7 @@ const SearchResult: React.FC = () => {
             {items.length ? (
               <div className='search-results__items catalog__items'>
                 {items.map((item) => (
-                  <SalesItem
+                  <Card
                     key={item.id}
                     product={item}
                     isFavorite={favorites.includes(item.id)}
@@ -40,6 +40,7 @@ const SearchResult: React.FC = () => {
               <Empty text='Ничего не найдено' />
             )}
           </div>
+          <div className='mt-40' />
         </div>
       </div>
     </>

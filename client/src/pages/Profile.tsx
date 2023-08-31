@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone'
 
 import { UserApiClient } from '../api'
 import { getProducts, getUserData } from '../redux/getters'
-import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
+import { editOrderActionCreator, editUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
 import {
   getEmailInputErrorMessage,
   getQueryParams,
@@ -15,6 +15,10 @@ import {
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
+import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/types'
+import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { Button } from '../components/common/Button'
 
 interface IFile {
   file: File | null
@@ -44,6 +48,73 @@ interface IProductInOrder {
   quintity: number
   color: string
   price: number
+}
+
+const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) => {
+  const dispatch = useDispatch()
+
+  const [agreedToGetEmails, setAgreedToGetEmails] = React.useState(true)
+
+  const onCheckbox = () => {
+    setAgreedToGetEmails((prev) => !prev)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const formData = new FormData()
+
+    formData.append('wantsToReceiveEmailUpdates', agreedToGetEmails ? '1' : '0')
+
+    UserApiClient.updateUserData(formData)
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        const payload = {
+          wantsToReceiveEmailUpdates: agreedToGetEmails
+        }
+
+        dispatch(editUserActionCreator(payload))
+        localStorage.setItem('decidedOnRecieveingEmails', '1')
+        onModalClose()
+      })
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
+  }
+
+  return (
+    <>
+      <h3 className='popup-message__title'>Do you wish to get our email updates and special events only for you?</h3>
+      <p className='popup-message__text'>We promise to email you no more than once a week.</p>
+
+      <form
+        className='popup__agree-form flex'
+        onSubmit={handleSubmit}
+      >
+        <label className='form__label'>
+          <input
+            className='form__checkbox-real'
+            type='checkbox'
+            checked={agreedToGetEmails}
+            onChange={onCheckbox}
+          />
+          <span className='form__checkbox-fake'></span>
+          <span className='form__text'>I agree to recieve email newsletter.</span>
+        </label>
+
+        <Button
+          title='Submit choice'
+          className='btn mt-20'
+          type='submit'
+        >
+          Submit choice
+        </Button>
+      </form>
+    </>
+  )
 }
 
 const Profile: React.FC = () => {
@@ -245,6 +316,20 @@ const Profile: React.FC = () => {
   const [apartment, setApartment] = React.useState(apartmentProps)
 
   const [activeTab, setActiveTab] = React.useState<'personal' | 'orders'>('personal')
+  const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
+
+  React.useEffect(() => {
+    const decidedOnRecieveingEmails = localStorage.getItem('decidedOnRecieveingEmails')
+
+    if (decidedOnRecieveingEmails === '1') {
+      return
+    }
+
+    window.setTimeout(() => {
+      document.body.classList.add('lock')
+      setModalLoginOpened(true)
+    }, 3000)
+  }, [])
 
   React.useEffect(() => {
     const tabParam = getQueryParams('tab')
@@ -372,37 +457,66 @@ const Profile: React.FC = () => {
       formData.append('image', profilePicture.file)
     }
     // formData.append("emailConfirmed", emailConfirmed)
-    // formData.append("wantsToReceiveEmailUpdates", wantsToReceiveEmailUpdates)
 
-    const payload = {
-      name: name.value,
-      surname: surname.value,
-      email: email.value,
-      phone: phone.value,
-      city: city.value,
-      street: street.value,
-      house: house.value,
-      apartment: apartment.value,
-      ...(profilePicture.url
-        ? {
-            image: {
-              name: '',
-              url: profilePicture.url
-            }
-          }
-        : {})
-    }
-
-    dispatch(loginUserActionCreator(payload))
+    // loader (in button maybe?)
     UserApiClient.updateUserData(formData)
+      .then((dto) => {
+        if (!isSuccessfullResponse(dto)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        const payload = {
+          name: name.value,
+          surname: surname.value,
+          email: email.value,
+          phone: phone.value,
+          city: city.value,
+          street: street.value,
+          house: house.value,
+          apartment: apartment.value,
+          ...(profilePicture.url
+            ? {
+                image: {
+                  name: '',
+                  url: profilePicture.url
+                }
+              }
+            : {})
+        }
+
+        dispatch(editUserActionCreator(payload))
+      })
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   const onCancelOrder = (orderId: number) => () => {
-    UserApiClient.cancelOrder(orderId).then(() => {})
+    UserApiClient.cancelOrder(orderId)
+      .then((dto) => {
+        if (!isSuccessfullCancelOrderResponse(dto)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        const candidate = user.orders.find((o) => o.id === orderId)
+        if (!candidate) {
+          return
+        }
+
+        const payload = {
+          ...candidate,
+          status: 'CANCELED'
+        } as const
+        dispatch(editOrderActionCreator(payload))
+      })
+      .then(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   const onLogout = () => {
     localStorage.removeItem('loft_furniture_token')
+    localStorage.removeItem('decidedOnRecieveingEmails')
     dispatch(logoutUserActionCreator())
     history.push({ pathname: '/' })
   }
@@ -411,31 +525,45 @@ const Profile: React.FC = () => {
     setActiveTab(tab)
   }
 
+  const onLoginModalClose = () => {
+    setModalLoginOpened(false)
+    document.body.classList.remove('lock')
+  }
+
   return (
     <>
+      {modalLoginOpened && (
+        <Modal
+          content={<ModalContent onModalClose={onLoginModalClose} />}
+          onModalClose={onLoginModalClose}
+        />
+      )}
+
       <section className='profile'>
         <div className='container'>
           <div className='profile__controls flex'>
             <div className='profile__tabs flex'>
               {tabs.map((t) => (
-                <button
+                <Button
                   className={`profile__tab ${t === activeTab ? 'profile__tab--active' : ''} btn`}
                   key={t}
                   type='button'
+                  title={t}
                   onClick={onTab(t)}
                 >
                   {t}
-                </button>
+                </Button>
               ))}
             </div>
 
-            <button
+            <Button
               className='profile__logout btn btn--danger'
               type='button'
+              title='Log out'
               onClick={onLogout}
             >
-              Выйти
-            </button>
+              Log out
+            </Button>
           </div>
           <div className='profile__box'>
             {activeTab === 'personal' && (
@@ -598,12 +726,13 @@ const Profile: React.FC = () => {
                     errorMessage={apartment.getErrorMessage(apartment.value)}
                     onChange={onChange(setApartment)}
                   />
-                  <button
+                  <Button
+                    title='Edit'
                     className='btn'
                     type='submit'
                   >
-                    Изменить
-                  </button>
+                    Edit
+                  </Button>
                 </form>
               </>
             )}
@@ -614,24 +743,34 @@ const Profile: React.FC = () => {
                 <div className='mt-30'>
                   {collectedOrders.map(({ id, name, status, createdAt, items }) => (
                     <div className='mt-10'>
-                      <div className='flex items-center justify-between'>
+                      <div className='profile__orders-info grid items-center justify-between'>
                         <div className='flex items-center'>
                           <p className='profile__order-name'>
                             Order name: {name} №{id}
                           </p>
-                          <button
-                            className='profile__order-cancel flex items-center justify-center'
-                            type='button'
-                            onClick={onCancelOrder(id)}
-                          >
-                            <img
-                              src='/images/icons/cross.svg'
-                              alt=''
-                            />
-                          </button>
+                          {status !== 'CANCELED' && (
+                            <Button
+                              className='profile__order-cancel flex items-center justify-center'
+                              type='button'
+                              aria-label='Cancel order'
+                              title='Cancel order'
+                              onClick={onCancelOrder(id)}
+                            >
+                              <img
+                                src='/images/icons/cross.svg'
+                                alt=''
+                              />
+                            </Button>
+                          )}
                         </div>
 
-                        <p className='profile__order-name'>Status: {status}</p>
+                        <p
+                          className={`profile__order-name ${
+                            status === 'CANCELED' ? 'profile__order-name--red' : 'profile__order-name--blue'
+                          }`}
+                        >
+                          Status: {status}
+                        </p>
                         <p className='profile__order-name'>{new Date(createdAt).toLocaleDateString()}</p>
                       </div>
                       <div className='profile__table grid items-center mt-10'>
@@ -650,7 +789,7 @@ const Profile: React.FC = () => {
                               </Link>
                               <img
                                 className='profile__table-image'
-                                src={image ? `http://localhost:5000${image.url}` : ''}
+                                src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
                                 alt=''
                               />
                             </div>

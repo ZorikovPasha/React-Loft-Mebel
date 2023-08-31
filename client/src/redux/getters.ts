@@ -1,4 +1,5 @@
 import { IFurniture } from '../api/types'
+import { IErrorsState } from './reducers/errors'
 import { IUserState } from './reducers/userReducer'
 import { RootState } from './store'
 
@@ -11,3 +12,5 @@ export const getFilteredProductsByName =
 
 export const getUserData = (state: RootState): IUserState => state.user
 export const getPathname = (state: RootState): string => state.pathname.pathname
+export const getError = (state: RootState): IErrorsState => state.errors
+export const getSearch = (state: RootState) => state.search

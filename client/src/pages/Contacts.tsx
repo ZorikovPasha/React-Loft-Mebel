@@ -3,23 +3,35 @@ import React from 'react'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
-import { ModalInfo } from '../components/common/ModalInfo'
 import { IField } from './SignUp'
 import { getEmailInputErrorMessage, getTextInputErrorMessage, validateEmail, validateTextInput } from '../utils'
 import AppTextField from '../components/common/appTextField'
+import { isSuccessfullResponse } from '../api/types'
+import { Modal } from '../components/common/Modal'
+import { toggleSnackbarOpen } from '../redux/actions/errors'
+import { useDispatch } from 'react-redux'
+import { Button } from '../components/common/Button'
+
+const ModalContent: React.FC = () => {
+  return (
+    <>
+      <h3 className='popup-message__title'>Сообщение отправлено</h3>
+      <p className='popup-message__text'>Мы с вами свяжемся</p>
+    </>
+  )
+}
 
 const Contacts: React.FC = () => {
   const fields = React.useRef<Record<string, IField>>({
     name: {
       value: '',
       label: 'Ваше имя',
-      labelClass: 'contacts__form-label',
+      labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'text',
       placeholder: 'Введите ваше имя',
-      className: 'contacts__form-block',
-      inputClassName: 'contacts__form-input',
+      inputClassName: 'form-input',
       tag: 'input',
       showErrors: false,
       errorMessage: getTextInputErrorMessage(''),
@@ -30,13 +42,13 @@ const Contacts: React.FC = () => {
       tag: 'input',
       value: '',
       label: 'Ваш e-mail',
-      labelClass: 'contacts__form-label',
+      labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'email',
-      placeholder: 'Введите ваш e-mail',
-      className: 'contacts__form-block',
-      inputClassName: 'contacts__form-input',
+      placeholder: 'Your e-mail',
+      className: 'mt-30',
+      inputClassName: 'form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
       getErrorMessage: getEmailInputErrorMessage,
@@ -45,13 +57,13 @@ const Contacts: React.FC = () => {
     message: {
       value: '',
       label: 'Сообщение',
-      labelClass: 'contacts__form-label',
+      labelClass: 'form__label',
+      className: 'mt-30',
       isValid: false,
       required: true,
       type: 'text',
       placeholder: 'Напишите ваше сообщение',
-      className: 'contacts__form-block',
-      inputClassName: 'contacts__form-area',
+      inputClassName: 'form-input',
       tag: 'textarea',
       showErrors: false,
       errorMessage: getTextInputErrorMessage(''),
@@ -60,12 +72,14 @@ const Contacts: React.FC = () => {
     }
   } as const)
 
+  const dispatch = useDispatch()
+
   const [isModalOpened, setModalOpened] = React.useState(false)
   const [form, setForm] = React.useState(fields.current)
   const breadcrumbs = useBreadcrumbs()
   const { name, email, message } = form
 
-  const onModalClose: React.MouseEventHandler<HTMLButtonElement> = () => {
+  const onModalClose = () => {
     document.documentElement.classList.remove('lock')
     setModalOpened(false)
   }
@@ -87,6 +101,19 @@ const Contacts: React.FC = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
+    setForm((prev) => {
+      return Object.entries(prev).reduce(
+        (accum, [key, props]) => ({
+          ...accum,
+          [key]: {
+            ...props,
+            showErrors: true
+          }
+        }),
+        {}
+      )
+    })
+
     if (!Object.values(form).every(({ isValid }) => isValid)) {
       return
     }
@@ -96,10 +123,18 @@ const Contacts: React.FC = () => {
       email: email.value,
       message: message.value
     }
-    UserApiClient.sendMessage(dto).then(() => {
-      document.documentElement.classList.add('lock')
-      setModalOpened(true)
-    })
+    UserApiClient.sendMessage(dto)
+      .then((dto) => {
+        if (isSuccessfullResponse(dto)) {
+          document.documentElement.classList.add('lock')
+          setModalOpened(true)
+        }
+
+        dispatch(toggleSnackbarOpen())
+      })
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   const showNameInputError = name.showErrors && !name.isValid && (name.required || Boolean(name.value))
@@ -109,89 +144,87 @@ const Contacts: React.FC = () => {
   return (
     <>
       {isModalOpened && (
-        <ModalInfo
-          title='Сообщение отправлено'
-          text='Мы с вами свяжемся'
+        <Modal
+          content={<ModalContent />}
           onModalClose={onModalClose}
         />
       )}
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='contacts'>
         <div className='container'>
-          <h4 className='contacts__title'>Let's connect</h4>
-          <div className='contacts__inner'>
+          <h4 className='contacts__title'>Leave your request here and we will reach out to you as soon as possible!</h4>
+          <div className='contacts__inner grid mt-40'>
             <form
               className='contacts__form'
               onSubmit={handleSubmit}
             >
-              <div className='contacts__form-line'>
-                <AppTextField
-                  elementType={name.tag}
-                  placeholder={name.placeholder}
-                  name='name'
-                  type={name.type}
-                  value={name.value}
-                  required={name.required}
-                  rootElclass={name.className}
-                  label={name.label}
-                  labelClass={name.labelClass}
-                  inputWrapClass={name.inputWrapClass}
-                  inputClassName={`${name.inputClassName} ${showNameInputError ? 'input-text--error' : ''}`}
-                  showErrors={showNameInputError}
-                  errorMessage={name.getErrorMessage(name.value)}
-                  onChange={onChange('name')}
-                />
-                <AppTextField
-                  elementType={email.tag}
-                  placeholder={email.placeholder}
-                  name='email'
-                  type={email.type}
-                  value={email.value}
-                  required={email.required}
-                  rootElclass={email.className}
-                  label={email.label}
-                  labelClass={email.labelClass}
-                  inputWrapClass={email.inputWrapClass}
-                  inputClassName={`${email.inputClassName} ${showEmailInputError ? 'input-text--error' : ''}`}
-                  showErrors={showEmailInputError}
-                  errorMessage={email.getErrorMessage(name.value)}
-                  onChange={onChange('email')}
-                />
-              </div>
+              <AppTextField
+                elementType={name.tag}
+                placeholder={name.placeholder}
+                name='name'
+                type={name.type}
+                value={name.value}
+                required={false}
+                rootElclass={name.className}
+                label={name.label}
+                labelClass={name.labelClass}
+                inputWrapClass={name.inputWrapClass}
+                inputClassName={`${name.inputClassName} ${showNameInputError ? 'form-input--error' : ''}`}
+                showErrors={showNameInputError}
+                errorMessage={name.getErrorMessage(name.value)}
+                onChange={onChange('name')}
+              />
+              <AppTextField
+                elementType={email.tag}
+                placeholder={email.placeholder}
+                name='email'
+                type={email.type}
+                value={email.value}
+                required={false}
+                rootElclass={email.className}
+                label={email.label}
+                labelClass={email.labelClass}
+                inputWrapClass={email.inputWrapClass}
+                inputClassName={`${email.inputClassName} ${showEmailInputError ? 'form-input--error' : ''}`}
+                showErrors={showEmailInputError}
+                errorMessage={email.getErrorMessage(name.value)}
+                onChange={onChange('email')}
+              />
               <AppTextField
                 elementType={message.tag}
                 placeholder={message.placeholder}
                 name='message'
                 type={message.type}
                 value={message.value}
-                required={message.required}
+                required={false}
                 rootElclass={message.className}
                 label={message.label}
                 labelClass={message.labelClass}
                 inputWrapClass={message.inputWrapClass}
-                inputClassName={`${message.inputClassName} ${showMessageInputError ? 'input-text--error' : ''}`}
+                inputClassName={`${message.inputClassName} ${showMessageInputError ? 'form-input--error' : ''}`}
                 showErrors={showMessageInputError}
                 errorMessage={message.getErrorMessage(message.value)}
                 onChange={onChange('message')}
               />
-              <div className='contacts__form-bottom'>
-                <label className='contacts__form-file form-file'>
+              <div className='contacts__form-bottom flex items-center mt-30'>
+                <label className='contacts__form-file form-file flex'>
                   <input
                     className='form-file__real'
                     type='file'
                   />
-                  <span className='form-file__fake'>Прикрепить файл</span>
+                  <span className='btn-hollow'>Add file</span>
                 </label>
-                <button
-                  className='contacts__form-btn'
+                <Button
+                  title='Submit'
+                  className='btn'
                   type='submit'
                 >
-                  Отправить
-                </button>
+                  Submit
+                </Button>
               </div>
             </form>
-            <div className='contacts__items'>
-              <div className='contacts__line'>
+            <div>
+              <div className='contacts__line flex items-center'>
                 <a
                   className='contacts__tel'
                   href='tel:89648999119'
@@ -206,43 +239,27 @@ const Contacts: React.FC = () => {
                 </a>
               </div>
               <a
-                className='contacts__link'
+                className='contacts__link mt-20'
                 href='https://www.instagram.com/?hl=en'
               >
                 INSTAGRAM
               </a>
-              <p className='contacts__text'>Адрес: г. Анапа, Анапское шоссе, 30 Ж/К Черное море</p>
+              <p className='contacts__text mt-20'>4550 W Pico Blvd unit d-101, Los Angeles, CA 90019, United States</p>
             </div>
           </div>
-          <h4 className='contacts__title'>Адрес нашей компании</h4>
-          <div style={{ position: 'relative', overflow: 'hidden' }}>
-            <a
-              href='https://yandex.ru/maps/org/loft_mebel/168358311332/?utm_medium=mapframe&utm_source=maps'
-              style={{ color: '#eee', fontSize: '12px', position: 'absolute', top: '0px' }}
-            >
-              Loft Мебель
-            </a>
-            <a
-              href='https://yandex.ru/maps/1107/anapa/category/furniture_store/184107871/?utm_medium=mapframe&utm_source=maps'
-              style={{ color: '#eee', fontSize: '12px', position: 'absolute', top: '14px' }}
-            >
-              Магазин мебели в Анапе
-            </a>
-            <a
-              href='https://yandex.ru/maps/1107/anapa/category/cabinet_furniture/184107869/?utm_medium=mapframe&utm_source=maps'
-              style={{ color: '#eee', fontSize: '12px', position: 'absolute', top: '28px' }}
-            >
-              Корпусная мебель в Анапе
-            </a>
+          <h4 className='contacts__title mt-40'>We are at: </h4>
+          <div
+            className='mt-40'
+            style={{ position: 'relative', overflow: 'hidden' }}
+          >
             <iframe
-              title='Магазин мебели в Анапе'
-              src='https://yandex.ru/map-widget/v1/-/CCUqI-Sv8C'
+              src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11924.956793041905!2d-118.34089996714462!3d34.04931641174938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b8f9d3d4c22b%3A0xccfafde3d3e0445e!2sLowe&#39;s%20Home%20Improvement!5e0!3m2!1sen!2sru!4v1693492192505!5m2!1sen!2sru'
               width='100%'
-              height='400'
-              frame-border='1'
-              allowFullScreen={true}
-              style={{ position: 'relative' }}
-            />
+              height='450'
+              allowFullScreen={false}
+              loading='lazy'
+              referrerPolicy='no-referrer-when-downgrade'
+            ></iframe>
           </div>
         </div>
       </section>

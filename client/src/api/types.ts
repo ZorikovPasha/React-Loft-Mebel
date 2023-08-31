@@ -147,8 +147,8 @@ export interface IFurnitureResponse {
 export interface IErrorsResponse {
   errors:
     | {
-        field: string | null
-        message: string | null
+        field: string
+        message: string
       }[]
     | null
 }
@@ -159,37 +159,6 @@ export interface IErrorResponse {
 
 export interface ISuccessfullResponse {
   success: boolean
-}
-
-export const isSuccessfullResponse = (
-  data: IErrorsResponse | IErrorResponse | ISuccessfullResponse
-): data is ISuccessfullResponse => {
-  const property: keyof ISuccessfullResponse = 'success'
-  return property in data
-}
-
-export const isSuccessfullLoginResponse = (
-  data: IErrorsResponse | IErrorResponse | ISuccessfullLoginResponse
-): data is ISuccessfullLoginResponse => {
-  const property: keyof ISuccessfullLoginResponse = 'token'
-  return property in data
-}
-
-export const isSuccessfullGetUserResponse = (
-  data: IErrorsResponse | IErrorResponse | IUserResponse
-): data is IUserResponse => {
-  const property: keyof IUserResponse = 'user'
-  return property in data
-}
-
-export const isResponseWithErrors = <T extends Record<keyof T, unknown>>(
-  data: IErrorsResponse | IErrorResponse | T
-): data is IErrorsResponse => {
-  return 'errors' in data
-}
-
-export const isStringPropertyname = (obj: Record<string, unknown>, key: string): key is keyof typeof obj => {
-  return key in obj
 }
 
 export interface ICartItemRequest {
@@ -237,4 +206,42 @@ export const isSuccessfullMakeOrderResponse = (
 ): dto is ISuccessfullMakeOrderResponse => {
   const propertyName: keyof ISuccessfullMakeOrderResponse = 'order'
   return propertyName in dto
+}
+
+export const isSuccessfullResponse = (
+  data: IErrorsResponse | IErrorResponse | ISuccessfullResponse
+): data is ISuccessfullResponse => {
+  const property: keyof ISuccessfullResponse = 'success'
+  return property in data
+}
+
+export const isSuccessfullCancelOrderResponse = (
+  data: IErrorsResponse | IErrorResponse | ICancelOrderResponse
+): data is ICancelOrderResponse => {
+  const property: keyof ICancelOrderResponse = 'status'
+  return property in data
+}
+
+export const isSuccessfullLoginResponse = (
+  data: IErrorsResponse | IErrorResponse | ISuccessfullLoginResponse
+): data is ISuccessfullLoginResponse => {
+  const property: keyof ISuccessfullLoginResponse = 'token'
+  return property in data
+}
+
+export const isSuccessfullGetUserResponse = (
+  data: IErrorsResponse | IErrorResponse | IUserResponse
+): data is IUserResponse => {
+  const property: keyof IUserResponse = 'user'
+  return property in data
+}
+
+export const isResponseWithErrors = <T extends Record<keyof T, unknown>>(
+  data: IErrorsResponse | IErrorResponse | T
+): data is IErrorsResponse => {
+  return 'errors' in data
+}
+
+export const isStringPropertyname = (obj: Record<string, unknown>, key: string): key is keyof typeof obj => {
+  return key in obj
 }

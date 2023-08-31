@@ -5,6 +5,8 @@ import { getUserData } from '../../redux/getters'
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
 import { editUserActionCreator } from '../../redux/actions/userAction'
+import { toggleSnackbarOpen } from '../../redux/actions/errors'
+import { Button } from './Button'
 
 interface IProps {
   id: number
@@ -15,32 +17,34 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
 
   const { favorites, isLoggedIn } = useSelector(getUserData)
 
-  const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
+  const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
-    const payload = {
-      favorites: [id]
-    }
-
-    dispatch(editUserActionCreator(payload))
 
     if (!isLoggedIn) {
-      return
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
+
     UserApiClient.addFavoriteItem(id)
       .then((dto) => {
-        if (isSuccessfullResponse(dto)) {
-          return
+        if (!isSuccessfullResponse(dto)) {
+          return dispatch(toggleSnackbarOpen())
         }
+
         const payload = {
           favorites: [id]
         }
-        editUserActionCreator(payload)
+
+        dispatch(editUserActionCreator(payload))
       })
-      .catch(() => editUserActionCreator(payload))
+      .catch(() => {
+        dispatch(toggleSnackbarOpen())
+      })
   }
 
   return (
-    <button
+    <Button
+      title='Add to favorites'
+      type='button'
       className='shop__wish'
       onClick={onAddToFavoriteClick}
     >
@@ -48,6 +52,6 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
         src={favorites.includes(id) ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}
         alt=''
       />
-    </button>
+    </Button>
   )
 }
