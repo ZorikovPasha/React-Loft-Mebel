@@ -16,52 +16,24 @@ jobs:
           npm run typecheck
           npm run test
           npm run build
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v2.0
+          ls -la 
+          pwd
+      - name: 🚀 Deploy to Netlify
+        uses: netlify/actions/cli@master
         with:
-          publish-dir: './dist'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
+          args: deploy --dir="./client/dist" --prod
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-  preparing_database:
-    runs-on: self-hosted
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/loft_furniture?schema=public
-
-    
+          NETLIFY_DIR: dist
   building_backend:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: 🚀 Deploy to Render.com
+        uses: bankfliptech/deploy-to-render@v1
         with:
-          node-version: 16.14.2
-      - uses: ttskch/render-deploy@v1.0.0
-        with:
-          api-key: ${{ secrets.RENDER_API_KEY }}
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
-      - run: |
-          cd server
-          npm ci
-          cd src
-          npx prisma db push
-          cd ..
-          npm run lint
-          npm run build
-          npm run start
+          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
+          apiKey: ${{ secrets.RENDER_API_KEY }}
+          deployHookURL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+  
