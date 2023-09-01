@@ -53,14 +53,14 @@ TODO!:
 - [x] inject prisma client
 - [x] change api to `/user/orders`, `/user/cart`, etc...
 - [x] substitute types from prisma/client insteead of hand made types
-- [ ] at the start two equal api call `api/furniture` in catalog
 - [x] should show snackbars when error is occured
 - [x] handle something went wrong when updating profile
 - [x] should add search     
 - [x] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
 - [ ] add remaining products    
 - [ ] mark in swagger which id to send
-- [ ] /login swagger edit response types   
+- [ ] /login swagger edit response types 
+- [ ] at the start two equal api call `api/furniture` in catalog
 - [ ] should implement github-ci    
 - [x] add universal button component to set type, title, aria-label automatically
 - [x] check for z-indexes everywhere
