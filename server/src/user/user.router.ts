@@ -159,6 +159,14 @@ export class UserRouter {
           check('message', 'Message was not provided').isString().trim().notEmpty(),
           this.userController.makeRequest.bind(this.userController)
         ]
+      },
+      {
+        method: 'post',
+        endpoint: '/reviews',
+        handler: [
+          this.protectService.checkAuthorization.bind(this.protectService),
+          this.userController.makeReview.bind(this.userController)
+        ]
       }
     ]
 

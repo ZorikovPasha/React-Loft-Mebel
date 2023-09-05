@@ -14,6 +14,49 @@
     }
   }
 
+  &__mobile-list-wrap {
+    margin-left: 25px;
+
+    @media #{$mobile} {
+      position: relative;
+
+      &:hover .header__mobile-list {
+        display: block;
+      }
+    }
+  }
+  
+  &__mobile-list {
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    right: 0;
+    display: none;
+    width: 200px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+  }
+
+  &__mobile-list-inner {
+    grid-gap: 20px;
+  }
+
+  &__mobile-list-link {
+    position: relative;
+    font-size: 16px;
+    line-height: 20px;
+    padding-left: 30px;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+
   &__sub-list {
     position: absolute;
     z-index: 1;
@@ -26,7 +69,7 @@
     box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
     background-color: #fff;
   
-    @media (width <=1200px) {
+    @media #{$tablet} {
       text-align: left;
     }
   
@@ -63,6 +106,10 @@
     width: 22px;
     height: 22px;
     margin-right: 25px;
+
+    @media #{$mobile} {
+      margin-right: 0;
+    }
 
     img {
       width: 100%;
@@ -332,12 +379,6 @@
 
   &__link {
     transition: hover 0.2s;
-
-    &--profile {
-      position: relative;
-      width: 25px;
-      height: 25px;
-    }
   }
 
   &__link--dot {
@@ -389,6 +430,22 @@
     padding: 24px;
     cursor: pointer;
     background-color: transparent;
+
+
+    @media (width >=767px) {
+      &:hover {
+        background: #245462;
+        color: #fff;
+      
+        path {
+          fill: white;
+        }
+      
+        .header__sub-list {
+          display: block;
+        }
+      }
+    }
 
     @media (width <=1200px) {
         padding: 24px 15px;
@@ -747,18 +804,5 @@
     &:hover {
       color: #245462;
     }
-  }
-}
-
-.categories__item:hover {
-  background: #245462;
-  color: #fff;
-
-  path {
-    fill: white;
-  }
-
-  .header__sub-list {
-    display: block;
   }
 }

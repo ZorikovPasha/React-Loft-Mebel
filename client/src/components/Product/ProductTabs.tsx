@@ -1,7 +1,11 @@
 import React from 'react'
+import { IFurniture, IImage } from '../../api/types'
 
-export const ProductTabs: React.FC = () => {
+export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
+  const { reviews } = product
   const [activeTab, setActiveTab] = React.useState(0)
+
+  console.log('reviews', reviews)
 
   const tabsContents = {
     features: {
@@ -34,6 +38,15 @@ export const ProductTabs: React.FC = () => {
     e.preventDefault()
     setActiveTab(idx)
   }
+
+  const reviewToRender =
+    reviews?.map((r) => ({
+      ...r,
+      attachedPictures:
+        r.attachedPictures?.reduce((accum: IImage[], next) => {
+          return next ? [...accum, next] : accum
+        }, []) ?? []
+    })) ?? []
 
   return (
     <section className='product-tabs'>
@@ -123,8 +136,95 @@ export const ProductTabs: React.FC = () => {
             )}
             {activeTab === 1 && (
               <div className='product-tabs__content-item product-content'>
-                {tabsContents.reviews.items.map(({ id, text }) => (
-                  <p key={id}>{text}</p>
+                {reviewToRender.map(({ id, text, score, user, attachedPictures, createdAt }) => (
+                  <div
+                    className='product-tabs__review'
+                    key={id}
+                  >
+                    <div className='flex items-center'>
+                      <img
+                        className='product-tabs__review-avatar'
+                        src={user.image ? `${import.meta.env.VITE_BACKEND}${user.image.url}` : ''}
+                        alt=''
+                      />
+                      <div className='product-tabs__review-right'>
+                        <p className='product-tabs__review-name'>{user.userName}</p>
+                        <p className='mt-5'>{new Date(createdAt).toLocaleDateString()}</p>
+                        <div className='flex info__rating-parent mt-5'>
+                          <img
+                            className='info__rating-img'
+                            src='/images/icons/star.svg'
+                            alt=''
+                          />
+                          <img
+                            className='info__rating-img'
+                            src='/images/icons/star.svg'
+                            alt=''
+                          />
+                          <img
+                            className='info__rating-img'
+                            src='/images/icons/star.svg'
+                            alt=''
+                          />
+                          <img
+                            className='info__rating-img'
+                            src='/images/icons/star.svg'
+                            alt=''
+                          />
+                          <img
+                            className='info__rating-img'
+                            src='/images/icons/star.svg'
+                            alt=''
+                          />
+
+                          <div
+                            style={{ width: (score / 5) * 95 }}
+                            className='flex info__rating-child'
+                          >
+                            <img
+                              className='info__rating-img'
+                              src='/images/icons/star-black.svg'
+                              alt=''
+                            />
+                            <img
+                              className='info__rating-img'
+                              src='/images/icons/star-black.svg'
+                              alt=''
+                            />
+                            <img
+                              className='info__rating-img'
+                              src='/images/icons/star-black.svg'
+                              alt=''
+                            />
+                            <img
+                              className='info__rating-img'
+                              src='/images/icons/star-black.svg'
+                              alt=''
+                            />
+                            <img
+                              className='info__rating-img'
+                              src='/images/icons/star-black.svg'
+                              alt=''
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className='product-tabs__review-p mt-30'>{text}</p>
+                    {attachedPictures.length ? (
+                      <div className='flex mt-20'>
+                        {attachedPictures.map((p) => (
+                          <img
+                            key={p.url}
+                            src={import.meta.env.VITE_BACKEND + p.url}
+                            className='product-tabs__review-attach'
+                            alt=''
+                          />
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
                 ))}
               </div>
             )}

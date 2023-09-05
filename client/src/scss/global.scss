@@ -28,7 +28,7 @@ body {
   line-height: 19px;
   color: $text;
 
-  &.lock {
+  &.lock, &.locked {
     overflow: hidden;
   }
 }
@@ -109,15 +109,6 @@ button {
   }
 }
 
-.error {
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 14px;
-  display: block;
-  margin: 0;
-  color: red;
-}
-
 .btn {
   color: #fff;
   background: #209cee;
@@ -158,8 +149,7 @@ button {
   padding: 14px 30px;
   transition: 0.3s;
 
-  &:hover,
-  &:focus {
+  &:hover {
     color: #FFF;
     background-color: rgba(#209cee, 0.9);
   }
@@ -202,6 +192,10 @@ button {
   margin-top: 10px;
 }
 
+.mt-5 {
+  margin-top: 5px;
+}
+
 .grid {
   display: grid;
 }
@@ -226,16 +220,24 @@ button {
   align-items: center;
 }
 
-.relative {
-  position: relative;
-}
-
 .align-start {
   align-items: flex-start;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
+.relative {
+  position: relative;
+}
+
 .highlight {
   background: #209cee;
+}
+
+.text-center {
+  text-align: center;
 }
 
 // z indexes
@@ -263,5 +265,5 @@ button {
 }
 
 .snackbar {
-  z-index: 4;
+  z-index: 5;
 }

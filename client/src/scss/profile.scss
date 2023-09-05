@@ -34,7 +34,30 @@
   }
 
   &__logout {
-    padding: 14px 25px;
+    position: relative;
+    font-size: 19px;
+    color: #D41367;
+    line-height: 26px;
+    padding-left: 30px;
+    white-space: nowrap;
+    margin-left: 30px;
+
+    @media #{$mobile} {
+      font-size: 16px;
+      line-height: 20px;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    svg {
+      position: absolute;
+      left: 0px;
+      top: 0;
+
+      @media #{$mobile} {
+        top: -3px;
+      }
+    }
   }
 
   &__title {
@@ -105,18 +128,35 @@
       }
   }
 
+  &__tabs {
+    margin-left: 10px;
+    margin-bottom: -1px;
+    grid-gap: 20px;
+
+    @media #{$mobile} {
+      grid-gap: 10px;
+    }
+  }
+
   &__tab {
     font-size: 18px;
     line-height: 22px;
-    padding: 10px 20px;
+    padding: 14px 25px;
     color: #414141;
     border: 1px solid #209cee;
     text-transform: capitalize;
     background-color: white;
     transition: 0.3s;
+    border-radius: 10px 10px 0 0; 
+
+    @media #{$mobile} {
+      font-size: 16px;
+      line-height: 22px;
+      padding: 10px 20px;
+    }
 
     &:hover {
-    border: 1px solid #209cee;
+      border: 1px solid #209cee;
       background-color: rgba(#209cee, 0.9);
       color: white;
     }
@@ -128,31 +168,19 @@
 
     &--active {
       background-color: #245462;
-    border: 1px solid #245462;
+      border: 1px solid #245462;
       color: white;
     }
   }
 
-  &__tab + &__tab {
-    margin-left: 30px;
-  }
-
   &__box {
-    margin-top: 80px;
+    padding: 80px 20px 20px 20px;
+    border: 1px solid #245462;
+    border-radius: 10px;
 
-    @media (width <=992px) {
-      min-width: 320px;
+    @media #{$tablet} {
+      padding: 40px 15px 40px 15px;
     }
-
-    @media (width <=810px) {
-        margin-left: 30px;
-        margin-bottom: 40px;
-      }
-
-      @media (width <=510px) {
-          min-width: auto;
-          margin-left: 0;
-        }
   }
 
   &__form-block {
@@ -200,6 +228,17 @@
     cursor: pointer;
     border-radius: 50%;
 
+    @media #{$tablet} {
+      width: 170px;
+      height: 170px;
+    }
+
+    &--square {
+      width: 200px;
+      height: 200px;
+      border-radius: 10px;
+    }
+
     &--drag {
       background-color: rgba(#209cee, .1);
     }
@@ -210,6 +249,12 @@
     font-size: 20px;
     line-height: 24px;
     text-align: center;
+    padding: 10px;
+
+    @media #{$tablet} {
+      font-size: 16px;
+      line-height: 20px;
+    }
   }
 
   &__picture {
@@ -219,6 +264,12 @@
     border-radius: 50%;
     width: 100%;
     height: 100%;
+
+    &--width-80 {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+    }
   }
 
   &__picture-img {
@@ -232,6 +283,27 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  &__picture-delete {
+    position: absolute;
+    z-index: 2;
+    top: 2px;
+    right: 2px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    padding: 1px;
+    border-radius: 4px;
+    border: 1px solid #D41367;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   &__table {

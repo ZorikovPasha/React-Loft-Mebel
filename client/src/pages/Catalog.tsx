@@ -12,7 +12,7 @@ import { getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
-import { UserApiClient } from '../api'
+import { PublicApiClient } from '../api'
 import { IFurniture } from '../api/types'
 import { Button } from '../components/common/Button'
 
@@ -41,7 +41,7 @@ const Catalog: React.FC = () => {
 
     setLoading(true)
 
-    UserApiClient.getFurniture(controller.signal)
+    PublicApiClient.getFurniture(controller.signal)
       .then((data) => {
         setItems(data.items)
         setLoading(false)

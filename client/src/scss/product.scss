@@ -109,6 +109,12 @@
       max-width: 100px;
     }
   }
+
+
+  &__review-uploads {
+    flex-wrap: wrap;
+    grid-gap: 20px;
+  }
 }
 
 .info {
@@ -129,8 +135,10 @@
     line-height: 16px;
     color: #686868;
     margin-bottom: 15px;
+    text-transform: capitalize;
 
-    @media (width <=510px) {
+
+    @media #{$mobile} {
       font-size: 9px;
       line-height: 11px;
     }
@@ -168,7 +176,6 @@
   &__rating-parent {
     position: relative;
     z-index: 0;
-    margin-bottom: 15px;
   }
 
   &__rating-child {
@@ -196,8 +203,8 @@
   }
 
   &__btn {
-    font-size: 13px;
-    line-height: 15px;
+    font-size: 14px;
+    line-height: 18px;
     color: #fff;
     padding: 12px 50px;
     background: #245462;
@@ -211,6 +218,38 @@
 
     &:active {
       opacity: 0.6;
+    }
+
+    &--plain {
+      position: relative;
+      padding: 12px 50px;
+      padding: 12px 50px 12px 60px;
+
+      font-size: 14px;
+      line-height: 18px;
+
+      &:hover {
+        path {
+          fill: white;
+        }
+      }
+
+      &:active {
+        path {
+          fill: #414141;
+        }
+      }
+
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 30px;
+        transform: translate(0, -50%);
+      }
+
+      path {
+        transition: all 0.2s;
+      }
     }
   }
 
@@ -278,50 +317,6 @@
       height: 6px;
       background-image: url('/images/icons/cross.svg');
     }
-  }
-}
-
-.product-tabs {
-  margin-top: 50px;
-
-  &__toggle {
-    display: flex;
-    align-items: center;
-    margin-bottom: 27px;
-  }
-
-  &__title {
-    padding-bottom: 10px;
-    position: relative;
-    cursor: pointer;
-    color: #686868;
-
-    &.active {
-      color: #414141;
-    }
-
-    &.active::after {
-      content: '';
-      position: absolute;
-      height: 3px;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #245462;
-    }
-
-    @media (width <=510px) {
-      font-size: 12px;
-      line-height: 14px;
-    }
-  }
-
-  &__title + &__title {
-    margin-left: 50px;
-
-    @media (width <=510px) {
-        margin-left: 20px;
-      }
   }
 }
 
@@ -429,6 +424,9 @@
 
   &__title {
     font-weight: 400;
+    font-size: 22px;
+    line-height: 26px;
+    font-weight: 500;
     margin-bottom: 35px;
   }
 

@@ -56,6 +56,12 @@ export interface IRequestDto {
   message: string | unknown | undefined | null
 }
 
+export interface IMakeReviewDto {
+  score: number | unknown | undefined
+  text: string | unknown | undefined
+  furnitureId: string | unknown | undefined
+}
+
 export interface IUserController {
   register: (
     req: Request<{}, {}, IRegisterUserDto>,

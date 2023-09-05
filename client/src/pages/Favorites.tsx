@@ -61,7 +61,7 @@ const Favorites: React.FC = () => {
         </section>
       ) : (
         <div className='container'>
-          <Empty text='Вам ничего не понравилось(' />
+          <Empty text='Seems like you have not liked anything so far' />
         </div>
       )}
     </>

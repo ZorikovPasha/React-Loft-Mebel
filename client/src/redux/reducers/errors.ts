@@ -3,7 +3,7 @@ import { ItoggleSnackbarCloseAction, ItoggleSnackbarOpenAction } from '../action
 export interface IErrorsState {
   toggleSnackbar: boolean
   message: null | string
-  variant: 'error' | 'warning'
+  variant: 'error' | 'warning' | 'success'
 }
 
 const initialState: IErrorsState = {
