@@ -22,7 +22,7 @@ export const getPasswordFieldErrorMessage = (str: string): string => {
   }
 
   if (str.trim() !== '1234') {
-    return 'Password is to simple'
+    return 'Password is too simple'
   }
 
   return ''

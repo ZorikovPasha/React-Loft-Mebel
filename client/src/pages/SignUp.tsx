@@ -44,9 +44,15 @@ const ModalContent: React.FC = () => {
   return (
     <div className='flex items-center flex-col'>
       <h3 className='popup-message__title'>You successfully signed up</h3>
+      <div className='popup__picture'>
+        <img
+          src='/images/success.png'
+          alt=''
+        />
+      </div>
       <Link
         to={ROUTES.Login}
-        className='popup-message__btn btn mt-40'
+        className='popup-message__btn btn mt-5'
       >
         Log in
       </Link>
@@ -239,6 +245,16 @@ const SignUp: React.FC = () => {
                 Sign up
               </Button>
             </form>
+
+            <div className='login__bottom mt-30'>
+              <span className='login__new'>Already have an account? </span>
+              <Link
+                className='login__new-link'
+                to={ROUTES.Login}
+              >
+                Log in
+              </Link>
+            </div>
           </div>
         </div>
       </div>

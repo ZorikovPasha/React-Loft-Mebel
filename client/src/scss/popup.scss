@@ -49,4 +49,13 @@
   &__agree-form {
     flex-direction: column;
   }
+
+  &__picture {
+    width: 200px;
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+  }
 }

@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
       { name: 'Chidren', link: '/catalog?room=children' }
     ],
     [
-      { name: 'cabinets', link: '/catalog/cabinets' },
+      { name: 'Cabinets', link: '/catalog/cabinets' },
       { name: 'Mattresses', link: '/catalog/mattresses' },
       { name: 'Soft furniture', link: '/catalog/upholstered' }
     ]

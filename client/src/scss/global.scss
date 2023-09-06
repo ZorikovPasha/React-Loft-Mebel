@@ -106,6 +106,12 @@ button {
       background-color: #ef438e;
     }
   }
+
+  &[disabled] {
+    background-color: grey;
+    pointer-events: none;
+    touch-action: none;
+  }
 }
 
 .btn-hollow {

@@ -16,16 +16,17 @@ import {
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
 import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/types'
-import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
 import { ROUTES, SCREEN_SIZES } from '../utils/const'
 import { useScreenSize } from '../hooks/useScreenSize'
+import { EmailsUpdatesModal } from '../components/profile/emailUpdatesModal'
 
 interface IFile {
   file: File | null
   url: string | null
+  isTouched: boolean
 }
 
 interface IProductInOrder {
@@ -52,90 +53,20 @@ interface IProductInOrder {
   price: number
 }
 
-const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) => {
-  const dispatch = useDispatch()
-
-  const [agreedToGetEmails, setAgreedToGetEmails] = React.useState(true)
-
-  const onCheckbox = () => {
-    setAgreedToGetEmails((prev) => !prev)
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const formData = new FormData()
-
-    formData.append('wantsToReceiveEmailUpdates', agreedToGetEmails ? '1' : '0')
-
-    UserApiClient.updateUserData(formData)
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
-
-        const payload = {
-          wantsToReceiveEmailUpdates: agreedToGetEmails
-        }
-
-        dispatch(editUserActionCreator(payload))
-        localStorage.setItem('decidedOnRecieveingEmails', '1')
-        onModalClose()
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
-  }
-
-  return (
-    <>
-      <h3 className='popup-message__title text-center'>
-        Do you wish to get our email updates and special events only for you?
-      </h3>
-      <p className='popup-message__text mt-20'>We promise to email you no more than once a week.</p>
-
-      <form
-        className='popup__agree-form flex mt-40'
-        onSubmit={handleSubmit}
-      >
-        <label className='form__label'>
-          <input
-            className='form__checkbox-real'
-            type='checkbox'
-            checked={agreedToGetEmails}
-            onChange={onCheckbox}
-          />
-          <span className='form__checkbox-fake'></span>
-          <span className='form__text'>I agree to recieve email newsletter.</span>
-        </label>
-
-        <Button
-          title='Submit choice'
-          className='btn mt-20'
-          type='submit'
-        >
-          Submit choice
-        </Button>
-      </form>
-    </>
-  )
-}
-
 const Profile: React.FC = () => {
   const history = useHistory()
 
   const { isLoggedIn } = useSelector(getUserData)
-
-  console.log('isLoggedIn', isLoggedIn)
 
   if (!isLoggedIn) {
     history.push(ROUTES.Login)
     return <></>
   }
 
-  const fileProps = {
+  const fileProps: IFile = {
     file: null,
-    url: null
+    url: null,
+    isTouched: false
   }
 
   const tabs = ['personal', 'orders'] as const
@@ -153,6 +84,7 @@ const Profile: React.FC = () => {
     tag: 'input',
     showErrors: false,
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
@@ -170,6 +102,7 @@ const Profile: React.FC = () => {
     tag: 'input',
     showErrors: false,
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
@@ -187,6 +120,7 @@ const Profile: React.FC = () => {
     inputClassName: 'form-input',
     showErrors: false,
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getEmailInputErrorMessage,
     validateFn: validateEmail
   }
@@ -204,6 +138,7 @@ const Profile: React.FC = () => {
     type: 'tel',
     showErrors: false,
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
@@ -221,6 +156,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
@@ -238,6 +174,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
@@ -255,6 +192,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
@@ -272,6 +210,7 @@ const Profile: React.FC = () => {
     className: 'profile__form-block',
     inputClassName: 'form-input',
     errorMessage: '',
+    isTouched: false,
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
   }
@@ -280,18 +219,18 @@ const Profile: React.FC = () => {
   const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
 
   const onDrop = React.useCallback((acceptedFiles: File[]) => {
-    // @ts-expect-error this is okay right here
-    if (acceptedFiles[0].type !== 'image/jpeg' || acceptedFiles[0].type !== 'image/png') {
+    if (acceptedFiles[0].type === 'image/jpeg' || acceptedFiles[0].type === 'image/png') {
+      const reader = new FileReader()
+      reader.readAsDataURL(acceptedFiles[0])
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        setProfilePicture({
+          file: acceptedFiles[0],
+          url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null,
+          isTouched: true
+        })
+      }
+    } else {
       return dispatch(toggleSnackbarOpen('You can attach .png or .jpg images only.'))
-    }
-
-    const reader = new FileReader()
-    reader.readAsDataURL(acceptedFiles[0])
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      setProfilePicture({
-        file: acceptedFiles[0],
-        url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null
-      })
     }
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
@@ -323,7 +262,7 @@ const Profile: React.FC = () => {
     }
   })
 
-  const [profilePicture, setProfilePicture] = React.useState<IFile>(fileProps)
+  const [profilePicture, setProfilePicture] = React.useState(fileProps)
   const [name, setName] = React.useState(nameProps)
   const [email, setEmail] = React.useState(emailProps)
   const [surname, setSurname] = React.useState(surnameProps)
@@ -335,6 +274,12 @@ const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<'personal' | 'orders'>('personal')
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
+
+  const isAnyFieldTouched = [name, email, surname, phone, city, street, house, apartment, profilePicture].some(
+    (props) => {
+      return props.isTouched
+    }
+  )
 
   React.useEffect(() => {
     const decidedOnRecieveingEmails = localStorage.getItem('decidedOnRecieveingEmails')
@@ -358,6 +303,7 @@ const Profile: React.FC = () => {
 
   React.useEffect(() => {
     setProfilePicture({
+      isTouched: profilePicture.isTouched,
       file: null,
       url: user.image?.url ?? null
     })
@@ -444,12 +390,16 @@ const Profile: React.FC = () => {
         ...prev,
         value: target.value,
         isValid: prev.validateFn(target.value),
-        showErrors: true
+        showErrors: true,
+        isTouched: true
       }))
     }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
+    if (!isAnyFieldTouched) {
+      return
+    }
 
     if (
       ![name, surname, email, phone, city, street, house].every(({ isValid, required }) => (required ? isValid : true))
@@ -502,6 +452,15 @@ const Profile: React.FC = () => {
 
         dispatch(editUserActionCreator(payload))
         dispatch(toggleSnackbarOpen('Profile info updated successfully!', 'success'))
+        setName((prev) => ({ ...prev, isTouched: false }))
+        setEmail((prev) => ({ ...prev, isTouched: false }))
+        setSurname((prev) => ({ ...prev, isTouched: false }))
+        setPhone((prev) => ({ ...prev, isTouched: false }))
+        setCity((prev) => ({ ...prev, isTouched: false }))
+        setStreet((prev) => ({ ...prev, isTouched: false }))
+        setHouse((prev) => ({ ...prev, isTouched: false }))
+        setApartment((prev) => ({ ...prev, isTouched: false }))
+        setProfilePicture((prev) => ({ ...prev, isTouched: false }))
       })
       .catch(() => {
         setIsLoading(false)
@@ -549,16 +508,15 @@ const Profile: React.FC = () => {
     document.body.classList.remove('lock')
   }
 
+  const showErrors = (props: IField) => {
+    return props.showErrors && !props.isValid && (props.required || props.value.trim().length > 0)
+  }
+
   return (
     <>
       {isLoading && <Loader rootElClass='loader--fixed' />}
 
-      {modalLoginOpened && (
-        <Modal
-          content={<ModalContent onModalClose={onLoginModalClose} />}
-          onModalClose={onLoginModalClose}
-        />
-      )}
+      {modalLoginOpened && <EmailsUpdatesModal onModalClose={onLoginModalClose} />}
 
       <section className='profile'>
         <div className='container'>
@@ -663,7 +621,7 @@ const Profile: React.FC = () => {
                     labelClass={name.labelClass}
                     inputWrapClass={name.inputWrapClass}
                     inputClassName={name.inputClassName}
-                    showErrors={!name.isValid && name.showErrors}
+                    showErrors={showErrors(name)}
                     errorMessage={name.getErrorMessage(name.value)}
                     onChange={onChange(setName)}
                   />
@@ -679,8 +637,8 @@ const Profile: React.FC = () => {
                     labelClass={email.labelClass}
                     inputWrapClass={email.inputWrapClass}
                     inputClassName={email.inputClassName}
-                    showErrors={!email.isValid && email.showErrors}
-                    errorMessage={email.getErrorMessage(name.value)}
+                    showErrors={showErrors(email)}
+                    errorMessage={email.getErrorMessage(email.value)}
                     onChange={onChange(setEmail)}
                   />
                   <AppTextField
@@ -695,7 +653,7 @@ const Profile: React.FC = () => {
                     labelClass={surname.labelClass}
                     inputWrapClass={surname.inputWrapClass}
                     inputClassName={surname.inputClassName}
-                    showErrors={!surname.isValid && surname.showErrors}
+                    showErrors={showErrors(surname)}
                     errorMessage={surname.getErrorMessage(surname.value)}
                     onChange={onChange(setSurname)}
                   />
@@ -711,7 +669,7 @@ const Profile: React.FC = () => {
                     labelClass={phone.labelClass}
                     inputWrapClass={phone.inputWrapClass}
                     inputClassName={phone.inputClassName}
-                    showErrors={!phone.isValid && phone.showErrors}
+                    showErrors={showErrors(phone)}
                     errorMessage={phone.getErrorMessage(phone.value)}
                     onChange={onChange(setPhone)}
                   />
@@ -727,7 +685,7 @@ const Profile: React.FC = () => {
                     labelClass={city.labelClass}
                     inputWrapClass={city.inputWrapClass}
                     inputClassName={city.inputClassName}
-                    showErrors={!city.isValid && city.showErrors}
+                    showErrors={showErrors(city)}
                     errorMessage={city.getErrorMessage(city.value)}
                     onChange={onChange(setCity)}
                   />
@@ -743,7 +701,7 @@ const Profile: React.FC = () => {
                     labelClass={street.labelClass}
                     inputWrapClass={street.inputWrapClass}
                     inputClassName={street.inputClassName}
-                    showErrors={!street.isValid && street.showErrors}
+                    showErrors={showErrors(street)}
                     errorMessage={street.getErrorMessage(street.value)}
                     onChange={onChange(setStreet)}
                   />
@@ -760,7 +718,7 @@ const Profile: React.FC = () => {
                     labelClass={house.labelClass}
                     inputWrapClass={house.inputWrapClass}
                     inputClassName={house.inputClassName}
-                    showErrors={!house.isValid && house.showErrors}
+                    showErrors={showErrors(house)}
                     errorMessage={house.getErrorMessage(house.value)}
                     onChange={onChange(setHouse)}
                   />
@@ -776,13 +734,14 @@ const Profile: React.FC = () => {
                     labelClass={apartment.labelClass}
                     inputWrapClass={apartment.inputWrapClass}
                     inputClassName={apartment.inputClassName}
-                    showErrors={!apartment.isValid && apartment.showErrors}
+                    showErrors={showErrors(apartment)}
                     errorMessage={apartment.getErrorMessage(apartment.value)}
                     onChange={onChange(setApartment)}
                   />
                   <Button
                     title='Edit'
-                    className='btn'
+                    className='btn ${isAnyFieldTouched}'
+                    disabled={!isAnyFieldTouched}
                     type='submit'
                   >
                     Update profile
@@ -828,10 +787,10 @@ const Profile: React.FC = () => {
                         <p className='profile__order-name'>{new Date(createdAt).toLocaleDateString()}</p>
                       </div>
                       <div className='profile__table grid items-center mt-10'>
-                        <p className='profile__table-cell'>Товар</p>
-                        <p className='profile__table-cell'>Цена</p>
-                        <p className='profile__table-cell'>Количество</p>
-                        <p className='profile__table-cell'>Цвет</p>
+                        <p className='profile__table-cell'>Product</p>
+                        <p className='profile__table-cell'>Price</p>
+                        <p className='profile__table-cell'>Quintity</p>
+                        <p className='profile__table-cell'>Color</p>
                         {items.map(({ id, name, image, color, quintity, price }) => (
                           <React.Fragment>
                             <div className='profile__table-cell flex items-center'>

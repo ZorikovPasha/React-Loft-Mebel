@@ -260,7 +260,7 @@ const Login: React.FC = () => {
           <span className='login__new'>Dont have an account? </span>
           <Link
             className='login__new-link'
-            to='/signup'
+            to={ROUTES.Signup}
           >
             Sign up
           </Link>

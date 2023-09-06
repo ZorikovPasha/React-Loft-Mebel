@@ -36,6 +36,7 @@ export const Search: React.FC = () => {
     const onCloseByOutsideClick = (e: MouseEvent) => {
       const path = e.path || (e.composedPath && e.composedPath())
       if (
+        showSearch &&
         !path.includes(searchWrapRef.current) &&
         !path.includes(searchButtonRef.current) &&
         !path.includes(dropDownRef.current) &&
