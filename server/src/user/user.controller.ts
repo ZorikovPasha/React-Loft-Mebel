@@ -19,7 +19,8 @@ import {
   IRequestDto,
   IUpdateUserDto,
   IUserController,
-  ResponseType
+  ResponseType,
+  IMakeReviewDto
 } from './user.controller.interface.js'
 import { ImageService } from '../image.js'
 import { PrismaService } from '../prisma.service.js'
@@ -733,5 +734,68 @@ export class UserController implements IUserController {
     console.log('data.message', data.message)
 
     return res.status(200).json({ success: true })
+  }
+
+  async makeReview(req: Request<{}, {}, IMakeReviewDto>, res: AppResponse, next: NextFunction) {
+    try {
+      this.logger.log(`[${req.method}] ${req.path}`)
+
+      if (!res.locals.user) {
+        return next({ status: 500, message: '' })
+      }
+
+      const { text, score, furnitureId } = req.body
+      if (typeof text !== 'string') {
+        return next(ApiError.badRequest('Review text was not provided or incorrect'))
+      }
+
+      if (typeof score !== 'string') {
+        return next(ApiError.badRequest('Review score was not provided or incorrect'))
+      }
+
+      if (typeof furnitureId !== 'string') {
+        return next(ApiError.badRequest('Furniture id score was not provided or incorrect'))
+      }
+
+      const { attachments } = req.files || {}
+
+      console.log('attachments', text, score, furnitureId, parseFloat(score))
+
+      const savedReview = await this.prisma.client.review.create({
+        data: {
+          text,
+          score: parseFloat(score),
+          userId: res.locals.user.id,
+          furnitureId: parseInt(furnitureId)
+        }
+      })
+
+      if (attachments) {
+        if (Array.isArray(attachments)) {
+          attachments.map(async (attachment) => {
+            const imageDataToSave = await this.imageService.prepare(attachment)
+            await this.prisma.client.image.create({
+              data: {
+                ...imageDataToSave,
+                reviewId: savedReview.id
+              }
+            })
+          })
+        } else {
+          const imageDataToSave = await this.imageService.prepare(attachments)
+          await this.prisma.client.image.create({
+            data: {
+              ...imageDataToSave,
+              reviewId: savedReview.id
+            }
+          })
+        }
+      }
+
+      return res.json({ success: true })
+    } catch (error) {
+      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
+      return next(ApiError.internal(error as Error))
+    }
   }
 }

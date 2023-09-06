@@ -28,7 +28,7 @@ body {
   line-height: 19px;
   color: $text;
 
-  &.lock {
+  &.lock, &.locked {
     overflow: hidden;
   }
 }
@@ -79,45 +79,6 @@ button {
   flex: 0 0 auto;
 }
 
-.breadcrumbs {
-  padding: 0 0 20px;
-
-  &__list {
-    display: flex;
-  }
-
-  &__item {
-    position: relative;
-    padding-right: 12px;
-    margin-right: 10px;
-    font-size: 12px;
-    line-height: 14px;
-    color: #969696;
-  }
-
-  &__item-back {
-    display: none;
-  }
-
-  &__item:not(:last-child)::after {
-    content: '/';
-    position: absolute;
-    right: 0;
-    font-size: 12px;
-    line-height: 14px;
-    color: #575757;
-  }
-}
-
-.error {
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 14px;
-  display: block;
-  margin: 0;
-  color: red;
-}
-
 .btn {
   color: #fff;
   background: #209cee;
@@ -158,8 +119,7 @@ button {
   padding: 14px 30px;
   transition: 0.3s;
 
-  &:hover,
-  &:focus {
+  &:hover {
     color: #FFF;
     background-color: rgba(#209cee, 0.9);
   }
@@ -167,22 +127,6 @@ button {
   &:active {
     background-color: #fff;
     color: #414141;
-  }
-}
-
-
-@media (width <=510px) {
-  .breadcrumbs__item:not(:last-child) {
-    display: none;
-  }
-
-  .breadcrumbs__item:last-child {
-    display: flex;
-  }
-
-  .breadcrumbs__item-back {
-    display: block;
-    margin-right: 7px;
   }
 }
 
@@ -200,6 +144,10 @@ button {
 
 .mt-10 {
   margin-top: 10px;
+}
+
+.mt-5 {
+  margin-top: 5px;
 }
 
 .grid {
@@ -226,16 +174,24 @@ button {
   align-items: center;
 }
 
-.relative {
-  position: relative;
-}
-
 .align-start {
   align-items: flex-start;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
+.relative {
+  position: relative;
+}
+
 .highlight {
   background: #209cee;
+}
+
+.text-center {
+  text-align: center;
 }
 
 // z indexes
@@ -263,5 +219,5 @@ button {
 }
 
 .snackbar {
-  z-index: 4;
+  z-index: 5;
 }

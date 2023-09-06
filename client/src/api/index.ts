@@ -78,6 +78,16 @@ class Api extends Axios {
   }
 }
 
+class PublicApi extends Api {
+  getFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
+    return this.get(`/api/furniture/`, { signal })
+  }
+
+  createFurniture = (dto: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
+    return this.post('/api/furniture/', dto, { headers: { 'Content-Type': 'multipart/form-data' } })
+  }
+}
+
 class UserApi extends Api {
   constructor(config: AxiosRequestConfig) {
     super(config)
@@ -102,14 +112,6 @@ class UserApi extends Api {
 
   getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {
     return this.get('/user')
-  }
-
-  getFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
-    return this.get(`/api/furniture/`, { signal })
-  }
-
-  createFurniture = (dto: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
-    return this.post('/api/furniture/', dto, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 
   addFavoriteItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
@@ -143,6 +145,11 @@ class UserApi extends Api {
   sendMessage = (formData: FormDataType): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
     return this.post('/user/request', formData)
   }
+
+  sendReview = (formData: FormData) => {
+    return this.post('/user/reviews', formData)
+  }
 }
 
 export const UserApiClient = new UserApi(apiConfig)
+export const PublicApiClient = new PublicApi(apiConfig)

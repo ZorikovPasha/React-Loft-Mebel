@@ -18,6 +18,7 @@ import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
+import { Loader } from '../components/common/Loader'
 
 export interface IField {
   value: string
@@ -41,16 +42,15 @@ export interface IField {
 
 const ModalContent: React.FC = () => {
   return (
-    <>
+    <div className='flex items-center flex-col'>
       <h3 className='popup-message__title'>You successfully signed up</h3>
-      <p className='popup-message__text'>Go to log in</p>
       <Link
         to={ROUTES.Login}
-        className='popup-message__btn'
+        className='popup-message__btn btn mt-40'
       >
         Log in
       </Link>
-    </>
+    </div>
   )
 }
 
@@ -115,6 +115,7 @@ const SignUp: React.FC = () => {
 
   const [modalSignUp, setModalSignUp] = React.useState(false)
   const [form, setForm] = React.useState(fields.current)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value
@@ -155,8 +156,10 @@ const SignUp: React.FC = () => {
       password: form.password.value
     }
 
+    setIsLoading(true)
     UserApiClient.register(dto)
       .then((data) => {
+        setIsLoading(false)
         if (!isSuccessfullResponse(data)) {
           return dispatch(toggleSnackbarOpen())
         }
@@ -164,6 +167,7 @@ const SignUp: React.FC = () => {
         setModalSignUp(true)
       })
       .catch(() => {
+        setIsLoading(false)
         dispatch(toggleSnackbarOpen())
       })
   }
@@ -178,6 +182,8 @@ const SignUp: React.FC = () => {
     <Redirect to={ROUTES.Profile} />
   ) : (
     <>
+      {isLoading && <Loader rootElClass='loader--fixed' />}
+
       <div className='signup'>
         <div className='container'>
           <div className='signup__inner'>
@@ -218,7 +224,7 @@ const SignUp: React.FC = () => {
                     label={label}
                     labelClass={labelClass}
                     inputWrapClass={inputWrapClass}
-                    inputClassName={`${inputClassName} ${_showErrors ? 'form-input--error' : ''}`}
+                    inputClassName={inputClassName}
                     showErrors={_showErrors}
                     errorMessage={getErrorMessage(value)}
                     onChange={onChange(key)}

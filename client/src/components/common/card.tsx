@@ -94,7 +94,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     <div className='sales__item item-sales'>
       {sale && discount ? (
         <div className='item-sales__label label-sales'>
-          <div className='label-sales__body'>-{discount}%</div>
+          <p className='label-sales__body'>-{discount}%</p>
         </div>
       ) : null}
       <Button

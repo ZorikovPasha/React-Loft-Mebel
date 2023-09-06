@@ -1,0 +1,40 @@
+.info-feature {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+
+  &__color {
+    flex-shrink: 0;
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    border-radius: 50%;
+
+    &:after {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      left: -2px;
+      bottom: -2px;
+      content: "";
+      border: 2px solid #209cee;
+      border-radius: 50%;
+    }
+  }
+
+  &__name {
+    font-size: 12px;
+    line-height: 14px;
+    margin-right: 10px;
+  }
+
+  &__val {
+    font-size: 12px;
+    line-height: 14px;
+    color: #9e9e9e;
+    white-space: nowrap;
+  }
+}
+

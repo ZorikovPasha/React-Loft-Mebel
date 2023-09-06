@@ -37,7 +37,7 @@ export class AppController implements IAppControllerInterface {
 
       const dto = await Promise.all(
         furniture.map(async (f) => {
-          const [image, dimensions] = await Promise.all([
+          const [image, dimensions, reviews] = await Promise.all([
             this.prisma.client.image.findFirst({
               where: {
                 id: f.imageId
@@ -47,10 +47,56 @@ export class AppController implements IAppControllerInterface {
               where: {
                 id: f.id
               }
+            }),
+            this.prisma.client.review.findMany({
+              where: {
+                furnitureId: f.id
+              }
             })
           ])
 
-          const dto = {
+          const _reviews = await Promise.all(
+            reviews.map(async (r) => {
+              const user = await this.prisma.client.user.findFirst({
+                where: {
+                  id: r.userId
+                }
+              })
+
+              const [userAvatar, attachedPictures] = await Promise.all([
+                user && user.photoId
+                  ? this.prisma.client.image.findFirst({
+                      where: {
+                        id: user.photoId
+                      }
+                    })
+                  : null,
+                this.prisma.client.image.findMany({
+                  where: {
+                    reviewId: r.id
+                  }
+                })
+              ])
+
+              return {
+                id: r.id,
+                text: r.text,
+                score: r.score,
+                furnitureId: r.furnitureId,
+                user: user
+                  ? {
+                      userName: user.userName,
+                      image: userAvatar
+                    }
+                  : {},
+                attachedPictures,
+                createdAt: r.createdAt,
+                updatedAt: r.updatedAt
+              }
+            })
+          )
+
+          return {
             ...f,
             image: image
               ? {
@@ -70,10 +116,9 @@ export class AppController implements IAppControllerInterface {
                   updatedAt: image.updatedAt
                 }
               : null,
-            dimensions
+            dimensions,
+            reviews: _reviews
           }
-
-          return dto
         })
       )
       // const findCriteria = Object.keys(req.query).reduce((accum, key) => {
@@ -127,7 +172,7 @@ export class AppController implements IAppControllerInterface {
 
       const errors: IError[] = []
 
-      if (!name) {
+      if (!name || typeof name !== 'string') {
         errors.push({
           field: 'name',
           message: 'Name was not provided'
@@ -257,6 +302,7 @@ export class AppController implements IAppControllerInterface {
       }
 
       const savedFurniture = await this.prisma.client.furniture.create({
+        // @ts-expect-error this is okay but should rewrite validation
         data: furniture
       })
 
@@ -303,12 +349,99 @@ export class AppController implements IAppControllerInterface {
       if (!req.query.id) {
         return next(ApiError.badRequest('Id was not provided'))
       }
+
       const furnitureItem = await this.prisma.client.furniture.findFirst({
         where: {
           id: parseInt(req.query.id)
         }
       })
-      return res.send(furnitureItem)
+
+      if (!furnitureItem) {
+        return res.status(404).json({ success: false })
+      }
+
+      const [image, dimensions, reviews] = await Promise.all([
+        this.prisma.client.image.findFirst({
+          where: {
+            id: furnitureItem.imageId
+          }
+        }),
+        this.prisma.client.furnitureDimension.findMany({
+          where: {
+            id: furnitureItem.id
+          }
+        }),
+        this.prisma.client.review.findMany({
+          where: {
+            furnitureId: furnitureItem.id
+          }
+        })
+      ])
+
+      const _reviews = reviews.map(async (r) => {
+        const user = await this.prisma.client.user.findFirst({
+          where: {
+            id: r.userId
+          }
+        })
+
+        const [userAvatar, attachedPictures] = await Promise.all([
+          user && user.photoId
+            ? this.prisma.client.image.findFirst({
+                where: {
+                  id: user.photoId
+                }
+              })
+            : null,
+          this.prisma.client.image.findMany({
+            where: {
+              reviewId: r.id
+            }
+          })
+        ])
+
+        return {
+          id: r.id,
+          text: r.text,
+          score: r.score,
+          furnitureId: r.furnitureId,
+          user: user
+            ? {
+                userName: user.userName,
+                image: userAvatar
+              }
+            : {},
+          attachedPictures,
+          createdAt: r.createdAt,
+          updatedAt: r.updatedAt
+        }
+      })
+
+      const dto = {
+        ...furnitureItem,
+        image: image
+          ? {
+              id: image.id,
+              name: image.name,
+              alternativeText: image.alternativeText,
+              caption: image.caption,
+              width: image.width,
+              height: image.height,
+              hash: image.hash,
+              ext: image.ext,
+              size: image.size,
+              url: image.url,
+              mime: image.mime,
+              provider: image.provider,
+              createdAt: image.createdAt,
+              updatedAt: image.updatedAt
+            }
+          : null,
+        dimensions,
+        reviews: _reviews
+      }
+
+      return res.send(dto)
     } catch (err) {
       this.logger.error(`${req.method} [${req.path}], Error 500 : ${err}`)
       return next(ApiError.internal(err as Error))
@@ -345,10 +478,3 @@ export class AppController implements IAppControllerInterface {
     }
   }
 }
-
-// export const appController = new AppController({
-//   room: 'room',
-//   material: 'material',
-//   type: 'type.value',
-//   brand: 'brand'
-// }, new LoggerService())

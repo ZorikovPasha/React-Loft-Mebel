@@ -43,7 +43,7 @@ const AppTextField: React.FC<IInputProps> = ({
         {elementType === 'textarea' ? (
           <textarea
             name={name}
-            className={inputClassName}
+            className={`${inputClassName} ${showErrors ? 'form-input--error' : ''}`}
             value={value}
             required={required}
             placeholder={placeholder}
@@ -53,7 +53,7 @@ const AppTextField: React.FC<IInputProps> = ({
           <input
             type={type}
             name={name}
-            className={inputClassName}
+            className={`${inputClassName} ${showErrors ? 'form-input--error' : ''}`}
             value={value}
             required={required}
             placeholder={placeholder}

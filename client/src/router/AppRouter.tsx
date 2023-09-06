@@ -10,7 +10,7 @@ import { Header } from '../components/layout/Header/Header'
 import { publicRoutes, authRoutes, WithPathname } from './routes'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
-import { getProducts, getUserData } from '../redux/getters'
+import { getProducts } from '../redux/getters'
 import '../scss/style.scss'
 import { Snackbar } from '../components/common/snackBar'
 import { editSearchActionCreator } from '../redux/actions/search'
@@ -19,7 +19,6 @@ export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
 
   const dispatch = useDispatch()
-  const { isLoggedIn } = useSelector(getUserData)
   const products = useSelector(getProducts)
 
   React.useLayoutEffect(() => {
@@ -55,17 +54,16 @@ export const AppRouter = () => {
           setMobMenuOpen={setMobMenuOpen}
         />
         <main className='main'>
-          <React.Suspense fallback={<Loader />}>
+          <React.Suspense fallback={<Loader rootElClass='loader--fixed' />}>
             <Switch>
-              {isLoggedIn &&
-                authRoutes.map(({ path, component, exact }) => (
-                  <Route
-                    path={path}
-                    key={path}
-                    render={() => <WithPathname>{component}</WithPathname>}
-                    exact={exact}
-                  />
-                ))}
+              {authRoutes.map(({ path, component, exact }) => (
+                <Route
+                  path={path}
+                  key={path}
+                  render={() => <WithPathname>{component}</WithPathname>}
+                  exact={exact}
+                />
+              ))}
               {publicRoutes.map(({ path, component, exact }) => (
                 <Route
                   path={path}

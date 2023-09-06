@@ -100,6 +100,37 @@ export interface ISuccessfullLoginResponse extends IUserResponse {
 
 export type FormDataType = Omit<SignUpCredsType, 'password'> & { message: string }
 
+export interface IImage {
+  id: number
+  name: string
+  alternativeText: string
+  caption: string
+  width: number
+  height: number
+  hash: string
+  ext: string
+  size: number
+  url: string
+  mime: string
+  provider: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface IReview {
+  id: number
+  text: string
+  score: number
+  furnitureId: number
+  user: {
+    userName: string | undefined
+    image: IImage | null
+  }
+  attachedPictures: (IImage | null)[] | null
+  createdAt: string
+  updatedAt: string
+}
+
 export interface IFurniture {
   id: number
   imageId: number
@@ -113,22 +144,7 @@ export interface IFurniture {
   room: string
   material: string
   brand: string
-  image: {
-    id: number
-    name: string
-    alternativeText: string
-    caption: string
-    width: number
-    height: number
-    hash: string
-    ext: string
-    size: number
-    url: string
-    mime: string
-    provider: string
-    createdAt: string
-    updatedAt: string
-  } | null
+  image: IImage | null
   dimensions:
     | {
         id: number
@@ -138,6 +154,7 @@ export interface IFurniture {
         height: number
       }[]
     | null
+  reviews: IReview[] | null
 }
 
 export interface IFurnitureResponse {

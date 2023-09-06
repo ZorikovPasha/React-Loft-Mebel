@@ -19,11 +19,13 @@ import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
+import { Loader } from '../components/common/Loader'
+import { ROUTES, SCREEN_SIZES } from '../utils/const'
+import { useScreenSize } from '../hooks/useScreenSize'
 
 interface IFile {
   file: File | null
   url: string | null
-  isTouched: boolean
 }
 
 interface IProductInOrder {
@@ -87,11 +89,13 @@ const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) 
 
   return (
     <>
-      <h3 className='popup-message__title'>Do you wish to get our email updates and special events only for you?</h3>
-      <p className='popup-message__text'>We promise to email you no more than once a week.</p>
+      <h3 className='popup-message__title text-center'>
+        Do you wish to get our email updates and special events only for you?
+      </h3>
+      <p className='popup-message__text mt-20'>We promise to email you no more than once a week.</p>
 
       <form
-        className='popup__agree-form flex'
+        className='popup__agree-form flex mt-40'
         onSubmit={handleSubmit}
       >
         <label className='form__label'>
@@ -118,10 +122,20 @@ const ModalContent: React.FC<{ onModalClose: () => void }> = ({ onModalClose }) 
 }
 
 const Profile: React.FC = () => {
+  const history = useHistory()
+
+  const { isLoggedIn } = useSelector(getUserData)
+
+  console.log('isLoggedIn', isLoggedIn)
+
+  if (!isLoggedIn) {
+    history.push(ROUTES.Login)
+    return <></>
+  }
+
   const fileProps = {
     file: null,
-    url: null,
-    isTouched: false
+    url: null
   }
 
   const tabs = ['personal', 'orders'] as const
@@ -263,20 +277,24 @@ const Profile: React.FC = () => {
   }
 
   const dispatch = useDispatch()
+  const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
 
   const onDrop = React.useCallback((acceptedFiles: File[]) => {
+    // @ts-expect-error this is okay right here
+    if (acceptedFiles[0].type !== 'image/jpeg' || acceptedFiles[0].type !== 'image/png') {
+      return dispatch(toggleSnackbarOpen('You can attach .png or .jpg images only.'))
+    }
+
     const reader = new FileReader()
     reader.readAsDataURL(acceptedFiles[0])
     reader.onload = (e: ProgressEvent<FileReader>) => {
       setProfilePicture({
         file: acceptedFiles[0],
-        url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null,
-        isTouched: true
+        url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null
       })
     }
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-  const history = useHistory()
 
   const products = useSelector(getProducts)
   const user = useSelector(getUserData)
@@ -314,9 +332,9 @@ const Profile: React.FC = () => {
   const [street, setStreet] = React.useState(streetProps)
   const [house, setHouse] = React.useState(houseProps)
   const [apartment, setApartment] = React.useState(apartmentProps)
-
   const [activeTab, setActiveTab] = React.useState<'personal' | 'orders'>('personal')
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   React.useEffect(() => {
     const decidedOnRecieveingEmails = localStorage.getItem('decidedOnRecieveingEmails')
@@ -340,7 +358,6 @@ const Profile: React.FC = () => {
 
   React.useEffect(() => {
     setProfilePicture({
-      isTouched: profilePicture.isTouched,
       file: null,
       url: user.image?.url ?? null
     })
@@ -427,19 +444,16 @@ const Profile: React.FC = () => {
         ...prev,
         value: target.value,
         isValid: prev.validateFn(target.value),
-        showErrors: true,
-        isTouched: true
+        showErrors: true
       }))
     }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
 
-    if (![name, surname, email, phone, house, street, house].every(({ isValid, isTouched }) => isValid && isTouched)) {
-      return
-    }
-
-    if (!profilePicture.isTouched && profilePicture.file) {
+    if (
+      ![name, surname, email, phone, city, street, house].every(({ isValid, required }) => (required ? isValid : true))
+    ) {
       return
     }
 
@@ -456,11 +470,13 @@ const Profile: React.FC = () => {
     if (profilePicture.file) {
       formData.append('image', profilePicture.file)
     }
-    // formData.append("emailConfirmed", emailConfirmed)
 
-    // loader (in button maybe?)
+    document.body.classList.add('lock')
+    setIsLoading(true)
     UserApiClient.updateUserData(formData)
       .then((dto) => {
+        setIsLoading(false)
+        document.body.classList.remove('lock')
         if (!isSuccessfullResponse(dto)) {
           return dispatch(toggleSnackbarOpen())
         }
@@ -485,8 +501,11 @@ const Profile: React.FC = () => {
         }
 
         dispatch(editUserActionCreator(payload))
+        dispatch(toggleSnackbarOpen('Profile info updated successfully!', 'success'))
       })
       .catch(() => {
+        setIsLoading(false)
+        document.body.classList.remove('lock')
         dispatch(toggleSnackbarOpen())
       })
   }
@@ -532,6 +551,8 @@ const Profile: React.FC = () => {
 
   return (
     <>
+      {isLoading && <Loader rootElClass='loader--fixed' />}
+
       {modalLoginOpened && (
         <Modal
           content={<ModalContent onModalClose={onLoginModalClose} />}
@@ -545,7 +566,7 @@ const Profile: React.FC = () => {
             <div className='profile__tabs flex'>
               {tabs.map((t) => (
                 <Button
-                  className={`profile__tab ${t === activeTab ? 'profile__tab--active' : ''} btn`}
+                  className={`profile__tab ${t === activeTab ? 'profile__tab--active' : ''}`}
                   key={t}
                   type='button'
                   title={t}
@@ -556,28 +577,61 @@ const Profile: React.FC = () => {
               ))}
             </div>
 
-            <Button
-              className='profile__logout btn btn--danger'
-              type='button'
-              title='Log out'
-              onClick={onLogout}
-            >
-              Log out
-            </Button>
+            {isNotMobile && (
+              <Button
+                className='profile__logout'
+                type='button'
+                title='Log out'
+                onClick={onLogout}
+              >
+                <>
+                  <svg
+                    width='24'
+                    height='24'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9'
+                      stroke='#D41367'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M16 17L21 12L16 7'
+                      stroke='#D41367'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                    <path
+                      d='M21 12H9'
+                      stroke='#D41367'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                  Log out
+                </>
+              </Button>
+            )}
           </div>
           <div className='profile__box'>
             {activeTab === 'personal' && (
               <>
-                <h3 className='profile__title'>Личные данные</h3>
+                <h3 className='profile__title'>Profile info</h3>
                 <form
-                  className='profile__form'
+                  className='profile__form mt-30'
                   onSubmit={handleSubmit}
                 >
                   <div className='profile__form-block'>
-                    <p className='newproduct__subtitle'>Profile Picture</p>
+                    <p className='newproduct__subtitle'>Avatar</p>
                     <div
                       {...getRootProps()}
-                      className={`profile__drop ${isDragActive ? 'profile__drop--drag' : ''}`}
+                      className={`profile__drop mt-20 ${isDragActive ? 'profile__drop--drag' : ''}`}
                     >
                       <input {...getInputProps()} />
                       {isDragActive ? (
@@ -608,8 +662,8 @@ const Profile: React.FC = () => {
                     label={name.label}
                     labelClass={name.labelClass}
                     inputWrapClass={name.inputWrapClass}
-                    inputClassName={`${name.inputClassName} ${name.isValid ? 'input-text--error' : ''}`}
-                    showErrors={name.isValid && name.showErrors}
+                    inputClassName={name.inputClassName}
+                    showErrors={!name.isValid && name.showErrors}
                     errorMessage={name.getErrorMessage(name.value)}
                     onChange={onChange(setName)}
                   />
@@ -624,8 +678,8 @@ const Profile: React.FC = () => {
                     label={email.label}
                     labelClass={email.labelClass}
                     inputWrapClass={email.inputWrapClass}
-                    inputClassName={`${email.inputClassName} ${email.isValid ? 'input-text--error' : ''}`}
-                    showErrors={email.isValid && email.showErrors}
+                    inputClassName={email.inputClassName}
+                    showErrors={!email.isValid && email.showErrors}
                     errorMessage={email.getErrorMessage(name.value)}
                     onChange={onChange(setEmail)}
                   />
@@ -640,8 +694,8 @@ const Profile: React.FC = () => {
                     label={surname.label}
                     labelClass={surname.labelClass}
                     inputWrapClass={surname.inputWrapClass}
-                    inputClassName={`${surname.inputClassName} ${surname.isValid ? 'input-text--error' : ''}`}
-                    showErrors={surname.isValid && surname.showErrors}
+                    inputClassName={surname.inputClassName}
+                    showErrors={!surname.isValid && surname.showErrors}
                     errorMessage={surname.getErrorMessage(surname.value)}
                     onChange={onChange(setSurname)}
                   />
@@ -656,8 +710,8 @@ const Profile: React.FC = () => {
                     label={phone.label}
                     labelClass={phone.labelClass}
                     inputWrapClass={phone.inputWrapClass}
-                    inputClassName={`${phone.inputClassName} ${phone.isValid ? 'input-text--error' : ''}`}
-                    showErrors={phone.isValid && phone.showErrors}
+                    inputClassName={phone.inputClassName}
+                    showErrors={!phone.isValid && phone.showErrors}
                     errorMessage={phone.getErrorMessage(phone.value)}
                     onChange={onChange(setPhone)}
                   />
@@ -672,8 +726,8 @@ const Profile: React.FC = () => {
                     label={city.label}
                     labelClass={city.labelClass}
                     inputWrapClass={city.inputWrapClass}
-                    inputClassName={`${city.inputClassName} ${city.isValid ? 'input-text--error' : ''}`}
-                    showErrors={city.isValid && city.showErrors}
+                    inputClassName={city.inputClassName}
+                    showErrors={!city.isValid && city.showErrors}
                     errorMessage={city.getErrorMessage(city.value)}
                     onChange={onChange(setCity)}
                   />
@@ -688,8 +742,8 @@ const Profile: React.FC = () => {
                     label={street.label}
                     labelClass={street.labelClass}
                     inputWrapClass={street.inputWrapClass}
-                    inputClassName={`${street.inputClassName} ${street.isValid ? 'input-text--error' : ''}`}
-                    showErrors={street.isValid && street.showErrors}
+                    inputClassName={street.inputClassName}
+                    showErrors={!street.isValid && street.showErrors}
                     errorMessage={street.getErrorMessage(street.value)}
                     onChange={onChange(setStreet)}
                   />
@@ -705,8 +759,8 @@ const Profile: React.FC = () => {
                     label={house.label}
                     labelClass={house.labelClass}
                     inputWrapClass={house.inputWrapClass}
-                    inputClassName={`${house.inputClassName} ${house.isValid ? 'input-text--error' : ''}`}
-                    showErrors={house.isValid && house.showErrors}
+                    inputClassName={house.inputClassName}
+                    showErrors={!house.isValid && house.showErrors}
                     errorMessage={house.getErrorMessage(house.value)}
                     onChange={onChange(setHouse)}
                   />
@@ -721,8 +775,8 @@ const Profile: React.FC = () => {
                     label={apartment.label}
                     labelClass={apartment.labelClass}
                     inputWrapClass={apartment.inputWrapClass}
-                    inputClassName={`${apartment.inputClassName} ${apartment.isValid ? 'input-text--error' : ''}`}
-                    showErrors={apartment.isValid && apartment.showErrors}
+                    inputClassName={apartment.inputClassName}
+                    showErrors={!apartment.isValid && apartment.showErrors}
                     errorMessage={apartment.getErrorMessage(apartment.value)}
                     onChange={onChange(setApartment)}
                   />
@@ -731,7 +785,7 @@ const Profile: React.FC = () => {
                     className='btn'
                     type='submit'
                   >
-                    Edit
+                    Update profile
                   </Button>
                 </form>
               </>

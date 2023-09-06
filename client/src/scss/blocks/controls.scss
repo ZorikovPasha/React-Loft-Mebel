@@ -2,28 +2,26 @@
   margin-bottom: 40px;
 
   &__toggle-aside {
+    position: relative;
     display: none;
-    font-size: 12px;
-    line-height: 14px;
+    font-size: 14px;
+    line-height: 18px;
     color: #000;
-    padding: 13px 48px;
-    background: #f9f9f9;
-    border: 3px solid rgba($text, 0.3);
-    border-radius: 3px;
-    transition: all 0.2s;
+    padding: 5px 5px 5px 30px;
+
+    svg {
+      position: absolute;
+      top: 3px;
+      left: 0;
+    }
 
     @media (width <=992px) {
       display: block;
     }
   }
 
-  &__toggle-aside:active,
-  &__toggle-aside:focus {
-    border: 3px solid rgba($text, 0.8);
-  }
-
   &__sort {
-    padding: 3px 35px 3px 3px;
+    padding: 3px 3px 3px 35px;
     position: relative;
     border: 4px solid rgba($main, 0.3);
     border-radius: 4px;
@@ -31,12 +29,15 @@
     &::after {
       content: '';
       position: absolute;
-      right: 5px;
+      left: 5px;
       top: 50%;
       transform: translate(0%, -50%);
-      width: 19px;
-      height: 11px;
-      background-image: url('/images/icons/sort.svg');
+      width: 24px;
+      height: 16px;
+      background-image: url('/images/icons/sort-icon.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
     }
 
     &:hover,
@@ -51,5 +52,10 @@
 
   &__sort-choice {
     font-weight: 600;
+
+    @media #{$mobile} {
+      font-size: 12px;
+      line-height: 14px;
+    }
   }
 }

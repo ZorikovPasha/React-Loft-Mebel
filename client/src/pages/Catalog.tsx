@@ -12,7 +12,7 @@ import { getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { submitValuesType } from '../types'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
-import { UserApiClient } from '../api'
+import { PublicApiClient } from '../api'
 import { IFurniture } from '../api/types'
 import { Button } from '../components/common/Button'
 
@@ -41,7 +41,7 @@ const Catalog: React.FC = () => {
 
     setLoading(true)
 
-    UserApiClient.getFurniture(controller.signal)
+    PublicApiClient.getFurniture(controller.signal)
       .then((data) => {
         setItems(data.items)
         setLoading(false)
@@ -152,7 +152,38 @@ const Catalog: React.FC = () => {
                   selfRef={asideToggleRef}
                   onClick={onBtnClick}
                 >
-                  Filter
+                  <>
+                    <svg
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <rect
+                        x='3'
+                        y='7'
+                        width='11'
+                        height='2'
+                        fill='#000'
+                      />
+                      <rect
+                        x='3'
+                        y='11'
+                        width='14'
+                        height='2'
+                        fill='#000'
+                      />
+                      <rect
+                        x='3'
+                        y='15'
+                        width='17'
+                        height='2'
+                        fill='#000'
+                      />
+                    </svg>
+                    Filter
+                  </>
                 </Button>
                 <SortPopup onSelectSortType={onSelectSortType} />
               </div>

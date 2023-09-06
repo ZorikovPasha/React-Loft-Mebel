@@ -169,7 +169,7 @@ const Contacts: React.FC = () => {
                 label={name.label}
                 labelClass={name.labelClass}
                 inputWrapClass={name.inputWrapClass}
-                inputClassName={`${name.inputClassName} ${showNameInputError ? 'form-input--error' : ''}`}
+                inputClassName={name.inputClassName}
                 showErrors={showNameInputError}
                 errorMessage={name.getErrorMessage(name.value)}
                 onChange={onChange('name')}
@@ -185,7 +185,7 @@ const Contacts: React.FC = () => {
                 label={email.label}
                 labelClass={email.labelClass}
                 inputWrapClass={email.inputWrapClass}
-                inputClassName={`${email.inputClassName} ${showEmailInputError ? 'form-input--error' : ''}`}
+                inputClassName={email.inputClassName}
                 showErrors={showEmailInputError}
                 errorMessage={email.getErrorMessage(name.value)}
                 onChange={onChange('email')}
@@ -201,7 +201,7 @@ const Contacts: React.FC = () => {
                 label={message.label}
                 labelClass={message.labelClass}
                 inputWrapClass={message.inputWrapClass}
-                inputClassName={`${message.inputClassName} ${showMessageInputError ? 'form-input--error' : ''}`}
+                inputClassName={message.inputClassName}
                 showErrors={showMessageInputError}
                 errorMessage={message.getErrorMessage(message.value)}
                 onChange={onChange('message')}

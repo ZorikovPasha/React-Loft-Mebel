@@ -7,16 +7,16 @@ export interface IFurnitureDimension {
 }
 
 export interface ICreateFurnitureDto {
-  name?: string
-  type?: string
-  priceOld?: string
-  priceNew?: string
-  colors?: string | undefined | null | unknown
-  rating?: string
-  sale?: string | null | undefined
-  room?: string
-  material?: string
-  brand?: string
+  name: string | unknown | undefined
+  type: string | unknown | undefined
+  priceOld: string | unknown | undefined
+  priceNew: string | unknown | undefined
+  colors: string | undefined | null | unknown
+  rating: string | unknown | undefined
+  sale: string | null | undefined
+  room: string | unknown | undefined
+  material: string | unknown | undefined
+  brand: string | unknown | undefined
   dimensions: string | undefined | null | unknown
 }
 

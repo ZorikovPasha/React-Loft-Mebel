@@ -89,7 +89,7 @@ const Login: React.FC = () => {
       )
     })
 
-    if (!Object.values(form).every(({ isValid }) => isValid)) {
+    if (!Object.values(form).every(({ isValid, required }) => required && isValid)) {
       return
     }
 
@@ -240,7 +240,7 @@ const Login: React.FC = () => {
                   label={label}
                   labelClass={labelClass}
                   inputWrapClass={inputWrapClass}
-                  inputClassName={`${inputClassName} ${_showErrors ? 'form-input--error' : ''}`}
+                  inputClassName={inputClassName}
                   showErrors={_showErrors}
                   errorMessage={errorMessage}
                   onChange={onChange(key)}

@@ -3,7 +3,7 @@ import { HexColorPicker } from 'react-colorful'
 
 import AppTextField from '../components/common/appTextField'
 import CustomSelect from '../components/common/CustomSelect'
-import { UserApiClient } from '../api'
+import { PublicApiClient } from '../api'
 import { isResponseWithErrors, isSuccessfullResponse } from '../api/types'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { useDispatch } from 'react-redux'
@@ -393,7 +393,7 @@ const NewProduct = (): JSX.Element => {
     formData.append('dimensions', serializeddimensions)
     formData.append('image', image.value)
 
-    UserApiClient.createFurniture(formData)
+    PublicApiClient.createFurniture(formData)
       .then((data) => {
         if (isSuccessfullResponse(data)) {
           setName(nameProps)

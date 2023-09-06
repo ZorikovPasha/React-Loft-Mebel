@@ -9,12 +9,13 @@
   }
 
   &__empty-text {
+    z-index: 1;
     font-weight: 700;
     font-size: 36px;
     line-height: 42px;
     text-align: center;
 
-    @media (width <=767px) {
+    @media #{$mobile} {
       font-size: 25px;
       line-height: 31px;
     }

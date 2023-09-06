@@ -30,8 +30,10 @@ export const Snackbar: React.FC = () => {
     dispatch(toggleSnackbarClose())
   }
 
+  const rootElClassName = variant === 'warning' ? 'snackbar--blue' : variant === 'success' ? 'snackbar--green' : ''
+
   return toggleSnackbar ? (
-    <div className={`snackbar flex items-center justify-between ${variant === 'warning' ? 'snackbar--blue' : ''}`}>
+    <div className={`snackbar flex items-center justify-between ${rootElClassName}`}>
       <p className='snackbar__p'>{message}</p>
       <Button
         className='snackbar__button'

@@ -16,8 +16,6 @@ jobs:
           npm run typecheck
           npm run test
           npm run build
-          ls -la 
-          pwd
       - name: 🚀 Deploy to Netlify
         uses: netlify/actions/cli@master
         with:
@@ -25,7 +23,6 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_DIR: dist
   building_backend:
     runs-on: ubuntu-latest
     steps:
@@ -36,4 +33,3 @@ jobs:
           apiKey: ${{ secrets.RENDER_API_KEY }}
           deployHookURL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
-  

@@ -15,7 +15,7 @@ export const HeaderBagIcon: React.FC = () => {
   return (
     <Link
       to='/cart'
-      className={`user-header__link user-header__link--hover ${cart.length ? 'user-header__link--dot' : ''}`}
+      className={`user-header__link user-header__link--mright ${cart.length ? 'user-header__link--dot' : ''}`}
     >
       <img
         src={isCartPage ? '/images/icons/bag-active.svg' : '/images/icons/bag.svg'}

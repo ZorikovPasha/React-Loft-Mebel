@@ -1,7 +1,7 @@
 export interface ItoggleSnackbarOpenAction {
   type: 'TOGGLE_SNACKBAR_OPEN'
   message: string
-  variant: 'error' | 'warning'
+  variant: 'error' | 'warning' | 'success'
 }
 
 export interface ItoggleSnackbarCloseAction {
