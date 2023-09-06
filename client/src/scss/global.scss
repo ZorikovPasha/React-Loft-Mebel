@@ -79,36 +79,6 @@ button {
   flex: 0 0 auto;
 }
 
-.breadcrumbs {
-  padding: 0 0 20px;
-
-  &__list {
-    display: flex;
-  }
-
-  &__item {
-    position: relative;
-    padding-right: 12px;
-    margin-right: 10px;
-    font-size: 12px;
-    line-height: 14px;
-    color: #969696;
-  }
-
-  &__item-back {
-    display: none;
-  }
-
-  &__item:not(:last-child)::after {
-    content: '/';
-    position: absolute;
-    right: 0;
-    font-size: 12px;
-    line-height: 14px;
-    color: #575757;
-  }
-}
-
 .btn {
   color: #fff;
   background: #209cee;
@@ -157,22 +127,6 @@ button {
   &:active {
     background-color: #fff;
     color: #414141;
-  }
-}
-
-
-@media (width <=510px) {
-  .breadcrumbs__item:not(:last-child) {
-    display: none;
-  }
-
-  .breadcrumbs__item:last-child {
-    display: flex;
-  }
-
-  .breadcrumbs__item-back {
-    display: block;
-    margin-right: 7px;
   }
 }
 

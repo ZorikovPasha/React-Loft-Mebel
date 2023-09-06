@@ -14,7 +14,7 @@ export const HeaderWishListIcon: React.FC = () => {
   return (
     <Link
       to='/favorites'
-      className={`user-header__link user-header__link--hover ${favorites.length ? 'user-header__link--dot' : ''}`}
+      className={`user-header__link user-header__link--mright ${favorites.length ? 'user-header__link--dot' : ''}`}
     >
       <img
         src={isFavoritesPage ? '/images/icons/wishlist-icon-active.svg' : '/images/icons/wishlist.svg'}

@@ -65,6 +65,7 @@ TODO!:
 - [ ] redesign successfull signup popup   
 - [ ] profile popup `recieve emails` is without scroll lock + no image   
 - [ ] profile should not send request if none of the fields is edited  
+- [x] refactor styles    
 - [x] profile email form error message is shown but border is not  
 - [x] product 404 if undefined  
 - [x] profile tabs borders design    

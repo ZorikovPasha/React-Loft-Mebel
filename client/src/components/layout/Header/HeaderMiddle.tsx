@@ -86,13 +86,13 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
         </a>
       </div>
       <div className='flex justify-between items-center'>
-        {isNotMobile && <HeaderWishListIcon />}
-        {isNotMobile && <HeaderBagIcon />}
+        {isNotMobile && isLoggedIn && <HeaderWishListIcon />}
+        {isNotMobile && isLoggedIn && <HeaderBagIcon />}
 
-        <div className={isLoggedIn ? 'header__mobile-list-wrap' : ''}>
+        <div className={`flex items-center justify-center ${isLoggedIn ? 'header__mobile-list-wrap' : ''}`}>
           <Link
             to={isLoggedIn ? ROUTES.Profile : ROUTES.Login}
-            className='user-header__link user-header__link--hover'
+            className='user-header__link'
           >
             {isLoggedIn && image ? (
               <img

@@ -16,22 +16,22 @@
   }
 
   &__column {
-    @media (width <=766px) {
-        display: none;
-      }
+
+    @media #{$mobile} {
+      display: none;
+    }
   }
 
   &__column--common {
     max-width: 173px;
     text-align: right;
 
-    @media (width <=766px) {
-        flex-grow: 1;
-        display: flex;
-        justify-content: space-between;
-        max-width: 100%;
-      }
-    
+    @media #{$mobile} {
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-between;
+      max-width: 100%;
+    }
   }
 
   &__title {
@@ -67,11 +67,11 @@
     margin-top: 20px;
     text-align: right;
 
-    @media (width <=766px) {
-        max-width: 173px;
-        text-align: right;
-        margin-top: 0;
-      }
+    @media #{$mobile} {
+      max-width: 173px;
+      text-align: right;
+      margin-top: 0;
+    }
 
       @media (width <=510px) {
           font-size: 11px;
@@ -89,9 +89,9 @@
   align-items: center;
   justify-content: space-between;
 
-  @media (width <=766px) {
-      justify-content: flex-end;
-    }
+  @media #{$mobile} {
+    justify-content: flex-end;
+  }
   
     @media (width <=510px) {
         padding: 15px 0;
@@ -101,9 +101,9 @@
   &__left {
     display: flex;
 
-    @media (width <=766px) {
-        display: none;
-      }
+    @media #{$mobile} {
+      display: none;
+    }
   }
 
   &__contacts {
@@ -134,10 +134,9 @@
         line-height: 126.69%;
     }
 
-    @media (width <=766px) {
-        display: none;
-      }
-    
+    @media #{$mobile} {
+      display: none;
+    }
 
     &::after {
       content: '';

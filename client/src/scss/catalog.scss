@@ -21,7 +21,7 @@
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 53px 30px;
     
-    @media (width <=766px) {
+    @media #{$mobile} {
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 30px;
     }

@@ -1,0 +1,29 @@
+.features {
+  display: flex;
+
+  @media (width <=510px) {
+      flex-wrap: wrap;
+    }
+
+  &__col--color {
+    margin-right: 25px;
+  }
+
+  &__col--quintity {
+    margin-right: 45px;
+  }
+
+  &__title {
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 10px;
+  }
+
+  @media (width <=510px) {
+    margin-top: 20px;
+  }
+
+  &__select-quintity {
+    width: 50px;
+  }
+}

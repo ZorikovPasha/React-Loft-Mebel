@@ -1,7 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { ProductCard } from '../components/Product/ProductCard'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { ProductTabs } from '../components/Product/ProductTabs'
@@ -10,21 +9,26 @@ import { getProducts, getUserData } from '../redux/getters'
 import { Card } from '../components/common/card'
 import { Empty } from '../components/common/Empty'
 import { Page404 } from './404'
+import { ROUTES } from '../utils/const'
 
 const Product: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const products = useSelector(getProducts)
   const { favorites } = useSelector(getUserData)
 
-  const breadcrumbs = useBreadcrumbs()
-
   const currentProduct = products.find((p) => p.id === Number(id))
 
   const topSales = products.filter((item) => parseFloat(item.rating) > 4.1)
 
+  const breads = [
+    { name: 'Catalog', href: ROUTES.Catalog, isLink: true },
+    { name: currentProduct?.room ?? '', href: '', isLink: true },
+    { name: currentProduct?.type ?? '', href: '', isLink: true }
+  ]
+
   return currentProduct ? (
     <>
-      <Breadcrumbs breadcrumbs={breadcrumbs} />
+      <Breadcrumbs breadcrumbs={breads} />
       {currentProduct && <ProductCard product={currentProduct} />}
       {currentProduct && <ProductTabs product={currentProduct} />}
 

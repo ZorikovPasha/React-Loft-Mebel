@@ -19,8 +19,24 @@
 @import 'footer';
 @import 'popup';
 @import './blocks/orders.scss';
+@import './blocks/breadcrumbs.scss';
 @import './blocks/snackbar.scss';
 @import './blocks/product-tabs.scss';
+@import './blocks/cart-empty.scss';
+@import './blocks/categories.scss';
+@import './blocks/gallery.scss';
+@import './blocks/info-feature.scss';
+@import './blocks/item-sales.scss';
+@import './blocks/search-results.scss';
+@import './blocks/search.scss';
+@import './blocks/sub-list.scss';
+@import './blocks/top.scss';
+@import './blocks/sales.scss';
+@import './blocks/user-header.scss';
+@import './blocks/features.scss';
+@import './blocks/info.scss';
+@import './blocks/shop.scss';
+@import './blocks/product-content.scss';
 
 // pages
 @import 'main';

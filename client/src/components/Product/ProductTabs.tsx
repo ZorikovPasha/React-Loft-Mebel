@@ -144,7 +144,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
                     <div className='flex items-center'>
                       <img
                         className='product-tabs__review-avatar'
-                        src={user.image ? `${import.meta.env.VITE_BACKEND}${user.image.url}` : ''}
+                        src={user.image ? import.meta.env.VITE_BACKEND + user.image.url : ''}
                         alt=''
                       />
                       <div className='product-tabs__review-right'>
@@ -213,7 +213,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
 
                     <p className='product-tabs__review-p mt-30'>{text}</p>
                     {attachedPictures.length ? (
-                      <div className='flex mt-20'>
+                      <div className='product-tabs__review-attachments flex mt-20'>
                         {attachedPictures.map((p) => (
                           <img
                             key={p.url}
