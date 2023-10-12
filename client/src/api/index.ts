@@ -103,11 +103,11 @@ class UserApi extends Api {
   }
 
   register = (credentials: SignUpCredsType): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
-    return this.post('/user/register', credentials)
+    return this.post('/auth/register', credentials)
   }
 
   login = (credentials: LoginCredsType): Promise<IErrorResponse | IErrorsResponse | ISuccessfullLoginResponse> => {
-    return this.post('/user/login', credentials)
+    return this.post('/auth/login', credentials)
   }
 
   getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {

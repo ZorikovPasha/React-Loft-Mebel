@@ -80,3 +80,6 @@ TODO!:
 - [x] check for z-indexes everywhere
 - [x] /contacts form redesign
 - [x] should disable buttons and inputs while making submit requests
+- [ ] moving to nestjs   
+- [ ] add server tests  
+- [ ] add confirmation email

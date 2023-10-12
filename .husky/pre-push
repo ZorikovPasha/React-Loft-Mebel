@@ -6,4 +6,6 @@ npm run test
 npm run typecheck
 
 cd ../server
+npm run test
+npm run test:e2e
 npm run build

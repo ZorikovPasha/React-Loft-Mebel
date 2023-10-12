@@ -1,33 +1,32 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "outDir": "./dist", 
-    "target": "es6",
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": false,
-    "module": "esnext",
-    "isolatedModules": true,
-    "moduleResolution":"node",
-    "incremental": true,
-    "noUnusedLocals": true, 
-    "noUnusedParameters": false,
-    "noImplicitAny": true,
-    "alwaysStrict": true,
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
-    "strictNullChecks": true,
-    "noErrorTruncation": true,
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictPropertyInitialization": false
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "strictNullChecks": true,
+    "noErrorTruncation": true,
+    "strictPropertyInitialization": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "strict": true
   },
   "exclude": [
     "node_modules"
   ],
-  "ts-node": {
-    "swc": true
-  }
 }
