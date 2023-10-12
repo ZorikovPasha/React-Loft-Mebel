@@ -1,47 +1,47 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator'
 
 export class CreateFurnitureDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name: string
 
   @IsString()
   @IsNotEmpty()
-  type: string;
+  type: string
 
   @IsString()
   @IsNotEmpty()
-  priceOld: string;
+  priceOld: string
 
   @IsString()
   @IsNotEmpty()
-  priceNew: string;
+  priceNew: string
 
   @IsString()
   @IsNotEmpty()
-  colors: string;
+  colors: string
 
   @IsString()
   @IsNotEmpty()
-  rating: string;
+  rating: string
 
   @IsString()
   @IsNotEmpty()
-  sale: string;
+  sale: string
 
   @IsString()
   @IsNotEmpty()
-  room: string;
+  room: string
 
   @IsString()
   @IsNotEmpty()
-  material: string;
+  material: string
 
   @IsString()
   @IsNotEmpty()
-  brand: string;
+  brand: string
 
   @IsString()
   @IsNotEmpty()
-  dimensions: string;
+  dimensions: string
 }

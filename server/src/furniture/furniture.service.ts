@@ -1,57 +1,55 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { ImageService } from '../image/image.service';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from '../prisma/prisma.service'
+import { ImageService } from '../image/image.service'
 
 class CreateFurnitureData {
-  name: string;
-  type: string;
-  priceNew: string;
-  priceOld: string;
-  colors: string[];
-  rating: string;
-  sale: boolean;
-  room: string;
-  material: string;
-  brand: string;
-  image: Express.Multer.File;
+  name: string
+  type: string
+  priceNew: string
+  priceOld: string
+  colors: string[]
+  rating: string
+  sale: boolean
+  room: string
+  material: string
+  brand: string
+  image: Express.Multer.File
   dimensions: {
-    width: number;
-    length: number;
-    height: number;
-  }[];
+    width: number
+    length: number
+    height: number
+  }[]
 }
 
 interface IFurniture {
-  id: number;
-  imageId: number;
-  name: string;
-  type: string;
-  priceOld: string;
-  priceNew: string;
-  colors: string[];
-  rating: string;
-  sale: boolean;
-  room: string;
-  material: string;
-  brand: string;
+  id: number
+  imageId: number
+  name: string
+  type: string
+  priceOld: string
+  priceNew: string
+  colors: string[]
+  rating: string
+  sale: boolean
+  room: string
+  material: string
+  brand: string
 }
 
 @Injectable()
 export class FurnitureService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly imageService: ImageService,
+    private readonly imageService: ImageService
   ) {}
 
   async create(createFurnitureData: CreateFurnitureData) {
-    const { image, dimensions } = createFurnitureData;
-    const imageDataToSave = await this.imageService.prepare(
-      Array.isArray(image) ? image[0] : image,
-    );
+    const { image, dimensions } = createFurnitureData
+    const imageDataToSave = await this.imageService.prepare(Array.isArray(image) ? image[0] : image)
 
     const savedImage = await this.prisma.image.create({
-      data: imageDataToSave,
-    });
+      data: imageDataToSave
+    })
 
     const savedFurniture = await this.prisma.furniture.create({
       data: {
@@ -65,20 +63,19 @@ export class FurnitureService {
         room: createFurnitureData.room,
         material: createFurnitureData.material,
         brand: createFurnitureData.brand,
-        imageId: savedImage.id,
-      },
-    });
+        imageId: savedImage.id
+      }
+    })
 
     await Promise.all(
       dimensions.map(async (d) => {
-        const dimensionIndatabase =
-          await this.prisma.furnitureDimension.findFirst({
-            where: {
-              width: d.width,
-              height: d.height,
-              length: d.length,
-            },
-          });
+        const dimensionIndatabase = await this.prisma.furnitureDimension.findFirst({
+          where: {
+            width: d.width,
+            height: d.height,
+            length: d.length
+          }
+        })
 
         if (!dimensionIndatabase) {
           await this.prisma.furnitureDimension.create({
@@ -86,64 +83,64 @@ export class FurnitureService {
               furnitureId: savedFurniture.id,
               width: d.width,
               height: d.height,
-              length: d.length,
-            },
-          });
+              length: d.length
+            }
+          })
         }
-      }),
-    );
+      })
+    )
   }
 
   async findAll() {
-    const furniture = await this.prisma.furniture.findMany();
+    const furniture = await this.prisma.furniture.findMany()
     return await Promise.all(
       furniture.map(async (furnitureItem) => {
-        return await this.prepareFurniture(furnitureItem);
-      }),
-    );
+        return await this.prepareFurniture(furnitureItem)
+      })
+    )
   }
 
   async prepareFurniture(furnitureItem: IFurniture) {
     const [image, dimensions, reviews] = await Promise.all([
       this.prisma.image.findFirst({
         where: {
-          id: furnitureItem.imageId,
-        },
+          id: furnitureItem.imageId
+        }
       }),
       this.prisma.furnitureDimension.findMany({
         where: {
-          id: furnitureItem.id,
-        },
+          id: furnitureItem.id
+        }
       }),
       this.prisma.review.findMany({
         where: {
-          furnitureId: furnitureItem.id,
-        },
-      }),
-    ]);
+          furnitureId: furnitureItem.id
+        }
+      })
+    ])
 
     const processedReviews = await Promise.all(
       reviews.map(async (r) => {
         const user = await this.prisma.user.findFirst({
           where: {
-            id: r.userId,
-          },
-        });
+            id: r.userId
+          }
+        })
 
         const [userAvatar, attachedPictures] = await Promise.all([
           user && user.photoId
             ? this.prisma.image.findFirst({
                 where: {
-                  id: user.photoId,
-                },
+                  id: user.photoId
+                }
               })
             : null,
           this.prisma.image.findMany({
             where: {
-              reviewId: r.id,
-            },
-          }),
-        ]);
+              reviewId: r.id
+            }
+          })
+        ])
 
         return {
           id: r.id,
@@ -153,15 +150,15 @@ export class FurnitureService {
           user: user
             ? {
                 userName: user.userName,
-                image: userAvatar,
+                image: userAvatar
               }
             : {},
           attachedPictures,
           createdAt: r.createdAt,
-          updatedAt: r.updatedAt,
-        };
-      }),
-    );
+          updatedAt: r.updatedAt
+        }
+      })
+    )
 
     const dto = {
       id: furnitureItem.id,
@@ -191,26 +188,26 @@ export class FurnitureService {
             mime: image.mime,
             provider: image.provider,
             createdAt: image.createdAt,
-            updatedAt: image.updatedAt,
+            updatedAt: image.updatedAt
           }
         : null,
       dimensions,
-      reviews: processedReviews,
-    };
+      reviews: processedReviews
+    }
 
-    return dto;
+    return dto
   }
 
   async findOne(id: number) {
     const furnitureItem = await this.prisma.furniture.findFirst({
       where: {
-        id: id,
-      },
-    });
+        id: id
+      }
+    })
 
     if (!furnitureItem) {
-      return null;
+      return null
     }
-    return await this.prepareFurniture(furnitureItem);
+    return await this.prepareFurniture(furnitureItem)
   }
 }

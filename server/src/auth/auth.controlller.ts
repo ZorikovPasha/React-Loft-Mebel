@@ -6,10 +6,10 @@ import {
   UsePipes,
   BadRequestException,
   UseGuards,
-  HttpCode,
-} from '@nestjs/common';
-import { User as IUser } from '@prisma/client';
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+  HttpCode
+} from '@nestjs/common'
+import { User as IUser } from '@prisma/client'
+import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 import {
   ApiExtraModels,
   ApiInternalServerErrorResponse,
@@ -17,14 +17,14 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+  ApiUnauthorizedResponse
+} from '@nestjs/swagger'
 
-import { AuthService } from '../auth/auth.service';
-import { UserService } from '../user/user.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { LocalAuthGuard } from '../auth/local-auth.guard';
+import { AuthService } from '../auth/auth.service'
+import { UserService } from '../user/user.service'
+import { CreateUserDto } from '../user/dto/create-user.dto'
+import { PrismaService } from '../prisma/prisma.service'
+import { LocalAuthGuard } from '../auth/local-auth.guard'
 import {
   BadRequestRes,
   InternalErrorRes,
@@ -33,15 +33,13 @@ import {
   apiResponse200,
   apiResponse401,
   apiResponse500,
-  registerUserApiResponse400,
-} from './dto/auth.dto';
+  registerUserApiResponse400
+} from './dto/auth.dto'
 
-export const User = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
-    return request.user;
-  },
-);
+export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest()
+  return request.user
+})
 
 @ApiTags('Authorization')
 @ApiExtraModels(SuccessfullRes)
@@ -53,7 +51,7 @@ export class AuthController {
   constructor(
     private readonly userService: UserService,
     private readonly prisma: PrismaService,
-    private readonly authService: AuthService,
+    private readonly authService: AuthService
   ) {}
 
   @ApiOperation({ summary: 'Register user' })
@@ -63,24 +61,24 @@ export class AuthController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
-    const { userName, email, password } = createUserDto;
+    const { userName, email, password } = createUserDto
 
     const candidate = await this.prisma.user.findFirst({
       where: {
-        OR: [{ email: email }, { userName: userName }],
-      },
-    });
+        OR: [{ email: email }, { userName: userName }]
+      }
+    })
 
     if (candidate) {
-      throw new BadRequestException('User already exists');
+      throw new BadRequestException('User already exists')
     }
 
     await this.userService.create({
       userName,
       email,
-      password,
-    });
-    return { success: true };
+      password
+    })
+    return { success: true }
   }
 
   @UseGuards(LocalAuthGuard)
@@ -91,6 +89,6 @@ export class AuthController {
   @ApiResponse(apiResponse500)
   @Post('login')
   async login(@User() user: IUser) {
-    return this.authService.login(user);
+    return this.authService.login(user)
   }
 }

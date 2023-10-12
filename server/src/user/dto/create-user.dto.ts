@@ -1,135 +1,128 @@
-import {
-  IsString,
-  IsNotEmpty,
-  MinLength,
-  IsOptional,
-  IsBoolean,
-  IsNumber,
-} from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, MinLength, IsOptional, IsBoolean, IsNumber } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateUserDto {
   @ApiProperty({ example: 'Justin25' })
   @IsString()
   @IsNotEmpty()
-  userName: string;
+  userName: string
 
   @ApiProperty({ example: 'test45email@gmail.com' })
   @IsString()
   @IsNotEmpty()
-  email: string;
+  email: string
 
   @ApiProperty({ example: 'Password123' })
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
-  password: string;
+  password: string
 }
 
 export class LoginUserDto {
   @ApiProperty({ example: 'test45email@gmail.com' })
   @IsString()
   @IsNotEmpty()
-  email: string;
+  email: string
 
   @ApiProperty({ example: 'Password123' })
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
-  password: string;
+  password: string
 }
 
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  name: string | undefined;
+  name: string | undefined
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  surname: string | undefined;
+  surname: string | undefined
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  phone: string | undefined;
+  phone: string | undefined
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  city: string | undefined;
+  city: string | undefined
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  street: string | undefined;
+  street: string | undefined
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  house: string | undefined;
+  house: string | undefined
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  apartment: string | undefined;
+  apartment: string | undefined
 
   @IsOptional()
   @IsBoolean()
-  emailConfirmed: boolean | undefined;
+  emailConfirmed: boolean | undefined
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  wantsToReceiveEmailUpdates: string | undefined;
+  wantsToReceiveEmailUpdates: string | undefined
 }
 
 export class AddFavoriteFurnitureDto {
   @IsNumber()
-  id: number;
+  id: number
 }
 
 export class EditOrderDto {
   @IsNumber()
-  orderId: number;
+  orderId: number
 }
 
 export class AddCartItemDto {
   @IsNumber()
-  productId: number;
+  productId: number
 
   @IsNumber()
-  quintity: number;
+  quintity: number
 
   @IsString()
   @IsNotEmpty()
-  color: string;
+  color: string
 }
 
 export class RemoveCartItemDto {
   @IsNumber()
-  productId: number;
+  productId: number
 
   @IsString()
   @IsNotEmpty()
-  color: string;
+  color: string
 }
 
 export class UserRequestDto {
   @IsString()
   @IsNotEmpty()
-  message: string;
+  message: string
 }
 
 export class MakeReviewDto {
   @IsString()
-  score: string;
+  score: string
 
   @IsString()
   @IsNotEmpty()
-  text: string;
+  text: string
 
   @IsNumber()
-  furnitureId: number;
+  furnitureId: number
 }

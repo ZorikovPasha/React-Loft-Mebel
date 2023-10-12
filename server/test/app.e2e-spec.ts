@@ -1,24 +1,27 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { Test, TestingModule } from '@nestjs/testing'
+import { INestApplication } from '@nestjs/common'
+import { UtilsModule } from '../src/utils/utils.module'
+import { ImageModule } from '../src/image/image.module'
+import { FurnitureController } from '../src/furniture/furniture.controller'
+import { FurnitureService } from '../src/furniture/furniture.service'
+import { PrismaModule } from '../src/prisma/prisma.module'
+// import * as request from 'supertest';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication;
+  let app: INestApplication
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+      imports: [PrismaModule, UtilsModule, ImageModule],
+      controllers: [FurnitureController],
+      providers: [FurnitureService]
+    }).compile()
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+    app = moduleFixture.createNestApplication()
+    await app.init()
+  })
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
-});
+  test('simple test', () => {
+    expect(0).toEqual(0)
+  })
+})

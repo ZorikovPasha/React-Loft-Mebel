@@ -1,54 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'
 
 export type DReturnType = {
-  status: boolean;
+  status: boolean
   deserializedDimensions: {
-    width: number;
-    length: number;
-    height: number;
-  }[];
-};
+    width: number
+    length: number
+    height: number
+  }[]
+}
 
 @Injectable()
 export class UtilsService {
   replaceSpacesWithUnderscores = (str: string): string => {
-    let formattedString = '';
+    let formattedString = ''
     str.split('').forEach((char) => {
       if (char === ' ') {
-        formattedString += '_';
+        formattedString += '_'
       } else {
-        formattedString += char;
+        formattedString += char
       }
-    });
+    })
 
-    return formattedString;
-  };
+    return formattedString
+  }
 
   deserializeDimensionsFromString = (str: string): DReturnType => {
-    const stringDimensions = str?.split(';') ?? [];
+    const stringDimensions = str?.split(';') ?? []
 
     if (!stringDimensions.length) {
-      return { status: false, deserializedDimensions: [] };
+      return { status: false, deserializedDimensions: [] }
     }
 
     const deserializedDimensions = stringDimensions.map((str) => {
-      const strings = str.split(',');
+      const strings = str.split(',')
 
       return {
         width: parseInt(strings[0]),
         length: parseInt(strings[1]),
-        height: parseInt(strings[2]),
-      };
-    });
+        height: parseInt(strings[2])
+      }
+    })
 
-    const isSerializedCorrectly = deserializedDimensions.every(
-      ({ width, length, height }) => {
-        return (
-          !Number.isNaN(width) && !Number.isNaN(length) && !Number.isNaN(height)
-        );
-      },
-    );
+    const isSerializedCorrectly = deserializedDimensions.every(({ width, length, height }) => {
+      return !Number.isNaN(width) && !Number.isNaN(length) && !Number.isNaN(height)
+    })
 
-    return { status: isSerializedCorrectly, deserializedDimensions };
-  };
+    return { status: isSerializedCorrectly, deserializedDimensions }
+  }
 }

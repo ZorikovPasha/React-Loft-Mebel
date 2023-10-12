@@ -1,14 +1,7 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Res,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get, Param, Res, BadRequestException, NotFoundException } from '@nestjs/common'
+import { Response } from 'express'
 
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service'
 
 @Controller('upload')
 export class UploadController {
@@ -19,19 +12,19 @@ export class UploadController {
     // this.logger.log(`[${req.method}] ${req.path}`)
 
     if (!url) {
-      throw new BadRequestException('Url was not provided');
+      throw new BadRequestException('Url was not provided')
     }
 
     const media = await this.prisma.image.findFirst({
       where: {
-        url: `/uploads/${url}`,
-      },
-    });
+        url: `/uploads/${url}`
+      }
+    })
 
     if (!media) {
-      throw new NotFoundException();
+      throw new NotFoundException()
     }
 
-    return res.status(200).contentType(media.mime).end(media.data);
+    return res.status(200).contentType(media.mime).end(media.data)
   }
 }
