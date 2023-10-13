@@ -1,5 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule, Injectable, NestMiddleware, Logger } from '@nestjs/common'
 import { Request, Response, NextFunction } from 'express'
+import { ConfigModule } from '@nestjs/config'
+import { resolve } from 'path'
 
 import { FurnitureModule } from './furniture/furniture.module'
 import { AuthModule } from './auth/auth.module'
@@ -30,7 +32,19 @@ class AppLoggerMiddleware implements NestMiddleware {
 }
 
 @Module({
-  imports: [FurnitureModule, PrismaModule, ImageModule, UtilsModule, UploadModule, UserModule, AuthModule]
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: resolve(__dirname, '..', `.env.${process.env.NODE_ENV}`),
+      isGlobal: true
+    }),
+    FurnitureModule,
+    PrismaModule,
+    ImageModule,
+    UtilsModule,
+    UploadModule,
+    UserModule,
+    AuthModule
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

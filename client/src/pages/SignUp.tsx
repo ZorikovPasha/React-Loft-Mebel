@@ -12,7 +12,7 @@ import {
   validateTextInput
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
-import { isSuccessfullResponse } from '../api/types'
+import { isRegisterUser200, isRes500 } from '../api/types'
 import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
@@ -60,18 +60,18 @@ const ModalContent: React.FC = () => {
   )
 }
 
-const SignUp: React.FC = () => {
+const SignUp = () => {
   const history = useHistory()
 
   const { isLoggedIn } = useSelector(getUserData)
 
   const fields = React.useRef<Record<string, IField>>({
-    name: {
+    userName: {
       value: '',
       label: 'Name',
       labelClass: 'signup__form-label form-label',
-      isValid: false,
       required: true,
+      isValid: false,
       type: 'text',
       placeholder: 'Enter your name',
       className: 'mt-20',
@@ -87,8 +87,8 @@ const SignUp: React.FC = () => {
       value: '',
       label: 'Email',
       labelClass: 'signup__form-label form-label',
-      isValid: false,
       required: true,
+      isValid: false,
       type: 'email',
       placeholder: 'Enter email',
       className: 'mt-20',
@@ -131,7 +131,8 @@ const SignUp: React.FC = () => {
         ...prev[name],
         value,
         isValid: prev[name].validateFn(value),
-        showErrors: true
+        showErrors: true,
+        errorMessage: prev[name].getErrorMessage(value)
       }
     }))
   }
@@ -157,7 +158,7 @@ const SignUp: React.FC = () => {
     }
 
     const dto = {
-      userName: form.name.value,
+      userName: form.userName.value,
       email: form.email.value,
       password: form.password.value
     }
@@ -166,11 +167,53 @@ const SignUp: React.FC = () => {
     UserApiClient.register(dto)
       .then((data) => {
         setIsLoading(false)
-        if (!isSuccessfullResponse(data)) {
-          return dispatch(toggleSnackbarOpen())
+        if (isRes500(data)) {
+          dispatch(toggleSnackbarOpen())
+          return
         }
-        document.documentElement.classList.add('lock')
-        setModalSignUp(true)
+
+        if (isRegisterUser200(data)) {
+          document.documentElement.classList.add('lock')
+          setModalSignUp(true)
+          return
+        }
+
+        if (data.statusCode === 400) {
+          if (typeof data.message === 'string') {
+            // User already exists
+
+            form.email.errorMessage = data.message
+            setForm({ ...form })
+          } else {
+            const errorData: Record<string, string> = {}
+            data.message.forEach((message: string) => {
+              const fieldName = message.split(' ')[0]
+              errorData[fieldName] = message
+            })
+
+            setForm((prev) => {
+              const newFormState: Record<string, IField> = {}
+              Object.entries(prev).forEach(([key]) => {
+                if (errorData[key]) {
+                  newFormState[key] = {
+                    ...prev[key],
+                    isValid: false,
+                    showErrors: true,
+                    errorMessage: errorData[key]
+                  }
+                } else {
+                  newFormState[key] = prev[key]
+                }
+              })
+
+              return newFormState
+            })
+          }
+
+          return
+        }
+
+        dispatch(toggleSnackbarOpen())
       })
       .catch(() => {
         setIsLoading(false)
@@ -212,7 +255,7 @@ const SignUp: React.FC = () => {
                   labelClass,
                   inputWrapClass,
                   inputClassName,
-                  getErrorMessage,
+                  errorMessage,
                   showErrors
                 } = props
 
@@ -232,7 +275,7 @@ const SignUp: React.FC = () => {
                     inputWrapClass={inputWrapClass}
                     inputClassName={inputClassName}
                     showErrors={_showErrors}
-                    errorMessage={getErrorMessage(value)}
+                    errorMessage={errorMessage}
                     onChange={onChange(key)}
                   />
                 )

@@ -54,7 +54,7 @@ export const AppRouter = () => {
           setMobMenuOpen={setMobMenuOpen}
         />
         <main className='main'>
-          <React.Suspense fallback={<Loader rootElClass='loader--fixed' />}>
+          <React.Suspense fallback={<Loader rootElClass='loader loader--vertical' />}>
             <Switch>
               {authRoutes.map(({ path, component, exact }) => (
                 <Route

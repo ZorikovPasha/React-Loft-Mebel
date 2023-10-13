@@ -9,6 +9,8 @@ interface CreateUserData {
   userName: string
   email: string
   password: string
+  name?: string
+  surname?: string
 }
 
 interface ICartItemProps {
@@ -36,13 +38,13 @@ export class UserService {
   ) {}
 
   async create(createUserData: CreateUserData) {
-    const { userName, email, password } = createUserData
+    const { userName, email, password, name, surname } = createUserData
     const hashedPassword = await bcrypt.hash(password, 10)
 
     await this.prisma.user.create({
       data: {
-        name: '',
-        surname: '',
+        name: name ?? '',
+        surname: surname,
         userName,
         password: hashedPassword,
         phone: '',
@@ -199,6 +201,7 @@ export class UserService {
       },
       data: Object.assign(updateUserData, additional)
     })
+    console.log('update user end')
   }
 
   async getUserFavorites(id: string) {

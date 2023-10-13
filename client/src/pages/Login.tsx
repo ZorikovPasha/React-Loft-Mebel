@@ -5,15 +5,22 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { UserApiClient } from '../api'
 import { IField } from './SignUp'
-import { getEmailInputErrorMessage, getPasswordFieldErrorMessage, validateEmail, validatePassword } from '../utils'
+import {
+  getEmailInputErrorMessage,
+  getPasswordFieldErrorMessage,
+  sanitizeUserRes,
+  validateEmail,
+  validatePassword
+} from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { ROUTES } from '../utils/const'
-import { isResponseWithErrors, isSuccessfullLoginResponse } from '../api/types'
+import { isILogin400, isSuccessfullLoginResponse } from '../api/types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
+import { Yandex } from '../svg/yandex-logo'
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
@@ -73,6 +80,8 @@ const Login: React.FC = () => {
     }))
   }
 
+  const yandexAuthLink = `${import.meta.env.VITE_BACKEND}/auth/login/yandex`
+
   const handleSubmit: React.MouseEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
@@ -101,97 +110,41 @@ const Login: React.FC = () => {
     setIsLoading(true)
     UserApiClient.login(dto)
       .then((data) => {
+        console.log('___then')
+
         setIsLoading(false)
-        if (isResponseWithErrors(data)) {
-          data.errors?.forEach((error) => {
-            if (error.field === 'email') {
-              setForm((prev) => ({
-                ...prev,
-                email: {
-                  ...prev.email,
-                  isValid: false,
-                  errorMessage: error.message ?? ''
-                }
-              }))
+        if (isILogin400(data)) {
+          setForm((prev) => ({
+            email: {
+              ...prev.email,
+              isValid: false,
+              errorMessage: data.message
+            },
+            password: {
+              ...prev.password,
+              isValid: false,
+              errorMessage: data.message
             }
-            if (error.field === 'password') {
-              setForm((prev) => ({
-                ...prev,
-                password: {
-                  ...prev.password,
-                  isValid: false,
-                  errorMessage: error.message ?? ''
-                }
-              }))
-            }
-          })
+          }))
+          return
         }
 
         if (isSuccessfullLoginResponse(data)) {
           setForm(fields.current)
           localStorage.setItem('loft_furniture_token', data.token)
-          const {
-            id,
-            name,
-            email,
-            surname,
-            phone,
-            city,
-            street,
-            house,
-            apartment,
-            orders,
-            image,
-            emailConfirmed,
-            favorites,
-            wantsToReceiveEmailUpdates,
-            cart,
-            updatedAt,
-            createdAt
-          } = data.user
-
-          const processedOrders =
-            orders?.map((o) => ({
-              id: o.id,
-              userId: o.userId,
-              name: o.name,
-              status: o.status,
-              createdAt: o.createdAt,
-              updatedAt: o.updatedAt,
-              items: o.items ?? []
-            })) ?? []
-          const payload = {
-            id: id,
-            isLoggedIn: true,
-            name: name,
-            email: email,
-            surname: surname,
-            phone: phone,
-            city: city,
-            street: street,
-            house: house,
-            apartment: apartment,
-            image: image
-              ? {
-                  name: image.name,
-                  url: import.meta.env.VITE_BACKEND + image.url
-                }
-              : null,
-            emailConfirmed: emailConfirmed,
-            wantsToReceiveEmailUpdates: wantsToReceiveEmailUpdates,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            favorites: favorites ?? [],
-            orders: processedOrders,
-            cart: cart ?? []
-          }
+          const payload = sanitizeUserRes(data.user)
           dispatch(loginUserActionCreator(payload))
           history.push({ pathname: ROUTES.Profile })
-        } else {
+          return
+        }
+
+        if (data.statusCode === 500) {
           dispatch(toggleSnackbarOpen())
         }
       })
       .catch(() => {
+        console.log('___Error')
+
         setIsLoading(false)
         dispatch(toggleSnackbarOpen())
       })
@@ -206,7 +159,7 @@ const Login: React.FC = () => {
         <div className='login__inner'>
           <h1 className='login__title'>Login</h1>
           <form
-            className='login__form form'
+            className='login__form mt-40'
             onSubmit={handleSubmit}
           >
             {Object.entries(form).map(([key, props]) => {
@@ -255,8 +208,16 @@ const Login: React.FC = () => {
               Log in
             </Button>
           </form>
+
+          <a
+            href={yandexAuthLink}
+            className='login__form-btn--yandex flex items-center justify-center btn mt-20 w100'
+          >
+            <Yandex className='login__form-logo' />
+            <span className='block'>Log in via Yandex</span>
+          </a>
         </div>
-        <div className='login__bottom'>
+        <div className='login__bottom mt-30'>
           <span className='login__new'>Dont have an account? </span>
           <Link
             className='login__new-link'

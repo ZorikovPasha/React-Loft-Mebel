@@ -1,4 +1,5 @@
 import React from 'react'
+import { IUserResponse } from '../api/types'
 
 export const validateEmail = (email: string): boolean => {
   return email.trim().length > 4 && email.includes('@') && email.includes('.')
@@ -37,7 +38,7 @@ export const getTextInputErrorMessage = (val: string) => {
 }
 
 export const getEmailInputErrorMessage = (str: string) => {
-  return str.trim().length === 0 ? 'Please fill in your email' : validateEmail(str) ? '' : 'Email is incorrect'
+  return str.trim().length === 0 ? 'Please enter your email' : validateEmail(str) ? '' : 'Email is incorrect'
 }
 
 export const getQueryParams = (paramName: string) => {
@@ -88,4 +89,43 @@ export const breakString: breakStringType = (originalStr = '', query = '') => {
   ) : (
     <>{originalStr}</>
   )
+}
+
+export const sanitizeUserRes = (userData: IUserResponse['user']) => {
+  const processedOrders =
+    userData.orders?.map((o) => ({
+      id: o.id,
+      userId: o.userId,
+      name: o.name,
+      status: o.status,
+      createdAt: o.createdAt,
+      updatedAt: o.updatedAt,
+      items: o.items ?? []
+    })) ?? []
+
+  return {
+    id: userData.id,
+    isLoggedIn: true,
+    name: userData.name,
+    email: userData.email,
+    surname: userData.surname,
+    phone: userData.phone,
+    city: userData.city,
+    street: userData.street,
+    house: userData.house,
+    apartment: userData.apartment,
+    image: userData.image
+      ? {
+          name: userData.image.name,
+          url: import.meta.env.VITE_BACKEND + userData.image.url
+        }
+      : null,
+    emailConfirmed: userData.emailConfirmed,
+    wantsToReceiveEmailUpdates: userData.wantsToReceiveEmailUpdates,
+    createdAt: userData.createdAt,
+    updatedAt: userData.updatedAt,
+    favorites: userData.favorites ?? [],
+    orders: processedOrders,
+    cart: userData.cart ?? []
+  }
 }

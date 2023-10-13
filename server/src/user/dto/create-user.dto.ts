@@ -50,22 +50,18 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   city: string | undefined
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   street: string | undefined
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   house: string | undefined
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   apartment: string | undefined
 
   @IsOptional()
@@ -74,7 +70,6 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   wantsToReceiveEmailUpdates: string | undefined
 }
 

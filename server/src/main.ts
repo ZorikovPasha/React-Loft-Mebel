@@ -7,6 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.enableShutdownHooks()
 
+  // if (process.env.NODE_ENV === "development") {
+  app.enableCors()
+  // }
+
   const config = new DocumentBuilder()
     .setTitle('Loft furniture backend API')
     .setVersion('1.0')

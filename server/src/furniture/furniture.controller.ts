@@ -25,7 +25,7 @@ export interface IFurnitureDimension {
   height: number
 }
 
-@Controller('furniture')
+@Controller('api/furniture')
 export class FurnitureController {
   constructor(
     private readonly furnitureService: FurnitureService,

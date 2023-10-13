@@ -90,6 +90,8 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     discount = (parseInt(priceOld) - parseInt(priceNew)) / 100
   }
 
+  console.log(sale)
+
   return (
     <div className='sales__item item-sales'>
       {sale && discount ? (
@@ -125,7 +127,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         <p className='item-sales__type'>{type}</p>
         <div className='item-sales__price'>
           {priceNew ? <p className='item-sales__price-new'>{priceNew} ₽</p> : null}
-          {priceOld ? <p className='item-sales__price-old'>{priceOld + ' ₽'}</p> : null}
+          {priceOld && sale ? <p className='item-sales__price-old'>{priceOld + ' ₽'}</p> : null}
         </div>
         {dimensions ? (
           <div className='item-sales__bottom flex'>

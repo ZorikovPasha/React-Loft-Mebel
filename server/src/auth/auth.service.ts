@@ -13,7 +13,7 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findByEmail(email)
-    console.log('user', user)
+    console.log('authservice.validateUser::user', user)
     if (!user) {
       return null
     }
@@ -41,5 +41,10 @@ export class AuthService {
       token: this.jwtService.sign(payload),
       user: await this.userService.collectUserData(user)
     }
+  }
+
+  generateToken(email: string, userId: string) {
+    const payload = { email: email, sub: userId }
+    return this.jwtService.sign(payload)
   }
 }

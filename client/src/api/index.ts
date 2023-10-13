@@ -1,11 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
 import {
   FormDataType,
+  I500Response,
   ICancelOrderResponse,
   ICartItemRequest,
   IErrorResponse,
   IErrorsResponse,
   IFurnitureResponse,
+  ILoginUser400,
+  IRegisterUser400,
   IRemoveCartItemDto,
   ISuccessfullLoginResponse,
   ISuccessfullMakeOrderResponse,
@@ -91,22 +94,19 @@ class PublicApi extends Api {
 class UserApi extends Api {
   constructor(config: AxiosRequestConfig) {
     super(config)
-    this._axios.interceptors.request.use(
-      (config) => ({
-        ...config,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('loft_furniture_token')}`
-        }
-      }),
-      (error) => console.log(error)
-    )
+    this._axios.interceptors.request.use((config) => ({
+      ...config,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('loft_furniture_token')}`
+      }
+    }))
   }
 
-  register = (credentials: SignUpCredsType): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
+  register = (credentials: SignUpCredsType): Promise<ISuccessfullResponse | IRegisterUser400 | I500Response> => {
     return this.post('/auth/register', credentials)
   }
 
-  login = (credentials: LoginCredsType): Promise<IErrorResponse | IErrorsResponse | ISuccessfullLoginResponse> => {
+  login = (credentials: LoginCredsType): Promise<ISuccessfullLoginResponse | ILoginUser400 | I500Response> => {
     return this.post('/auth/login', credentials)
   }
 

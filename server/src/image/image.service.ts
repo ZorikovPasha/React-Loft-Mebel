@@ -16,6 +16,7 @@ export class ImageService {
     const imageExtension = image.originalname.split('.').pop()
 
     const hash = crypto.createHash('md5')
+    const digest = hash.digest('hex')
 
     const photo = {
       name: image.originalname,
@@ -23,11 +24,11 @@ export class ImageService {
       caption: '',
       width: imageDimensions.width,
       height: imageDimensions.height,
-      hash: hash.digest('hex'),
+      hash: digest,
       ext: imageExtension ?? '',
       mime: image.mimetype,
       size: image.size / 1000,
-      url: `/uploads/${processedImageNameWithoutExtension}_${hash.digest('hex')}.${imageExtension}`,
+      url: `/uploads/${processedImageNameWithoutExtension}_${digest}.${imageExtension}`,
       provider: 'database',
       data: compressedImage
     }

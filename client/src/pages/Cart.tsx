@@ -142,27 +142,30 @@ const Cart: React.FC = () => {
         <div className='container'>
           {collectedItems.length ? (
             <>
-              <div className='cart__top'>
-                <p>Your cart:</p>
-                <p>
-                  <span className='cart__top-num'>Items: {quintity}</span>
-                </p>
-              </div>
-              {collectedItems.map((item) => (
-                <CartItem
-                  key={item.name + item.color + item.quintity}
-                  item={item}
-                />
-              ))}
-              <div className='cart__bottom'>
+              <div className=''>
+                <p className='cart__bottom-total'>Items: {quintity}</p>
                 <p className='cart__bottom-total'>
                   Total cost:
-                  <span> {total} P</span>
+                  <span className='fw-500'> {total} P</span>
+                </p>
+              </div>
+              <div className='mt-20'>
+                {collectedItems.map((item) => (
+                  <CartItem
+                    key={item.name + item.color + item.quintity}
+                    item={item}
+                  />
+                ))}
+              </div>
+              <div className='cart__bottom flex items-center mt-40'>
+                <p className='cart__bottom-total'>
+                  Total cost:
+                  <span className='fw-500'> {total} P</span>
                 </p>
                 <Button
                   title='Submit order'
                   type='button'
-                  className='btn'
+                  className='cart__bottom-btn btn'
                   onClick={onRegisterOrder}
                 >
                   Submit order

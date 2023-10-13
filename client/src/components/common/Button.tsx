@@ -1,7 +1,7 @@
 import React from 'react'
 
 type IButonProps = {
-  type: 'button' | 'submit'
+  type: 'button' | 'submit' | 'reset'
   children: string | React.ReactElement
   title: string
   disabled?: boolean

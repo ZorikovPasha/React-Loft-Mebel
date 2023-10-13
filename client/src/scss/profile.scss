@@ -61,8 +61,9 @@
   }
 
   &__title {
-    font-size: 24px;
-    line-height: 30px;
+    font-size: 30px;
+    line-height: 38px;
+    color: #209cee;
   }
 
   &__total {
@@ -174,7 +175,7 @@
   }
 
   &__box {
-    padding: 80px 20px 20px 20px;
+    padding: 60px 20px 20px 20px;
     border: 1px solid #245462;
     border-radius: 10px;
 
@@ -382,5 +383,81 @@
   &__orders-info {
     text-align: center;
     grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  &__cancel {
+    font-size: 18px;
+    line-height: 22px;
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    border: 1px solid #D41367; 
+    padding: 14px 30px 14px 45px;
+    transition: $transition;
+
+    &[disabled] {
+      border: 1px solid grey; 
+      pointer-events: none;
+      touch-action: none;
+    }
+
+    &:hover {
+      background-color: #D41367; 
+      color: white;
+    }
+    &:hover path {
+      fill: white;
+    }
+
+    &:active {
+      background-color: transparent;
+      border: 1px solid #D41367; 
+      color: #414141;
+    }
+    &:active path {
+      fill: #D41367;
+    }
+
+    path {
+      transition: $transition;
+    }
+  }
+
+  &__check {
+    padding: 14px 30px 14px 45px;
+
+    &:hover path {
+      stroke: white;
+    }
+
+    &:active path {
+      stroke: #209cee;
+    }
+
+    &[disabled] {
+      border: 1px solid grey; 
+      pointer-events: none;
+      touch-action: none;
+    }
+
+    path {
+      transition: $transition;
+    }
+  }
+
+  &__cancel-cross {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 25px;
+    transform: translate(0, -50%) scale(3);
+  }
+
+  &__cancel-check {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translate(0, -50%) scale(2);
   }
 }

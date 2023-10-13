@@ -3,7 +3,7 @@ import { Response } from 'express'
 
 import { PrismaService } from '../prisma/prisma.service'
 
-@Controller('upload')
+@Controller('uploads')
 export class UploadController {
   constructor(private readonly prisma: PrismaService) {}
 

@@ -22,6 +22,8 @@ import { Loader } from '../components/common/Loader'
 import { ROUTES, SCREEN_SIZES } from '../utils/const'
 import { useScreenSize } from '../hooks/useScreenSize'
 import { EmailsUpdatesModal } from '../components/profile/emailUpdatesModal'
+import { Check } from '../svg/check'
+import { Cross } from '../svg/cross'
 
 interface IFile {
   file: File | null
@@ -42,7 +44,7 @@ interface IProductInOrder {
     id: number
     mime: string
     name: string
-    provider: 'database'
+    provider: 'database' | string
     size: number
     updatedAt: string
     url: string
@@ -129,7 +131,7 @@ const Profile: React.FC = () => {
     tag: 'input',
     value: '',
     isValid: false,
-    required: true,
+    required: false,
     placeholder: 'Type your phone number',
     labelClass: 'newproduct__subtitle',
     label: 'Phone',
@@ -147,7 +149,7 @@ const Profile: React.FC = () => {
     tag: 'input',
     value: '',
     isValid: false,
-    required: true,
+    required: false,
     placeholder: 'Type city you live in',
     labelClass: 'newproduct__subtitle',
     label: 'City',
@@ -166,7 +168,7 @@ const Profile: React.FC = () => {
     value: '',
     type: 'text',
     isValid: false,
-    required: true,
+    required: false,
     label: 'Street',
     placeholder: 'Type street you live in',
     showErrors: false,
@@ -185,7 +187,7 @@ const Profile: React.FC = () => {
     type: 'text',
     isValid: false,
     placeholder: 'Type your house',
-    required: true,
+    required: false,
     labelClass: 'newproduct__subtitle',
     label: 'House',
     showErrors: false,
@@ -238,28 +240,36 @@ const Profile: React.FC = () => {
   const products = useSelector(getProducts)
   const user = useSelector(getUserData)
 
-  const collectedOrders = user.orders.map((o) => {
-    const items = o.items
-      .map((item) => {
-        const product = products.find((p) => p.id === item.furnitureId)
-        if (!product) {
-          return
-        }
-        return {
-          id: product.id,
-          name: product.name,
-          image: product.image,
-          quintity: item.quintity,
-          color: item.color,
-          price: parseFloat(product.priceNew ? product.priceNew : product.priceOld)
-        }
-      })
-      .filter((item): item is IProductInOrder => Boolean(item))
+  interface IOrderToRender {
+    items: IProductInOrder[]
+    id: number
+    name: string
+    status: string
+    createdAt: string
+  }
 
-    return {
-      ...o,
-      items
-    }
+  const collectedOrders: IOrderToRender[] = []
+
+  user.orders.forEach((order) => {
+    const furnituresInOrder: IProductInOrder[] = []
+
+    order.items.forEach((item) => {
+      const product = products.find((p) => p.id === item.furnitureId)
+      if (!product) {
+        return
+      }
+
+      furnituresInOrder.push({
+        id: product.id,
+        name: product.name,
+        image: product.image,
+        quintity: item.quintity,
+        color: item.color,
+        price: parseFloat(product.priceNew ? product.priceNew : product.priceOld)
+      })
+    })
+
+    collectedOrders.push(Object.assign(order, { items: furnituresInOrder }))
   })
 
   const [profilePicture, setProfilePicture] = React.useState(fileProps)
@@ -275,10 +285,11 @@ const Profile: React.FC = () => {
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
+  console.log('name,', name.isTouched)
+  console.log('surname', surname.isTouched)
+
   const isAnyFieldTouched = [name, email, surname, phone, city, street, house, apartment, profilePicture].some(
-    (props) => {
-      return props.isTouched
-    }
+    (props) => props.isTouched
   )
 
   React.useEffect(() => {
@@ -383,20 +394,21 @@ const Profile: React.FC = () => {
   )
 
   const onChange =
-    (setState: React.Dispatch<React.SetStateAction<IField>>) =>
+    (setState: React.Dispatch<React.SetStateAction<IField>>, originalvalue: string) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const target = e.target
+      const { value } = e.target
       setState((prev) => ({
         ...prev,
-        value: target.value,
-        isValid: prev.validateFn(target.value),
+        value: value,
+        isValid: prev.validateFn(value),
         showErrors: true,
-        isTouched: true
+        isTouched: value !== originalvalue
       }))
     }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
+
     if (!isAnyFieldTouched) {
       return
     }
@@ -408,10 +420,18 @@ const Profile: React.FC = () => {
     }
 
     const formData = new FormData()
-    formData.append('name', name.value)
-    formData.append('surname', surname.value)
-    formData.append('email', email.value)
-    formData.append('phone', phone.value)
+    if (name.value.trim().length > 0) {
+      formData.append('name', name.value)
+    }
+    if (surname.value.trim().length > 0) {
+      formData.append('surname', surname.value)
+    }
+    if (email.value.trim().length > 0) {
+      formData.append('email', email.value)
+    }
+    if (phone.value.trim().length > 0) {
+      formData.append('phone', phone.value)
+    }
     formData.append('city', city.value)
     formData.append('street', street.value)
     formData.append('house', house.value)
@@ -512,6 +532,67 @@ const Profile: React.FC = () => {
     return props.showErrors && !props.isValid && (props.required || props.value.trim().length > 0)
   }
 
+  const resetEdits = () => {
+    setProfilePicture({
+      isTouched: false,
+      file: null,
+      url: user.image?.url ?? null
+    })
+    setName((prev) => ({
+      ...prev,
+      value: user.name,
+      isTouched: false,
+      isValid: prev.validateFn(user.name)
+    }))
+
+    setSurname((prev) => ({
+      ...prev,
+      value: user.surname,
+      isTouched: false,
+      isValid: prev.validateFn(user.surname)
+    }))
+
+    setEmail((prev) => ({
+      ...prev,
+      value: user.email,
+      isTouched: false,
+      isValid: prev.validateFn(user.email)
+    }))
+
+    setPhone((prev) => ({
+      ...prev,
+      value: user.phone,
+      isTouched: false,
+      isValid: prev.validateFn(user.phone)
+    }))
+
+    setCity((prev) => ({
+      ...prev,
+      value: user.city,
+      isTouched: false,
+      isValid: prev.validateFn(user.city)
+    }))
+    setStreet((prev) => ({
+      ...prev,
+      value: user.street,
+      isTouched: false,
+      isValid: prev.validateFn(user.street)
+    }))
+
+    setHouse((prev) => ({
+      ...prev,
+      value: user.house,
+      isTouched: false,
+      isValid: prev.validateFn(user.house)
+    }))
+    setApartment((prev) => ({
+      ...prev,
+      value: user.apartment,
+      isTouched: false,
+      isValid: prev.validateFn(user.apartment)
+    }))
+  }
+
   return (
     <>
       {isLoading && <Loader rootElClass='loader--fixed' />}
@@ -580,7 +661,7 @@ const Profile: React.FC = () => {
           <div className='profile__box'>
             {activeTab === 'personal' && (
               <>
-                <h3 className='profile__title'>Profile info</h3>
+                <h3 className='profile__title'>Profile</h3>
                 <form
                   className='profile__form mt-30'
                   onSubmit={handleSubmit}
@@ -623,23 +704,7 @@ const Profile: React.FC = () => {
                     inputClassName={name.inputClassName}
                     showErrors={showErrors(name)}
                     errorMessage={name.getErrorMessage(name.value)}
-                    onChange={onChange(setName)}
-                  />
-                  <AppTextField
-                    elementType={email.tag}
-                    placeholder={email.placeholder}
-                    name='email'
-                    type={email.type}
-                    value={email.value}
-                    required={email.required}
-                    rootElclass={email.className}
-                    label={email.label}
-                    labelClass={email.labelClass}
-                    inputWrapClass={email.inputWrapClass}
-                    inputClassName={email.inputClassName}
-                    showErrors={showErrors(email)}
-                    errorMessage={email.getErrorMessage(email.value)}
-                    onChange={onChange(setEmail)}
+                    onChange={onChange(setName, user.name)}
                   />
                   <AppTextField
                     elementType={surname.tag}
@@ -655,7 +720,23 @@ const Profile: React.FC = () => {
                     inputClassName={surname.inputClassName}
                     showErrors={showErrors(surname)}
                     errorMessage={surname.getErrorMessage(surname.value)}
-                    onChange={onChange(setSurname)}
+                    onChange={onChange(setSurname, user.surname)}
+                  />
+                  <AppTextField
+                    elementType={email.tag}
+                    placeholder={email.placeholder}
+                    name='email'
+                    type={email.type}
+                    value={email.value}
+                    required={email.required}
+                    rootElclass={email.className}
+                    label={email.label}
+                    labelClass={email.labelClass}
+                    inputWrapClass={email.inputWrapClass}
+                    inputClassName={email.inputClassName}
+                    showErrors={showErrors(email)}
+                    errorMessage={email.getErrorMessage(email.value)}
+                    onChange={onChange(setEmail, user.email)}
                   />
                   <AppTextField
                     elementType={phone.tag}
@@ -671,7 +752,7 @@ const Profile: React.FC = () => {
                     inputClassName={phone.inputClassName}
                     showErrors={showErrors(phone)}
                     errorMessage={phone.getErrorMessage(phone.value)}
-                    onChange={onChange(setPhone)}
+                    onChange={onChange(setPhone, user.phone)}
                   />
                   <AppTextField
                     elementType={city.tag}
@@ -687,7 +768,7 @@ const Profile: React.FC = () => {
                     inputClassName={city.inputClassName}
                     showErrors={showErrors(city)}
                     errorMessage={city.getErrorMessage(city.value)}
-                    onChange={onChange(setCity)}
+                    onChange={onChange(setCity, user.city)}
                   />
                   <AppTextField
                     elementType={street.tag}
@@ -703,7 +784,7 @@ const Profile: React.FC = () => {
                     inputClassName={street.inputClassName}
                     showErrors={showErrors(street)}
                     errorMessage={street.getErrorMessage(street.value)}
-                    onChange={onChange(setStreet)}
+                    onChange={onChange(setStreet, user.street)}
                   />
 
                   <AppTextField
@@ -720,7 +801,7 @@ const Profile: React.FC = () => {
                     inputClassName={house.inputClassName}
                     showErrors={showErrors(house)}
                     errorMessage={house.getErrorMessage(house.value)}
-                    onChange={onChange(setHouse)}
+                    onChange={onChange(setHouse, user.house)}
                   />
                   <AppTextField
                     elementType={apartment.tag}
@@ -736,23 +817,47 @@ const Profile: React.FC = () => {
                     inputClassName={apartment.inputClassName}
                     showErrors={showErrors(apartment)}
                     errorMessage={apartment.getErrorMessage(apartment.value)}
-                    onChange={onChange(setApartment)}
+                    onChange={onChange(setApartment, user.apartment)}
                   />
-                  <Button
-                    title='Edit'
-                    className='btn ${isAnyFieldTouched}'
-                    disabled={!isAnyFieldTouched}
-                    type='submit'
-                  >
-                    Update profile
-                  </Button>
+                  <div className='flex items-center gg30'>
+                    <Button
+                      title='Edit'
+                      className='profile__check btn-hollow relative'
+                      disabled={!isAnyFieldTouched}
+                      type='submit'
+                    >
+                      <>
+                        <Check
+                          className='profile__cancel-check'
+                          stroke={isAnyFieldTouched ? '#209cee' : 'grey'}
+                        />
+                        Update
+                      </>
+                    </Button>
+
+                    <Button
+                      title='Cancel edtis'
+                      className='profile__cancel flex items-center justify-center relative'
+                      type='button'
+                      disabled={!isAnyFieldTouched}
+                      onClick={resetEdits}
+                    >
+                      <>
+                        <Cross
+                          fill={isAnyFieldTouched ? '#D41367' : 'grey'}
+                          className='profile__cancel-cross'
+                        />
+                        Cancel
+                      </>
+                    </Button>
+                  </div>
                 </form>
               </>
             )}
 
             {activeTab === 'orders' && (
               <div className='profile__orders orders'>
-                <h3 className='profile__title'>Мои заказы: {collectedOrders.length}</h3>
+                <h3 className='profile__title'>My orders: {collectedOrders.length}</h3>
                 <div className='mt-30'>
                   {collectedOrders.map(({ id, name, status, createdAt, items }) => (
                     <div className='mt-10'>

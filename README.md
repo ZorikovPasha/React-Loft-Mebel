@@ -80,6 +80,13 @@ TODO!:
 - [x] check for z-indexes everywhere
 - [x] /contacts form redesign
 - [x] should disable buttons and inputs while making submit requests
-- [ ] moving to nestjs   
+- [x] moving to nestjs   
 - [ ] add server tests  
 - [ ] add confirmation email
+- [x] add login via yandex
+- [ ] nestjs swagger  
+- [ ] signup server errors indication
+- [x] cancel profile filling
+- [ ] signup error messages not in english  
+- [ ] login via yandex popup with email shows every time  
+- [x] cart item mobile view is messed up  

@@ -36,6 +36,39 @@ interface ICartItemResponse {
   color: string
 }
 
+export interface ISuccessfullResponse {
+  success: boolean
+}
+
+export interface IRegisterUser400 {
+  message: string | string[]
+  error: 'Bad Request'
+  statusCode: 400
+}
+
+export interface I500Response {
+  statusCode: 500
+  message: 'Internal server error'
+}
+
+// login
+
+export interface ILoginUser400 {
+  statusCode: 400
+  message: string
+}
+
+export interface ISuccessfullLoginResponse extends IUserResponse {
+  token: string
+}
+
+//
+
+export interface I401Response {
+  message: 'Unauthorized'
+  statusCode: 401
+}
+
 interface IOrderResponse {
   id: number
   userId: string
@@ -92,10 +125,6 @@ export interface IUserResponse {
     orders: IOrderResponse[] | never[] | null
     cart: ICartItemResponse[] | never[] | null
   }
-}
-
-export interface ISuccessfullLoginResponse extends IUserResponse {
-  token: string
 }
 
 export type FormDataType = Omit<SignUpCredsType, 'password'> & { message: string }
@@ -174,10 +203,6 @@ export interface IErrorResponse {
   message: string
 }
 
-export interface ISuccessfullResponse {
-  success: boolean
-}
-
 export interface ICartItemRequest {
   quintity: number
   productId: number
@@ -218,6 +243,28 @@ export interface IRemoveCartItemDto {
   color: string
 }
 
+export const isILogin400 = (data: ISuccessfullLoginResponse | ILoginUser400 | I500Response): data is ILoginUser400 => {
+  // @ts-expect-error this is okay here
+  return data.statusCode === 400
+}
+
+export const isSuccessfullLoginResponse = <T>(
+  data: ISuccessfullLoginResponse | T
+): data is ISuccessfullLoginResponse => {
+  // @ts-expect-error this is okay here
+  return data.statusCode === 200
+}
+
+export const isRegisterUser200 = <T>(data: ISuccessfullResponse | T): data is ISuccessfullResponse => {
+  // @ts-expect-error this is okay here
+  return data.success
+}
+
+export const isRes500 = <T>(data: I500Response | T): data is I500Response => {
+  // @ts-expect-error this is okay here
+  return data.statusCode === 500
+}
+
 export const isSuccessfullMakeOrderResponse = (
   dto: ISuccessfullMakeOrderResponse | IErrorResponse
 ): dto is ISuccessfullMakeOrderResponse => {
@@ -236,13 +283,6 @@ export const isSuccessfullCancelOrderResponse = (
   data: IErrorsResponse | IErrorResponse | ICancelOrderResponse
 ): data is ICancelOrderResponse => {
   const property: keyof ICancelOrderResponse = 'status'
-  return property in data
-}
-
-export const isSuccessfullLoginResponse = (
-  data: IErrorsResponse | IErrorResponse | ISuccessfullLoginResponse
-): data is ISuccessfullLoginResponse => {
-  const property: keyof ISuccessfullLoginResponse = 'token'
   return property in data
 }
 
