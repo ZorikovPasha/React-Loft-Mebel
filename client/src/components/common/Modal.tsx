@@ -3,13 +3,14 @@ import { Button } from './Button'
 
 interface IModalProps {
   content: React.ReactElement
+  bodyClass?: string
   onModalClose: () => void
 }
 
-export const Modal: React.FC<IModalProps> = ({ onModalClose, content }) => {
+export const Modal: React.FC<IModalProps> = ({ bodyClass = '', onModalClose, content }) => {
   return (
     <div className='popup shown'>
-      <div className='popup__body'>
+      <div className={`popup__body ${bodyClass}`}>
         <Button
           type='button'
           title='Close modal'

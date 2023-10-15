@@ -53,7 +53,7 @@ export const EmailsUpdatesModal: React.FC<{ onModalClose: () => void }> = ({ onM
           <p className='popup-message__text mt-20'>We promise to email you no more than once a week.</p>
 
           <form
-            className='popup__agree-form flex mt-40'
+            className='flex flex-col mt-40'
             onSubmit={handleSubmit}
           >
             <label className='form__label'>

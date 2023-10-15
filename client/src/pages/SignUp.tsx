@@ -79,7 +79,7 @@ const SignUp = () => {
       tag: 'input',
       showErrors: false,
       errorMessage: getTextInputErrorMessage(''),
-      getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
+      getErrorMessage: getTextInputErrorMessage,
       validateFn: validateTextInput
     },
     email: {
@@ -95,8 +95,7 @@ const SignUp = () => {
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
-      getErrorMessage: (str: string) =>
-        str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
+      getErrorMessage: getEmailInputErrorMessage,
       validateFn: validateEmail
     },
     password: {
@@ -140,18 +139,10 @@ const SignUp = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
-    setForm((prev) => {
-      return Object.entries(prev).reduce(
-        (accum, [key, props]) => ({
-          ...accum,
-          [key]: {
-            ...props,
-            showErrors: true
-          }
-        }),
-        {}
-      )
+    Object.keys(form).forEach((key) => {
+      form[key].showErrors = true
     })
+    setForm({ ...form })
 
     if (!Object.values(form).every(({ isValid }) => isValid)) {
       return

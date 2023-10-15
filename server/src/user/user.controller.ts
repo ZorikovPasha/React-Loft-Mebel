@@ -217,7 +217,7 @@ export class UserController {
       userId: user.sub,
       text: dto.text,
       score: dto.score,
-      furnitureId: dto.furnitureId,
+      furnitureId: parseInt(dto.furnitureId),
       attachments: attachments
     })
 

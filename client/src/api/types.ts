@@ -41,8 +41,9 @@ export interface ISuccessfullResponse {
 }
 
 export interface IRegisterUser400 {
+  // <- this coud be actually general 400 for many requests
   message: string | string[]
-  error: 'Bad Request'
+  error: 'Bad Request' // <- can convert this to string too
   statusCode: 400
 }
 
@@ -146,7 +147,7 @@ export interface IImage {
   updatedAt: string
 }
 
-interface IReview {
+export interface IReview {
   id: number
   text: string
   score: number
@@ -258,6 +259,11 @@ export const isSuccessfullLoginResponse = <T>(
 export const isRegisterUser200 = <T>(data: ISuccessfullResponse | T): data is ISuccessfullResponse => {
   // @ts-expect-error this is okay here
   return data.success
+}
+
+export const isRes200 = <T>(data: ISuccessfullResponse | T): data is ISuccessfullResponse => {
+  // @ts-expect-error this is okay here
+  return data.success == true
 }
 
 export const isRes500 = <T>(data: I500Response | T): data is I500Response => {

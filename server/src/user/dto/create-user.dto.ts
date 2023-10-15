@@ -118,6 +118,6 @@ export class MakeReviewDto {
   @IsNotEmpty()
   text: string
 
-  @IsNumber()
-  furnitureId: number
+  @IsString()
+  furnitureId: string
 }

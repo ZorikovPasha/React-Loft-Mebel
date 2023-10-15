@@ -59,7 +59,7 @@
 
       &:active,
       &:visited { 
-        background-color: white;
+        background-color: inherit;
         border: 1px solid #FF0000; 
         color: $text;
       }

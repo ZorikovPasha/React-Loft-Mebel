@@ -49,7 +49,6 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
 
   const onLogout = () => {
     localStorage.removeItem('loft_furniture_token')
-    localStorage.removeItem('decidedOnRecieveingEmails')
     dispatch(logoutUserActionCreator())
     history.push({ pathname: '/' })
   }

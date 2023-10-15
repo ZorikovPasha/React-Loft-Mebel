@@ -77,6 +77,7 @@
     font-weight: 500;
     cursor: pointer;
     margin: 50px 0 6px;
+    transition: $transition;
 
     @media #{$mobile} {
       font-size: 13px;

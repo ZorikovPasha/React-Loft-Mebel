@@ -13,9 +13,7 @@ export const useAuth = async (): Promise<void> => {
 
   React.useEffect(() => {
     const newToken = getQueryParams('token')
-    console.log('newToken', newToken)
     if (typeof newToken === 'string') {
-      console.log('setting new token')
       localStorage.setItem('loft_furniture_token', newToken)
     }
 
@@ -24,11 +22,7 @@ export const useAuth = async (): Promise<void> => {
       return
     }
 
-    console.log('using token:', token)
-
     UserApiClient.getUserData().then((data) => {
-      console.log('got data:', data)
-
       if (!isSuccessfullGetUserResponse(data)) {
         return
       }

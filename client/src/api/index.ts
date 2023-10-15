@@ -146,7 +146,7 @@ class UserApi extends Api {
     return this.post('/user/request', formData)
   }
 
-  sendReview = (formData: FormData) => {
+  sendReview = (formData: FormData): Promise<ISuccessfullResponse | IRegisterUser400 | I500Response> => {
     return this.post('/user/reviews', formData)
   }
 }

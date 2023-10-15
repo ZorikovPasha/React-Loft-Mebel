@@ -85,8 +85,10 @@ TODO!:
 - [ ] add confirmation email
 - [x] add login via yandex
 - [ ] nestjs swagger  
-- [ ] signup server errors indication
+- [x] signup server errors indication
 - [x] cancel profile filling
-- [ ] signup error messages not in english  
-- [ ] login via yandex popup with email shows every time  
+- [x] signup error messages not in english  
+- [x] login via yandex popup with email shows every time  
 - [x] cart item mobile view is messed up  
+- [ ] should add floating inputs?
+- [ ] should add shipping methods and specs on furniture
