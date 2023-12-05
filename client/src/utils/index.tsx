@@ -18,7 +18,7 @@ export const getPasswordFieldErrorMessage = (str: string): string => {
     return 'Please enter your paassword'
   }
 
-  if (str.trim().length < 6) {
+  if (str.trim().length < 7) {
     return 'Password length should be more than 6 characters'
   }
 
@@ -106,14 +106,14 @@ export const sanitizeUserRes = (userData: IUserResponse['user']) => {
   return {
     id: userData.id,
     isLoggedIn: true,
-    name: userData.name,
-    email: userData.email,
+    name: userData.name ?? '',
+    email: userData.email ?? '',
     surname: userData.surname ?? '',
-    phone: userData.phone,
-    city: userData.city,
-    street: userData.street,
-    house: userData.house,
-    apartment: userData.apartment,
+    phone: userData.phone ?? '',
+    city: userData.city ?? '',
+    street: userData.street ?? '',
+    house: userData.house ?? '',
+    apartment: userData.apartment ?? '',
     image: userData.image
       ? {
           name: userData.image.name,

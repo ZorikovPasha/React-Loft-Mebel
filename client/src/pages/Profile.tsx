@@ -427,10 +427,10 @@ const Profile: React.FC = () => {
     const formData = new FormData()
     formData.append('name', name.value)
     formData.append('surname', surname.value)
-    if (email.value.trim().length > 0) {
+    if (validateTextInput(email.value)) {
       formData.append('email', email.value)
     }
-    if (phone.value.trim().length > 0) {
+    if (validateTextInput(phone.value)) {
       formData.append('phone', phone.value)
     }
     formData.append('city', city.value)
@@ -527,7 +527,7 @@ const Profile: React.FC = () => {
   }
 
   const showErrors = (props: IField) => {
-    return props.showErrors && !props.isValid && (props.required || props.value.trim().length > 0)
+    return props.showErrors && !props.isValid && (props.required || validateTextInput(props.value))
   }
 
   const resetEdits = () => {
@@ -875,7 +875,7 @@ const Profile: React.FC = () => {
                           <p className='profile__table-cell'>Quintity</p>
                           <p className='profile__table-cell'>Color</p>
                           {items.map(({ id, name, image, color, quintity, price }) => (
-                            <React.Fragment>
+                            <React.Fragment key={id}>
                               <div className='profile__table-cell flex items-center'>
                                 <Link
                                   to={`/products/${id}`}

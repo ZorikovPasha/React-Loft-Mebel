@@ -84,6 +84,13 @@ TODO!:
 - [x] login via yandex popup with email shows every time  
 - [x] cart item mobile view is messed up  
 - [x] should add shipping methods and specs on furniture
+- [x] Profile tabs are broken
+- [x] making product favorite is not working with store  
+- [x] PUT /user male phone optional
+- [x] cart total split with spaces
+- [x] make sure that user data sanitized is of correct type  
+- [ ] loader while fetching user data? (react-query)
+- [ ] write backend tests
 - [ ] move svgs to separate files respectively
 - [ ] add remaining products    
 - [ ] mark in swagger which id to send
@@ -94,9 +101,6 @@ TODO!:
 - [ ] nestjs swagger  
 - [ ] after login via yandex login shows in a moment before profile  
 - [ ] move from redux to zustand
-- [x] Profile tabs are broken
-- [ ] loader while fetching user data? (react-query)
-- [ ] make sure that user data sanitized is of correct type  
-- [x] making product favorite is not working with store  
-- [x] PUT /user male phone optional
-- [x] cart total split with spaces
+- [ ] should add redis
+- [ ] add sqlite option
+
