@@ -155,61 +155,60 @@ const SignUp = () => {
     }
 
     setIsLoading(true)
-    UserApiClient.register(dto)
-      .then((data) => {
-        setIsLoading(false)
-        if (isRes500(data)) {
-          dispatch(toggleSnackbarOpen())
-          return
-        }
+    try {
+      const response = await UserApiClient.register(dto)
+      setIsLoading(false)
+      if (isRes500(response)) {
+        dispatch(toggleSnackbarOpen())
+        return
+      }
 
-        if (isRegisterUser200(data)) {
-          document.documentElement.classList.add('lock')
-          setModalSignUp(true)
-          return
-        }
+      if (isRegisterUser200(response)) {
+        document.documentElement.classList.add('lock')
+        setModalSignUp(true)
+        return
+      }
 
-        if (data.statusCode === 400) {
-          if (typeof data.message === 'string') {
-            // User already exists
+      if (response.statusCode === 400) {
+        if (typeof response.message === 'string') {
+          // User already exists
 
-            form.email.errorMessage = data.message
-            setForm({ ...form })
-          } else {
-            const errorData: Record<string, string> = {}
-            data.message.forEach((message: string) => {
-              const fieldName = message.split(' ')[0]
-              errorData[fieldName] = message
-            })
+          form.email.errorMessage = response.message
+          setForm({ ...form })
+        } else {
+          const errorData: Record<string, string> = {}
+          response.message.forEach((message: string) => {
+            const fieldName = message.split(' ')[0]
+            errorData[fieldName] = message
+          })
 
-            setForm((prev) => {
-              const newFormState: Record<string, IField> = {}
-              Object.entries(prev).forEach(([key]) => {
-                if (errorData[key]) {
-                  newFormState[key] = {
-                    ...prev[key],
-                    isValid: false,
-                    showErrors: true,
-                    errorMessage: errorData[key]
-                  }
-                } else {
-                  newFormState[key] = prev[key]
+          setForm((prev) => {
+            const newFormState: Record<string, IField> = {}
+            Object.entries(prev).forEach(([key]) => {
+              if (errorData[key]) {
+                newFormState[key] = {
+                  ...prev[key],
+                  isValid: false,
+                  showErrors: true,
+                  errorMessage: errorData[key]
                 }
-              })
-
-              return newFormState
+              } else {
+                newFormState[key] = prev[key]
+              }
             })
-          }
 
-          return
+            return newFormState
+          })
         }
 
-        dispatch(toggleSnackbarOpen())
-      })
-      .catch(() => {
-        setIsLoading(false)
-        dispatch(toggleSnackbarOpen())
-      })
+        return
+      }
+
+      dispatch(toggleSnackbarOpen())
+    } catch (error) {
+      setIsLoading(false)
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   const onModalClose = () => {

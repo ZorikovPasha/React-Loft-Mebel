@@ -74,13 +74,13 @@ export class UserController {
   ) {
     let hasAnyFieldsToUpdate = false
     const dataToUpdate: Record<string, string | number | boolean> = {}
-
     Object.entries(updateUserDto).forEach(([key, value]) => {
       if (typeof value !== 'undefined' && value !== null) {
         hasAnyFieldsToUpdate = true
 
         if (key === 'wantsToReceiveEmailUpdates') {
           dataToUpdate[key] = value === '1'
+          dataToUpdate.DecidedOnWantsToReceiveEmailUpdates = true
         } else {
           dataToUpdate[key] = value
         }

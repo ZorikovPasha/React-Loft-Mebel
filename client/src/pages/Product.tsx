@@ -29,8 +29,8 @@ const Product: React.FC = () => {
   return currentProduct ? (
     <>
       <Breadcrumbs breadcrumbs={breads} />
-      {currentProduct && <ProductCard product={currentProduct} />}
-      {currentProduct && <ProductTabs product={currentProduct} />}
+      <ProductCard product={currentProduct} />
+      <ProductTabs product={currentProduct} />
 
       <section className='sales'>
         <div className='container'>

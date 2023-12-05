@@ -24,6 +24,7 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { EmailsUpdatesModal } from '../components/profile/emailUpdatesModal'
 import { Check } from '../svg/check'
 import { Cross } from '../svg/cross'
+import { Logout } from '../svg/logout'
 
 interface IFile {
   file: File | null
@@ -55,15 +56,16 @@ interface IProductInOrder {
   price: number
 }
 
+interface IOrderToRender {
+  items: IProductInOrder[]
+  id: number
+  name: string
+  status: string
+  createdAt: string
+}
+
 const Profile: React.FC = () => {
   const history = useHistory()
-
-  const { isLoggedIn } = useSelector(getUserData)
-
-  if (!isLoggedIn) {
-    history.push(ROUTES.Login)
-    return <></>
-  }
 
   const fileProps: IFile = {
     file: null,
@@ -71,7 +73,7 @@ const Profile: React.FC = () => {
     isTouched: false
   }
 
-  const tabs = ['personal', 'orders'] as const
+  const tabs = ['Personal', 'Orders'] as const
 
   const nameProps: IField = {
     value: '',
@@ -240,14 +242,6 @@ const Profile: React.FC = () => {
   const products = useSelector(getProducts)
   const user = useSelector(getUserData)
 
-  interface IOrderToRender {
-    items: IProductInOrder[]
-    id: number
-    name: string
-    status: string
-    createdAt: string
-  }
-
   const collectedOrders: IOrderToRender[] = []
 
   user.orders.forEach((order) => {
@@ -281,7 +275,7 @@ const Profile: React.FC = () => {
   const [street, setStreet] = React.useState(streetProps)
   const [house, setHouse] = React.useState(houseProps)
   const [apartment, setApartment] = React.useState(apartmentProps)
-  const [activeTab, setActiveTab] = React.useState<'personal' | 'orders'>('personal')
+  const [activeTab, setActiveTab] = React.useState<'Personal' | 'Orders'>('Personal')
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
@@ -290,21 +284,21 @@ const Profile: React.FC = () => {
   )
 
   React.useEffect(() => {
-    const decidedOnRecieveingEmails = localStorage.getItem('decidedOnRecieveingEmails')
-
-    if (decidedOnRecieveingEmails === '1') {
+    if (user.decidedOnWantsToReceiveEmailUpdates === true && user.isLoggedIn) {
       return
     }
 
-    window.setTimeout(() => {
+    const timeoutId = window.setTimeout(() => {
       document.body.classList.add('lock')
       setModalLoginOpened(true)
     }, 3000)
-  }, [])
+
+    return () => window.clearTimeout(timeoutId)
+  }, [user])
 
   React.useEffect(() => {
     const tabParam = getQueryParams('tab')
-    if (tabParam === 'orders' || tabParam === 'personal') {
+    if (tabParam === 'Orders' || tabParam === 'Personal') {
       setActiveTab(tabParam)
     }
   }, [window.location.search])
@@ -403,26 +397,36 @@ const Profile: React.FC = () => {
       }))
     }
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault()
 
     if (!isAnyFieldTouched) {
       return
     }
 
+    if (name.required && !name.isValid) {
+      setName({ ...name, showErrors: true })
+      return
+    }
+
+    if (surname.required && !surname.isValid) {
+      setSurname({ ...surname, showErrors: true })
+      return
+    }
+
     if (
-      ![name, surname, email, phone, city, street, house].every(({ isValid, required }) => (required ? isValid : true))
+      ![email, phone, city, street, house].every((props) => {
+        console.log(props)
+
+        return props.required ? props.isValid : true
+      })
     ) {
       return
     }
 
     const formData = new FormData()
-    if (name.value.trim().length > 0) {
-      formData.append('name', name.value)
-    }
-    if (surname.value.trim().length > 0) {
-      formData.append('surname', surname.value)
-    }
+    formData.append('name', name.value)
+    formData.append('surname', surname.value)
     if (email.value.trim().length > 0) {
       formData.append('email', email.value)
     }
@@ -440,73 +444,71 @@ const Profile: React.FC = () => {
 
     document.body.classList.add('lock')
     setIsLoading(true)
-    UserApiClient.updateUserData(formData)
-      .then((dto) => {
-        setIsLoading(false)
-        document.body.classList.remove('lock')
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
 
-        const payload = {
-          name: name.value,
-          surname: surname.value,
-          email: email.value,
-          phone: phone.value,
-          city: city.value,
-          street: street.value,
-          house: house.value,
-          apartment: apartment.value,
-          ...(profilePicture.url
-            ? {
-                image: {
-                  name: '',
-                  url: profilePicture.url
-                }
+    try {
+      const dto = await UserApiClient.updateUserData(formData)
+      setIsLoading(false)
+      document.body.classList.remove('lock')
+      if (!isSuccessfullResponse(dto)) {
+        return dispatch(toggleSnackbarOpen())
+      }
+
+      const payload = {
+        name: name.value,
+        surname: surname.value,
+        email: email.value,
+        phone: phone.value,
+        city: city.value,
+        street: street.value,
+        house: house.value,
+        apartment: apartment.value,
+        ...(profilePicture.url
+          ? {
+              image: {
+                name: '',
+                url: profilePicture.url
               }
-            : {})
-        }
+            }
+          : {})
+      }
 
-        dispatch(editUserActionCreator(payload))
-        dispatch(toggleSnackbarOpen('Profile info updated successfully!', 'success'))
-        setName((prev) => ({ ...prev, isTouched: false }))
-        setEmail((prev) => ({ ...prev, isTouched: false }))
-        setSurname((prev) => ({ ...prev, isTouched: false }))
-        setPhone((prev) => ({ ...prev, isTouched: false }))
-        setCity((prev) => ({ ...prev, isTouched: false }))
-        setStreet((prev) => ({ ...prev, isTouched: false }))
-        setHouse((prev) => ({ ...prev, isTouched: false }))
-        setApartment((prev) => ({ ...prev, isTouched: false }))
-        setProfilePicture((prev) => ({ ...prev, isTouched: false }))
-      })
-      .catch(() => {
-        setIsLoading(false)
-        document.body.classList.remove('lock')
-        dispatch(toggleSnackbarOpen())
-      })
+      dispatch(editUserActionCreator(payload))
+      dispatch(toggleSnackbarOpen('Profile info updated successfully!', 'success'))
+      setName((prev) => ({ ...prev, isTouched: false }))
+      setEmail((prev) => ({ ...prev, isTouched: false }))
+      setSurname((prev) => ({ ...prev, isTouched: false }))
+      setPhone((prev) => ({ ...prev, isTouched: false }))
+      setCity((prev) => ({ ...prev, isTouched: false }))
+      setStreet((prev) => ({ ...prev, isTouched: false }))
+      setHouse((prev) => ({ ...prev, isTouched: false }))
+      setApartment((prev) => ({ ...prev, isTouched: false }))
+      setProfilePicture((prev) => ({ ...prev, isTouched: false }))
+    } catch (error) {
+      setIsLoading(false)
+      document.body.classList.remove('lock')
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
-  const onCancelOrder = (orderId: number) => () => {
-    UserApiClient.cancelOrder(orderId)
-      .then((dto) => {
-        if (!isSuccessfullCancelOrderResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+  const onCancelOrder = (orderId: number) => async () => {
+    try {
+      const dto = await UserApiClient.cancelOrder(orderId)
+      if (!isSuccessfullCancelOrderResponse(dto)) {
+        return dispatch(toggleSnackbarOpen())
+      }
 
-        const candidate = user.orders.find((o) => o.id === orderId)
-        if (!candidate) {
-          return
-        }
+      const candidate = user.orders.find((o) => o.id === orderId)
+      if (!candidate) {
+        return
+      }
 
-        const payload = {
-          ...candidate,
-          status: 'CANCELED'
-        } as const
-        dispatch(editOrderActionCreator(payload))
+      const payload = Object.assign(candidate, {
+        status: 'CANCELED'
       })
-      .then(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      dispatch(editOrderActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   const onLogout = () => {
@@ -515,7 +517,7 @@ const Profile: React.FC = () => {
     history.push({ pathname: '/' })
   }
 
-  const onTab = (tab: 'personal' | 'orders') => () => {
+  const onTab = (tab: 'Personal' | 'Orders') => () => {
     setActiveTab(tab)
   }
 
@@ -589,6 +591,11 @@ const Profile: React.FC = () => {
     }))
   }
 
+  if (!user.isLoggedIn) {
+    history.push(ROUTES.Login)
+    return <></>
+  }
+
   return (
     <>
       {isLoading && <Loader rootElClass='loader--fixed' />}
@@ -599,7 +606,7 @@ const Profile: React.FC = () => {
         <div className='container'>
           <div className='profile__inner'>
             <div className='profile__controls flex'>
-              <div className='profile__tabs flex'>
+              <div className='flex gap-20'>
                 {tabs.map((t) => (
                   <Button
                     className={`profile__tab ${t === activeTab ? 'profile__tab--active' : ''}`}
@@ -621,48 +628,17 @@ const Profile: React.FC = () => {
                   onClick={onLogout}
                 >
                   <>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9'
-                        stroke='#D41367'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M16 17L21 12L16 7'
-                        stroke='#D41367'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M21 12H9'
-                        stroke='#D41367'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
+                    <Logout />
                     Log out
                   </>
                 </Button>
               )}
             </div>
             <div className='profile__box'>
-              {activeTab === 'personal' && (
+              {activeTab === 'Personal' && (
                 <>
                   <h3 className='profile__title'>Profile</h3>
-                  <form
-                    className='profile__form mt-30'
-                    onSubmit={handleSubmit}
-                  >
+                  <form className='profile__form mt-30'>
                     <div className='profile__form-block'>
                       <p className='newproduct__subtitle'>Avatar</p>
                       <div
@@ -680,9 +656,13 @@ const Profile: React.FC = () => {
                             />
                           </div>
                         ) : (
-                          <p className='profile__drop-placeholder'>
-                            Drag 'n' drop some files here, or click to select files
-                          </p>
+                          <div className='flex'>
+                            <img
+                              className='profile__picture-stub'
+                              src='/images/user-stub.jpg'
+                              alt=''
+                            />
+                          </div>
                         )}
                       </div>
                     </div>
@@ -821,7 +801,8 @@ const Profile: React.FC = () => {
                         title='Edit'
                         className='profile__check btn-hollow relative'
                         disabled={!isAnyFieldTouched}
-                        type='submit'
+                        type='button'
+                        onClick={handleSubmit}
                       >
                         <>
                           <Check
@@ -852,7 +833,7 @@ const Profile: React.FC = () => {
                 </>
               )}
 
-              {activeTab === 'orders' && (
+              {activeTab === 'Orders' && (
                 <div className='profile__orders orders'>
                   <h3 className='profile__title'>My orders: {collectedOrders.length}</h3>
                   <div className='mt-30'>

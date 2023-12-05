@@ -70,13 +70,12 @@ const Login: React.FC = () => {
     const target = e.target
     setForm((prev) => ({
       ...prev,
-      [name]: {
-        ...prev[name],
+      [name]: Object.assign(prev[name], {
         value: target.value,
         isValid: prev[name].validateFn(target.value),
         errorMessage: prev[name].getErrorMessage(target.value),
         showErrors: true
-      }
+      })
     }))
   }
 
@@ -89,10 +88,9 @@ const Login: React.FC = () => {
       return Object.entries(prev).reduce(
         (accum, [key, props]) => ({
           ...accum,
-          [key]: {
-            ...props,
+          [key]: Object.assign(props, {
             showErrors: true
-          }
+          })
         }),
         {}
       )
@@ -108,46 +106,40 @@ const Login: React.FC = () => {
     }
 
     setIsLoading(true)
-    UserApiClient.login(dto)
-      .then((data) => {
-        console.log('___then')
+    try {
+      const response = await UserApiClient.login(dto)
 
-        setIsLoading(false)
-        if (isILogin400(data)) {
-          setForm((prev) => ({
-            email: {
-              ...prev.email,
-              isValid: false,
-              errorMessage: data.message
-            },
-            password: {
-              ...prev.password,
-              isValid: false,
-              errorMessage: data.message
-            }
-          }))
-          return
-        }
+      setIsLoading(false)
+      if (isILogin400(response)) {
+        setForm((prev) => ({
+          email: Object.assign(prev.email, {
+            isValid: false,
+            errorMessage: response.message
+          }),
+          password: Object.assign(prev.password, {
+            isValid: false,
+            errorMessage: response.message
+          })
+        }))
+        return
+      }
 
-        if (isSuccessfullLoginResponse(data)) {
-          setForm(fields.current)
-          localStorage.setItem('loft_furniture_token', data.token)
-          const payload = sanitizeUserRes(data.user)
-          dispatch(loginUserActionCreator(payload))
-          history.push({ pathname: ROUTES.Profile })
-          return
-        }
+      if (isSuccessfullLoginResponse(response)) {
+        setForm(fields.current)
+        localStorage.setItem('loft_furniture_token', response.token)
+        const payload = sanitizeUserRes(response.user)
+        dispatch(loginUserActionCreator(payload))
+        history.push({ pathname: ROUTES.Profile })
+        return
+      }
 
-        if (data.statusCode === 500) {
-          dispatch(toggleSnackbarOpen())
-        }
-      })
-      .catch(() => {
-        console.log('___Error')
-
-        setIsLoading(false)
+      if (response.statusCode === 500) {
         dispatch(toggleSnackbarOpen())
-      })
+      }
+    } catch (error) {
+      setIsLoading(false)
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   return isLoggedIn ? (

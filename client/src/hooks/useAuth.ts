@@ -22,14 +22,17 @@ export const useAuth = async (): Promise<void> => {
       return
     }
 
-    UserApiClient.getUserData().then((data) => {
+    const processLogin = async () => {
+      const data = await UserApiClient.getUserData()
       if (!isSuccessfullGetUserResponse(data)) {
         return
       }
 
       const payload = sanitizeUserRes(data.user)
       dispatch(loginUserActionCreator(payload))
-    })
+    }
+
+    processLogin()
   }, [])
 
   React.useEffect(() => {

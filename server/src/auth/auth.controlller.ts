@@ -113,7 +113,7 @@ export class AuthController {
     })
 
     if (candidate) {
-      throw new BadRequestException('User already exists')
+      throw new BadRequestException('User already exists') // 422
     }
 
     await this.userService.create({
@@ -159,8 +159,6 @@ export class AuthController {
         surname: req.user.name?.givenName
       })
     } catch (error) {
-      // console.log('catching error', error);
-
       const thisUser = await this.userService.findByEmail(req.user._json.default_email)
       if (thisUser) {
         const token = this.authService.generateToken(thisUser.email, thisUser.id)

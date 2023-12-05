@@ -153,14 +153,14 @@ export const Aside: React.FC<IAsideProps> = ({
   const onBrand = (brand: string) => () => {
     setChosenBrands((prev) => ({
       ...prev,
-      value: prev.value.includes(brand) ? prev.value.filter((c) => c !== brand) : [...prev.value, brand]
+      value: prev.value.includes(brand) ? prev.value.filter((c) => c !== brand) : prev.value.concat(brand)
     }))
   }
 
   const onColor = (color: string) => () => {
     setChosenColors((prev) => ({
       ...prev,
-      value: prev.value.includes(color) ? prev.value.filter((c) => c !== color) : [...prev.value, color]
+      value: prev.value.includes(color) ? prev.value.filter((c) => c !== color) : prev.value.concat(color)
     }))
   }
 

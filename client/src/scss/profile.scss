@@ -143,24 +143,28 @@
     line-height: 22px;
     padding: 14px 25px;
     color: #414141;
-    border-bottom: 1px solid #209cee;
     text-transform: capitalize;
     background-color: white;
-    transition: 0.3s;
     border-radius: 10px 10px 0 0; 
+
+    &--active {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        content: "";
+        width: 100%;
+        border-bottom: 4px solid #209cee;
+      }
+    }
 
     @media #{$mobile} {
       font-size: 16px;
       line-height: 22px;
       padding: 10px 20px;
-    }
-
-    &:hover {
-      border-bottom: 1px solid #245462;
-    }
-
-    &--active {
-      border-bottom: 1px solid #245462;
     }
   }
 
@@ -213,6 +217,7 @@
   }
 
   &__drop {
+    overflow: hidden;
     width: 250px;
     height: 250px;
     display: flex;
@@ -264,6 +269,10 @@
       height: 80px;
       border-radius: 10px;
     }
+  }
+
+  &__picture-stub {
+    max-width: 100%;
   }
 
   &__picture-img {

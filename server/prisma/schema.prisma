@@ -48,6 +48,7 @@ model User {
   photoId                    Int?                @unique
   role                       Role                @default(BASIC)
   emailConfirmed             Boolean             @default(false)
+  DecidedOnWantsToReceiveEmailUpdates Boolean @default(false)
   wantsToReceiveEmailUpdates Boolean             @default(false)
   favorites                  FavoriteFurniture[]
   orders                     Order[]
@@ -94,6 +95,8 @@ model Furniture {
   furnitureInCart   CartFurniture[]
   orderedFurniture  OrderedFurniture[]
   reviews Review[]
+  description String 
+  specs String 
 }
 
 model Cart {

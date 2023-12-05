@@ -21,7 +21,6 @@ export class YandexStrategy extends PassportStrategy(Strategy, 'yandex') {
         profile: Profile,
         done: (error: string | null, user: Record<string, unknown>) => void
       ) => {
-        console.log('verify::constructor', accessToken, refreshToken)
         return done(null, profile)
       }
     )

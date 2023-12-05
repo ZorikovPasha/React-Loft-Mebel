@@ -37,36 +37,35 @@ export class FurnitureController {
   @UseInterceptors(FileInterceptor('image'))
   @HttpCode(200)
   @Post()
-  async create(@Body() createFurnitureDto: CreateFurnitureDto, @UploadedFile() uploadedImage: Express.Multer.File) {
-    const { name, type, priceOld, priceNew, colors, rating, sale, room, material, brand, dimensions } =
-      createFurnitureDto
-
+  async create(@Body() dto: CreateFurnitureDto, @UploadedFile() uploadedImage: Express.Multer.File) {
     if (!uploadedImage) {
       throw new BadRequestException('Image was not provided')
     }
 
-    const { status, deserializedDimensions } = this.utils.deserializeDimensionsFromString(dimensions)
+    const { status, deserializedDimensions } = this.utils.deserializeDimensionsFromString(dto.dimensions)
 
     if (!status) {
       throw new BadRequestException('Dimensions are not correct')
     }
 
-    const deserializedSale = sale === '1'
-    const deserializedColors = colors?.split(';') ?? []
+    const deserializedSale = dto.sale === '1'
+    const deserializedColors = dto.colors?.split(';') ?? []
 
     const furniture = {
       dimensions: deserializedDimensions,
-      name,
-      type,
-      priceNew,
-      priceOld,
+      name: dto.name,
+      type: dto.type,
+      priceNew: dto.priceNew,
+      priceOld: dto.priceOld,
       colors: deserializedColors,
-      rating,
+      rating: dto.rating,
       sale: deserializedSale,
-      room,
-      material,
-      brand,
-      image: uploadedImage
+      room: dto.room,
+      material: dto.material,
+      brand: dto.brand,
+      image: uploadedImage,
+      specs: dto.specs,
+      description: dto.description
     }
 
     await this.furnitureService.create(furniture)

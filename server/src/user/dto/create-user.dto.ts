@@ -35,17 +35,14 @@ export class LoginUserDto {
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   name: string | undefined
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   surname: string | undefined
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   phone: string | undefined
 
   @IsOptional()

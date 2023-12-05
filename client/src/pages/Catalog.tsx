@@ -36,6 +36,8 @@ const Catalog: React.FC = () => {
   const [items, setItems] = React.useState<IFurniture[]>([])
   const [isLoading, setLoading] = React.useState(false)
 
+  console.log('items', items)
+
   React.useEffect(() => {
     const controller = new AbortController()
 
@@ -58,23 +60,23 @@ const Catalog: React.FC = () => {
 
   const colors = items.reduce((accum: string[], next) => {
     const absentColors = next.colors.filter((c) => !accum.includes(c))
-    return [...accum, ...absentColors]
+    return accum.concat(absentColors)
   }, [])
 
   const brands = items.reduce((accum: string[], next) => {
-    return accum.includes(next.brand) ? accum : [...accum, next.brand]
+    return accum.includes(next.brand) ? accum : accum.concat(next.brand)
   }, [])
 
   const rooms = items.reduce((accum: string[], next) => {
-    return accum.includes(next.room) ? accum : [...accum, next.room]
+    return accum.includes(next.room) ? accum : accum.concat(next.room)
   }, [])
 
   const materials = items.reduce((accum: string[], next) => {
-    return accum.includes(next.material) ? accum : [...accum, next.material]
+    return accum.includes(next.material) ? accum : accum.concat(next.material)
   }, [])
 
   const furnitureTypes = items.reduce((accum: string[], next) => {
-    return accum.includes(next.type) ? accum : [...accum, next.type]
+    return accum.includes(next.type) ? accum : accum.concat(next.type)
   }, [])
 
   const handleFiltersSubmit = ({ brandsIds, colorsIds, room, material, type }: submitValuesType): void => {
@@ -131,18 +133,16 @@ const Catalog: React.FC = () => {
       <section className='catalog'>
         <div className='container'>
           <div className='flex align-start'>
-            {
-              <Aside
-                colors={colors}
-                brands={brands}
-                rooms={rooms}
-                types={furnitureTypes}
-                materials={materials}
-                isAsideVisible={isAsideVisible}
-                onAsideCloseClick={onAsideCloseClick}
-                handleFiltersSubmit={handleFiltersSubmit}
-              />
-            }
+            <Aside
+              colors={colors}
+              brands={brands}
+              rooms={rooms}
+              types={furnitureTypes}
+              materials={materials}
+              isAsideVisible={isAsideVisible}
+              onAsideCloseClick={onAsideCloseClick}
+              handleFiltersSubmit={handleFiltersSubmit}
+            />
             <div className='catalog__body'>
               <div className='catalog__controls controls flex'>
                 <Button

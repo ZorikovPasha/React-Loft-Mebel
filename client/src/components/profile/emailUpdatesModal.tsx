@@ -17,30 +17,29 @@ export const EmailsUpdatesModal: React.FC<{ onModalClose: () => void }> = ({ onM
     setAgreedToGetEmails((prev) => !prev)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const formData = new FormData()
 
     formData.append('wantsToReceiveEmailUpdates', agreedToGetEmails ? '1' : '0')
 
-    UserApiClient.updateUserData(formData)
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+    try {
+      const dto = await UserApiClient.updateUserData(formData)
+      if (!isSuccessfullResponse(dto)) {
+        return dispatch(toggleSnackbarOpen())
+      }
 
-        const payload = {
-          wantsToReceiveEmailUpdates: agreedToGetEmails
-        }
+      const payload = {
+        wantsToReceiveEmailUpdates: agreedToGetEmails,
+        decidedOnWantsToReceiveEmailUpdates: true
+      }
 
-        dispatch(editUserActionCreator(payload))
-        localStorage.setItem('decidedOnRecieveingEmails', '1')
-        onModalClose()
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      dispatch(editUserActionCreator(payload))
+      onModalClose()
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   return (

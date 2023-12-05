@@ -2,38 +2,26 @@ import React from 'react'
 import { IFurniture, IImage, IReview } from '../../api/types'
 import { Modal } from '../common/Modal'
 import { AttachmentsPopupBody } from './attachmentsModal'
+import { Button } from '../common/Button'
 
 type NewReviewsType = Omit<IReview, 'attachedPictures'> & {
   attachedPictures: IImage[]
 }
 
 export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
-  const { reviews } = product
+  const { reviews, specs } = product
 
   const attachmentsInModal = React.useRef<IImage[]>([])
 
   const [showAttachmentsModel, setShowAttachmentsModel] = React.useState(false)
-  const [activeTab, setActiveTab] = React.useState(0)
+  const [activeTab, setActiveTab] = React.useState<keyof typeof tabsContents>('features')
 
   const tabsContents = {
     features: {
-      name: 'Характеристки',
-      items: [
-        { feature: 'Размер', value: '218 × 95 × 90 <span>(Дл. × Шир. × Выс.)</span>' },
-        { feature: 'Спальное место', value: '195 × 144 × 44 <span>(Дл. × Шир. × Выс.)</span>' },
-        { feature: 'Посадочное место', value: '50 × 44 (Глуб. × Выс.)' },
-        { feature: 'Каркас', value: 'массив, фанера, ДВП, пружинная змейка' },
-        { feature: 'Механизм', value: 'пантограф' },
-        { feature: 'Материал ножек', value: 'массив' },
-        { feature: 'Наполнение подушек', value: 'крошка ППУ, холлофайбер' }
-      ]
+      name: 'Specs'
     },
     reviews: {
       name: 'Reviews'
-    },
-    delivery: {
-      name: 'Доставка',
-      items: [{ method: 'Посылка', details: 'Очень быстро, заказывайте.' }]
     }
   }
 
@@ -43,7 +31,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
     setShowAttachmentsModel(true)
   }
 
-  const onTabClick = (idx: number) => (e: React.MouseEvent) => {
+  const onTabClick = (idx: keyof typeof tabsContents) => (e: React.MouseEvent) => {
     e.preventDefault()
     setActiveTab(idx)
   }
@@ -66,6 +54,13 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
     reviewsToRender.push(r as NewReviewsType)
   })
 
+  const specsToRender: string[][] = []
+  specs.split(';').forEach((string) => {
+    if (string.trim().length > 0) {
+      specsToRender.push(string.split(':'))
+    }
+  })
+
   const onAttachmentsodalClose = () => {
     setShowAttachmentsModel(false)
     document.body.classList.remove('locked')
@@ -84,89 +79,37 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
       <section className='product-tabs mt-40'>
         <div className='container'>
           <div className='product-tabs__inner'>
-            <div className='product-tabs__toggle'>
-              {Object.entries(tabsContents).map((tab, idx) => (
-                <a
-                  className={`product-tabs__title ${activeTab === idx ? 'active' : ''}`}
-                  key={tab[0]}
-                  href='/#'
-                  data-index={idx}
-                  onClick={onTabClick(idx)}
+            <div className='flex gap-20'>
+              {Object.entries(tabsContents).map(([key, props]) => (
+                <Button
+                  className={`profile__tab ${key === activeTab ? 'profile__tab--active' : ''}`}
+                  key={key}
+                  title={`Click ${props.name}`}
+                  type='button'
+                  onClick={onTabClick(key as keyof typeof tabsContents)}
                 >
-                  {tab[1].name}
-                </a>
+                  {props.name}
+                </Button>
               ))}
             </div>
 
-            <div className='product-tabs__content'>
-              {activeTab === 0 && (
+            <div className='product-tabs__content mt-30'>
+              {activeTab === 'features' && (
                 <div className='product-tabs__content-item product-content'>
                   <div className='product-content__box'>
-                    <div className='product-content__row'>
-                      <div className='product-content__line'>
-                        <p className='product-content__text product-content__text--left'>Размер</p>
-                        <div className='product-content__dots'></div>
+                    {specsToRender.map((item) => (
+                      <div className='product-content__row'>
+                        <div className='product-content__line'>
+                          <p className='product-content__text product-content__text--left'>{item[0]}</p>
+                          <div className='product-content__dots'></div>
+                        </div>
+                        <p className='product-content__text product-content__text--right'>{item[1]}</p>
                       </div>
-                      <p className='product-content__text product-content__text--right'>
-                        218 × 95 × 90 <span>(Дл. × Шир. × Выс.)</span>
-                      </p>
-                    </div>
-
-                    <div className='product-content__row'>
-                      <div className='product-content__line'>
-                        <p className='product-content__text product-content__text--left'>Спальное место</p>
-                        <div className='product-content__dots'></div>
-                      </div>
-                      <p className='product-content__text product-content__text--right'>
-                        195 × 144 × 44 <span>(Дл. × Шир. × Выс.)</span>
-                      </p>
-                    </div>
-
-                    <div className='product-content__row'>
-                      <div className='product-content__line'>
-                        <p className='product-content__text product-content__text--left'>Посадочное место</p>
-                        <div className='product-content__dots'></div>
-                      </div>
-                      <p className='product-content__text product-content__text--right'>50 × 44 (Глуб. × Выс.)</p>
-                    </div>
-
-                    <div className='product-content__row'>
-                      <div className='product-content__line'>
-                        <p className='product-content__text product-content__text--left'>Каркас</p>
-                        <div className='product-content__dots'></div>
-                      </div>
-                      <p className='product-content__text product-content__text--right'>
-                        массив, фанера, ДВП, пружинная змейка
-                      </p>
-                    </div>
-
-                    <div className='product-content__row'>
-                      <div className='product-content__line'>
-                        <p className='product-content__text product-content__text--left'>Механизм</p>
-                        <div className='product-content__dots'></div>
-                      </div>
-                      <p className='product-content__text product-content__text--right'>пантограф</p>
-                    </div>
-
-                    <div className='product-content__row'>
-                      <div className='product-content__line'>
-                        <p className='product-content__text product-content__text--left'>Материал ножек</p>
-                        <div className='product-content__dots'></div>
-                      </div>
-                      <p className='product-content__text product-content__text--right'>массив</p>
-                    </div>
-
-                    <div className='product-content__row'>
-                      <div className='product-content__line'>
-                        <p className='product-content__text product-content__text--left'>Наполнение подушек</p>
-                        <div className='product-content__dots'></div>
-                      </div>
-                      <p className='product-content__text product-content__text--right'>крошка ППУ, холлофайбер</p>
-                    </div>
+                    ))}
                   </div>
                 </div>
               )}
-              {activeTab === 1 && (
+              {activeTab === 'reviews' && (
                 <div className='product-tabs__content-item product-content'>
                   {reviewsToRender.map(({ id, text, score, user, attachedPictures, createdAt }) => (
                     <div
@@ -245,28 +188,22 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
 
                       <p className='product-tabs__review-p mt-30'>{text}</p>
                       {attachedPictures.length ? (
-                        <div className='product-tabs__review-attachments flex mt-20'>
+                        <div className='product-tabs__review-attachments flex mt-20 gap-20'>
                           {attachedPictures.map((p) => (
-                            <img
+                            <div
                               key={p.url}
-                              src={import.meta.env.VITE_BACKEND + p.url}
-                              className='product-tabs__review-attach'
-                              alt=''
                               onClick={openAttachmentsModal(attachedPictures)}
-                            />
+                              className='product-tabs__review-attach-box relative'
+                            >
+                              <img
+                                src={import.meta.env.VITE_BACKEND + p.url}
+                                className='product-tabs__review-attach'
+                                alt=''
+                              />
+                            </div>
                           ))}
                         </div>
                       ) : null}
-                    </div>
-                  ))}
-                </div>
-              )}
-              {activeTab === 2 && (
-                <div className='product-tabs__content-item product-content'>
-                  {tabsContents.delivery.items.map(({ details, method }) => (
-                    <div key={details}>
-                      <span>{method}: </span>
-                      {details}
                     </div>
                   ))}
                 </div>

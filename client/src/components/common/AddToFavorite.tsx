@@ -17,28 +17,27 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
 
   const { favorites, isLoggedIn } = useSelector(getUserData)
 
-  const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+  const onAddToFavoriteClick: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
 
     if (!isLoggedIn) {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
-    UserApiClient.addFavoriteItem(id)
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+    try {
+      const response = await UserApiClient.addFavoriteItem(id)
+      if (!isSuccessfullResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
 
-        const payload = {
-          favorites: [id]
-        }
+      const payload = {
+        favorites: [id]
+      }
 
-        dispatch(editUserActionCreator(payload))
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      dispatch(editUserActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   return (

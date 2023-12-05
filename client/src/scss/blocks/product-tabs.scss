@@ -3,12 +3,6 @@
     margin-top: 30px;
   }
 
-  &__toggle {
-    display: flex;
-    align-items: center;
-    margin-bottom: 27px;
-  }
-
   &__title {
     padding-bottom: 10px;
     position: relative;
@@ -89,7 +83,24 @@
     object-fit: cover;
     object-position: center;
     border-radius: 10px;
+  }
+
+  &__review-attach-box {
     cursor: pointer;
+
+    &:hover::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      content: "";
+      background-image: url("/images/icons/magnifier.svg");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      width: 50px;
+      height: 50px;
+    }
   }
 
   &__review-attach-big {
@@ -102,10 +113,6 @@
     width: calc(100%);
     object-fit: contain;
     object-position: center;
-  }
-
-  &__review-attach + &__review-attach {
-    margin-left: 20px;
   }
 
   &__review-right {

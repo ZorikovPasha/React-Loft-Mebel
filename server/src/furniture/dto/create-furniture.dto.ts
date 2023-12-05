@@ -44,4 +44,12 @@ export class CreateFurnitureDto {
   @IsString()
   @IsNotEmpty()
   dimensions: string
+
+  @IsString()
+  @IsNotEmpty()
+  specs: string
+
+  @IsString()
+  @IsNotEmpty()
+  description: string
 }

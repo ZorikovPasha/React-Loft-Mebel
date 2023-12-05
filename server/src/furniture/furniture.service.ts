@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
+import { Furniture } from '@prisma/client'
 
 class CreateFurnitureData {
   name: string
@@ -14,26 +15,13 @@ class CreateFurnitureData {
   material: string
   brand: string
   image: Express.Multer.File
+  specs: string
+  description: string
   dimensions: {
     width: number
     length: number
     height: number
   }[]
-}
-
-interface IFurniture {
-  id: number
-  imageId: number
-  name: string
-  type: string
-  priceOld: string
-  priceNew: string
-  colors: string[]
-  rating: string
-  sale: boolean
-  room: string
-  material: string
-  brand: string
 }
 
 @Injectable()
@@ -63,6 +51,8 @@ export class FurnitureService {
         room: createFurnitureData.room,
         material: createFurnitureData.material,
         brand: createFurnitureData.brand,
+        description: createFurnitureData.description,
+        specs: createFurnitureData.specs,
         imageId: savedImage.id
       }
     })
@@ -100,7 +90,7 @@ export class FurnitureService {
     )
   }
 
-  async prepareFurniture(furnitureItem: IFurniture) {
+  async prepareFurniture(furnitureItem: Furniture) {
     const [image, dimensions, reviews] = await Promise.all([
       this.prisma.image.findFirst({
         where: {
@@ -173,6 +163,8 @@ export class FurnitureService {
       room: furnitureItem.room,
       material: furnitureItem.material,
       brand: furnitureItem.brand,
+      description: furnitureItem.description,
+      specs: furnitureItem.specs,
       image: image
         ? {
             id: image.id,

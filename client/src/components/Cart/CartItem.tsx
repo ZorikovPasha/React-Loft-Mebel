@@ -8,6 +8,7 @@ import { removeProductFromCartActionCreator } from '../../redux/actions/userActi
 import { getUserData } from '../../redux/getters'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from '../common/Button'
+import { splitPriceWithSpaces } from '../../utils'
 
 interface ICartItemProps {
   item: {
@@ -32,7 +33,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
 
   const dispatch = useDispatch()
 
-  const onRemoveItemClick = () => {
+  const onRemoveItemClick = async () => {
     if (!isLoggedIn) {
       return
     }
@@ -42,26 +43,25 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
       color
     }
 
-    UserApiClient.removeCartItem(dto)
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
-        const payload = {
-          id: cartItemId,
-          furnitureId,
-          quintity,
-          color
-        }
+    try {
+      const response = await UserApiClient.removeCartItem(dto)
+      if (!isSuccessfullResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
+      const payload = {
+        id: cartItemId,
+        furnitureId,
+        quintity,
+        color
+      }
 
-        dispatch(removeProductFromCartActionCreator(payload))
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      dispatch(removeProductFromCartActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
-  const totalCost = price * quintity
+  const totalToRender = splitPriceWithSpaces(price * quintity)
 
   return (
     <div className='item flex relative'>
@@ -76,7 +76,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
             <h6 className='item__info-name fw-500'>
               <Link to={`/products/${furnitureId}`}>{name}</Link>
             </h6>
-            <p className='item__info-price'>{totalCost} ₽</p>
+            <p className='item__info-price'>{totalToRender} ₽</p>
           </div>
           <div className='item__info-line mt-20 flex items-center'>
             <div className='item__info-feature info-feature flex items-center'>

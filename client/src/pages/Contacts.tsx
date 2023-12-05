@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
@@ -9,10 +10,9 @@ import AppTextField from '../components/common/appTextField'
 import { isSuccessfullResponse } from '../api/types'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
-import { useDispatch } from 'react-redux'
 import { Button } from '../components/common/Button'
 
-const ModalContent: React.FC = () => {
+const ModalContent = () => {
   return (
     <>
       <h3 className='popup-message__title'>Сообщение отправлено</h3>
@@ -88,27 +88,25 @@ const Contacts: React.FC = () => {
     setForm((prev) => {
       return {
         ...prev,
-        [name]: {
-          ...prev[name],
+        [name]: Object.assign(prev[name], {
           value: e.target.value,
           isValid: prev[name].validateFn(e.target.value),
           showErrors: true
-        }
+        })
       }
     })
   }
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
     setForm((prev) => {
       return Object.entries(prev).reduce(
         (accum, [key, props]) => ({
           ...accum,
-          [key]: {
-            ...props,
+          [key]: Object.assign(props, {
             showErrors: true
-          }
+          })
         }),
         {}
       )
@@ -123,18 +121,17 @@ const Contacts: React.FC = () => {
       email: email.value,
       message: message.value
     }
-    UserApiClient.sendMessage(dto)
-      .then((dto) => {
-        if (isSuccessfullResponse(dto)) {
-          document.documentElement.classList.add('lock')
-          setModalOpened(true)
-        }
+    try {
+      const response = await UserApiClient.sendMessage(dto)
+      if (isSuccessfullResponse(response)) {
+        document.documentElement.classList.add('lock')
+        setModalOpened(true)
+      }
 
-        dispatch(toggleSnackbarOpen())
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      dispatch(toggleSnackbarOpen())
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   const showNameInputError = name.showErrors && !name.isValid && (name.required || Boolean(name.value))

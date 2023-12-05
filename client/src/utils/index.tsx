@@ -108,7 +108,7 @@ export const sanitizeUserRes = (userData: IUserResponse['user']) => {
     isLoggedIn: true,
     name: userData.name,
     email: userData.email,
-    surname: userData.surname,
+    surname: userData.surname ?? '',
     phone: userData.phone,
     city: userData.city,
     street: userData.street,
@@ -121,6 +121,7 @@ export const sanitizeUserRes = (userData: IUserResponse['user']) => {
         }
       : null,
     emailConfirmed: userData.emailConfirmed,
+    decidedOnWantsToReceiveEmailUpdates: userData.decidedOnWantsToReceiveEmailUpdates,
     wantsToReceiveEmailUpdates: userData.wantsToReceiveEmailUpdates,
     createdAt: userData.createdAt,
     updatedAt: userData.updatedAt,
@@ -128,4 +129,16 @@ export const sanitizeUserRes = (userData: IUserResponse['user']) => {
     orders: processedOrders,
     cart: userData.cart ?? []
   }
+}
+
+export const splitPriceWithSpaces = (total: number) => {
+  let totalToRender = ''
+  let charsCount = total.toString().length
+
+  while (charsCount > 3) {
+    totalToRender = totalToRender + total.toString().slice(0, 2) + ' ' + total.toString().slice(charsCount - 3)
+    charsCount = charsCount - 3
+  }
+
+  return totalToRender
 }

@@ -57,10 +57,6 @@ TODO!:
 - [x] handle something went wrong when updating profile
 - [x] should add search     
 - [x] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
-- [ ] add remaining products    
-- [ ] mark in swagger which id to send
-- [ ] /login swagger edit response types 
-- [ ] at the start two equal api call `api/furniture` in catalog
 - [x] add reviews  
 - [x] redesign successfull signup popup   
 - [x] profile popup `recieve emails` is without scroll lock  
@@ -81,14 +77,26 @@ TODO!:
 - [x] /contacts form redesign
 - [x] should disable buttons and inputs while making submit requests
 - [x] moving to nestjs   
-- [ ] add server tests  
-- [ ] add confirmation email
 - [x] add login via yandex
-- [ ] nestjs swagger  
 - [x] signup server errors indication
 - [x] cancel profile filling
 - [x] signup error messages not in english  
 - [x] login via yandex popup with email shows every time  
 - [x] cart item mobile view is messed up  
-- [ ] should add floating inputs?
-- [ ] should add shipping methods and specs on furniture
+- [x] should add shipping methods and specs on furniture
+- [ ] move svgs to separate files respectively
+- [ ] add remaining products    
+- [ ] mark in swagger which id to send
+- [ ] /login swagger edit response types 
+- [ ] at the start two equal api call `api/furniture` in catalog
+- [ ] add server tests  
+- [ ] add confirmation email
+- [ ] nestjs swagger  
+- [ ] after login via yandex login shows in a moment before profile  
+- [ ] move from redux to zustand
+- [x] Profile tabs are broken
+- [ ] loader while fetching user data? (react-query)
+- [ ] make sure that user data sanitized is of correct type  
+- [x] making product favorite is not working with store  
+- [x] PUT /user male phone optional
+- [x] cart total split with spaces

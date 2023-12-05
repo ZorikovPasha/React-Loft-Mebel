@@ -59,12 +59,6 @@ export interface ILoginUser400 {
   message: string
 }
 
-export interface ISuccessfullLoginResponse extends IUserResponse {
-  token: string
-}
-
-//
-
 export interface I401Response {
   message: 'Unauthorized'
   statusCode: 401
@@ -93,7 +87,7 @@ export interface IUserResponse {
   user: {
     id: string
     name: string
-    surname: string
+    surname: string | null
     userName: string
     email: string
     phone: string
@@ -119,6 +113,7 @@ export interface IUserResponse {
     } | null
     role: string
     emailConfirmed: boolean
+    decidedOnWantsToReceiveEmailUpdates: boolean
     wantsToReceiveEmailUpdates: boolean
     createdAt: Date
     updatedAt: Date
@@ -126,6 +121,10 @@ export interface IUserResponse {
     orders: IOrderResponse[] | never[] | null
     cart: ICartItemResponse[] | never[] | null
   }
+}
+
+export interface ISuccessfullLoginResponse extends IUserResponse {
+  token: string
 }
 
 export type FormDataType = Omit<SignUpCredsType, 'password'> & { message: string }
@@ -175,6 +174,8 @@ export interface IFurniture {
   material: string
   brand: string
   image: IImage | null
+  description: string
+  specs: string
   dimensions:
     | {
         id: number
@@ -253,7 +254,7 @@ export const isSuccessfullLoginResponse = <T>(
   data: ISuccessfullLoginResponse | T
 ): data is ISuccessfullLoginResponse => {
   // @ts-expect-error this is okay here
-  return data.statusCode === 200
+  return typeof data.token === 'string' && Boolean(data.user)
 }
 
 export const isRegisterUser200 = <T>(data: ISuccessfullResponse | T): data is ISuccessfullResponse => {

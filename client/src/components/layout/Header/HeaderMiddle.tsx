@@ -92,6 +92,7 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
           <Link
             to={isLoggedIn ? ROUTES.Profile : ROUTES.Login}
             className='user-header__link user-header__link--profile'
+            title='Profile'
           >
             {isLoggedIn && image ? (
               <img

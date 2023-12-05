@@ -52,14 +52,18 @@
       color: $text;
       transition: $transition;
 
+      &:visited {
+        color: $text;
+        background-color: white;
+      }
+      
       &:hover {
         color: white;
         background-color: rgba(#FF0000, 0.8);
       }
 
-      &:active,
-      &:visited { 
-        background-color: inherit;
+      &:active { 
+        background-color: white;
         border: 1px solid #FF0000; 
         color: $text;
       }

@@ -1,9 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { UserApiClient } from '../../api'
 import { IFurniture, isSuccessfullResponse } from '../../api/types'
-import { Link } from 'react-router-dom'
 import { getUserData } from '../../redux/getters'
 import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
@@ -20,7 +20,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
   const dispatch = useDispatch()
   const { isLoggedIn, favorites } = useSelector(getUserData)
 
-  const onLikeProductClick = () => {
+  const onLikeProductClick = (isLoggedIn: boolean) => async () => {
     if (!isLoggedIn) {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
@@ -30,29 +30,28 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     }
 
     if (favorites.includes(id)) {
-      return UserApiClient.deleteFavoriteItem(id)
-        .then((dto) => {
-          if (!isSuccessfullResponse(dto)) {
-            return dispatch(toggleSnackbarOpen())
-          }
-
-          editUserActionCreator(payload)
-        })
-        .catch(() => {
-          dispatch(toggleSnackbarOpen())
-        })
-    }
-    UserApiClient.addFavoriteItem(id)
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
+      try {
+        const response = await UserApiClient.deleteFavoriteItem(id)
+        if (!isSuccessfullResponse(response)) {
           return dispatch(toggleSnackbarOpen())
         }
 
-        editUserActionCreator(payload)
-      })
-      .catch(() => {
+        dispatch(editUserActionCreator(payload))
+      } catch (error) {
         dispatch(toggleSnackbarOpen())
-      })
+      }
+    } else {
+      try {
+        const response = await UserApiClient.addFavoriteItem(id)
+        if (!isSuccessfullResponse(response)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        dispatch(editUserActionCreator(payload))
+      } catch (error) {
+        dispatch(toggleSnackbarOpen())
+      }
+    }
   }
 
   const onAddToCartClick = async () => {
@@ -60,28 +59,30 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
-    UserApiClient.addItemToCart({
-      productId: id,
-      quintity: 1,
-      color: colors[0]
-    })
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+    try {
+      const dto = {
+        productId: id,
+        quintity: 1,
+        color: colors[0]
+      }
 
-        const payload = {
-          id,
-          furnitureId: id,
-          quintity: 1,
-          color: colors[0]
-        }
+      const response = await UserApiClient.addItemToCart(dto)
 
-        dispatch(addProductToCartActionCreator(payload))
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      if (!isSuccessfullResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
+
+      const payload = {
+        id,
+        furnitureId: id,
+        quintity: 1,
+        color: colors[0]
+      }
+
+      dispatch(addProductToCartActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   let discount = 0
@@ -89,8 +90,6 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
   if (priceNew < priceOld) {
     discount = (parseInt(priceOld) - parseInt(priceNew)) / 100
   }
-
-  console.log(sale)
 
   return (
     <div className='sales__item item-sales'>
@@ -103,7 +102,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         title='Like product'
         type='button'
         className='item-sales__like'
-        onClick={onLikeProductClick}
+        onClick={onLikeProductClick(isLoggedIn)}
       >
         <img
           src={isFavorite ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}

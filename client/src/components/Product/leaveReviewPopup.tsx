@@ -80,13 +80,10 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
       reader.onload = (e: ProgressEvent<FileReader>) => {
         const url = e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null
         setPictures((prev) => ({
-          files: [
-            ...prev.files,
-            {
-              file: file,
-              url: url
-            }
-          ]
+          files: prev.files.concat({
+            file: file,
+            url: url
+          })
         }))
       }
     })
@@ -115,14 +112,12 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (![score, text].every(({ isValid, required }) => (required ? isValid : true))) {
       return
     }
-
-    console.log('further')
 
     const formData = new FormData()
 
@@ -135,32 +130,29 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
 
     setIsLoading(true)
 
-    UserApiClient.sendReview(formData)
-      .then((data) => {
-        if (isRes500(data)) {
-          dispatch(toggleSnackbarOpen())
-          setIsLoading(false)
-          return
-        }
-
-        if (isRes200(data)) {
-          setIsLoading(false)
-          setText(textProps)
-          setScore(scoreProps)
-          setPictures({ files: [] })
-          onModalClose()
-          return
-        }
-
+    try {
+      const response = await UserApiClient.sendReview(formData)
+      if (isRes500(response)) {
         dispatch(toggleSnackbarOpen())
         setIsLoading(false)
-      })
-      .catch((error) => {
-        // something went wrong
-        dispatch(toggleSnackbarOpen())
-        console.log('error', error)
+        return
+      }
+
+      if (isRes200(response)) {
         setIsLoading(false)
-      })
+        setText(textProps)
+        setScore(scoreProps)
+        setPictures({ files: [] })
+        onModalClose()
+        return
+      }
+
+      dispatch(toggleSnackbarOpen())
+      setIsLoading(false)
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+      setIsLoading(false)
+    }
   }
 
   return (

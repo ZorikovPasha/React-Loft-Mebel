@@ -283,7 +283,7 @@ const NewProduct = (): JSX.Element => {
   const onAddColor = (): void => {
     setColors((prev) => ({
       ...prev,
-      value: [...prev.value, '#fff']
+      value: prev.value.concat('#fff')
     }))
     setActiveColor((prev) => prev + 1)
   }
@@ -325,7 +325,7 @@ const NewProduct = (): JSX.Element => {
   const onAddDimension = (): void => {
     setDimensions((prev) => ({
       ...prev,
-      value: [...prev.value, { width: '', length: '', height: '' }]
+      value: prev.value.concat({ width: '', length: '', height: '' })
     }))
   }
 
@@ -341,13 +341,11 @@ const NewProduct = (): JSX.Element => {
 
         dimensionToEdit[dimension] = target.value
 
-        return {
-          ...prev
-        }
+        return prev
       })
     }
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
     // checks
@@ -393,66 +391,67 @@ const NewProduct = (): JSX.Element => {
     formData.append('dimensions', serializeddimensions)
     formData.append('image', image.value)
 
-    PublicApiClient.createFurniture(formData)
-      .then((data) => {
-        if (isSuccessfullResponse(data)) {
-          setName(nameProps)
-          setType(typeProps)
-          setPriceOld(priceOldProps)
-          setPriceNew(priceNewProps)
-          setColors(colorsProps)
-          setRating(ratingProps)
-          setSale(saleProps)
-          setRoom(roomProps)
-          setMaterial(materialProps)
-          setBrand(brandProps)
-          setDimensions(dimensionsProps)
-          setImage(imageProps)
-          setActiveColor(0)
-        } else if (isResponseWithErrors(data)) {
-          data.errors?.forEach((error) => {
-            if (error.field === 'name') {
-              setName((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'type') {
-              setType((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'priceOld') {
-              setPriceOld((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'priceNew') {
-              setPriceNew((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'colors') {
-              setColors((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'rating') {
-              setRating((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'sale') {
-              setSale((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'room') {
-              setRoom((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'material') {
-              setMaterial((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'brand') {
-              setBrand((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'dimensions') {
-              setDimensions((prev) => ({ ...prev, isValid: false }))
-            }
-            if (error.field === 'image') {
-              setImage((prev) => ({ ...prev, isValid: false }))
-            }
-          })
-        } else {
-          dispatch(toggleSnackbarOpen())
-        }
-      })
-      .catch(() => dispatch(toggleSnackbarOpen()))
+    try {
+      const response = await PublicApiClient.createFurniture(formData)
+      if (isSuccessfullResponse(response)) {
+        setName(nameProps)
+        setType(typeProps)
+        setPriceOld(priceOldProps)
+        setPriceNew(priceNewProps)
+        setColors(colorsProps)
+        setRating(ratingProps)
+        setSale(saleProps)
+        setRoom(roomProps)
+        setMaterial(materialProps)
+        setBrand(brandProps)
+        setDimensions(dimensionsProps)
+        setImage(imageProps)
+        setActiveColor(0)
+      } else if (isResponseWithErrors(response)) {
+        response.errors?.forEach((error) => {
+          if (error.field === 'name') {
+            setName((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'type') {
+            setType((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'priceOld') {
+            setPriceOld((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'priceNew') {
+            setPriceNew((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'colors') {
+            setColors((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'rating') {
+            setRating((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'sale') {
+            setSale((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'room') {
+            setRoom((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'material') {
+            setMaterial((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'brand') {
+            setBrand((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'dimensions') {
+            setDimensions((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'image') {
+            setImage((prev) => ({ ...prev, isValid: false }))
+          }
+        })
+      } else {
+        dispatch(toggleSnackbarOpen())
+      }
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   return (

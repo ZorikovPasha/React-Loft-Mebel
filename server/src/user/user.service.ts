@@ -126,10 +126,11 @@ export class UserService {
         }
       })
 
-      ordersData.push({
-        ...order,
-        items: productsInOrder
-      })
+      ordersData.push(
+        Object.assign(order, {
+          items: productsInOrder
+        })
+      )
     }
 
     return {
@@ -163,6 +164,7 @@ export class UserService {
         : null,
       role: user.role,
       emailConfirmed: user.emailConfirmed,
+      decidedOnWantsToReceiveEmailUpdates: user.DecidedOnWantsToReceiveEmailUpdates,
       wantsToReceiveEmailUpdates: user.wantsToReceiveEmailUpdates,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -201,7 +203,6 @@ export class UserService {
       },
       data: Object.assign(updateUserData, additional)
     })
-    console.log('update user end')
   }
 
   async getUserFavorites(id: string) {
@@ -255,10 +256,11 @@ export class UserService {
         }
       })
 
-      ordersData.push({
-        ...order,
-        items: productsInOrder
-      })
+      ordersData.push(
+        Object.assign(order, {
+          items: productsInOrder
+        })
+      )
     }
   }
 

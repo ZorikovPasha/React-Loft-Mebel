@@ -23,7 +23,6 @@ const SliderPrevArrow: React.FC = () => {
       className='slick-btn slick-prev'
       title='Previous slide'
       type='button'
-      onClick={() => ({})}
     >
       <svg
         width='9'
@@ -48,7 +47,6 @@ const SliderNextArrow: React.FC = () => {
       className='slick-btn slick-next'
       type='button'
       title='Next slide'
-      onClick={() => ({})}
     >
       <svg
         width='8'
@@ -104,7 +102,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const dispatch = useDispatch()
   const { isLoggedIn } = useSelector(getUserData)
 
-  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating } = product
+  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description } = product
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
@@ -145,10 +143,9 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const onSelect = (name: string) => (value: ColorOptionType | null) => {
     setForm((prev) => ({
       ...prev,
-      [name]: {
-        ...prev[name],
+      [name]: Object.assign(prev.name, {
         value: value?.value ?? ''
-      }
+      })
     }))
   }
 
@@ -159,35 +156,36 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     }))
   }
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!isLoggedIn) {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
-    UserApiClient.addItemToCart({
+    const dto = {
       productId: id,
       quintity: parseInt(form.quintity.value),
       color: colorsState.value
-    })
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+    }
 
-        const payload = {
-          id,
-          furnitureId: id,
-          color: colorsState.value,
-          quintity: parseInt(form.quintity.value)
-        }
+    try {
+      const response = await UserApiClient.addItemToCart(dto)
+      if (!isSuccessfullResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
 
-        dispatch(addProductToCartActionCreator(payload))
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      const payload = {
+        id,
+        furnitureId: id,
+        color: colorsState.value,
+        quintity: parseInt(form.quintity.value)
+      }
+
+      dispatch(addProductToCartActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   const ratingWidth = (parseFloat(rating) / 5) * 95
@@ -365,11 +363,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                 ))}
               </div>
             </form>
-            <p className='info__text mt-20'>
-              Laconic lines and simple shapes, impeccable style and individuality - all this is the Deans sofa.
-              Restrained Scandinavian design will complement any modern setting. Elegance, comfort and functionality,
-              put together - “Deans” is simply created for a relaxing holiday with family or a group of friends!
-            </p>
+            <p className='info__text mt-20'>{description}</p>
 
             {isLoggedIn && (
               <Button
