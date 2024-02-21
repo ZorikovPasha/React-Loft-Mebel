@@ -222,12 +222,15 @@ const Profile: React.FC = () => {
   const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
 
   const onDrop = React.useCallback((acceptedFiles: File[]) => {
+    if (!acceptedFiles[0]) {
+      return
+    }
     if (acceptedFiles[0].type === 'image/jpeg' || acceptedFiles[0].type === 'image/png') {
       const reader = new FileReader()
       reader.readAsDataURL(acceptedFiles[0])
       reader.onload = (e: ProgressEvent<FileReader>) => {
         setProfilePicture({
-          file: acceptedFiles[0],
+          file: acceptedFiles[0] ?? null,
           url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null,
           isTouched: true
         })

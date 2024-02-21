@@ -63,7 +63,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
       const dto = {
         productId: id,
         quintity: 1,
-        color: colors[0]
+        color: colors[0] ?? '#FFF'
       }
 
       const response = await UserApiClient.addItemToCart(dto)
@@ -76,7 +76,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         id,
         furnitureId: id,
         quintity: 1,
-        color: colors[0]
+        color: colors[0] ?? '#FFF'
       }
 
       dispatch(addProductToCartActionCreator(payload))
@@ -128,7 +128,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
           {priceNew ? <p className='item-sales__price-new'>{priceNew} ₽</p> : null}
           {priceOld && sale ? <p className='item-sales__price-old'>{priceOld + ' ₽'}</p> : null}
         </div>
-        {dimensions ? (
+        {dimensions && dimensions[0] ? (
           <div className='item-sales__bottom flex'>
             <p className='item-sales__text'>Размеры</p>
             <div className='item-sales__line'>

@@ -252,7 +252,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                   Kitchens
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[0].map(({ link, text }) => (
+                  {subLists.current[0]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
@@ -297,7 +297,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                   Bedrooms
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[1].map(({ link, text }) => (
+                  {subLists.current[1]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
@@ -346,7 +346,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                   Living rooms
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[2].map(({ link, text }) => (
+                  {subLists.current[2]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
@@ -395,7 +395,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                   Halls
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[3].map(({ link, text }) => (
+                  {subLists.current[3]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
@@ -444,7 +444,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                   Offices
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[4].map(({ link, text }) => (
+                  {subLists.current[4]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
@@ -505,7 +505,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                   Children
                 </Link>
                 <ul className='header__sub-list header__sub-list--rightside'>
-                  {subLists.current[5].map(({ link, text }) => (
+                  {subLists.current[5]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'

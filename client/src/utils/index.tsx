@@ -81,7 +81,7 @@ export const breakString: breakStringType = (originalStr = '', query = '') => {
       {positions.map(({ start, end }, idx) => (
         <React.Fragment key={start}>
           <span className='highlight'>{originalStr.slice(start, end)}</span>
-          {positions.length > 1 && positions[idx + 1] && originalStr.slice(end, positions[idx + 1].start)}
+          {positions.length > 1 && positions[idx + 1] && originalStr.slice(end, positions[idx + 1]?.start)}
         </React.Fragment>
       ))}
       {originalStr.slice(lastFoundEntryPositions.end, originalStr.length)}

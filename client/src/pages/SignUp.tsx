@@ -65,7 +65,7 @@ const SignUp = () => {
 
   const { isLoggedIn } = useSelector(getUserData)
 
-  const fields = React.useRef<Record<string, IField>>({
+  const fields = React.useRef<Record<'userName' | 'email' | 'password', IField>>({
     userName: {
       value: '',
       label: 'Name',
@@ -122,25 +122,32 @@ const SignUp = () => {
   const [form, setForm] = React.useState(fields.current)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const value = e.target.value
-    setForm((prev) => ({
-      ...prev,
-      [name]: {
-        ...prev[name],
-        value,
-        isValid: prev[name].validateFn(value),
-        showErrors: true,
-        errorMessage: prev[name].getErrorMessage(value)
-      }
-    }))
-  }
+  const onChange =
+    (name: 'userName' | 'email' | 'password') => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = e.target.value
+      setForm((prev) => {
+        const props = prev[name]
+        if (!props) {
+          return prev
+        }
+        return {
+          ...prev,
+          [name]: {
+            ...props,
+            value,
+            isValid: props.validateFn(value),
+            showErrors: true,
+            errorMessage: props.getErrorMessage(value)
+          }
+        }
+      })
+    }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
-    Object.keys(form).forEach((key) => {
-      form[key].showErrors = true
+    Object.values(form).forEach((props) => {
+      props.showErrors = true
     })
     setForm({ ...form })
 
@@ -179,21 +186,25 @@ const SignUp = () => {
           const errorData: Record<string, string> = {}
           response.message.forEach((message: string) => {
             const fieldName = message.split(' ')[0]
+            if (!fieldName) {
+              return
+            }
             errorData[fieldName] = message
           })
 
           setForm((prev) => {
             const newFormState: Record<string, IField> = {}
-            Object.entries(prev).forEach(([key]) => {
-              if (errorData[key]) {
+            Object.entries(prev).forEach(([key, props]) => {
+              const newErrorMessage = errorData[key]
+              if ((key === 'userName' || key === 'email' || key === 'password') && newErrorMessage) {
                 newFormState[key] = {
                   ...prev[key],
                   isValid: false,
                   showErrors: true,
-                  errorMessage: errorData[key]
+                  errorMessage: newErrorMessage
                 }
               } else {
-                newFormState[key] = prev[key]
+                newFormState[key] = props
               }
             })
 
@@ -266,7 +277,7 @@ const SignUp = () => {
                     inputClassName={inputClassName}
                     showErrors={_showErrors}
                     errorMessage={errorMessage}
-                    onChange={onChange(key)}
+                    onChange={onChange(key as 'userName' | 'email' | 'password')}
                   />
                 )
               })}

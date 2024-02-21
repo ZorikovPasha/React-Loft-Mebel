@@ -106,7 +106,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
-  const fields = React.useRef<Record<string, ISelectField>>({
+  const fields = React.useRef<Record<'quintity' | 'dimensions', ISelectField>>({
     quintity: {
       label: 'Quintity',
       value: '1',
@@ -119,7 +119,9 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     },
     dimensions: {
       label: 'Размер (Д × Ш × В)',
-      value: dimensions ? `${dimensions[0].width} CM × ${dimensions[0].length} CM × ${dimensions[0].height} CM` : '',
+      value: dimensions
+        ? `${dimensions[0]?.width ?? 0} CM × ${dimensions[0]?.length ?? 0} CM × ${dimensions[0]?.height ?? 0} CM`
+        : '',
       options:
         dimensions?.map((d) => ({
           value: `${d.width} CM × ${d.length} CM × ${d.height} CM`,
@@ -140,11 +142,15 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const [colorsState, setColorsState] = React.useState(colorProps)
   const [reviewModelShown, setReviewModelShown] = React.useState(false)
 
-  const onSelect = (name: string) => (value: ColorOptionType | null) => {
+  const onSelect = (name: 'quintity' | 'dimensions') => (value: ColorOptionType | null) => {
     setForm((prev) => {
+      const props = prev[name]
+      if (!props) {
+        return prev
+      }
       return {
         ...prev,
-        [name]: Object.assign(prev[name], {
+        [name]: Object.assign(props, {
           value: value?.value ?? ''
         })
       }
@@ -168,7 +174,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     const dto = {
       productId: id,
       quintity: parseInt(form.quintity.value),
-      color: colorsState.value
+      color: colorsState.value ?? '#FFF'
     }
 
     try {
@@ -180,7 +186,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
       const payload = {
         id,
         furnitureId: id,
-        color: colorsState.value,
+        color: colorsState.value ?? '#FFF',
         quintity: parseInt(form.quintity.value)
       }
 
@@ -339,7 +345,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                     <CustomSelect
                       value={props.value}
                       options={props.options}
-                      onChange={onSelect(key)}
+                      onChange={onSelect(key as 'quintity' | 'dimensions')}
                     />
                   </div>
                 ))}
@@ -354,7 +360,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                       className='colors__checkbox-real'
                       id={color}
                       type='checkbox'
-                      checked={colorsState.value.includes(color)}
+                      checked={colorsState.value?.includes(color) ?? false}
                       onChange={onColor(color)}
                     />
                     <span

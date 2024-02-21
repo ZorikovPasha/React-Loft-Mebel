@@ -28,7 +28,7 @@ const Login: React.FC = () => {
   const { isLoggedIn } = useSelector(getUserData)
   const history = useHistory()
 
-  const fields = React.useRef<Record<string, IField>>({
+  const fields = React.useRef<Record<'email' | 'password', IField>>({
     email: {
       tag: 'input',
       value: '',
@@ -66,17 +66,23 @@ const Login: React.FC = () => {
   const [form, setForm] = React.useState(fields.current)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChange = (name: 'email' | 'password') => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target
-    setForm((prev) => ({
-      ...prev,
-      [name]: Object.assign(prev[name], {
-        value: target.value,
-        isValid: prev[name].validateFn(target.value),
-        errorMessage: prev[name].getErrorMessage(target.value),
-        showErrors: true
-      })
-    }))
+    setForm((prev) => {
+      const props = prev[name]
+      if (!props) {
+        return prev
+      }
+      return {
+        ...prev,
+        [name]: Object.assign(props, {
+          value: target.value,
+          isValid: props.validateFn(target.value),
+          errorMessage: props.getErrorMessage(target.value),
+          showErrors: true
+        })
+      }
+    })
   }
 
   const yandexAuthLink = `${import.meta.env.VITE_BACKEND}/auth/login/yandex`
@@ -84,17 +90,18 @@ const Login: React.FC = () => {
   const handleSubmit: React.MouseEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
-    setForm((prev) => {
-      return Object.entries(prev).reduce(
-        (accum, [key, props]) => ({
-          ...accum,
-          [key]: Object.assign(props, {
-            showErrors: true
-          })
-        }),
-        {}
-      )
-    })
+    const newFormState = {
+      email: {
+        ...form.email,
+        showErroers: true
+      },
+      password: {
+        ...form.password,
+        showErroers: true
+      }
+    }
+
+    setForm(newFormState)
 
     if (!Object.values(form).every(({ isValid, required }) => required && isValid)) {
       return
@@ -188,7 +195,7 @@ const Login: React.FC = () => {
                   inputClassName={inputClassName}
                   showErrors={_showErrors}
                   errorMessage={errorMessage}
-                  onChange={onChange(key)}
+                  onChange={onChange(key as 'email' | 'password')}
                 />
               )
             })}

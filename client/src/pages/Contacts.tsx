@@ -21,8 +21,10 @@ const ModalContent = () => {
   )
 }
 
+type FieldsNames = 'name' | 'email' | 'message'
+
 const Contacts: React.FC = () => {
-  const fields = React.useRef<Record<string, IField>>({
+  const fields = React.useRef<Record<FieldsNames, IField>>({
     name: {
       value: '',
       label: 'Ваше имя',
@@ -84,13 +86,18 @@ const Contacts: React.FC = () => {
     setModalOpened(false)
   }
 
-  const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChange = (name: FieldsNames) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => {
+      const props = prev[name]
+      if (!props) {
+        return prev
+      }
+
       return {
         ...prev,
-        [name]: Object.assign(prev[name], {
+        [name]: Object.assign(props, {
           value: e.target.value,
-          isValid: prev[name].validateFn(e.target.value),
+          isValid: props.validateFn(e.target.value),
           showErrors: true
         })
       }
@@ -100,16 +107,8 @@ const Contacts: React.FC = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
-    setForm((prev) => {
-      return Object.entries(prev).reduce(
-        (accum, [key, props]) => ({
-          ...accum,
-          [key]: Object.assign(props, {
-            showErrors: true
-          })
-        }),
-        {}
-      )
+    Object.values(form).forEach((props) => {
+      props.showErrors = true
     })
 
     if (!Object.values(form).every(({ isValid }) => isValid)) {

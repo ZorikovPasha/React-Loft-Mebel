@@ -92,7 +92,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
             </div>
             <div className='item__info-feature info-feature flex items-center'>
               <p className='info-feature__name'>Размер(Ш×Д×В):</p>
-              {dimension ? (
+              {dimension[0] ? (
                 <p className='info-feature__val'>
                   {dimension[0].width} СМ × {dimension[0].length} СМ × {dimension[0].height} СМ
                 </p>

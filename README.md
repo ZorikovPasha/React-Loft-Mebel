@@ -90,9 +90,17 @@ TODO!:
 - [x] PUT /user male phone optional
 - [x] cart total split with spaces
 - [x] make sure that user data sanitized is of correct type
-- [ ] loader while fetching user data? (react-query)
-- [ ] write backend tests
-- [ ] move svgs to separate files respectively
+- [x] card liked is above search dropdown
+- [x] search found item has no image
+- [x] cannot close search dropdown
+- [x] after creating orders corresponding tabs doesnt open
+- [x] orders table is seems broken
+- [x] profile order error when trying to cancel
+- [x] productcard onselect is broken
+- [x] orders comes with no products
+- [x] items are not being added to cart
+- [x] move svgs to separate files respectively
+- [x] strict tsconfig
 - [ ] add remaining products
 - [ ] mark in swagger which id to send
 - [ ] /login swagger edit response types
@@ -102,17 +110,8 @@ TODO!:
 - [ ] nestjs swagger
 - [ ] after login via yandex login shows in a moment before profile
 - [ ] add sqlite option
-- [x] card liked is above search dropdown
-- [x] search found item has no image
-- [x] cannot close search dropdown
-- [x] after creating orders corresponding tabs doesnt open
-- [x] orders table is seems broken
-- [ ] close search on ESC and on outer area
-- [x] profile order error when trying to cancel
-- [x] productcard onselect is broken
-- [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
-- [x] orders comes with no products
 - [ ] orders with same date are not sorted right when adding new order only before reload
-- [x] items are not being added to cart
 - [ ] user gets exprired in a middle of using site
-- [ ] strict tsconfig
+- [ ] loader while fetching user data? (react-query) (nextjs is better)
+- [ ] write backend tests
+- [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)

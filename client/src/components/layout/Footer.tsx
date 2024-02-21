@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
                 {footerLists.map((list) => (
                   <ul
                     className='footer__list'
-                    key={list[0].link}
+                    key={list[0]?.link}
                   >
                     {list.map(({ link, name }) => (
                       <li
