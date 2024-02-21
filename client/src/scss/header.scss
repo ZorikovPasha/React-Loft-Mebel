@@ -305,6 +305,18 @@
     border: 1px solid #245462;
   }
 
+  &__search-close {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   &__bottom {
     display: flex;
     align-items: center;

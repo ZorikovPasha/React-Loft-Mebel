@@ -33,14 +33,14 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
     document.body.onclick = function (e: MouseEvent): void {
       if (isMobMenuOpen && !e.path?.includes(menuBtnRef.current)) {
         setMobMenuOpen(false)
-        document.documentElement.classList.remove('lock')
+        document.body.classList.remove('lock')
       }
     }
   }, [])
 
   const onMobMenuBtnClick = (): void => {
     setMobMenuOpen(true)
-    document.documentElement.classList.add('lock')
+    document.body.classList.add('lock')
   }
 
   const pathname = useSelector(getPathname)

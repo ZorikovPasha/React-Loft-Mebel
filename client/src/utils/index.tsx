@@ -1,5 +1,5 @@
 import React from 'react'
-import { IUserResponse } from '../api/types'
+import { IUserResponse, OrderStatusType } from '../api/types'
 
 export const validateEmail = (email: string): boolean => {
   return email.trim().length > 4 && email.includes('@') && email.includes('.')
@@ -42,7 +42,7 @@ export const getEmailInputErrorMessage = (str: string) => {
 }
 
 export const getQueryParams = (paramName: string) => {
-  if (typeof window !== `undefined`) {
+  if (typeof window !== 'undefined') {
     const urlSearchParams = new URLSearchParams(window.location.search)
     const params = Object.fromEntries(urlSearchParams.entries())
     return params[paramName]
@@ -91,17 +91,37 @@ export const breakString: breakStringType = (originalStr = '', query = '') => {
   )
 }
 
+interface IProcessedOrder {
+  id: number
+  userId: string
+  name: string
+  status: OrderStatusType
+  createdAt: string
+  updatedAt: string
+  items: {
+    id: number
+    furnitureId: number
+    orderId: number
+    quintity: number
+    color: string
+  }[]
+}
+
 export const sanitizeUserRes = (userData: IUserResponse['user']) => {
-  const processedOrders =
-    userData.orders?.map((o) => ({
-      id: o.id,
-      userId: o.userId,
-      name: o.name,
-      status: o.status,
-      createdAt: o.createdAt,
-      updatedAt: o.updatedAt,
-      items: o.items ?? []
-    })) ?? []
+  const processedOrders: IProcessedOrder[] = []
+  if (userData.orders) {
+    userData.orders.forEach((o) => {
+      processedOrders.push({
+        id: o.id,
+        userId: o.userId,
+        name: o.name,
+        status: o.status,
+        createdAt: o.createdAt,
+        updatedAt: o.updatedAt,
+        items: Array.isArray(o.items) ? o.items : []
+      })
+    })
+  }
 
   return {
     id: userData.id,

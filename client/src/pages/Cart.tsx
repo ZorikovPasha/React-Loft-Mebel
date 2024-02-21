@@ -92,13 +92,13 @@ const Cart: React.FC = () => {
 
   const onLoginModalClose = () => {
     setModalLoginOpened(false)
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
   }
 
   const onRegisterOrder = async () => {
     if (!isLoggedIn) {
       setModalLoginOpened(true)
-      document.documentElement.classList.add('lock')
+      document.body.classList.add('lock')
       return
     }
 

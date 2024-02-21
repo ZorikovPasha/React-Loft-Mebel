@@ -144,7 +144,7 @@ export class UserController {
     return dto
   }
 
-  @HttpCode(204)
+  @HttpCode(200)
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseGuards(JwtAuthGuard)
   @Put('orders')
@@ -176,7 +176,6 @@ export class UserController {
       color: dto.color,
       productId: dto.productId
     })
-
     return { success: true }
   }
 
@@ -211,8 +210,6 @@ export class UserController {
     @UploadedFile() attachments: Express.Multer.File | null,
     @User() user: IUserPayload
   ) {
-    console.log('attachments', attachments)
-
     await this.userService.makeReview({
       userId: user.sub,
       text: dto.text,

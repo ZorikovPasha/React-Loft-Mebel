@@ -36,7 +36,7 @@
 
   &__like {
     position: absolute;
-    z-index: 1;
+    z-index: 0;
     top: 21px;
     right: 16px;
     display: flex;
@@ -73,9 +73,10 @@
   }
 
   &__title {
-    display: block;
     font-weight: 500;
-    cursor: pointer;
+    font-size: 18px;
+    line-height: 24px;
+    display: block;
     margin: 50px 0 6px;
     transition: $transition;
 

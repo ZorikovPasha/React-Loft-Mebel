@@ -2,9 +2,11 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd client
+npm run lint
 npm run test
 npm run typecheck
 
 cd ../server
+npm run lint
 npm run test:e2e
 npm run build

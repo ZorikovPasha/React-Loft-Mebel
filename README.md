@@ -1,26 +1,27 @@
 Furniture E-commerce store project
 
-TODO!: 
-- [x] aborcontroller    
-- [x] remove formik    
-- [x] remove yup    
-- [x] move select to its own chunk    
-- [x] /api/furniture changed for GET from POST    
-- [x] mobile  menu points should not come from backend  
-- [x] remove /private prefix     
-- [x] unify success messages    
-- [x] switch to prisma + postgres    
-- [x] profile picture?    
-- [x] refactor server api    
-- [x] image compressing    
-- [x] should add notfound page    
-- [x] redirect to 404    
-- [x] should get all colors and brands from backend in aside    
-- [x] should add logging when accessing a route  
-- [x] redux should get user's info right after login    
-- [x] /login should return user data (think of which)    
-- [x] decide whether should do login if there is token    
-- [x] should redirect to login after register (modals comes in)    
+TODO!:
+
+- [x] aborcontroller
+- [x] remove formik
+- [x] remove yup
+- [x] move select to its own chunk
+- [x] /api/furniture changed for GET from POST
+- [x] mobile menu points should not come from backend
+- [x] remove /private prefix
+- [x] unify success messages
+- [x] switch to prisma + postgres
+- [x] profile picture?
+- [x] refactor server api
+- [x] image compressing
+- [x] should add notfound page
+- [x] redirect to 404
+- [x] should get all colors and brands from backend in aside
+- [x] should add logging when accessing a route
+- [x] redux should get user's info right after login
+- [x] /login should return user data (think of which)
+- [x] decide whether should do login if there is token
+- [x] should redirect to login after register (modals comes in)
 - [x] image name before uploads is incorrect
 - [x] login returns image buffer but should not
 - [x] remove cart and orders requests, they come with login
@@ -32,9 +33,9 @@ TODO!:
 - [x] cart item is not being removed from redux
 - [x] removing from favorites does not remove from redux
 - [x] mark cart and favorites icons
-- [x] when not logged in items are not being added to cart 
+- [x] when not logged in items are not being added to cart
 - [x] catalog aside close
-- [x] productcard on buy nothing happens (should add to cart) 
+- [x] productcard on buy nothing happens (should add to cart)
 - [x] productcard select is not working
 - [x] productcard should display colors in select (did in a row)
 - [x] product shoul be added to cart with colors
@@ -44,7 +45,7 @@ TODO!:
 - [x] profile request should not be sent if there is no changes
 - [x] should add feature to cancel order
 - [x] /login sends back empry orders
-- [x] /product buy again removes it from cart 
+- [x] /product buy again removes it from cart
 - [x] isolate image preparing logic (and sending user data maybe? (/login & GET /user ))
 - [x] should refactor styles
 - [x] add logging in protect (and refactor it)
@@ -55,52 +56,63 @@ TODO!:
 - [x] substitute types from prisma/client insteead of hand made types
 - [x] should show snackbars when error is occured
 - [x] handle something went wrong when updating profile
-- [x] should add search     
-- [x] user should have the ability to choose whether he wants to recieve emails	("wantsToReceiveEmailUpdates": boolean)
-- [x] add reviews  
-- [x] redesign successfull signup popup   
-- [x] profile popup `recieve emails` is without scroll lock  
-- [x] profile should not send request if none of the fields is edited  
-- [x] refactor styles    
-- [x] profile email form error message is shown but border is not  
-- [x] product 404 if undefined  
-- [x] profile tabs borders design    
-- [x] should add mobile user menu   
-- [x] should only upload `.png` or `.jpg` files    
-- [x] profile should redirect to login if not authorized  
+- [x] should add search
+- [x] user should have the ability to choose whether he wants to recieve emails ("wantsToReceiveEmailUpdates": boolean)
+- [x] add reviews
+- [x] redesign successfull signup popup
+- [x] profile popup `recieve emails` is without scroll lock
+- [x] profile should not send request if none of the fields is edited
+- [x] refactor styles
+- [x] profile email form error message is shown but border is not
+- [x] product 404 if undefined
+- [x] profile tabs borders design
+- [x] should add mobile user menu
+- [x] should only upload `.png` or `.jpg` files
+- [x] profile should redirect to login if not authorized
 - [x] catalog items loader should be centered
-- [x] favorites label should be in english  
-- [x] profile no loading while updating   
-- [x] should implement github-ci    
+- [x] favorites label should be in english
+- [x] profile no loading while updating
+- [x] should implement github-ci
 - [x] add universal button component to set type, title, aria-label automatically
 - [x] check for z-indexes everywhere
 - [x] /contacts form redesign
 - [x] should disable buttons and inputs while making submit requests
-- [x] moving to nestjs   
+- [x] moving to nestjs
 - [x] add login via yandex
 - [x] signup server errors indication
 - [x] cancel profile filling
-- [x] signup error messages not in english  
-- [x] login via yandex popup with email shows every time  
-- [x] cart item mobile view is messed up  
+- [x] signup error messages not in english
+- [x] login via yandex popup with email shows every time
+- [x] cart item mobile view is messed up
 - [x] should add shipping methods and specs on furniture
 - [x] Profile tabs are broken
-- [x] making product favorite is not working with store  
+- [x] making product favorite is not working with store
 - [x] PUT /user male phone optional
 - [x] cart total split with spaces
-- [x] make sure that user data sanitized is of correct type  
+- [x] make sure that user data sanitized is of correct type
 - [ ] loader while fetching user data? (react-query)
 - [ ] write backend tests
 - [ ] move svgs to separate files respectively
-- [ ] add remaining products    
+- [ ] add remaining products
 - [ ] mark in swagger which id to send
-- [ ] /login swagger edit response types 
+- [ ] /login swagger edit response types
 - [ ] at the start two equal api call `api/furniture` in catalog
-- [ ] add server tests  
+- [ ] add server tests
 - [ ] add confirmation email
-- [ ] nestjs swagger  
-- [ ] after login via yandex login shows in a moment before profile  
-- [ ] move from redux to zustand
-- [ ] should add redis
+- [ ] nestjs swagger
+- [ ] after login via yandex login shows in a moment before profile
 - [ ] add sqlite option
-
+- [x] card liked is above search dropdown
+- [x] search found item has no image
+- [x] cannot close search dropdown
+- [x] after creating orders corresponding tabs doesnt open
+- [x] orders table is seems broken
+- [ ] close search on ESC and on outer area
+- [x] profile order error when trying to cancel
+- [x] productcard onselect is broken
+- [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
+- [x] orders comes with no products
+- [ ] orders with same date are not sorted right when adding new order only before reload
+- [x] items are not being added to cart
+- [ ] user gets exprired in a middle of using site
+- [ ] strict tsconfig

@@ -289,18 +289,19 @@ export class UserService {
       })
     ])
 
-    const productsInOrder = await Promise.all(
-      currentProductsInCart.map(async ({ furnitureId, quintity, color }) => {
-        return await this.prisma.orderedFurniture.create({
-          data: {
-            furnitureId,
-            quintity,
-            orderId: userOrder.id,
-            color
-          }
-        })
+    const productsInOrder = []
+    for (const product of currentProductsInCart) {
+      const createdFurniture = await this.prisma.orderedFurniture.create({
+        data: {
+          furnitureId: product.furnitureId,
+          quintity: product.quintity,
+          orderId: userOrder.id,
+          color: product.color
+        }
       })
-    )
+
+      productsInOrder.push(createdFurniture)
+    }
 
     await this.prisma.cartFurniture.deleteMany({
       where: {
@@ -364,7 +365,8 @@ export class UserService {
     const candidate = await this.prisma.cartFurniture.findFirst({
       where: {
         furnitureId: productId,
-        color
+        color,
+        cartId: userCart.id
       }
     })
 
@@ -372,7 +374,8 @@ export class UserService {
       await this.prisma.cartFurniture.updateMany({
         where: {
           furnitureId: productId,
-          color
+          color,
+          cartId: userCart.id
         },
         data: {
           quintity: candidate.quintity + quintity

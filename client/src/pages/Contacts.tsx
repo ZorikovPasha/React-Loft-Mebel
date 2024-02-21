@@ -80,7 +80,7 @@ const Contacts: React.FC = () => {
   const { name, email, message } = form
 
   const onModalClose = () => {
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
     setModalOpened(false)
   }
 
@@ -124,7 +124,7 @@ const Contacts: React.FC = () => {
     try {
       const response = await UserApiClient.sendMessage(dto)
       if (isSuccessfullResponse(response)) {
-        document.documentElement.classList.add('lock')
+        document.body.classList.add('lock')
         setModalOpened(true)
       }
 

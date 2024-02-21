@@ -287,10 +287,10 @@ export const isSuccessfullResponse = (
 }
 
 export const isSuccessfullCancelOrderResponse = (
-  data: IErrorsResponse | IErrorResponse | ICancelOrderResponse
-): data is ICancelOrderResponse => {
-  const property: keyof ICancelOrderResponse = 'status'
-  return property in data
+  data: IErrorsResponse | IErrorResponse | ISuccessfullResponse
+): data is ISuccessfullResponse => {
+  const property: keyof ISuccessfullResponse = 'success'
+  return property in data && data.success === true
 }
 
 export const isSuccessfullGetUserResponse = (

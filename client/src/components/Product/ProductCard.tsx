@@ -141,12 +141,14 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const [reviewModelShown, setReviewModelShown] = React.useState(false)
 
   const onSelect = (name: string) => (value: ColorOptionType | null) => {
-    setForm((prev) => ({
-      ...prev,
-      [name]: Object.assign(prev.name, {
-        value: value?.value ?? ''
-      })
-    }))
+    setForm((prev) => {
+      return {
+        ...prev,
+        [name]: Object.assign(prev[name], {
+          value: value?.value ?? ''
+        })
+      }
+    })
   }
 
   const onColor = (color: string) => () => {

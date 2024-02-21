@@ -37,7 +37,7 @@
   &__logout {
     position: relative;
     font-size: 19px;
-    color: #D41367;
+    color: #d41367;
     line-height: 26px;
     padding-left: 30px;
     white-space: nowrap;
@@ -145,7 +145,7 @@
     color: #414141;
     text-transform: capitalize;
     background-color: white;
-    border-radius: 10px 10px 0 0; 
+    border-radius: 10px 10px 0 0;
 
     &--active {
       position: relative;
@@ -155,7 +155,7 @@
         bottom: 0;
         right: 0;
         left: 0;
-        content: "";
+        content: '';
         width: 100%;
         border-bottom: 4px solid #209cee;
       }
@@ -169,7 +169,9 @@
   }
 
   &__inner {
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 7px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      0px 1px 1px rgba(0, 0, 0, 0.075) inset,
+      0px 0px 7px rgba(0, 0, 0, 0.2);
   }
 
   &__box {
@@ -223,7 +225,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px dashed #209cee; 
+    border: 2px dashed #209cee;
     cursor: pointer;
     border-radius: 50%;
 
@@ -239,7 +241,7 @@
     }
 
     &--drag {
-      background-color: rgba(#209cee, .1);
+      background-color: rgba(#209cee, 0.1);
     }
   }
 
@@ -301,7 +303,7 @@
     height: 20px;
     padding: 1px;
     border-radius: 4px;
-    border: 1px solid #D41367;
+    border: 1px solid #d41367;
 
     img {
       width: 100%;
@@ -328,17 +330,17 @@
     min-height: 100%;
     padding: 15px;
     background-color: white;
-  } 
-  
+  }
+
   &__order-total {
     font-size: 18px;
-    line-height: 26px; 
+    line-height: 26px;
     font-weight: 500;
   }
 
   &__order-name {
     font-size: 18px;
-    line-height: 26px; 
+    line-height: 26px;
     font-weight: 500;
 
     &--red {
@@ -347,6 +349,10 @@
 
     &--blue {
       color: #209cee;
+    }
+
+    &--right {
+      text-align: right;
     }
   }
 
@@ -357,7 +363,7 @@
       right: -2px;
       left: -2px;
       bottom: -2px;
-      content: "";
+      content: '';
       border: 2px solid black;
       border-radius: 50%;
     }
@@ -365,7 +371,6 @@
 
   &__order-cancel {
     overflow: hidden;
-    margin-left: 30px;
     width: 30px;
     height: 30px;
     padding: 5px;
@@ -393,18 +398,18 @@
     border-radius: 4px;
     background-color: transparent;
     cursor: pointer;
-    border: 1px solid #D41367; 
+    border: 1px solid #d41367;
     padding: 14px 30px 14px 45px;
     transition: $transition;
 
     &[disabled] {
-      border: 1px solid grey; 
+      border: 1px solid grey;
       pointer-events: none;
       touch-action: none;
     }
 
     &:hover {
-      background-color: #D41367; 
+      background-color: #d41367;
       color: white;
     }
     &:hover path {
@@ -413,11 +418,11 @@
 
     &:active {
       background-color: transparent;
-      border: 1px solid #D41367; 
+      border: 1px solid #d41367;
       color: #414141;
     }
     &:active path {
-      fill: #D41367;
+      fill: #d41367;
     }
 
     path {
@@ -437,7 +442,7 @@
     }
 
     &[disabled] {
-      border: 1px solid grey; 
+      border: 1px solid grey;
       pointer-events: none;
       touch-action: none;
     }

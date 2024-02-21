@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } f
 import {
   FormDataType,
   I500Response,
-  ICancelOrderResponse,
   ICartItemRequest,
   IErrorResponse,
   IErrorsResponse,
@@ -138,7 +137,7 @@ class UserApi extends Api {
     return this.post('/user/orders')
   }
 
-  cancelOrder = (orderId: number): Promise<ICancelOrderResponse | IErrorResponse> => {
+  cancelOrder = (orderId: number): Promise<IErrorsResponse | IErrorResponse | ISuccessfullResponse> => {
     return this.put('/user/orders', { orderId })
   }
 

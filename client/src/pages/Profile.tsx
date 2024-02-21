@@ -24,7 +24,6 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { EmailsUpdatesModal } from '../components/profile/emailUpdatesModal'
 import { Check } from '../svg/check'
 import { Cross } from '../svg/cross'
-import { Logout } from '../svg/logout'
 
 interface IFile {
   file: File | null
@@ -57,7 +56,7 @@ interface IProductInOrder {
 }
 
 interface IOrderToRender {
-  items: IProductInOrder[]
+  products: IProductInOrder[]
   id: number
   name: string
   status: string
@@ -73,7 +72,7 @@ const Profile: React.FC = () => {
     isTouched: false
   }
 
-  const tabs = ['Personal', 'Orders'] as const
+  const tabs = ['personal', 'orders'] as const
 
   const nameProps: IField = {
     value: '',
@@ -263,7 +262,10 @@ const Profile: React.FC = () => {
       })
     })
 
-    collectedOrders.push(Object.assign(order, { items: furnituresInOrder }))
+    collectedOrders.push({
+      ...order,
+      products: furnituresInOrder
+    })
   })
 
   const [profilePicture, setProfilePicture] = React.useState(fileProps)
@@ -275,7 +277,7 @@ const Profile: React.FC = () => {
   const [street, setStreet] = React.useState(streetProps)
   const [house, setHouse] = React.useState(houseProps)
   const [apartment, setApartment] = React.useState(apartmentProps)
-  const [activeTab, setActiveTab] = React.useState<'Personal' | 'Orders'>('Personal')
+  const [activeTab, setActiveTab] = React.useState<'personal' | 'orders'>('personal')
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
@@ -284,7 +286,10 @@ const Profile: React.FC = () => {
   )
 
   React.useEffect(() => {
-    if (user.decidedOnWantsToReceiveEmailUpdates === true && user.isLoggedIn) {
+    if (!user.isLoggedIn) {
+      return
+    }
+    if (user.decidedOnWantsToReceiveEmailUpdates === true) {
       return
     }
 
@@ -298,7 +303,7 @@ const Profile: React.FC = () => {
 
   React.useEffect(() => {
     const tabParam = getQueryParams('tab')
-    if (tabParam === 'Orders' || tabParam === 'Personal') {
+    if (tabParam === 'orders' || tabParam === 'personal') {
       setActiveTab(tabParam)
     }
   }, [window.location.search])
@@ -416,8 +421,6 @@ const Profile: React.FC = () => {
 
     if (
       ![email, phone, city, street, house].every((props) => {
-        console.log(props)
-
         return props.required ? props.isValid : true
       })
     ) {
@@ -517,7 +520,7 @@ const Profile: React.FC = () => {
     history.push({ pathname: '/' })
   }
 
-  const onTab = (tab: 'Personal' | 'Orders') => () => {
+  const onTab = (tab: 'personal' | 'orders') => () => {
     setActiveTab(tab)
   }
 
@@ -593,7 +596,7 @@ const Profile: React.FC = () => {
 
   if (!user.isLoggedIn) {
     history.push(ROUTES.Login)
-    return <></>
+    return null
   }
 
   return (
@@ -628,14 +631,42 @@ const Profile: React.FC = () => {
                   onClick={onLogout}
                 >
                   <>
-                    <Logout />
+                    <svg
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        d='M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9'
+                        stroke='#D41367'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                      <path
+                        d='M16 17L21 12L16 7'
+                        stroke='#D41367'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                      <path
+                        d='M21 12H9'
+                        stroke='#D41367'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                    </svg>
                     Log out
                   </>
                 </Button>
               )}
             </div>
             <div className='profile__box'>
-              {activeTab === 'Personal' && (
+              {activeTab === 'personal' && (
                 <>
                   <h3 className='profile__title'>Profile</h3>
                   <form className='profile__form mt-30'>
@@ -833,12 +864,15 @@ const Profile: React.FC = () => {
                 </>
               )}
 
-              {activeTab === 'Orders' && (
+              {activeTab === 'orders' && (
                 <div className='profile__orders orders'>
                   <h3 className='profile__title'>My orders: {collectedOrders.length}</h3>
                   <div className='mt-30'>
-                    {collectedOrders.map(({ id, name, status, createdAt, items }) => (
-                      <div className='mt-10'>
+                    {collectedOrders.map(({ id, name, status, createdAt, products }) => (
+                      <div
+                        className='mt-10'
+                        key={id}
+                      >
                         <div className='profile__orders-info grid items-center justify-between'>
                           <div className='flex items-center'>
                             <p className='profile__order-name'>
@@ -867,39 +901,50 @@ const Profile: React.FC = () => {
                           >
                             Status: {status}
                           </p>
-                          <p className='profile__order-name'>{new Date(createdAt).toLocaleDateString()}</p>
+                          <p className='profile__order-name profile__order-name--right'>
+                            {new Date(createdAt).toLocaleDateString()}
+                          </p>
                         </div>
-                        <div className='profile__table grid items-center mt-10'>
-                          <p className='profile__table-cell'>Product</p>
-                          <p className='profile__table-cell'>Price</p>
-                          <p className='profile__table-cell'>Quintity</p>
-                          <p className='profile__table-cell'>Color</p>
-                          {items.map(({ id, name, image, color, quintity, price }) => (
-                            <React.Fragment key={id}>
-                              <div className='profile__table-cell flex items-center'>
-                                <Link
-                                  to={`/products/${id}`}
-                                  className=''
-                                >
-                                  <p>{name}</p>
-                                </Link>
-                                <img
-                                  className='profile__table-image'
-                                  src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
-                                  alt=''
-                                />
-                              </div>
-                              <p className='profile__table-cell'>{price * quintity}</p>
-                              <p className='profile__table-cell'>{quintity}</p>
-                              <p className='profile__table-cell'>
-                                <span
-                                  className='profile__table-color colors__checkbox-fake'
-                                  style={{ backgroundColor: color ? color : '#fff' }}
-                                ></span>
-                              </p>
-                            </React.Fragment>
-                          ))}
-                        </div>
+
+                        {products.length > 0 ? (
+                          <div className='profile__table grid items-center mt-10'>
+                            <p className='profile__table-cell'>Product</p>
+                            <p className='profile__table-cell'>Price</p>
+                            <p className='profile__table-cell'>Quintity</p>
+                            <p className='profile__table-cell'>Color</p>
+                            {products.map(({ id, name, image, color, quintity, price }) => (
+                              <React.Fragment key={id}>
+                                <div className='profile__table-cell flex items-center'>
+                                  <Link
+                                    to={`/products/${id}`}
+                                    className=''
+                                  >
+                                    <p>{name}</p>
+                                  </Link>
+                                  <img
+                                    className='profile__table-image'
+                                    src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
+                                    alt=''
+                                  />
+                                </div>
+                                <div className='profile__table-cell flex items-center'>
+                                  <p>{price * quintity}</p>
+                                </div>
+                                <div className='profile__table-cell flex items-center'>
+                                  <p>{quintity}</p>
+                                </div>
+                                <div className='profile__table-cell flex items-center'>
+                                  <p>
+                                    <span
+                                      className='profile__table-color colors__checkbox-fake'
+                                      style={{ backgroundColor: color ? color : '#fff' }}
+                                    />
+                                  </p>
+                                </div>
+                              </React.Fragment>
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
                     ))}
                   </div>

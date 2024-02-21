@@ -36,8 +36,6 @@ const Catalog: React.FC = () => {
   const [items, setItems] = React.useState<IFurniture[]>([])
   const [isLoading, setLoading] = React.useState(false)
 
-  console.log('items', items)
-
   React.useEffect(() => {
     const controller = new AbortController()
 
@@ -109,18 +107,18 @@ const Catalog: React.FC = () => {
     }
 
     toggleAsideVisibility(false)
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
   }
 
   const onBtnClick: React.MouseEventHandler<HTMLButtonElement> = React.useCallback((): void => {
     toggleAsideVisibility(true)
-    document.documentElement.classList.add('lock')
+    document.body.classList.add('lock')
   }, [])
 
   const onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement> = (e): void => {
     e.preventDefault()
     toggleAsideVisibility(false)
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
   }
 
   const onSelectSortType = React.useCallback((cat: string): void => {

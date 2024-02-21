@@ -164,7 +164,7 @@ const SignUp = () => {
       }
 
       if (isRegisterUser200(response)) {
-        document.documentElement.classList.add('lock')
+        document.body.classList.add('lock')
         setModalSignUp(true)
         return
       }
@@ -213,7 +213,7 @@ const SignUp = () => {
 
   const onModalClose = () => {
     history.push({ pathname: ROUTES.Login })
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
     setModalSignUp(false)
   }
 

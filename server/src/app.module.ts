@@ -20,11 +20,10 @@ class AppLoggerMiddleware implements NestMiddleware {
 
     const { ip, method, originalUrl } = request
     response.on('finish', () => {
-      const { statusCode } = response
       const diff = process.hrtime(startAt)
       const responseTime = Math.round(diff[0] * 1e3 + diff[1] * 1e-6)
 
-      this.logger.log(`[${method}] ${originalUrl} ip:${ip}: ${statusCode} totalTime:${responseTime}ms`)
+      this.logger.log(`[${method}] ${originalUrl} ip:${ip}: ${response.statusCode} totalTime:${responseTime}ms`)
     })
 
     next()

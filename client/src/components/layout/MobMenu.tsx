@@ -77,12 +77,12 @@ export const MobMenu: React.FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen
   }
   const onMobMenuItemClick: React.MouseEventHandler<HTMLAnchorElement> = (): void => {
     setMobMenuOpen(false)
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
   }
 
   const onMobMenuCloseClick: React.MouseEventHandler<HTMLButtonElement> = (): void => {
     setMobMenuOpen(false)
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
   }
 
   return (

@@ -29,6 +29,7 @@ export const AppRouter = () => {
     const searchData = products.map((p) => ({
       title: p.name,
       link: `/products/${p.id}`,
+      imageUrl: p.image?.url,
       texts: [] as string[]
     }))
 
