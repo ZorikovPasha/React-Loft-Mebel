@@ -115,3 +115,5 @@ TODO!:
 - [ ] loader while fetching user data? (react-query) (nextjs is better)
 - [ ] write backend tests
 - [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
+- [x] furniture/:id return 404 if null
+- [x] remove [data] prop from furnitureReviews attachments

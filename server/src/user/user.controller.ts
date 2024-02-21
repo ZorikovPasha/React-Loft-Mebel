@@ -31,12 +31,14 @@ import {
 import { PrismaService } from '../prisma/prisma.service'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { IUserPayload } from '../auth/jwt.strategy'
+import { ApiTags } from '@nestjs/swagger'
 
 export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest()
   return request.user
 })
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(

@@ -14,10 +14,11 @@ import {
   NotFoundException
 } from '@nestjs/common'
 import { FurnitureService } from './furniture.service'
-import { CreateFurnitureDto } from './dto/create-furniture.dto'
+import { CreateFurnitureDto, FurnitureRes, apiResponse200 } from './dto/create-furniture.dto'
 import { PrismaService } from '../prisma/prisma.service'
 import { UtilsService } from '../utils/utils.service'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiExtraModels, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger'
 
 export interface IFurnitureDimension {
   width: number
@@ -25,6 +26,8 @@ export interface IFurnitureDimension {
   height: number
 }
 
+@ApiTags('Furniture')
+@ApiExtraModels(FurnitureRes)
 @Controller('api/furniture')
 export class FurnitureController {
   constructor(
@@ -33,6 +36,57 @@ export class FurnitureController {
     private readonly utils: UtilsService
   ) {}
 
+  @ApiOkResponse({
+    isArray: true,
+    type: FurnitureRes
+  })
+  @Get()
+  async findAll() {
+    const items = await this.furnitureService.findAll()
+    // const findCriteria = Object.keys(req.query).reduce((accum, key) => {
+    //   if (key === 'color' || key === 'sort') return accum;
+    //     return {...accum, [this.mappedValues[key]]: req.query[key]};
+    // }, {});
+
+    // switch (req.query.sort) {
+    //   case 'asc':
+    //     furnitureItems = await Furniture.find(findCriteria).sort({ priceNew: 1 });
+    //     break;
+    //   case 'desc':
+    //     furnitureItems = await Furniture.find(findCriteria).sort({ priceNew: -1 });
+    //     break;
+    //   case 'pop':
+    //     furnitureItems = await Furniture.find(findCriteria).sort({ rating: -1 });
+    //     break;
+    //   default:
+    //     furnitureItems = await Furniture.find(findCriteria);
+    //     break;
+    //   }
+
+    return { items: items }
+  }
+
+  @ApiOkResponse({
+    schema: {
+      $ref: getSchemaPath(FurnitureRes)
+    }
+  })
+  @Get(':id')
+  async findOne(@Param('id') id: string | undefined) {
+    if (!id) {
+      throw new BadRequestException('Id was not provided')
+    }
+
+    const furnitureItem = await this.furnitureService.findOne(parseInt(id))
+
+    if (!furnitureItem) {
+      throw new NotFoundException()
+    }
+
+    return furnitureItem
+  }
+
+  @ApiOkResponse(apiResponse200)
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(FileInterceptor('image'))
   @HttpCode(200)
@@ -72,47 +126,7 @@ export class FurnitureController {
     return { success: true }
   }
 
-  @Get()
-  async findAll() {
-    const items = await this.furnitureService.findAll()
-    // const findCriteria = Object.keys(req.query).reduce((accum, key) => {
-    //   if (key === 'color' || key === 'sort') return accum;
-    //     return {...accum, [this.mappedValues[key]]: req.query[key]};
-    // }, {});
-
-    // switch (req.query.sort) {
-    //   case 'asc':
-    //     furnitureItems = await Furniture.find(findCriteria).sort({ priceNew: 1 });
-    //     break;
-    //   case 'desc':
-    //     furnitureItems = await Furniture.find(findCriteria).sort({ priceNew: -1 });
-    //     break;
-    //   case 'pop':
-    //     furnitureItems = await Furniture.find(findCriteria).sort({ rating: -1 });
-    //     break;
-    //   default:
-    //     furnitureItems = await Furniture.find(findCriteria);
-    //     break;
-    //   }
-
-    return { items: items }
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string | undefined) {
-    if (!id) {
-      throw new BadRequestException('Id was not provided')
-    }
-
-    const furnitureItem = await this.furnitureService.findOne(parseInt(id))
-
-    if (!furnitureItem) {
-      throw new NotFoundException()
-    }
-
-    return furnitureItem
-  }
-
+  @ApiOkResponse(apiResponse200)
   @HttpCode(200)
   @Delete(':id')
   async remove(@Param('id') id: string) {

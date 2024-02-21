@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
 import { Furniture } from '@prisma/client'
@@ -141,6 +141,24 @@ export class FurnitureService {
             ? {
                 userName: user.userName,
                 image: userAvatar
+                  ? {
+                      id: userAvatar.id,
+                      name: userAvatar.name,
+                      alternativeText: userAvatar.alternativeText,
+                      caption: userAvatar.caption,
+                      width: userAvatar.width,
+                      height: userAvatar.height,
+                      hash: userAvatar.hash,
+                      ext: userAvatar.ext,
+                      size: userAvatar.size,
+                      url: userAvatar.url,
+                      mime: userAvatar.mime,
+                      provider: userAvatar.provider,
+                      createdAt: userAvatar.createdAt,
+                      updatedAt: userAvatar.updatedAt,
+                      reviewId: userAvatar.reviewId
+                    }
+                  : null
               }
             : {},
           attachedPictures,
@@ -198,7 +216,7 @@ export class FurnitureService {
     })
 
     if (!furnitureItem) {
-      return null
+      throw new NotFoundException()
     }
     return await this.prepareFurniture(furnitureItem)
   }

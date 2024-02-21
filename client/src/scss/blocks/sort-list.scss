@@ -2,8 +2,7 @@
   position: absolute;
   top: 110%;
   right: 0;
-  left: 0;
-  min-width: 170px;
+  min-width: 200px;
   background: #fefefe;
   box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
   border: 2px solid $main;
@@ -12,8 +11,8 @@
   text-align: left;
 
   &__item {
-    font-size: 12px;
-    line-height: 14px;
+    font-size: 14px;
+    line-height: 16px;
     padding: 4px 0;
 
     &.active {
@@ -22,6 +21,6 @@
   }
 
   &__item + &__item {
-    margin-top: 20px;
+    margin-top: 10px;
   }
 }
