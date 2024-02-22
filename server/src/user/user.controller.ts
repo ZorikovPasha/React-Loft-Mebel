@@ -32,6 +32,7 @@ import { PrismaService } from '../prisma/prisma.service'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { IUserPayload } from '../auth/jwt.strategy'
 import { ApiTags } from '@nestjs/swagger'
+import { FurnitureService } from '../furniture/furniture.service'
 
 export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest()
@@ -43,6 +44,7 @@ export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) 
 export class UserController {
   constructor(
     private readonly userService: UserService,
+    private readonly furnitureService: FurnitureService,
     private readonly prisma: PrismaService
   ) {}
 
@@ -212,13 +214,16 @@ export class UserController {
     @UploadedFile() attachments: Express.Multer.File | null,
     @User() user: IUserPayload
   ) {
-    await this.userService.makeReview({
-      userId: user.sub,
-      text: dto.text,
-      score: dto.score,
-      furnitureId: parseInt(dto.furnitureId),
-      attachments: attachments
-    })
+    await Promise.all([
+      this.userService.makeReview({
+        userId: user.sub,
+        text: dto.text,
+        score: dto.score,
+        furnitureId: parseInt(dto.furnitureId),
+        attachments: attachments
+      }),
+      this.furnitureService.recalculateFurnitureScore(parseInt(dto.furnitureId))
+    ])
 
     return { success: true }
   }

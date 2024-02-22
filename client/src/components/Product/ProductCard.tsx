@@ -17,7 +17,7 @@ interface IProductCardProps {
   product: IFurniture
 }
 
-const SliderPrevArrow: React.FC = () => {
+const SliderPrevArrow = () => {
   return (
     <Button
       className='slick-btn slick-prev'
@@ -41,7 +41,7 @@ const SliderPrevArrow: React.FC = () => {
   )
 }
 
-const SliderNextArrow: React.FC = () => {
+const SliderNextArrow = () => {
   return (
     <Button
       className='slick-btn slick-next'
@@ -100,9 +100,10 @@ interface ISelectField {
 
 export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const dispatch = useDispatch()
-  const { isLoggedIn } = useSelector(getUserData)
+  const { isLoggedIn, ...user } = useSelector(getUserData)
+  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews } = product
 
-  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description } = product
+  const didCurrentUserReviewedThisFurniture = !!reviews?.find((r) => r.user.id === user.id) ?? false
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
@@ -265,70 +266,81 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
           <div className='info'>
             <h1 className='info__title'>{name}</h1>
             <p className='info__category'>{type}</p>
-            <div className='flex info__rating-parent'>
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
+            <div className='flex items-center'>
+              {reviews?.length ? (
+                <div className='flex info__rating-parent'>
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
 
-              <div
-                style={{ width: ratingWidth }}
-                className='flex info__rating-child'
-              >
+                  <div
+                    style={{ width: ratingWidth }}
+                    className='flex info__rating-child'
+                  >
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                  </div>
+                </div>
+              ) : (
                 <img
                   className='info__rating-img'
-                  src='/images/icons/star-black.svg'
+                  src='/images/icons/star.svg'
                   alt=''
                 />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-              </div>
+              )}
+              <p className='ml-5'>({reviews?.length ?? 0})</p>
             </div>
             <form
               className='mt-10'
               onSubmit={handleSubmit}
             >
               <div className='info__shop shop'>
-                <p className='shop__price'>{priceNew ? priceNew : priceOld} $</p>
+                <p className='shop__price'>{priceNew ? priceNew : priceOld}$</p>
                 <Button
                   className='shop__btn btn'
                   title='Buy product'
@@ -373,7 +385,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
             </form>
             <p className='info__text mt-20'>{description}</p>
 
-            {isLoggedIn && (
+            {isLoggedIn && !didCurrentUserReviewedThisFurniture && (
               <Button
                 className='shop__btn--plain btn-hollow mt-20'
                 title='Leave review'

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { ROUTES } from '../../utils/const'
 
 export const Footer: React.FC = () => {
   const footerLists = [
@@ -43,6 +44,24 @@ export const Footer: React.FC = () => {
                     ))}
                   </ul>
                 ))}
+                <ul className='footer__list'>
+                  <li className='footer__list-item'>
+                    <Link
+                      to={ROUTES.About}
+                      className='footer__list-link'
+                    >
+                      About us
+                    </Link>
+                  </li>
+                  <li className='footer__list-item'>
+                    <Link
+                      to={ROUTES.Contacts}
+                      className='footer__list-link'
+                    >
+                      Contacts
+                    </Link>
+                  </li>
+                </ul>
               </div>
             </div>
             <div className='footer__column footer__column--common'>

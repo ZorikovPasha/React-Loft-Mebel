@@ -384,7 +384,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
               <li className='categories__item'>
                 <Link
                   className='categories__item-a'
-                  to='/catalog/children'
+                  to='/catalog?room=children'
                 >
                   <svg
                     width='23'

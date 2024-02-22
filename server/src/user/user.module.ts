@@ -3,9 +3,10 @@ import { UserService } from './user.service'
 import { UserController } from './user.controller'
 import { PrismaModule } from '../prisma/prisma.module'
 import { ImageModule } from '../image/image.module'
+import { FurnitureModule } from '../furniture/furniture.module'
 
 @Module({
-  imports: [PrismaModule, ImageModule],
+  imports: [PrismaModule, ImageModule, FurnitureModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService]

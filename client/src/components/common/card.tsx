@@ -15,7 +15,7 @@ interface ISalesItemProps {
 }
 
 export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
-  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors } = product
+  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors, rating, reviews } = product
 
   const dispatch = useDispatch()
   const { isLoggedIn, favorites } = useSelector(getUserData)
@@ -130,7 +130,23 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         </div>
         {dimensions && dimensions[0] ? (
           <div className='item-sales__bottom flex'>
-            <p className='item-sales__text'>Info</p>
+            <div className='flex justify-start items-center width-full'>
+              {reviews?.length ? (
+                <img
+                  className='block'
+                  src='/images/icons/star-black.svg'
+                  alt=''
+                />
+              ) : (
+                <img
+                  className='block'
+                  src='/images/icons/star.svg'
+                  alt=''
+                />
+              )}
+              {reviews?.length ? <p className='ml-5'>{rating}</p> : null}
+              <p className='ml-5'>({reviews?.length})</p>
+            </div>
             <div className='item-sales__line'>
               <div className='item-sales__size'>
                 <p className='item-sales__val'>Width</p>

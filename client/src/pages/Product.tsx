@@ -7,7 +7,6 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { ProductTabs } from '../components/Product/ProductTabs'
 import { getProducts, getUserData } from '../redux/getters'
 import { Card } from '../components/common/card'
-import { Empty } from '../components/common/Empty'
 import { Page404 } from './404'
 import { ROUTES } from '../utils/const'
 
@@ -19,12 +18,17 @@ const Product: React.FC = () => {
   const currentProduct = products.find((p) => p.id === Number(id))
 
   const topSales = products.filter((item) => parseFloat(item.rating) > 4.5)
+  const youMayAlsoLike = products.filter((item) => item.type === currentProduct?.type)
 
   const breads = [
     { name: 'Catalog', href: ROUTES.Catalog, isLink: true },
-    { name: currentProduct?.room ?? '', href: '', isLink: true },
-    { name: currentProduct?.type ?? '', href: '', isLink: true }
+    { name: currentProduct?.room ?? '', href: `/catalog?room=${currentProduct?.room}`, isLink: true },
+    { name: currentProduct?.type ?? '', href: `/catalog?type=${currentProduct?.type}`, isLink: true }
   ]
+
+  React.useEffect(() => {
+    window.scroll({ top: 0 })
+  }, [id])
 
   return currentProduct ? (
     <>
@@ -32,10 +36,10 @@ const Product: React.FC = () => {
       <ProductCard product={currentProduct} />
       <ProductTabs product={currentProduct} />
 
-      <section className='sales'>
-        <div className='container'>
-          <h3 className='sales__title'>Top sales</h3>
-          {topSales.length ? (
+      {topSales.length ? (
+        <section className='mt-60'>
+          <div className='container'>
+            <h3 className='sales__title'>Top sales</h3>
             <div className='sales__items sales__items--product mt-30'>
               {topSales.map((product) => (
                 <Card
@@ -45,11 +49,26 @@ const Product: React.FC = () => {
                 />
               ))}
             </div>
-          ) : (
-            <Empty text='Seems like nothing in here..' />
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      ) : null}
+
+      {youMayAlsoLike.length ? (
+        <section className='mt-60'>
+          <div className='container'>
+            <h3 className='sales__title'>You may also like</h3>
+            <div className='sales__items sales__items--product mt-30'>
+              {youMayAlsoLike.map((product) => (
+                <Card
+                  key={product.id}
+                  product={product}
+                  isFavorite={favorites.includes(product.id)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
     </>
   ) : (
     <Page404 />

@@ -35,12 +35,12 @@ export const Breadcrumbs: React.FC<IBreadcrumbsProps> = ({ breadcrumbs }) => {
                 ''
               )}
               {link.isLink ? (
-                <a
+                <Link
                   className='breadcrumbs__link'
-                  href={link.href}
+                  to={link.href}
                 >
                   {link.name}
-                </a>
+                </Link>
               ) : (
                 <span className='breadcrumbs__link'>{link.name}</span>
               )}

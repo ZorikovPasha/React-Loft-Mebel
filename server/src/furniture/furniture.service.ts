@@ -139,6 +139,21 @@ export class FurnitureService {
           this.prisma.image.findMany({
             where: {
               reviewId: r.id
+            },
+            select: {
+              id: true,
+              name: true,
+              alternativeText: true,
+              caption: true,
+              width: true,
+              height: true,
+              hash: true,
+              ext: true,
+              size: true,
+              url: true,
+              mime: true,
+              createdAt: true,
+              updatedAt: true
             }
           })
         ])
@@ -151,6 +166,7 @@ export class FurnitureService {
           user: user
             ? {
                 userName: user.userName,
+                id: user.id,
                 image: userAvatar
                   ? {
                       id: userAvatar.id,
@@ -230,5 +246,37 @@ export class FurnitureService {
       throw new NotFoundException()
     }
     return await this.prepareFurniture(furnitureItem)
+  }
+
+  async recalculateFurnitureScore(furnitureId: number) {
+    console.log('furnitureId', furnitureId)
+
+    const thisFurnitureReviews = await this.prisma.review.findMany({
+      where: {
+        furnitureId: furnitureId
+      }
+    })
+
+    console.log('thisFurnitureReviews', thisFurnitureReviews)
+
+    if (thisFurnitureReviews.length > 0) {
+      const normalizedScore =
+        thisFurnitureReviews.reduce((accum: number, next) => {
+          return accum + next.score
+        }, 0) / thisFurnitureReviews.length
+
+      console.log('normalizedScore', normalizedScore, String(normalizedScore))
+
+      await this.prisma.furniture.update({
+        where: {
+          id: furnitureId
+        },
+        data: {
+          rating: String(normalizedScore)
+        }
+      })
+    }
+
+    console.log('_____end')
   }
 }

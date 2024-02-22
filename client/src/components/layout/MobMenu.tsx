@@ -30,43 +30,33 @@ export const MobMenu: React.FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen
     body: [
       {
         name: 'Kitchens',
-        link: '/catalog/kitchens',
+        link: '/catalog?room=kitchen',
         imgLink: '/images/mob-menu/kitchen.svg'
       },
       {
         name: 'Bedrooms',
-        link: '/catalog/bedroom',
+        link: '/catalog?room=bedroom',
         imgLink: '/images/mob-menu/bedroom.svg'
       },
       {
         name: 'Living rooms',
-        link: '/catalog/living',
+        link: '/catalog?room=living',
         imgLink: '/images/mob-menu/livingroom.svg'
       },
       {
         name: 'Halls',
-        link: '/catalog/hall',
+        link: '/catalog?room=hall',
         imgLink: '/images/mob-menu/closet.svg'
       },
       {
         name: 'Office',
-        link: '/catalog/office',
+        link: '/catalog?room=office',
         imgLink: '/images/mob-menu/office.svg'
       },
       {
         name: 'Children',
-        link: '/catalog/children',
+        link: '/catalog?room=children',
         imgLink: '/images/mob-menu/children.svg'
-      },
-      {
-        name: 'Sale',
-        link: '/catalog/new',
-        imgLink: '/images/mob-menu/promo.svg'
-      },
-      {
-        name: 'Cabinets',
-        link: '/catalog/cabinets',
-        imgLink: '/images/mob-menu/cupboard.svg'
       }
     ]
   }

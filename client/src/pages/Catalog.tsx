@@ -9,7 +9,6 @@ import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { getUserData } from '../redux/getters'
-import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { PublicApiClient } from '../api'
 import { IFurniture } from '../api/types'
@@ -142,20 +141,26 @@ const Catalog = () => {
           setItems(data.filtered)
         }
         allProducts.current = data.all
+
+        const defaultOption = {
+          label: 'All',
+          value: 'all'
+        }
+
         setRoom({
           value: furnitureRoom,
-          options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })), // roomSelectOptions,
+          options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption),
           label: 'Room'
         })
         setType({
           value: furnitureType,
-          options: allTypes.map((t) => ({ label: capitalizeFirstLetter(t), value: t })),
+          options: allTypes.map((t) => ({ label: capitalizeFirstLetter(t), value: t })).concat(defaultOption),
           label: 'Type'
         })
         setMaterials({
           value: furnitureMaterial,
           label: materials.label,
-          options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+          options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption)
         })
         setBrands({
           value: brands.value,
@@ -174,7 +179,13 @@ const Catalog = () => {
 
   const { favorites } = useSelector(getUserData)
 
-  const breadcrumbs = useBreadcrumbs()
+  const breadcrumbs = [
+    {
+      name: 'Catalog',
+      isLink: false,
+      href: ''
+    }
+  ]
 
   const handleFiltersSubmit = () => {
     const roomQuery = `${room.value === 'all' || room.value === undefined ? '' : `&room=${room.value}`}`

@@ -8,6 +8,7 @@ import { ImageModule } from '../image/image.module'
 @Module({
   imports: [PrismaModule, UtilsModule, ImageModule],
   controllers: [FurnitureController],
-  providers: [FurnitureService]
+  providers: [FurnitureService],
+  exports: [FurnitureService]
 })
 export class FurnitureModule {}

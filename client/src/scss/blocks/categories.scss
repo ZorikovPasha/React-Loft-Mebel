@@ -18,6 +18,15 @@
     height: inherit;
 
     &:hover {
+      background: #245462;
+      color: #fff;
+
+      path {
+        fill: white;
+      }
+    }
+
+    &:hover {
       .header__sub-list {
         display: block;
       }
@@ -30,17 +39,6 @@
     padding: 24px;
     background-color: transparent;
     height: 100%;
-
-    // @media (width >=767px) {
-    &:hover {
-      background: #245462;
-      color: #fff;
-
-      path {
-        fill: white;
-      }
-    }
-    // }
 
     @media #{$tablet} {
       padding: 24px 15px;

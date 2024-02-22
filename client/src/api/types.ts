@@ -154,6 +154,7 @@ export interface IReview {
   user: {
     userName: string | undefined
     image: IImage | null
+    id: string
   }
   attachedPictures: (IImage | null)[] | null
   createdAt: string

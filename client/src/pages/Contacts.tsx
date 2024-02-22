@@ -15,24 +15,24 @@ import { Button } from '../components/common/Button'
 const ModalContent = () => {
   return (
     <>
-      <h3 className='popup-message__title'>Сообщение отправлено</h3>
-      <p className='popup-message__text'>Мы с вами свяжемся</p>
+      <h3 className='popup-message__title'>Your request has been send!</h3>
+      <p className='popup-message__text'>We well reach out to in a close future!</p>
     </>
   )
 }
 
 type FieldsNames = 'name' | 'email' | 'message'
 
-const Contacts: React.FC = () => {
+const Contacts = () => {
   const fields = React.useRef<Record<FieldsNames, IField>>({
     name: {
       value: '',
-      label: 'Ваше имя',
+      label: 'Your name',
       labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'text',
-      placeholder: 'Введите ваше имя',
+      placeholder: 'Type your name',
       inputClassName: 'form-input',
       tag: 'input',
       showErrors: false,
@@ -43,7 +43,7 @@ const Contacts: React.FC = () => {
     email: {
       tag: 'input',
       value: '',
-      label: 'Ваш e-mail',
+      label: 'Your e-mail',
       labelClass: 'form__label',
       isValid: false,
       required: true,
@@ -58,13 +58,13 @@ const Contacts: React.FC = () => {
     },
     message: {
       value: '',
-      label: 'Сообщение',
+      label: 'Your message',
       labelClass: 'form__label',
       className: 'mt-30',
       isValid: false,
       required: true,
       type: 'text',
-      placeholder: 'Напишите ваше сообщение',
+      placeholder: 'Type your message',
       inputClassName: 'form-input',
       tag: 'textarea',
       showErrors: false,
@@ -78,8 +78,12 @@ const Contacts: React.FC = () => {
 
   const [isModalOpened, setModalOpened] = React.useState(false)
   const [form, setForm] = React.useState(fields.current)
-  const breadcrumbs = useBreadcrumbs()
   const { name, email, message } = form
+
+  const breadcrumbs = useBreadcrumbs()
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const onModalClose = () => {
     document.body.classList.remove('lock')
@@ -203,13 +207,6 @@ const Contacts: React.FC = () => {
                 onChange={onChange('message')}
               />
               <div className='contacts__form-bottom flex items-center mt-30'>
-                <label className='contacts__form-file form-file flex'>
-                  <input
-                    className='form-file__real'
-                    type='file'
-                  />
-                  <span className='btn-hollow'>Add file</span>
-                </label>
                 <Button
                   title='Submit'
                   className='btn'
@@ -229,9 +226,9 @@ const Contacts: React.FC = () => {
                 </a>
                 <a
                   className='contacts__mail'
-                  href='mailto:mebel_loft_anapa@mail.ru'
+                  href='mailto:mebel_loft_la@gmail.com'
                 >
-                  mebel_loft_anapa@mail.ru
+                  mebel_loft_la@gmail.com
                 </a>
               </div>
               <a

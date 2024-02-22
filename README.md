@@ -113,6 +113,21 @@ TODO!:
 - [x] remove new arrivals section
 - [x] on mobile cannot close search
 - [x] picture in card can be any size
+- [x] header sublists are broken
+- [x] how products rating is scored?
+- [x] show reviews in cards
+- [x] reviews attachedPictures should be no data
+- [x] breadcrumbs in catalog are broken
+- [x] reviews img if no avatar is broken
+- [x] user should not leave review if he just did it
+- [x] no "All" option in selects
+- [x] should show no stars if 0 reviews in card and in product (grey star actually)
+- [x] add `You may also like` block with products of the same `type`
+- [x] after going from one product to another should be scroll up
+- [x] add `You may also like` block with products of the same `type`
+- [x] after going from one product to another should be scroll up
+- [x] translate contacts page
+- [x] change links in mobile menu
 - [ ] mark in swagger which id to send
 - [ ] /login swagger edit response types
 - [ ] nestjs swagger
@@ -126,7 +141,8 @@ TODO!:
 - [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 - [ ] type controller's outputs
 - [ ] selecting option from header doesnt trigger products refetching
-- [x] reviews img if no avatar is broken
 - [ ] orders with same date are not sorted right when adding new order only before reload
-- [ ] how products rating is scored?
-- [ ] header sublists are broken
+- [ ] filter furniture by brand
+- [ ] should sanitize furniture after fetching
+- [ ] /profile name is not being updated
+- [ ] translate about us page

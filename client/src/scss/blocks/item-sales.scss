@@ -171,6 +171,7 @@
     display: flex;
     align-items: center;
     width: 100%;
+    margin-top: 15px;
     margin-bottom: 17px;
   }
 
@@ -197,15 +198,15 @@
   }
 
   &__val {
-    font-size: 9px;
-    line-height: 11px;
+    font-size: 12px;
+    line-height: 14px;
     color: #c4c4c4;
     margin-bottom: 8px;
   }
 
   &__num {
-    font-size: 9px;
-    line-height: 11px;
+    font-size: 12px;
+    line-height: 14px;
   }
 
   &__tocart {
