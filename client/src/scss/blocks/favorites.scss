@@ -9,35 +9,15 @@
   }
 
   &__empty-text {
-    z-index: 1;
-    font-weight: 700;
     font-size: 36px;
     line-height: 42px;
+    font-weight: 700;
     text-align: center;
+    background: #f1d152;
 
     @media #{$mobile} {
       font-size: 25px;
       line-height: 31px;
-    }
-
-    &::before {
-      transform: scaleX(0);
-      content: ' ';
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: #f1d152;
-      z-index: -1;
-      transition: transform 0.3s ease;
-      transform-origin: bottom right;
-    }
-
-    &:hover::before {
-      transform: scaleX(1);
-      transform-origin: bottom left;
     }
   }
 }

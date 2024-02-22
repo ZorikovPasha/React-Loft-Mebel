@@ -2,25 +2,24 @@
   position: absolute;
   top: 110%;
   right: 0;
-  min-width: 200px;
+  left: 0;
   background: #fefefe;
   box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
   border: 2px solid $main;
   border-radius: 3px;
-  padding: 20px;
   text-align: left;
 
   &__item {
     font-size: 14px;
     line-height: 16px;
-    padding: 4px 0;
+    padding: 15px 20px;
+
+    &:hover {
+      background-color: #f8f8f8;
+    }
 
     &.active {
       font-weight: 700;
     }
-  }
-
-  &__item + &__item {
-    margin-top: 10px;
   }
 }

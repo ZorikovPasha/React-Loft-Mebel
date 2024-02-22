@@ -189,7 +189,8 @@ export interface IFurniture {
 }
 
 export interface IFurnitureResponse {
-  items: IFurniture[]
+  filtered: IFurniture[]
+  all: IFurniture[]
 }
 
 export interface IErrorsResponse {

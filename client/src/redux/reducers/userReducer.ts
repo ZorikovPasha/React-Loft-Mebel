@@ -1,5 +1,5 @@
 import { OrderStatusType } from '../../api/types'
-import { Actions } from '../../types/actionsTypes'
+import { Actions } from '../actions/types'
 
 export type userActionType = {
   type: typeof Actions.LOGIN | typeof Actions.LOGOUT | typeof Actions.EDIT_USER_DATA | typeof Actions.ADD_CART_ITEM

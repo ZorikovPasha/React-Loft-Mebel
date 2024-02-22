@@ -1,7 +1,7 @@
 import { ThunkAction } from 'redux-thunk'
 import { Dispatch } from 'redux'
 
-import { Actions, fetchItemsActionType } from '../../types/actionsTypes'
+import { Actions, fetchItemsActionType } from './types'
 import { IProductsState } from '../reducers/itemsReducer'
 import { PublicApiClient } from '../../api'
 import { IFurniture } from '../../api/types'
@@ -10,8 +10,8 @@ export const fetchItemsThunkCreator = () // queryParams: string
 : ThunkAction<void, IProductsState, unknown, fetchItemsActionType> => {
   return async (dispatch: Dispatch<fetchItemsActionType>) => {
     const controller = new AbortController()
-    const furniture = await PublicApiClient.getFurniture(controller.signal)
-    dispatch(setItemsActionCreator(furniture.items))
+    const furniture = await PublicApiClient.getFurniture('', controller.signal)
+    dispatch(setItemsActionCreator(furniture.all))
   }
 }
 

@@ -1,4 +1,4 @@
-import { Actions, IPathnameAction } from '../../types/actionsTypes'
+import { Actions, IPathnameAction } from '../actions/types'
 
 export interface IPathnameState {
   pathname: string

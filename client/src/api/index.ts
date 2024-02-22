@@ -81,8 +81,8 @@ class Api extends Axios {
 }
 
 class PublicApi extends Api {
-  getFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
-    return this.get(`/api/furniture/`, { signal })
+  getFurniture = (query: string, signal: AbortSignal): Promise<IFurnitureResponse> => {
+    return this.get(`/api/furniture/${query}`, { signal })
   }
 
   createFurniture = (dto: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {

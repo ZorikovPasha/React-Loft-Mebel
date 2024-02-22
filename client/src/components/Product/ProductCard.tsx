@@ -118,9 +118,9 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
       ]
     },
     dimensions: {
-      label: 'Размер (Д × Ш × В)',
+      label: 'Dimensions (W × L × H)',
       value: dimensions
-        ? `${dimensions[0]?.width ?? 0} CM × ${dimensions[0]?.length ?? 0} CM × ${dimensions[0]?.height ?? 0} CM`
+        ? `${dimensions[0]?.width ?? 0} × ${dimensions[0]?.length ?? 0} × ${dimensions[0]?.height ?? 0}`
         : '',
       options:
         dimensions?.map((d) => ({
@@ -328,7 +328,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
               onSubmit={handleSubmit}
             >
               <div className='info__shop shop'>
-                <p className='shop__price'>{priceNew ? priceNew : priceOld} P</p>
+                <p className='shop__price'>{priceNew ? priceNew : priceOld} $</p>
                 <Button
                   className='shop__btn btn'
                   title='Buy product'

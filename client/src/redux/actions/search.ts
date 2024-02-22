@@ -1,4 +1,4 @@
-import { Actions } from '../../types/actionsTypes'
+import { Actions } from './types'
 import { ISearchState } from '../reducers/search'
 
 export const editSearchActionCreator = (payload: Partial<ISearchState>): ISearchAction => ({

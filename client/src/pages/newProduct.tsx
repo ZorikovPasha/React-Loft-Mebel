@@ -23,6 +23,7 @@ interface IInputProps {
   rootElclass: string
   inputClass: string
   placeholder: string
+  showErrors: boolean
 }
 
 interface ISelectProps {
@@ -32,6 +33,7 @@ interface ISelectProps {
   type: 'select'
   placeholder: string
   options: { value: string; label: string }[]
+  showErrors: boolean
 }
 
 interface IRadioProps {
@@ -65,6 +67,7 @@ interface IDimensions {
   type: 'multiInput'
   isValid: boolean
   placeholder: string
+  showErrors: boolean
 }
 
 const NewProduct = (): JSX.Element => {
@@ -76,7 +79,32 @@ const NewProduct = (): JSX.Element => {
     required: true,
     tag: 'input',
     type: 'text',
-    placeholder: 'Furniture name'
+    placeholder: 'Furniture name',
+    showErrors: false
+  }
+
+  const descriptionProps: IInputProps = {
+    value: '',
+    isValid: false,
+    rootElclass: 'mt-30',
+    inputClass: 'form-input',
+    required: true,
+    tag: 'input',
+    type: 'text',
+    placeholder: 'Furniture description',
+    showErrors: false
+  }
+
+  const specsProps: IInputProps = {
+    value: '',
+    isValid: false,
+    rootElclass: 'mt-30',
+    inputClass: 'form-input',
+    required: true,
+    tag: 'input',
+    type: 'text',
+    placeholder: 'Furniture specs',
+    showErrors: false
   }
 
   const typeProps: ISelectProps = {
@@ -91,8 +119,13 @@ const NewProduct = (): JSX.Element => {
       { value: 'table', label: 'Tables' },
       { value: 'chair', label: 'Chairs' },
       { value: 'set', label: 'Sets' },
-      { value: 'bedsideTables', label: 'Bedside tables' }
-    ]
+      { value: 'bedsideTables', label: 'Bedside tables' },
+      { value: 'shelves', label: 'Shelves' },
+      { value: 'mirrors', label: 'Mirrors' },
+      { value: 'corners', label: 'Corners' },
+      { value: 'countertops', label: 'countertops' }
+    ],
+    showErrors: false
   }
 
   const priceOldProps: IInputProps = {
@@ -103,7 +136,8 @@ const NewProduct = (): JSX.Element => {
     inputClass: 'form-input',
     tag: 'input',
     type: 'text',
-    placeholder: 'Old price'
+    placeholder: 'Old price',
+    showErrors: false
   }
 
   const priceNewProps: IInputProps = {
@@ -114,7 +148,8 @@ const NewProduct = (): JSX.Element => {
     inputClass: 'form-input',
     tag: 'input',
     type: 'text',
-    placeholder: 'New price'
+    placeholder: 'New price',
+    showErrors: false
   }
 
   const colorsProps: IColorsProps = {
@@ -132,7 +167,8 @@ const NewProduct = (): JSX.Element => {
     inputClass: 'form-input',
     tag: 'input',
     type: 'text',
-    placeholder: 'rating'
+    placeholder: 'rating',
+    showErrors: false
   }
 
   const saleProps: IRadioProps = {
@@ -156,7 +192,8 @@ const NewProduct = (): JSX.Element => {
       { value: 'children', label: 'Children' },
       { value: 'hall', label: 'Halls' },
       { value: 'office', label: 'Office' }
-    ]
+    ],
+    showErrors: false
   }
 
   const materialProps: ISelectProps = {
@@ -169,7 +206,8 @@ const NewProduct = (): JSX.Element => {
       { value: 'soft', label: 'Soft' },
       { value: 'hard', label: 'Hard' },
       { value: 'wood', label: 'Wood' }
-    ]
+    ],
+    showErrors: false
   }
 
   const brandProps: ISelectProps = {
@@ -186,7 +224,8 @@ const NewProduct = (): JSX.Element => {
       { value: 'Tyffany', label: 'Tyffany' },
       { value: 'Light', label: 'Light' },
       { value: 'Willy', label: 'Willy' }
-    ]
+    ],
+    showErrors: false
   }
 
   const dimensionsProps: IDimensions = {
@@ -199,7 +238,8 @@ const NewProduct = (): JSX.Element => {
     ],
     isValid: false,
     type: 'multiInput',
-    placeholder: 'Dimensions'
+    placeholder: 'Dimensions',
+    showErrors: false
   }
 
   const imageProps: IFileProps = {
@@ -210,6 +250,8 @@ const NewProduct = (): JSX.Element => {
   const dispatch = useDispatch()
 
   const [name, setName] = React.useState(nameProps)
+  const [description, setDescription] = React.useState(descriptionProps)
+  const [specs, setSpecs] = React.useState(specsProps)
   const [type, setType] = React.useState(typeProps)
   const [priceOld, setPriceOld] = React.useState(priceOldProps)
   const [priceNew, setPriceNew] = React.useState(priceNewProps)
@@ -232,7 +274,8 @@ const NewProduct = (): JSX.Element => {
       setState((prev) => ({
         ...prev,
         value: target.value,
-        isValid: target.value.trim().length > 0
+        isValid: target.value.trim().length > 0,
+        showErrors: true
       }))
     }
 
@@ -240,7 +283,8 @@ const NewProduct = (): JSX.Element => {
     setState((prev) => ({
       ...prev,
       value: value?.value ?? null,
-      isValid: Boolean(value?.value)
+      isValid: Boolean(value?.value),
+      showErrors: true
     }))
   }
 
@@ -340,8 +384,7 @@ const NewProduct = (): JSX.Element => {
         }
 
         dimensionToEdit[dimension] = target.value
-
-        return prev
+        return { ...prev }
       })
     }
 
@@ -349,7 +392,6 @@ const NewProduct = (): JSX.Element => {
     e.preventDefault()
 
     // checks
-
     if (name.value === null) {
       return
     }
@@ -379,6 +421,8 @@ const NewProduct = (): JSX.Element => {
 
     const formData = new FormData()
     formData.append('name', name.value)
+    formData.append('description', description.value)
+    formData.append('specs', specs.value)
     formData.append('type', type.value)
     formData.append('priceOld', priceOld.value)
     formData.append('priceNew', priceNew.value)
@@ -395,6 +439,8 @@ const NewProduct = (): JSX.Element => {
       const response = await PublicApiClient.createFurniture(formData)
       if (isSuccessfullResponse(response)) {
         setName(nameProps)
+        setDescription(descriptionProps)
+        setSpecs(descriptionProps)
         setType(typeProps)
         setPriceOld(priceOldProps)
         setPriceNew(priceNewProps)
@@ -411,6 +457,9 @@ const NewProduct = (): JSX.Element => {
         response.errors?.forEach((error) => {
           if (error.field === 'name') {
             setName((prev) => ({ ...prev, isValid: false }))
+          }
+          if (error.field === 'description') {
+            setDescription((prev) => ({ ...prev, isValid: false }))
           }
           if (error.field === 'type') {
             setType((prev) => ({ ...prev, isValid: false }))
@@ -471,8 +520,38 @@ const NewProduct = (): JSX.Element => {
             type={name.type}
             placeholder={name.placeholder}
             required={name.required}
-            showErrors
+            showErrors={name.showErrors}
             onChange={onType(setName)}
+          />
+
+          <AppTextField
+            rootElclass={description.rootElclass}
+            inputClassName={description.inputClass}
+            value={description.value}
+            elementType={description.tag}
+            label='Description'
+            labelClass='newproduct__subtitle'
+            name='description'
+            type={description.type}
+            placeholder={description.placeholder}
+            required={description.required}
+            showErrors={description.showErrors}
+            onChange={onType(setDescription)}
+          />
+
+          <AppTextField
+            rootElclass={specs.rootElclass}
+            inputClassName={specs.inputClass}
+            value={specs.value}
+            elementType={specs.tag}
+            label='Specs'
+            labelClass='newproduct__subtitle'
+            name='specs'
+            type={specs.type}
+            placeholder={specs.placeholder}
+            required={specs.required}
+            showErrors={specs.showErrors}
+            onChange={onType(setSpecs)}
           />
 
           <div className='mt-30'>
@@ -481,6 +560,7 @@ const NewProduct = (): JSX.Element => {
             <CustomSelect
               value={type.value ?? ''}
               options={type.options}
+              showErrors={type.showErrors}
               onChange={onSelect(setType)}
             />
           </div>
@@ -496,7 +576,7 @@ const NewProduct = (): JSX.Element => {
             type={priceOld.type}
             placeholder={priceOld.placeholder}
             required={priceOld.required}
-            showErrors
+            showErrors={priceOld.showErrors}
             onChange={onType(setPriceOld)}
           />
 
@@ -511,7 +591,7 @@ const NewProduct = (): JSX.Element => {
             type={priceNew.type}
             placeholder={priceNew.placeholder}
             required={priceNew.required}
-            showErrors
+            showErrors={priceNew.showErrors}
             onChange={onType(setPriceNew)}
           />
 
@@ -543,8 +623,8 @@ const NewProduct = (): JSX.Element => {
                       type='text'
                       name={`color-${idx}`}
                       placeholder=''
-                      required
-                      showErrors
+                      required={false}
+                      showErrors={false}
                       onChange={onTypeColor(idx)}
                     />
 
@@ -653,7 +733,7 @@ const NewProduct = (): JSX.Element => {
             type={rating.type}
             placeholder={rating.placeholder}
             required={rating.required}
-            showErrors
+            showErrors={rating.showErrors}
             onChange={onType(setRating)}
           />
 
@@ -679,6 +759,7 @@ const NewProduct = (): JSX.Element => {
             <CustomSelect
               value={room.value ?? ''}
               options={room.options}
+              showErrors={room.showErrors}
               onChange={onSelect(setRoom)}
             />
           </div>
@@ -689,6 +770,7 @@ const NewProduct = (): JSX.Element => {
             <CustomSelect
               value={material.value ?? ''}
               options={material.options}
+              showErrors={material.showErrors}
               onChange={onSelect(setMaterial)}
             />
           </div>
@@ -699,11 +781,12 @@ const NewProduct = (): JSX.Element => {
             <CustomSelect
               value={brand.value ?? ''}
               options={brand.options}
+              showErrors={brand.showErrors}
               onChange={onSelect(setBrand)}
             />
           </div>
 
-          <p className='newproduct__subtitle'>Dimesions</p>
+          <p className='newproduct__subtitle mt-30'>Dimesions</p>
 
           {dimensions.value.map(({ width, length, height }, idx) => (
             <div
@@ -719,7 +802,7 @@ const NewProduct = (): JSX.Element => {
                   type='text'
                   placeholder='Width'
                   required
-                  showErrors
+                  showErrors={dimensions.showErrors}
                   onChange={onTypeDimension(idx, 'width')}
                 />
                 <AppTextField
@@ -730,7 +813,7 @@ const NewProduct = (): JSX.Element => {
                   type='text'
                   placeholder='Length'
                   required
-                  showErrors
+                  showErrors={dimensions.showErrors}
                   onChange={onTypeDimension(idx, 'length')}
                 />
                 <AppTextField
@@ -741,7 +824,7 @@ const NewProduct = (): JSX.Element => {
                   type='text'
                   placeholder='Height'
                   required
-                  showErrors
+                  showErrors={dimensions.showErrors}
                   onChange={onTypeDimension(idx, 'height')}
                 />
               </div>

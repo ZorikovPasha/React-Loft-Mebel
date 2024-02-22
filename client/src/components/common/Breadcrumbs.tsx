@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-type BreadcrumbsLinkType = {
+export type BreadcrumbsLinkType = {
   name: string
   href: string
   isLink: boolean

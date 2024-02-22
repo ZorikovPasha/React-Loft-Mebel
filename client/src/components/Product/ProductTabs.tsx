@@ -3,6 +3,7 @@ import { IFurniture, IImage, IReview } from '../../api/types'
 import { Modal } from '../common/Modal'
 import { AttachmentsPopupBody } from './attachmentsModal'
 import { Button } from '../common/Button'
+import { Empty } from '../common/Empty'
 
 type NewReviewsType = Omit<IReview, 'attachedPictures'> & {
   attachedPictures: IImage[]
@@ -111,6 +112,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
               )}
               {activeTab === 'reviews' && (
                 <div className='product-tabs__content-item product-content'>
+                  {reviewsToRender.length === 0 ? <Empty text='No reviews yet' /> : null}
                   {reviewsToRender.map(({ id, text, score, user, attachedPictures, createdAt }) => (
                     <div
                       className='product-tabs__review'

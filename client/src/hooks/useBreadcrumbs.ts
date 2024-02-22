@@ -1,5 +1,5 @@
-import { BreadcrumbsLinkType } from '../types'
 import { useHistory } from 'react-router'
+import { BreadcrumbsLinkType } from '../components/common/Breadcrumbs'
 
 const matchingPoints = [
   { link: 'catalog', name: 'Catalog' },

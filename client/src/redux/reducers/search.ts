@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js'
 import { ISearchAction } from '../actions/search'
-import { Actions } from '../../types/actionsTypes'
+import { Actions } from '../actions/types'
 
 interface searchItemType {
   title: string

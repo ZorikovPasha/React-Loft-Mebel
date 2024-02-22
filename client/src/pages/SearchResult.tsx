@@ -37,7 +37,7 @@ const SearchResult: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <Empty text='Ничего не найдено' />
+              <Empty text='Nothing found' />
             )}
           </div>
           <div className='mt-40' />

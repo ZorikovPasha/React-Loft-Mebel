@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
 import { Furniture } from '@prisma/client'
+import { FurnitureRes } from './dto/create-furniture.dto'
 
 class CreateFurnitureData {
   name: string
@@ -45,7 +46,7 @@ export class FurnitureService {
         type: createFurnitureData.type,
         priceOld: createFurnitureData.priceOld,
         priceNew: createFurnitureData.priceNew,
-        colors: createFurnitureData.colors,
+        colors: createFurnitureData.colors.join(';'),
         rating: createFurnitureData.rating,
         sale: createFurnitureData.sale,
         room: createFurnitureData.room,
@@ -77,6 +78,16 @@ export class FurnitureService {
             }
           })
         }
+      })
+    )
+  }
+
+  async findMany(criteria: Record<string, unknown>): Promise<Omit<typeof FurnitureRes, 'prototype'>[]> {
+    // @ts-expect-error this is okay for now
+    const furniture = await this.prisma.furniture.findMany(criteria)
+    return await Promise.all(
+      furniture.map(async (furnitureItem) => {
+        return await this.prepareFurniture(furnitureItem)
       })
     )
   }
@@ -175,7 +186,7 @@ export class FurnitureService {
       type: furnitureItem.type,
       priceOld: furnitureItem.priceOld,
       priceNew: furnitureItem.priceNew,
-      colors: furnitureItem.colors,
+      colors: furnitureItem.colors.split(';'),
       rating: furnitureItem.rating,
       sale: furnitureItem.sale,
       room: furnitureItem.room,

@@ -1,5 +1,5 @@
 import { IFurniture } from '../../api/types'
-import { fetchItemsActionType, Actions } from '../../types/actionsTypes'
+import { fetchItemsActionType, Actions } from '../actions/types'
 
 export interface IProductsState {
   items: IFurniture[]

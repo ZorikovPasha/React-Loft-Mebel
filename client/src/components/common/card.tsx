@@ -85,10 +85,10 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     }
   }
 
-  let discount = 0
+  let discount = '0'
 
   if (priceNew < priceOld) {
-    discount = (parseInt(priceOld) - parseInt(priceNew)) / 100
+    discount = (((parseInt(priceOld) - parseInt(priceNew)) / parseInt(priceOld)) * 100).toFixed(0)
   }
 
   return (
@@ -125,23 +125,23 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         </Link>
         <p className='item-sales__type'>{type}</p>
         <div className='item-sales__price'>
-          {priceNew ? <p className='item-sales__price-new'>{priceNew} ₽</p> : null}
-          {priceOld && sale ? <p className='item-sales__price-old'>{priceOld + ' ₽'}</p> : null}
+          {priceNew ? <p className='item-sales__price-new'>{priceNew}$</p> : null}
+          {priceOld && sale ? <p className='item-sales__price-old'>{priceOld + '$'}</p> : null}
         </div>
         {dimensions && dimensions[0] ? (
           <div className='item-sales__bottom flex'>
-            <p className='item-sales__text'>Размеры</p>
+            <p className='item-sales__text'>Info</p>
             <div className='item-sales__line'>
               <div className='item-sales__size'>
-                <p className='item-sales__val'>ШИРИНА</p>
+                <p className='item-sales__val'>Width</p>
                 <p className='item-sales__num'>{dimensions[0].width} СМ</p>
               </div>
               <div className='item-sales__size'>
-                <p className='item-sales__val'>ГЛУБИНА</p>
+                <p className='item-sales__val'>Length</p>
                 <p className='item-sales__num'>{dimensions[0].length} СМ</p>
               </div>
               <div className='item-sales__size'>
-                <p className='item-sales__val'>ВЫСОТА</p>
+                <p className='item-sales__val'>Height</p>
                 <p className='item-sales__num'>{dimensions[0].height} СМ</p>
               </div>
             </div>

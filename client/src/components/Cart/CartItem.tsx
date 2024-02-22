@@ -76,7 +76,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
             <h6 className='item__info-name fw-500'>
               <Link to={`/products/${furnitureId}`}>{name}</Link>
             </h6>
-            <p className='item__info-price'>{totalToRender} ₽</p>
+            <p className='item__info-price'>{totalToRender} $</p>
           </div>
           <div className='item__info-line mt-20 flex items-center'>
             <div className='item__info-feature info-feature flex items-center'>
@@ -100,7 +100,6 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
             </div>
           </div>
         </div>
-        {/* <div className='item__bottom'></div> */}
       </div>
       <Button
         title='Remove product from cart'

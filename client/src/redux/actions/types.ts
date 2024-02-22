@@ -1,4 +1,4 @@
-import { IFurniture } from '../api/types'
+import { IFurniture } from '../../api/types'
 
 export const Actions = {
   SET_PRODUCTS: 'SET_PRODUCTS',

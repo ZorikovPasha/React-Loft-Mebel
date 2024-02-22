@@ -101,19 +101,29 @@ TODO!:
 - [x] items are not being added to cart
 - [x] move svgs to separate files respectively
 - [x] strict tsconfig
-- [ ] add remaining products
+- [x] furniture/:id return 404 if null
+- [x] remove [data] prop from furnitureReviews attachments
+- [x] /product/id add ui if no reviews
+- [x] remove card bottom if it doesnt fit
+- [x] discount is not correctly calculated
+- [x] add sqlite option
+- [x] picture in card can be any size
 - [ ] mark in swagger which id to send
 - [ ] /login swagger edit response types
-- [ ] at the start two equal api call `api/furniture` in catalog
-- [ ] add server tests
-- [ ] add confirmation email
 - [ ] nestjs swagger
+- [ ] at the start two equal api call `api/furniture` in catalog
+- [ ] add confirmation email
 - [ ] after login via yandex login shows in a moment before profile
-- [ ] add sqlite option
+- [ ] add remaining products
 - [ ] orders with same date are not sorted right when adding new order only before reload
 - [ ] user gets exprired in a middle of using site
 - [ ] loader while fetching user data? (react-query) (nextjs is better)
 - [ ] write backend tests
 - [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
-- [x] furniture/:id return 404 if null
-- [x] remove [data] prop from furnitureReviews attachments
+- [ ] type controller's outputs
+- [ ] selecting option from header doesnt trigger products refetching
+- [x] correct footer links
+- [x] display those products which are on sale
+- [x] catalog add top sales products
+- [x] remove new arrivals section
+- [ ] on mobile cannot close search

@@ -18,17 +18,19 @@ interface ICustomSelect {
     }>
   ) => void
   options: IOption[]
-  value: string
+  value: string | undefined
+  showErrors?: boolean
 }
 
-const CustomSelect: React.FC<ICustomSelect> = ({ onChange, options, value }) => {
-  const defaultValue = (options: IOption[], value: string): IOption | undefined => {
+export const CustomSelect: React.FC<ICustomSelect> = ({ options, value, showErrors, onChange }) => {
+  const defaultValue = (options: IOption[], value: string | undefined): IOption | undefined => {
     if (options) {
       return options.find((option) => option?.value === value)
     }
   }
   return (
     <Select
+      className={showErrors ? 'error' : ''}
       value={defaultValue(options, value)}
       options={options}
       onChange={onChange}

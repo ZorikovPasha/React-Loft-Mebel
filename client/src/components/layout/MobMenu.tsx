@@ -64,11 +64,6 @@ export const MobMenu: React.FC<IMobMenuProps> = ({ isMobMenuOpen, setMobMenuOpen
         imgLink: '/images/mob-menu/promo.svg'
       },
       {
-        name: 'New arrivals',
-        link: '/catalog/new',
-        imgLink: '/images/mob-menu/new.svg'
-      },
-      {
         name: 'Cabinets',
         link: '/catalog/cabinets',
         imgLink: '/images/mob-menu/cupboard.svg'

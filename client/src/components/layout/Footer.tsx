@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export const Footer: React.FC = () => {
   const footerLists = [
     [
-      { name: 'Kithens', link: '/catalog?room=kitchens' },
+      { name: 'Kithens', link: '/catalog?room=kitchen' },
       { name: 'Bedrooms', link: '/catalog?room=bedroom' },
       { name: 'Living rooms', link: '/catalog?room=living' }
     ],
@@ -12,16 +12,11 @@ export const Footer: React.FC = () => {
       { name: 'Halls', link: '/catalog?room=hall' },
       { name: 'Office', link: '/catalog?room=office' },
       { name: 'Chidren', link: '/catalog?room=children' }
-    ],
-    [
-      { name: 'Cabinets', link: '/catalog/cabinets' },
-      { name: 'Mattresses', link: '/catalog/mattresses' },
-      { name: 'Soft furniture', link: '/catalog/upholstered' }
     ]
   ]
 
   return (
-    <footer className='footer'>
+    <footer className='footer mt-30'>
       <div className='container'>
         <div className='footer__inner'>
           <div className='footer__main'>
@@ -63,16 +58,10 @@ export const Footer: React.FC = () => {
           <div className='footer__bottom bottom-footer'>
             <div className='bottom-footer__left'>
               <Link
-                to='/catalog/new'
+                to='/catalog?sale=1'
                 className='bottom-footer__text bottom-footer__text--promo'
               >
                 Sale
-              </Link>
-              <Link
-                to='/catalog/new'
-                className='bottom-footer__text'
-              >
-                New arrivals
               </Link>
             </div>
             <div className='bottom-footer__contacts'>
@@ -84,9 +73,9 @@ export const Footer: React.FC = () => {
               </a>
               <a
                 className='bottom-footer__mail'
-                href='mailto:mebel_loft_anapa@mail.ru'
+                href='mailto:mebel_loft_la@gmail.com'
               >
-                mebel_loft_anapa@mail.ru
+                mebel_loft_la@gmail.com
               </a>
             </div>
           </div>

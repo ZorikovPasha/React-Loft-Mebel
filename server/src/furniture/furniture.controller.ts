@@ -11,7 +11,8 @@ import {
   ValidationPipe,
   UseInterceptors,
   UploadedFile,
-  NotFoundException
+  NotFoundException,
+  Query
 } from '@nestjs/common'
 import { FurnitureService } from './furniture.service'
 import { CreateFurnitureDto, FurnitureRes, apiResponse200 } from './dto/create-furniture.dto'
@@ -41,8 +42,39 @@ export class FurnitureController {
     type: FurnitureRes
   })
   @Get()
-  async findAll() {
-    const items = await this.furnitureService.findAll()
+  async findAll(
+    @Query('type') type: string | undefined,
+    @Query('room') room: string | undefined,
+    @Query('material') material: string | undefined
+  ) {
+    const criteria = {
+      where: {
+        type: {},
+        room: {},
+        material: {}
+      }
+    }
+
+    if (type) {
+      criteria.where.type = {
+        equals: type
+      }
+    }
+
+    if (room) {
+      criteria.where.room = {
+        equals: room
+      }
+    }
+
+    if (material) {
+      criteria.where.material = {
+        equals: material
+      }
+    }
+
+    const filtered = await this.furnitureService.findMany(criteria)
+    const all = await this.furnitureService.findAll()
     // const findCriteria = Object.keys(req.query).reduce((accum, key) => {
     //   if (key === 'color' || key === 'sort') return accum;
     //     return {...accum, [this.mappedValues[key]]: req.query[key]};
@@ -63,7 +95,7 @@ export class FurnitureController {
     //     break;
     //   }
 
-    return { items: items }
+    return { filtered: filtered, all: all }
   }
 
   @ApiOkResponse({

@@ -9,15 +9,15 @@ export const SortPopup: React.FC<ISortPopupProps> = ({ onSelectSortType }) => {
   const items = [
     {
       value: 'desc',
-      text: 'по убыванию цены'
+      text: 'Descending price'
     },
     {
       value: 'asc',
-      text: 'по возрастанию цены'
+      text: 'Ascending price'
     },
     {
       value: 'pop',
-      text: 'по популярности'
+      text: 'Popularity'
     }
   ]
 

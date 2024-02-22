@@ -3,12 +3,12 @@
   box-shadow: 0 -4px 10px rgb(0 0 0 / 3%);
 
   @media (width <=992px) {
-      padding-top: 30px;
-    }
+    padding-top: 30px;
+  }
 
-    @media (width <=510px) {
-        padding-top: 20px;
-      }
+  @media (width <=510px) {
+    padding-top: 20px;
+  }
 
   &__main {
     display: flex;
@@ -16,7 +16,6 @@
   }
 
   &__column {
-
     @media #{$mobile} {
       display: none;
     }
@@ -73,10 +72,10 @@
       margin-top: 0;
     }
 
-      @media (width <=510px) {
-          font-size: 11px;
-          line-height: 126.69%;
-        }
+    @media (width <=510px) {
+      font-size: 11px;
+      line-height: 126.69%;
+    }
   }
 
   &__bottom {
@@ -92,11 +91,10 @@
   @media #{$mobile} {
     justify-content: flex-end;
   }
-  
-    @media (width <=510px) {
-        padding: 15px 0;
-      }
-    
+
+  @media (width <=510px) {
+    padding: 15px 0;
+  }
 
   &__left {
     display: flex;
@@ -108,11 +106,10 @@
 
   &__contacts {
     @media (width <=510px) {
-        flex-grow: 1;
-        display: flex;
-        justify-content: space-between;
-      }
-    
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-between;
+    }
   }
 
   &__text {
@@ -130,8 +127,8 @@
     position: relative;
 
     @media (width <=992px) {
-        font-size: 12px;
-        line-height: 126.69%;
+      font-size: 12px;
+      line-height: 126.69%;
     }
 
     @media #{$mobile} {
@@ -156,16 +153,15 @@
     position: relative;
 
     @media (width <=992px) {
-        font-size: 12px;
-        line-height: 126.69%;
-      }
+      font-size: 12px;
+      line-height: 126.69%;
+    }
 
-      @media (width <=510px) {
-          margin-left: 0;
-          font-size: 11px;
-          line-height: 126.69%;
-        }
-      
+    @media (width <=510px) {
+      margin-left: 0;
+      font-size: 11px;
+      line-height: 126.69%;
+    }
 
     &::after {
       content: '';
@@ -185,16 +181,15 @@
     position: relative;
 
     @media (width <=992px) {
-        font-size: 12px;
-        line-height: 126.69%;
+      font-size: 12px;
+      line-height: 126.69%;
     }
 
     @media (width <=510px) {
-        margin-left: 0;
-        font-size: 11px;
-        line-height: 126.69%;
-      }
-    
+      margin-left: 0;
+      font-size: 11px;
+      line-height: 126.69%;
+    }
 
     &::after {
       content: '';
@@ -208,4 +203,3 @@
     }
   }
 }
-
