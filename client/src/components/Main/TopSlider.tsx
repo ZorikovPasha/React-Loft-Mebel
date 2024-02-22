@@ -69,15 +69,18 @@ export const TopSlider: React.FC = () => {
   const slides = [
     {
       title: 'Living rooms',
-      imageUrl: '/images/top-bg-1.jpg'
+      imageUrl: '/images/top-bg-1.jpg',
+      link: '/catalog?room=living'
     },
     {
       title: 'Kithens',
-      imageUrl: '/images/top-bg-2.jpg'
+      imageUrl: '/images/top-bg-2.jpg',
+      link: '/catalog?room=kitchen'
     },
     {
       title: 'Bedrooms',
-      imageUrl: '/images/top-bg-3.jpg'
+      imageUrl: '/images/top-bg-3.jpg',
+      link: '/catalog?room=bedroom'
     }
   ]
 
@@ -104,7 +107,7 @@ export const TopSlider: React.FC = () => {
       {...settings}
       className={`${!slides?.length ? 'top__slider--fullsize' : ''}`}
     >
-      {slides.map(({ title, imageUrl }) => (
+      {slides.map(({ title, imageUrl, link }) => (
         <div key={title}>
           <div
             className='top__slider-item'
@@ -114,7 +117,7 @@ export const TopSlider: React.FC = () => {
               <h1 className='top__title'>{title}</h1>
               <Link
                 className='btn'
-                to='/catalog/kitchens'
+                to={link}
               >
                 Go to catalog
               </Link>
