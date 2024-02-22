@@ -38,11 +38,12 @@ const SearchResults = ({ onCloseDropdown }: IProps) => {
               className={`search__dropdown-item ${!idx ? 'search__dropdown-item--no-top-border' : ''} flex`}
               onClick={onCloseDropdown}
             >
-              <img
-                className='search__dropdown-item-img'
-                src={import.meta.env.VITE_BACKEND + imageUrl}
-                alt=''
-              />
+              <div className='search__dropdown-item-img'>
+                <img
+                  src={import.meta.env.VITE_BACKEND + imageUrl}
+                  alt=''
+                />
+              </div>
               <div>
                 <p className='search__dropdown-item-name'>{breakString(title, queryToRender)}</p>
                 {textWithQuery ? (
@@ -155,6 +156,7 @@ export const Search = () => {
       queryToRender: ''
     }
     dispatch(editSearchActionCreator(payload))
+    setShowSearch(false)
   }
 
   return isDesktop ? (
@@ -248,6 +250,20 @@ export const Search = () => {
                   alt='search'
                 />
               </span>
+              {query.length > 0 ? (
+                <Button
+                  type='button'
+                  className='header__search-close'
+                  title='Clear search'
+                  onClick={clearSearch}
+                >
+                  <img
+                    className='width-full height-full'
+                    src='/images/icons/cross.svg'
+                    alt='cross icon'
+                  />
+                </Button>
+              ) : null}
             </form>
 
             {dropdownShown && (

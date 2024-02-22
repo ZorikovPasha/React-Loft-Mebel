@@ -107,6 +107,11 @@ TODO!:
 - [x] remove card bottom if it doesnt fit
 - [x] discount is not correctly calculated
 - [x] add sqlite option
+- [x] correct footer links
+- [x] display those products which are on sale
+- [x] catalog add top sales products
+- [x] remove new arrivals section
+- [x] on mobile cannot close search
 - [x] picture in card can be any size
 - [ ] mark in swagger which id to send
 - [ ] /login swagger edit response types
@@ -122,8 +127,3 @@ TODO!:
 - [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 - [ ] type controller's outputs
 - [ ] selecting option from header doesnt trigger products refetching
-- [x] correct footer links
-- [x] display those products which are on sale
-- [x] catalog add top sales products
-- [x] remove new arrivals section
-- [ ] on mobile cannot close search

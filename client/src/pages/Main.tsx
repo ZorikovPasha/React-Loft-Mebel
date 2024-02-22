@@ -35,9 +35,9 @@ export const Main: React.FC = () => {
               />
               <Link
                 className='gallery__item-link'
-                to='/catalog?room=bedroom'
+                to='/catalog?room=hall'
               >
-                Explore bedrooms
+                Explore halls
               </Link>
             </div>
             <div className='gallery__item'>
