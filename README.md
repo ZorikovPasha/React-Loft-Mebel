@@ -129,3 +129,4 @@ TODO!:
 - [x] reviews img if no avatar is broken
 - [ ] orders with same date are not sorted right when adding new order only before reload
 - [ ] how products rating is scored?
+- [ ] header sublists are broken

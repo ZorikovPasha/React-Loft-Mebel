@@ -16,6 +16,12 @@
     position: relative;
     flex-grow: 1;
     height: inherit;
+
+    &:hover {
+      .header__sub-list {
+        display: block;
+      }
+    }
   }
 
   &__item-a {
@@ -32,10 +38,6 @@
 
       path {
         fill: white;
-      }
-
-      .header__sub-list {
-        display: block;
       }
     }
     // }
