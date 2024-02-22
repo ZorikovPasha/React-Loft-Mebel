@@ -121,7 +121,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
                       <div className='flex items-center'>
                         <img
                           className='product-tabs__review-avatar'
-                          src={user.image ? import.meta.env.VITE_BACKEND + user.image.url : ''}
+                          src={user.image ? import.meta.env.VITE_BACKEND + user.image.url : '/images/user-stub.jpg'}
                           alt=''
                         />
                         <div className='product-tabs__review-right'>

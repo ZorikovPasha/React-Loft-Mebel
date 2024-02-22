@@ -159,7 +159,7 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
     <>
       {isLoading && <Loader rootElClass='loader--fixed' />}
 
-      <h3 className='text-center'>Liked this product? Leave your review!</h3>
+      <h3 className='popup__title popup__title--narrow text-center'>Liked this product? Leave your review!</h3>
       <form
         className='flex flex-col'
         onSubmit={handleSubmit}

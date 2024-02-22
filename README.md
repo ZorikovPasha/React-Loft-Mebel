@@ -120,10 +120,12 @@ TODO!:
 - [ ] add confirmation email
 - [ ] after login via yandex login shows in a moment before profile
 - [ ] add remaining products
-- [ ] orders with same date are not sorted right when adding new order only before reload
 - [ ] user gets exprired in a middle of using site
 - [ ] loader while fetching user data? (react-query) (nextjs is better)
 - [ ] write backend tests
 - [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 - [ ] type controller's outputs
 - [ ] selecting option from header doesnt trigger products refetching
+- [x] reviews img if no avatar is broken
+- [ ] orders with same date are not sorted right when adding new order only before reload
+- [ ] how products rating is scored?

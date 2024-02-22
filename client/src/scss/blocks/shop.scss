@@ -33,7 +33,7 @@
     &--plain {
       position: relative;
       padding: 12px 50px;
-      padding: 12px 50px 12px 60px;
+      padding: 12px 40px 12px 50px;
 
       font-size: 14px;
       line-height: 18px;
@@ -53,7 +53,7 @@
       svg {
         position: absolute;
         top: 50%;
-        left: 30px;
+        left: 20px;
         transform: translate(0, -50%);
       }
 
