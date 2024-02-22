@@ -1,7 +1,6 @@
 import React from 'react'
 import Slider, { Settings } from 'react-slick'
 import { useDispatch, useSelector } from 'react-redux'
-import { useDropzone } from 'react-dropzone'
 
 import { AddToFavorite } from '../common/AddToFavorite'
 import CustomSelect from '../common/CustomSelect'
@@ -12,22 +11,18 @@ import { getUserData } from '../../redux/getters'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from '../common/Button'
 import { Modal } from '../common/Modal'
-import { getTextInputErrorMessage, validateTextInput } from '../../utils'
-import { IField } from '../../pages/SignUp'
-import AppTextField from '../common/appTextField'
-import { Loader } from '../common/Loader'
+import { ModalContent } from './leaveReviewPopup'
 
 interface IProductCardProps {
   product: IFurniture
 }
 
-const SliderPrevArrow: React.FC = () => {
+const SliderPrevArrow = () => {
   return (
     <Button
       className='slick-btn slick-prev'
       title='Previous slide'
       type='button'
-      onClick={() => ({})}
     >
       <svg
         width='9'
@@ -46,13 +41,12 @@ const SliderPrevArrow: React.FC = () => {
   )
 }
 
-const SliderNextArrow: React.FC = () => {
+const SliderNextArrow = () => {
   return (
     <Button
       className='slick-btn slick-next'
       type='button'
       title='Next slide'
-      onClick={() => ({})}
     >
       <svg
         width='8'
@@ -104,244 +98,16 @@ interface ISelectField {
   options: ColorOptionType[]
 }
 
-interface IFile {
-  files: {
-    file: File
-    url: string | null
-  }[]
-}
-
-interface IModalContentProps {
-  onModalClose: () => void
-  furnitureId: number
-}
-
-const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModalClose }) => {
-  const scoreProps: IField = {
-    value: '',
-    label: 'Score',
-    labelClass: 'signup__form-label form-label',
-    isValid: false,
-    required: true,
-    type: 'text',
-    placeholder: 'Enter your score',
-    className: 'mt-20',
-    inputClassName: 'signup__form-input form-input',
-    tag: 'input',
-    showErrors: false,
-    errorMessage: getTextInputErrorMessage(''),
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
-    validateFn: validateTextInput
-  }
-
-  const textProps: IField = {
-    tag: 'textarea',
-    value: '',
-    type: 'text',
-    isValid: true,
-    placeholder: 'Write your review',
-    required: false,
-    labelClass: 'signup__form-label form-label',
-    label: 'Review',
-    showErrors: false,
-    className: 'mt-20',
-    inputClassName: 'form-input',
-    errorMessage: '',
-    getErrorMessage: getTextInputErrorMessage,
-    validateFn: validateTextInput
-  }
-
-  const fileProps: IFile = {
-    files: []
-  }
-
-  const dispatch = useDispatch()
-
-  const [score, setScore] = React.useState(scoreProps)
-  const [text, setText] = React.useState(textProps)
-  const [pictures, setPictures] = React.useState(fileProps)
-  const [isLoading, setIsLoading] = React.useState(false)
-
-  const onDrop = React.useCallback((acceptedFiles: File[]) => {
-    acceptedFiles.forEach((file) => {
-      // @ts-expect-error ts should not complain here
-      if (file.type !== 'image/jpeg' || file.type !== 'image/png') {
-        return dispatch(toggleSnackbarOpen('You can attach .png or .jpg images only.'))
-      }
-
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const url = e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null
-        setPictures((prev) => ({
-          files: [
-            ...prev.files,
-            {
-              file: file,
-              url: url
-            }
-          ]
-        }))
-      }
-    })
-  }, [])
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
-  const onChange =
-    (setState: React.Dispatch<React.SetStateAction<IField>>) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const value = e.target.value
-      setState((prev) => ({
-        ...prev,
-        value: value,
-        isValid: prev.validateFn(value),
-        showErrors: true,
-        isTouched: true
-      }))
-    }
-
-  const deleteAttachment = (idx: number) => () => {
-    // @ts-expect-error this is okay
-    const otherAttachments = pictures.files.filter((file, id) => id !== idx)
-    setPictures({
-      files: otherAttachments
-    })
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (![score, text].every(({ isValid, required }) => (required ? isValid : true))) {
-      return
-    }
-
-    console.log('further')
-
-    const formData = new FormData()
-
-    formData.append('text', text.value)
-    formData.append('furnitureId', furnitureId.toString())
-    formData.append('score', score.value)
-    pictures.files.forEach((image) => {
-      formData.append('attachments', image.file)
-    })
-
-    setIsLoading(true)
-
-    UserApiClient.sendReview(formData)
-      .then(() => {
-        setIsLoading(false)
-        setText(textProps)
-        setScore(scoreProps)
-        setPictures({ files: [] })
-        onModalClose()
-      })
-      .catch(() => {
-        setIsLoading(false)
-      })
-  }
-
-  return (
-    <>
-      {isLoading && <Loader rootElClass='loader--fixed' />}
-
-      <h3 className='text-center'>Liked this product? Leave your review!</h3>
-      <form
-        className='popup__agree-form flex'
-        onSubmit={handleSubmit}
-      >
-        <AppTextField
-          elementType={score.tag}
-          placeholder={score.placeholder}
-          name='score'
-          type={score.type}
-          value={score.value}
-          required={score.required}
-          rootElclass={score.className}
-          label={score.label}
-          labelClass={score.labelClass}
-          inputWrapClass={score.inputWrapClass}
-          inputClassName={score.inputClassName}
-          showErrors={!score.isValid && score.showErrors}
-          errorMessage={score.getErrorMessage(score.value)}
-          onChange={onChange(setScore)}
-        />
-
-        <AppTextField
-          elementType={text.tag}
-          placeholder={text.placeholder}
-          name='text'
-          type={text.type}
-          value={text.value}
-          required={text.required}
-          rootElclass={text.className}
-          label={text.label}
-          labelClass={text.labelClass}
-          inputWrapClass={text.inputWrapClass}
-          inputClassName={text.inputClassName}
-          showErrors={!text.isValid && text.showErrors}
-          errorMessage={text.getErrorMessage(text.value)}
-          onChange={onChange(setText)}
-        />
-
-        <div
-          {...getRootProps()}
-          className={`profile__drop profile__drop--square mt-30 ${isDragActive ? 'profile__drop--drag' : ''}`}
-        >
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p className='profile__drop-placeholder'>Drop your images here...</p>
-          ) : (
-            <p className='profile__drop-placeholder'>Drag 'n' drop some files here, or click to select files</p>
-          )}
-        </div>
-
-        {pictures.files.length ? (
-          <div className='product__review-uploads flex mt-30'>
-            {pictures.files.map((p, idx) => (
-              <div className='profile__picture profile__picture--width-80'>
-                <Button
-                  type='button'
-                  title='Delete picture'
-                  className='profile__picture-delete'
-                  onClick={deleteAttachment(idx)}
-                >
-                  <img
-                    src='/images/icons/cross.svg'
-                    alt=''
-                  />
-                </Button>
-                <img
-                  src={p.url ?? '/images/stub.jpg'}
-                  className='profile__picture-img'
-                />
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        <Button
-          title='Submit choice'
-          className='btn mt-20'
-          type='submit'
-        >
-          Leave review
-        </Button>
-      </form>
-    </>
-  )
-}
-
 export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const dispatch = useDispatch()
-  const { isLoggedIn } = useSelector(getUserData)
+  const { isLoggedIn, ...user } = useSelector(getUserData)
+  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews } = product
 
-  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating } = product
+  const didCurrentUserReviewedThisFurniture = !!reviews?.find((r) => r.user.id === user.id) ?? false
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
-  const fields = React.useRef<Record<string, ISelectField>>({
+  const fields = React.useRef<Record<'quintity' | 'dimensions', ISelectField>>({
     quintity: {
       label: 'Quintity',
       value: '1',
@@ -353,8 +119,10 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
       ]
     },
     dimensions: {
-      label: 'Размер (Д × Ш × В)',
-      value: dimensions ? `${dimensions[0].width} CM × ${dimensions[0].length} CM × ${dimensions[0].height} CM` : '',
+      label: 'Dimensions (W × L × H)',
+      value: dimensions
+        ? `${dimensions[0]?.width ?? 0} × ${dimensions[0]?.length ?? 0} × ${dimensions[0]?.height ?? 0}`
+        : '',
       options:
         dimensions?.map((d) => ({
           value: `${d.width} CM × ${d.length} CM × ${d.height} CM`,
@@ -375,14 +143,19 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const [colorsState, setColorsState] = React.useState(colorProps)
   const [reviewModelShown, setReviewModelShown] = React.useState(false)
 
-  const onSelect = (name: string) => (value: ColorOptionType | null) => {
-    setForm((prev) => ({
-      ...prev,
-      [name]: {
-        ...prev[name],
-        value: value?.value ?? ''
+  const onSelect = (name: 'quintity' | 'dimensions') => (value: ColorOptionType | null) => {
+    setForm((prev) => {
+      const props = prev[name]
+      if (!props) {
+        return prev
       }
-    }))
+      return {
+        ...prev,
+        [name]: Object.assign(props, {
+          value: value?.value ?? ''
+        })
+      }
+    })
   }
 
   const onColor = (color: string) => () => {
@@ -392,35 +165,36 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     }))
   }
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!isLoggedIn) {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
-    UserApiClient.addItemToCart({
+    const dto = {
       productId: id,
       quintity: parseInt(form.quintity.value),
-      color: colorsState.value
-    })
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+      color: colorsState.value ?? '#FFF'
+    }
 
-        const payload = {
-          id,
-          furnitureId: id,
-          color: colorsState.value,
-          quintity: parseInt(form.quintity.value)
-        }
+    try {
+      const response = await UserApiClient.addItemToCart(dto)
+      if (!isSuccessfullResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
 
-        dispatch(addProductToCartActionCreator(payload))
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      const payload = {
+        id,
+        furnitureId: id,
+        color: colorsState.value ?? '#FFF',
+        quintity: parseInt(form.quintity.value)
+      }
+
+      dispatch(addProductToCartActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   const ratingWidth = (parseFloat(rating) / 5) * 95
@@ -492,70 +266,81 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
           <div className='info'>
             <h1 className='info__title'>{name}</h1>
             <p className='info__category'>{type}</p>
-            <div className='flex info__rating-parent'>
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
-              <img
-                className='info__rating-img'
-                src='/images/icons/star.svg'
-                alt=''
-              />
+            <div className='flex items-center'>
+              {reviews?.length ? (
+                <div className='flex info__rating-parent'>
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
+                  <img
+                    className='info__rating-img'
+                    src='/images/icons/star.svg'
+                    alt=''
+                  />
 
-              <div
-                style={{ width: ratingWidth }}
-                className='flex info__rating-child'
-              >
+                  <div
+                    style={{ width: ratingWidth }}
+                    className='flex info__rating-child'
+                  >
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                    <img
+                      className='info__rating-img'
+                      src='/images/icons/star-black.svg'
+                      alt=''
+                    />
+                  </div>
+                </div>
+              ) : (
                 <img
                   className='info__rating-img'
-                  src='/images/icons/star-black.svg'
+                  src='/images/icons/star.svg'
                   alt=''
                 />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-                <img
-                  className='info__rating-img'
-                  src='/images/icons/star-black.svg'
-                  alt=''
-                />
-              </div>
+              )}
+              <p className='ml-5'>({reviews?.length ?? 0})</p>
             </div>
             <form
               className='mt-10'
               onSubmit={handleSubmit}
             >
               <div className='info__shop shop'>
-                <p className='shop__price'>{priceNew ? priceNew : priceOld} P</p>
+                <p className='shop__price'>{priceNew ? priceNew : priceOld}$</p>
                 <Button
                   className='shop__btn btn'
                   title='Buy product'
@@ -572,7 +357,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                     <CustomSelect
                       value={props.value}
                       options={props.options}
-                      onChange={onSelect(key)}
+                      onChange={onSelect(key as 'quintity' | 'dimensions')}
                     />
                   </div>
                 ))}
@@ -587,7 +372,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                       className='colors__checkbox-real'
                       id={color}
                       type='checkbox'
-                      checked={colorsState.value.includes(color)}
+                      checked={colorsState.value?.includes(color) ?? false}
                       onChange={onColor(color)}
                     />
                     <span
@@ -598,14 +383,9 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                 ))}
               </div>
             </form>
-            <p className='info__text-title mt-20'>Описание</p>
-            <p className='info__text'>
-              Лаконичные линии и простые формы, безупречный стиль и индивидуальность – все это диван «Динс». Сдержанный
-              скандинавский дизайн украсит любую современную обстановку. Элегантность, комфорт и функциональность,
-              собранные воедино – «Динс» просто создан для размеренного отдыха в кругу семьи или компании друзей!
-            </p>
+            <p className='info__text mt-20'>{description}</p>
 
-            {isLoggedIn && (
+            {isLoggedIn && !didCurrentUserReviewedThisFurniture && (
               <Button
                 className='shop__btn--plain btn-hollow mt-20'
                 title='Leave review'

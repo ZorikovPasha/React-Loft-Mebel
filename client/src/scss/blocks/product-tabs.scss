@@ -1,14 +1,6 @@
 .product-tabs {
-  margin-top: 50px;
-
   @media #{$tablet} {
     margin-top: 30px;
-  }
-
-  &__toggle {
-    display: flex;
-    align-items: center;
-    margin-bottom: 27px;
   }
 
   &__title {
@@ -47,7 +39,7 @@
 
   &__review {
     padding: 15px;
-    border: 1px solid #245462;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 7px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
   }
 
@@ -93,11 +85,71 @@
     border-radius: 10px;
   }
 
-  &__review-attach + &__review-attach {
-    margin-left: 20px;
+  &__review-attach-box {
+    cursor: pointer;
+
+    &:hover::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      content: "";
+      background-image: url("/images/icons/magnifier.svg");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  &__review-attach-big {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: calc(100%);
+    object-fit: contain;
+    object-position: center;
   }
 
   &__review-right {
     margin-left: 20px;
+  }
+
+  &__slider {
+    .slick-list,
+   .slick-track,
+   .slick-slide div {
+      height: 100%;
+   } 
+
+   .slick-slider {
+    height: calc(100% - 30px);
+   }
+  }
+
+  &__slider-arrows {
+    padding: 0 15px;
+  }
+
+  &__slider-arrow {
+    padding: 10px;
+    border-radius: 10px;
+
+    &:hover {
+      box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 7px rgba(0, 0, 0, 0.2);
+    }
+
+    &[disabled] {
+      white-space: nowrap;
+      touch-action: none;
+      cursor: default;
+      &:hover {
+        box-shadow: none;
+      }
+    }
   }
 }

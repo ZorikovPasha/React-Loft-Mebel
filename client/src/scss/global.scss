@@ -1,7 +1,8 @@
 html {
   box-sizing: border-box;
   scroll-behavior: smooth;
-  height: 100%;
+  min-height: 100%;
+  height: auto;
 
   &.lock {
     overflow: hidden;
@@ -21,14 +22,17 @@ html {
 body {
   min-width: 320px;
   overflow-x: hidden;
-  height: 100%;
+  min-height: 100%;
+  height: inherit;
+  min-height: 100vh;
   font-family: Roboto, sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
   color: $text;
 
-  &.lock, &.locked {
+  &.lock,
+  &.locked {
     overflow: hidden;
   }
 }
@@ -38,7 +42,8 @@ textarea {
 }
 
 #root {
-  min-height: 100%;
+  min-height: inherit;
+  height: inherit;
   display: flex;
 }
 
@@ -82,7 +87,7 @@ button {
 .btn {
   color: #fff;
   background: #209cee;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 18px;
   line-height: 22px;
   display: inline-block;
@@ -99,28 +104,34 @@ button {
   }
 
   &--danger {
-    background-color: #D41367;
+    background-color: #d41367;
 
     &:hover,
     &:focus {
       background-color: #ef438e;
     }
   }
+
+  &[disabled] {
+    background-color: grey;
+    pointer-events: none;
+    touch-action: none;
+  }
 }
 
 .btn-hollow {
   background-color: #fff;
   border: 1px solid #209cee;
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 18px;
   line-height: 22px;
   display: inline-block;
   cursor: pointer;
   padding: 14px 30px;
-  transition: 0.3s;
+  transition: $transition;
 
   &:hover {
-    color: #FFF;
+    color: #fff;
     background-color: rgba(#209cee, 0.9);
   }
 
@@ -128,6 +139,13 @@ button {
     background-color: #fff;
     color: #414141;
   }
+}
+.fw-500 {
+  font-weight: 500;
+}
+
+.mt-60 {
+  margin-top: 60px;
 }
 
 .mt-40 {
@@ -150,6 +168,14 @@ button {
   margin-top: 5px;
 }
 
+.ml-5 {
+  margin-left: 5px;
+}
+
+.block {
+  display: block;
+}
+
 .grid {
   display: grid;
 }
@@ -160,6 +186,10 @@ button {
 
 .inline-flex {
   display: inline-flex;
+}
+
+.justify-start {
+  justify-content: start;
 }
 
 .justify-center {
@@ -194,10 +224,34 @@ button {
   text-align: center;
 }
 
+.w100 {
+  width: 100%;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.gg30 {
+  grid-column-gap: 30px;
+}
+
+.gap-20 {
+  grid-gap: 20px;
+}
+
+.height-full {
+  height: 100%;
+}
+
+.width-full {
+  width: 100%;
+}
+
 // z indexes
 
 .home__promo-content {
-  z-index: 2;  
+  z-index: 2;
 }
 
 .sub-list {

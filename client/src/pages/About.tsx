@@ -1,6 +1,9 @@
 import React from 'react'
 
-const About: React.FC = () => {
+const About = () => {
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <>
       <section className='about__top'>
@@ -8,16 +11,16 @@ const About: React.FC = () => {
           <div className='container'>
             <div className='about__top-inner flex items-center justify-between'>
               <div className='about__top-text animate__animated animate__delay-1s animate__fadeInLeft'>
-                <p className='about__top-label'>О магазине</p>
-                <h1 className='about__top-title'>Интернет-магазин «Лофт Мебель»: купите хорошую мебель в один клик!</h1>
+                <p className='about__top-label'>About the store</p>
+                <h1 className='about__top-title'>Online store "Loft Furniture": buy good furniture in one click!</h1>
                 <p className='about__top-par'>
-                  Уникальный формат интернет-магазина позволит вам купить лучшую мебель крупнейших российских фабрик
-                  максимально быстро и по выгодной цене!
+                  The unique format of the online store will allow you to buy the best furniture from the largest
+                  factories as quickly as possible and at a bargain price!
                 </p>
                 <p className='about__top-par'>
-                  Мы благодарим за доверие более десятка производителей, которые дали нам возможность представлять
-                  лучшие образцы их продукции в российском интернет-пространстве. Прямые договоры на поставку мебели с
-                  фабрик обеспечивают наиболее привлекательные условия для наших покупателей.
+                  We are grateful for the trust of more than a dozen manufacturers who gave us the opportunity to
+                  present the best samples of their products in the Internet space. Direct contracts for the supply of
+                  furniture from factories provide the most attractive conditions for our customers.
                 </p>
               </div>
               <div className='about__top-images animate__animated animate__delay-2s animate__fadeInRight'>
@@ -33,7 +36,7 @@ const About: React.FC = () => {
 
       <section className='about__benefits'>
         <div className='container'>
-          <h2 className='about__benefits-title'>Покупайте с выгодой!</h2>
+          <h2 className='about__benefits-title'>Buy at a profit!</h2>
           <div className='about__benefits-items'>
             <div className='about__benefits-item flex'>
               <img
@@ -41,10 +44,10 @@ const About: React.FC = () => {
                 alt='benefit'
               />
               <div className='about__benefits-item-text'>
-                <h6 className='about__benefits-item-title'>Лучшая цена</h6>
+                <h6 className='about__benefits-item-title'>Get Best Price</h6>
                 <p className='about__benefits-item-par'>
-                  Предлагаем близкие к оптовым цены, которые дают возможность приобретать мебель дешевле, чем в
-                  розничных салонах и шоу-румах.
+                  We offer close to wholesale prices, which make it possible to purchase furniture cheaper than in
+                  retail salons and showrooms.
                 </p>
               </div>
             </div>
@@ -54,10 +57,10 @@ const About: React.FC = () => {
                 alt='benefit'
               />
               <div className='about__benefits-item-text'>
-                <h6 className='about__benefits-item-title'>Прямые поставки</h6>
+                <h6 className='about__benefits-item-title'>Direct deliveries</h6>
                 <p className='about__benefits-item-par'>
-                  С ведущих мебельных фабрик уменьшают срок выполнения вашего заказа, даже если речь идет об
-                  изготовлении предметов по индивидуальному проекту.
+                  Leading furniture factories reduce the lead time of your order, even when it comes to production of
+                  items according to an individual project.
                 </p>
               </div>
             </div>
@@ -67,10 +70,10 @@ const About: React.FC = () => {
                 alt='benefit'
               />
               <div className='about__benefits-item-text'>
-                <h6 className='about__benefits-item-title'>Экономие времени</h6>
+                <h6 className='about__benefits-item-title'>Save ypur time</h6>
                 <p className='about__benefits-item-par'>
-                  Не нашли оптимальный вариант или нет времени на поиски? Оставьте онлайн-заявку с критериями, и мы
-                  предложим вам несколько достойных образцов.
+                  Haven't found the best option or don't have time to search? Leave an online application with the
+                  criteria and we will We will offer you some worthy samples.
                 </p>
               </div>
             </div>
@@ -80,10 +83,10 @@ const About: React.FC = () => {
                 alt='benefit'
               />
               <div className='about__benefits-item-text'>
-                <h6 className='about__benefits-item-title'>Изготовление на заказ</h6>
+                <h6 className='about__benefits-item-title'>Customization</h6>
                 <p className='about__benefits-item-par'>
-                  Принимаем заявки на изготовление мебели по персональному дизайн-проекту от покупателей из любой точки
-                  России. Просим быть готовыми к авансированной оплате персональных заказов.
+                  We accept applications for the manufacture of furniture according to a personal design project from
+                  buyers from anywhere in USA. Please be ready to pay in advance for personal orders.
                 </p>
               </div>
             </div>
@@ -94,28 +97,28 @@ const About: React.FC = () => {
       <section className='about__descr'>
         <div className='container'>
           <div className='about__descr-item'>
-            <h5 className='about__descr-title'>Самые «вкусные» предложения</h5>
+            <h5 className='about__descr-title'>Best deals</h5>
             <p className='about__descr-text'>
-              Мы делаем всё необходимое, чтобы покупатели получали доступ к актуальным новинкам, которые представляет
-              российский мебельный рынок. Познакомиться с каждой моделью, сравнить цены на аналоги и выбрать лучшее вы
-              можете прямо сейчас. Хотите первыми узнавать о самых выгодных предложениях? Тогда подписывайтесь на
-              информационную рассылку!
+              We do everything necessary to ensure that customers get access to the latest innovations that are
+              presented Furniture market. Get acquainted with each model, compare prices for analogues and choose the
+              best you You can do it right now. Do you want to be the first to know about the best deals? Then subscribe
+              to Newsletter!
             </p>
           </div>
           <div className='about__descr-item'>
-            <h5 className='about__descr-title'>Гарантированное качество</h5>
+            <h5 className='about__descr-title'>Guaranteed Quality</h5>
             <p className='about__descr-text'>
-              Вся продукция сопровождается гарантией производителя. В каталогах представлена только сертифицированная
-              мебель. Собственный контроль качества тщательно проверяет каждый образец перед отправкой заказчику.
-              Покупатели получают необходимые документы – гарантийный талон и чек.
+              All products are accompanied by a manufacturer's warranty. Only certified furniture. In-house quality
+              control carefully checks each sample before sending it to the customer. Buyers receive the necessary
+              documents - a warranty card and a receipt.
             </p>
           </div>
           <div className='about__descr-item'>
-            <h5 className='about__descr-title'>Впечатляющий ассортимент</h5>
+            <h5 className='about__descr-title'>Impressive assortment</h5>
             <p className='about__descr-text'>
-              Ежедневно мы выбираем для наших каталогов идеальные образцы из товарной матрицы производителей по всей
-              России. Модные расцветки, экологически безопасные материалы, надежные комплектующие – у нас вы найдете
-              мебель своей мечты!
+              On a daily basis, we select the ideal samples for our catalogs from the product matrix of manufacturers
+              throughout the USA. Fashionable colors, environmentally friendly materials, reliable components - here you
+              will find The furniture of your dreams!
             </p>
           </div>
         </div>
@@ -125,32 +128,31 @@ const About: React.FC = () => {
         <div className='container'>
           <div className='about__features-items'>
             <div className='about__features-item about__features-item--1'>
-              <h6 className='about__features-title'>Особенные условия для оптовиков</h6>
+              <h6 className='about__features-title'>Special conditions for wholesalers</h6>
               <p className='about__features-text'>
-                Число наших оптовых покупателей неуклонно возрастает и всё потому, что мы сумели предложить владельцам
-                мебельных магазинов наиболее выгодные условия.
+                The number of our wholesale buyers is steadily increasing and all because we have managed to offer the
+                owners furniture stores have the most favorable conditions.
               </p>
             </div>
             <div className='about__features-item about__features-item--2'>
-              <h6 className='about__features-title'>Оперативная доставка</h6>
+              <h6 className='about__features-title'>Prompt delivery</h6>
               <p className='about__features-text'>
-                Собственная курьерская служба быстро привезет купленную мебель по указанному адресу. В российские
-                регионы доставка осуществляется силами транспортных компаний.
+                Our own courier service will quickly deliver the purchased furniture to the specified address.
               </p>
             </div>
             <div className='about__features-item about__features-item--3'>
-              <h6 className='about__features-title'>Внимательный сервис</h6>
+              <h6 className='about__features-title'>Attentive service</h6>
               <p className='about__features-text'>
-                Квалифицированные менеджеры интернет-магазина ответят на все вопросы по ассортименту и предоставляемым
-                возможностям, а также помогут оформить заказ и проконтролируют реализацию клиентских пожеланий при
-                заказе мебели.
+                Qualified managers of the online store will answer all questions about the assortment and the provided
+                opportunities, as well as help to place an order and monitor the implementation of customer wishes when
+                ordering furniture.
               </p>
             </div>
             <div className='about__features-item about__features-item--4'>
-              <h6 className='about__features-title'>Каждый пятый покупатель заказывает у нас повторно! </h6>
+              <h6 className='about__features-title'>Every fifth customer orders from us again! </h6>
               <p className='about__features-text'>
-                И мы благодарим всех, кто воспользовался нашим уникальным предложением, заказал мебель быстро и недорого
-                и порекомендовал друзьям и знакомым.
+                And we thank everyone who took advantage of our unique offer, ordered furniture quickly and
+                inexpensively and recommended it to friends and acquaintances.
               </p>
             </div>
           </div>
@@ -163,26 +165,26 @@ const About: React.FC = () => {
           <div className='about__economy-items flex items-center justify-between'>
             <div className='about__economy-item flex'>
               <div className='about__economy-box'>
-                <h6 className='about__economy-item-title'>Время. </h6>
+                <h6 className='about__economy-item-title'>Time. </h6>
                 <p className='about__economy-item-text'>
-                  Примем вашу заявку в кротчайшие сроки. При необходимости подберем для вас достойные варианты по
-                  заданным критериям.
+                  We will accept your application as soon as possible. If necessary, we will select worthy options for
+                  you in terms of criteria.
                 </p>
               </div>
             </div>
             <div className='about__economy-item flex'>
               <div className='about__economy-box'>
-                <h6 className='about__economy-item-title'>Силы. </h6>
+                <h6 className='about__economy-item-title'>Effort. </h6>
                 <p className='about__economy-item-text'>
-                  Закупим оптом или закажем на фабрике, избавив от длительных обсуждений заказа с исполнителем. Курируем
-                  все этапы работы над заказом.
+                  We will buy in bulk or order at the factory, saving you from lengthy discussions of the order with the
+                  contractor. We curate all stages of work on the order.
                 </p>
               </div>
             </div>
             <div className='about__economy-item flex'>
               <div className='about__economy-box'>
-                <h6 className='about__economy-item-title'>Деньги.</h6>
-                <p className='about__economy-item-text'>Вы точно купите мебель дешевле, чем в розницу.</p>
+                <h6 className='about__economy-item-title'>Money.</h6>
+                <p className='about__economy-item-text'>You will definitely buy furniture cheaper than retail.</p>
               </div>
             </div>
           </div>
@@ -192,8 +194,8 @@ const About: React.FC = () => {
       <div className='about__motto'>
         <div className='container'>
           <p className='about__motto-text'>
-            На чем мы не экономим? <br />
-            На вашем комфорте и качестве мебели!
+            What do we not save on? <br />
+            On your comfort and quality of furniture!
           </p>
         </div>
       </div>

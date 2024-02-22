@@ -5,79 +5,34 @@ import { UserApiClient } from '../api/'
 import { loginUserActionCreator, logoutUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
 import { isSuccessfullGetUserResponse } from '../api/types'
+import { getQueryParams, sanitizeUserRes } from '../utils'
 
 export const useAuth = async (): Promise<void> => {
   const dispatch = useDispatch()
   const { isLoggedIn } = useSelector(getUserData)
 
   React.useEffect(() => {
+    const newToken = getQueryParams('token')
+    if (typeof newToken === 'string') {
+      localStorage.setItem('loft_furniture_token', newToken)
+    }
+
     const token = localStorage.getItem('loft_furniture_token')
     if (!token) {
       return
     }
 
-    UserApiClient.getUserData().then((data) => {
+    const processLogin = async () => {
+      const data = await UserApiClient.getUserData()
       if (!isSuccessfullGetUserResponse(data)) {
         return
       }
 
-      const {
-        id,
-        name,
-        email,
-        surname,
-        phone,
-        city,
-        street,
-        house,
-        apartment,
-        orders,
-        image,
-        emailConfirmed,
-        favorites,
-        wantsToReceiveEmailUpdates,
-        cart,
-        updatedAt,
-        createdAt
-      } = data.user
-
-      const processedOrders =
-        orders?.map((o) => ({
-          id: o.id,
-          userId: o.userId,
-          name: o.name,
-          status: o.status,
-          createdAt: o.createdAt,
-          updatedAt: o.updatedAt,
-          items: o.items ?? []
-        })) ?? []
-      const payload = {
-        id: id,
-        isLoggedIn: true,
-        name: name,
-        email: email,
-        surname: surname,
-        phone: phone,
-        city: city,
-        street: street,
-        house: house,
-        apartment: apartment,
-        image: image
-          ? {
-              name: image.name,
-              url: import.meta.env.VITE_BACKEND + image.url
-            }
-          : null,
-        emailConfirmed: emailConfirmed,
-        wantsToReceiveEmailUpdates: wantsToReceiveEmailUpdates,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        favorites: favorites ?? [],
-        orders: processedOrders,
-        cart: cart ?? []
-      }
+      const payload = sanitizeUserRes(data.user)
       dispatch(loginUserActionCreator(payload))
-    })
+    }
+
+    processLogin()
   }, [])
 
   React.useEffect(() => {

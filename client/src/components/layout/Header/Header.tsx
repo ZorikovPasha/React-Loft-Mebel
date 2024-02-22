@@ -2,7 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { HeaderMiddle } from './HeaderMiddle'
-import { ROUTES } from '../../../utils/const'
+import { ROUTES, SCREEN_SIZES } from '../../../utils/const'
+import { useScreenSize } from '../../../hooks/useScreenSize'
 
 export interface IHeaderProps {
   isMobMenuOpen: boolean
@@ -23,14 +24,6 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
         link: 'corners'
       },
       {
-        text: 'Modular',
-        link: 'modular'
-      },
-      {
-        text: 'Dinning area',
-        link: 'dinner'
-      },
-      {
         text: 'Countertops',
         link: 'countertops'
       },
@@ -49,34 +42,18 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
         link: 'mirrors'
       },
       {
-        text: 'Furniture',
-        link: 'furniture'
-      },
-      {
         text: 'Sets',
-        link: 'sets'
+        link: 'set'
       },
       {
         text: 'Bedside tables',
-        link: 'bedside-tables'
+        link: 'bedsideTables'
       }
     ],
     [
       {
-        text: 'Mini walls',
-        link: 'miniwalls'
-      },
-      {
-        text: 'Modular living rooms',
-        link: 'modularLiv'
-      },
-      {
         text: 'Shelves',
         link: 'shelves'
-      },
-      {
-        text: 'Shelving',
-        link: 'shelving'
       },
       {
         text: 'Walls',
@@ -103,37 +80,27 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
     ],
     [
       {
-        text: 'Gaming chairs',
-        link: 'chairs'
-      },
-      {
-        text: 'Tables',
-        link: 'tables'
+        text: 'Office chairs',
+        link: 'chair'
       },
       {
         text: 'Office tables',
-        link: 'officeTables'
+        link: 'table'
       }
     ],
     [
       {
         text: 'Beds',
-        link: 'beds'
-      },
-      {
-        text: 'Soft items',
-        link: 'upholsteredKid'
-      },
-      {
-        text: 'Dressers',
-        link: 'dressers'
+        link: 'bed'
       },
       {
         text: 'Children tables',
-        link: 'tables'
+        link: 'table'
       }
     ]
   ])
+
+  const isMobile = !useScreenSize(SCREEN_SIZES.tablet)
 
   return (
     <header className='header'>
@@ -146,69 +113,40 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
         <div className='header__bottom'>
           <div className='header__categories categories'>
             <ul className='categories__list'>
-              <li className='categories__item categories__item--promo'>
-                <Link
-                  to='/catalog/new'
-                  className='categories__item-img'
-                >
-                  <svg
-                    width='19'
-                    height='19'
-                    viewBox='0 0 19 19'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
+              {isMobile ? (
+                <li className='categories__item'>
+                  <Link
+                    className='categories__item-a'
+                    to='/catalog?sale=1'
                   >
-                    <path
-                      d='M6.46429 7.07143H7.67857M11.3214 11.9286H12.5357M12.5357 6.46429L6.46429 12.5357M8.65177 1.35135L7.28081 2.7223C7.05585 2.94727 6.75073 3.07365 6.43258 3.07365H4.27324C3.61073 3.07365 3.07365 3.61073 3.07365 4.27324V6.43258C3.07365 6.75073 2.94727 7.05585 2.7223 7.28081L1.35135 8.65177C0.882883 9.12023 0.882883 9.87977 1.35135 10.3482L2.7223 11.7192C2.94727 11.9442 3.07365 12.2493 3.07365 12.5674V14.7268C3.07365 15.3893 3.61073 15.9263 4.27324 15.9263H6.43258C6.75073 15.9263 7.05585 16.0527 7.28081 16.2777L8.65177 17.6486C9.12023 18.1171 9.87977 18.1171 10.3482 17.6486L11.7192 16.2777C11.9442 16.0527 12.2493 15.9263 12.5674 15.9263H14.7268C15.3893 15.9263 15.9263 15.3893 15.9263 14.7268V12.5674C15.9263 12.2493 16.0527 11.9442 16.2777 11.7192L17.6486 10.3482C18.1171 9.87977 18.1171 9.12023 17.6486 8.65177L16.2777 7.28081C16.0527 7.05585 15.9263 6.75073 15.9263 6.43258V4.27324C15.9263 3.61073 15.3893 3.07365 14.7268 3.07365H12.5674C12.2493 3.07365 11.9442 2.94727 11.7192 2.7223L10.3482 1.35135C9.87977 0.882883 9.12023 0.882883 8.65177 1.35135Z'
-                      stroke='#414141'
-                    />
-                  </svg>
-                </Link>
-                <Link
-                  to='/catalog/new'
-                  className='categories__link'
-                >
-                  Sale
-                </Link>
-              </li>
-              <li className='categories__item categories__item--new'>
-                <Link
-                  to='/catalog/new'
-                  className='categories__item-img'
-                >
-                  <svg
-                    width='22'
-                    height='22'
-                    viewBox='0 0 22 22'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      clipRule='evenodd'
-                      d='M20.7327 9.36166L20.7488 9.37349C21.3351 9.8039 22 10.2946 22 10.9996C22 11.7044 21.3355 12.194 20.7502 12.6253L20.7499 12.6256C20.4113 12.8723 19.9885 13.1842 19.933 13.3908C19.9522 13.7877 20.0635 14.1748 20.2582 14.5213L20.2669 14.5414C20.5617 15.2208 20.8641 15.9178 20.5222 16.506C20.1769 17.1 19.4012 17.187 18.6513 17.2712C18.2637 17.2736 17.8817 17.3642 17.5342 17.5361C17.3619 17.8839 17.271 18.2662 17.2683 18.6543C17.1841 19.4041 17.0865 20.1856 16.4974 20.5251C15.9082 20.8647 15.1985 20.5586 14.5136 20.2602C14.1695 20.066 13.7853 19.9535 13.3908 19.9312C13.1909 19.9827 12.8879 20.3934 12.6399 20.7296L12.6256 20.7489L12.6248 20.75C12.1936 21.3351 11.705 21.9981 10.9996 21.9981C10.294 21.9981 9.80537 21.335 9.37418 20.7498L9.37353 20.7489C9.12578 20.4103 8.81494 19.9876 8.60834 19.9321C8.21173 19.9536 7.82521 20.0648 7.47779 20.2573L7.46081 20.2647C6.78037 20.5608 6.08216 20.8647 5.4931 20.5213C4.89913 20.175 4.81206 19.4003 4.7279 18.6513C4.7262 18.262 4.63523 17.8781 4.46199 17.5294C4.11448 17.3564 3.73204 17.2651 3.34386 17.2625C2.59494 17.1831 1.81634 17.0875 1.47394 16.4974C1.13154 15.9072 1.43951 15.1975 1.73793 14.5127C1.93264 14.169 2.04527 13.7851 2.06697 13.3907C2.01613 13.1902 1.60207 12.885 1.2662 12.6374L1.26619 12.6374L1.25012 12.6255C0.663777 12.1951 0 11.7054 0 10.9995C0 10.2936 0.663777 9.8039 1.24914 9.37349C1.58773 9.12672 2.01052 8.81489 2.06598 8.6083C2.04491 8.21263 1.93228 7.82728 1.73694 7.48254C1.43471 6.79675 1.13145 6.08698 1.47672 5.49301C1.82199 4.89904 2.59772 4.81197 3.34758 4.72781C3.73405 4.72584 4.11501 4.63626 4.46185 4.46575C4.63411 4.11802 4.72503 3.73567 4.72777 3.34762C4.81197 2.59395 4.91047 1.81347 5.4987 1.47295C6.08693 1.13243 6.79662 1.43466 7.48528 1.73788C7.83001 1.93071 8.21389 2.04316 8.60816 2.06692C8.80803 2.01533 9.11104 1.60466 9.35905 1.26852L9.37335 1.24914L9.37418 1.24802C9.80537 0.662935 10.2939 0 10.9994 0C11.7017 0 12.1891 0.657086 12.6217 1.24026L12.6283 1.24914C12.876 1.58773 13.1869 2.01052 13.3935 2.06598C13.7881 2.04415 14.1724 1.93157 14.5163 1.73694C15.2011 1.43471 15.9118 1.13149 16.5058 1.47775C17.0998 1.82401 17.1868 2.59875 17.271 3.34767C17.2727 3.73706 17.3636 4.12089 17.5369 4.46961C17.8844 4.64258 18.2668 4.73387 18.655 4.73647C19.4039 4.81587 20.1825 4.9115 20.5249 5.50166C20.8673 6.09182 20.5594 6.8015 20.261 7.48635C20.0662 7.82997 19.9536 8.21393 19.9319 8.6083C19.9827 8.80882 20.3968 9.11406 20.7327 9.36166ZM7.74743 13.1994C7.83772 13.3198 7.97949 13.3907 8.13 13.3907C8.18143 13.3907 8.23245 13.3823 8.28114 13.3658C8.47635 13.3008 8.60812 13.1182 8.60825 12.9124V9.08655C8.60825 8.82243 8.39412 8.6083 8.13 8.6083C7.86588 8.6083 7.65175 8.82243 7.65175 9.08655V11.4777L5.64316 8.7996C5.55286 8.67918 5.41109 8.6083 5.26058 8.6083C4.99646 8.6083 4.78233 8.82243 4.78233 9.08655V12.9124C4.78233 13.1765 4.99646 13.3907 5.26058 13.3907C5.5247 13.3907 5.73884 13.1765 5.73884 12.9124V10.5213L7.74743 13.1994ZM11.9559 13.3907H10.043C9.77884 13.3907 9.56471 13.1765 9.56471 12.9124V10.9995V9.08655C9.56471 8.82243 9.77884 8.6083 10.043 8.6083H11.9559C12.22 8.6083 12.4342 8.82243 12.4342 9.08655C12.4342 9.35067 12.22 9.5648 11.9559 9.5648H10.5212V10.5212H11.9559C12.22 10.5212 12.4342 10.7353 12.4342 10.9995C12.4342 11.2636 12.22 11.4777 11.9559 11.4777H10.5212V12.4342H11.9559C12.22 12.4342 12.4342 12.6483 12.4342 12.9125C12.4342 13.1766 12.22 13.3907 11.9559 13.3907ZM16.2839 13.0636C16.349 13.2591 16.5321 13.3909 16.7382 13.3907L16.7574 13.3897C16.9698 13.3817 17.1514 13.2344 17.2031 13.0282L18.1596 9.20231C18.2235 8.94581 18.0674 8.68613 17.811 8.62219C17.5545 8.55826 17.2948 8.71437 17.2308 8.97083L16.6732 11.2032L16.2361 9.89191C16.1862 9.78189 16.0981 9.69374 15.9881 9.64384C15.7374 9.53018 15.4421 9.64124 15.3284 9.89191L14.8913 11.2032L14.3337 8.97083C14.2698 8.71437 14.0101 8.55826 13.7536 8.62219C13.4972 8.68613 13.341 8.94586 13.405 9.20231L14.3614 13.0282C14.4131 13.2344 14.5947 13.3817 14.8071 13.3897C15.0218 13.4058 15.2185 13.2699 15.2796 13.0636L15.7818 11.5552L16.2839 13.0636Z'
-                      fill='#414141'
-                    />
-                  </svg>
-                </Link>
-                <Link
-                  to='/catalog/new'
-                  className='categories__link'
-                >
-                  New arrivals
-                </Link>
-              </li>
-
+                    <svg
+                      width='19'
+                      height='19'
+                      viewBox='0 0 19 19'
+                      fill='none'
+                      className='categories__item-img'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        d='M6.46429 7.07143H7.67857M11.3214 11.9286H12.5357M12.5357 6.46429L6.46429 12.5357M8.65177 1.35135L7.28081 2.7223C7.05585 2.94727 6.75073 3.07365 6.43258 3.07365H4.27324C3.61073 3.07365 3.07365 3.61073 3.07365 4.27324V6.43258C3.07365 6.75073 2.94727 7.05585 2.7223 7.28081L1.35135 8.65177C0.882883 9.12023 0.882883 9.87977 1.35135 10.3482L2.7223 11.7192C2.94727 11.9442 3.07365 12.2493 3.07365 12.5674V14.7268C3.07365 15.3893 3.61073 15.9263 4.27324 15.9263H6.43258C6.75073 15.9263 7.05585 16.0527 7.28081 16.2777L8.65177 17.6486C9.12023 18.1171 9.87977 18.1171 10.3482 17.6486L11.7192 16.2777C11.9442 16.0527 12.2493 15.9263 12.5674 15.9263H14.7268C15.3893 15.9263 15.9263 15.3893 15.9263 14.7268V12.5674C15.9263 12.2493 16.0527 11.9442 16.2777 11.7192L17.6486 10.3482C18.1171 9.87977 18.1171 9.12023 17.6486 8.65177L16.2777 7.28081C16.0527 7.05585 15.9263 6.75073 15.9263 6.43258V4.27324C15.9263 3.61073 15.3893 3.07365 14.7268 3.07365H12.5674C12.2493 3.07365 11.9442 2.94727 11.7192 2.7223L10.3482 1.35135C9.87977 0.882883 9.12023 0.882883 8.65177 1.35135Z'
+                        stroke='#414141'
+                      />
+                    </svg>
+                    <span className='categories__link'>Sale</span>
+                  </Link>
+                </li>
+              ) : null}
               <li className='categories__item'>
                 <Link
                   to='/catalog?room=kitchen'
-                  className='categories__item-img'
+                  className='categories__item-a'
                 >
                   <svg
                     width='23'
                     height='23'
                     viewBox='0 0 23 23'
                     fill='none'
+                    className='categories__item-img'
                     xmlns='http://www.w3.org/2000/svg'
                   >
                     <path
@@ -244,21 +182,17 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       fill='black'
                     />
                   </svg>
+                  <span className='categories__link'>Kitchen</span>
                 </Link>
-                <Link
-                  to='/catalog?room=kitchen'
-                  className='categories__link'
-                >
-                  Kitchens
-                </Link>
+
                 <ul className='header__sub-list'>
-                  {subLists.current[0].map(({ link, text }) => (
+                  {subLists.current[0]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
                     >
                       <Link
-                        to='/catalog?room=kitchen'
+                        to={`/catalog?room=kitchen&type=${link}`}
                         className='sub-list__link'
                       >
                         {text}
@@ -271,13 +205,14 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
               <li className='categories__item'>
                 <Link
                   to='/catalog?room=bedroom'
-                  className='categories__item-img'
+                  className='categories__item-a'
                 >
                   <svg
                     width='28'
                     height='23'
                     viewBox='0 0 28 23'
                     fill='none'
+                    className='categories__item-img'
                     xmlns='http://www.w3.org/2000/svg'
                   >
                     <path
@@ -289,21 +224,18 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       fill='black'
                     />
                   </svg>
+
+                  <span className='categories__link'>Bedrooms</span>
                 </Link>
-                <Link
-                  to='/catalog?room=bedroom'
-                  className='categories__link'
-                >
-                  Bedrooms
-                </Link>
+
                 <ul className='header__sub-list'>
-                  {subLists.current[1].map(({ link, text }) => (
+                  {subLists.current[1]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
                     >
                       <Link
-                        to='/catalog?room=bedroom'
+                        to={`/catalog?room=bedroom&type=${link}`}
                         className='sub-list__link'
                       >
                         {text}
@@ -316,7 +248,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
               <li className='categories__item'>
                 <Link
                   to='/catalog?room=living'
-                  className='categories__item-img'
+                  className='categories__item-a'
                 >
                   <svg
                     width='30'
@@ -324,6 +256,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                     viewBox='0 0 30 23'
                     fill='none'
                     xmlns='http://www.w3.org/2000/svg'
+                    className='categories__item-img'
                   >
                     <path
                       d='M29.5312 15.9375H28.125V13.125H29.0625C29.3214 13.1249 29.5311 12.9149 29.531 12.656C29.531 12.6304 29.5289 12.6047 29.5247 12.5794L29.0559 9.76688C29.0184 9.54082 28.8229 9.37512 28.5938 9.375H26.7188C26.4896 9.37512 26.2941 9.54082 26.2566 9.76688L25.7878 12.5794C25.7453 12.8347 25.9179 13.0762 26.1734 13.1187C26.1987 13.1229 26.2243 13.125 26.25 13.125H27.1875V15.9375H25.3125C25.2967 15.9397 25.281 15.9428 25.2656 15.9469C25.0455 14.8525 24.0851 14.0644 22.9688 14.0625H22.0312V12.6562C22.0312 11.8796 21.4017 11.25 20.625 11.25H16.875C16.0983 11.25 15.4688 11.8796 15.4688 12.6562V14.0625H14.5312V12.6562C14.5312 11.8796 13.9017 11.25 13.125 11.25H9.375C8.59834 11.25 7.96875 11.8796 7.96875 12.6562V14.0625H7.03125C5.91492 14.0644 4.95445 14.8525 4.73438 15.9469C4.71897 15.9428 4.70332 15.9397 4.6875 15.9375H2.8125V13.125H3.75C4.00887 13.1249 4.21863 12.9149 4.21852 12.656C4.21852 12.6304 4.21641 12.6047 4.21219 12.5794L3.74344 9.76688C3.70588 9.54082 3.51041 9.37512 3.28125 9.375H1.40625C1.17709 9.37512 0.981621 9.54082 0.944062 9.76688L0.475313 12.5794C0.432832 12.8347 0.605449 13.0762 0.860859 13.1187C0.886172 13.1229 0.911836 13.125 0.9375 13.125H1.875V15.9375H0.46875C0.209883 15.9375 0 16.1474 0 16.4062V21.5625C0 21.8214 0.209883 22.0312 0.46875 22.0312H29.5312C29.7901 22.0312 30 21.8214 30 21.5625V16.4062C30 16.1474 29.7901 15.9375 29.5312 15.9375ZM1.49109 12.1875L1.80328 10.3125H2.88422L3.19641 12.1875H1.49109ZM4.21875 21.0938H0.9375V16.875H4.21875V21.0938ZM16.4062 12.6562C16.4062 12.3974 16.6161 12.1875 16.875 12.1875H20.625C20.8839 12.1875 21.0938 12.3974 21.0938 12.6562V14.0625H16.4062V12.6562ZM8.90625 12.6562C8.90625 12.3974 9.11613 12.1875 9.375 12.1875H13.125C13.3839 12.1875 13.5938 12.3974 13.5938 12.6562V14.0625H8.90625V12.6562ZM24.375 21.0938H5.625V19.6875H24.375V21.0938ZM24.375 18.75H5.625V16.4062C5.625 15.6296 6.25459 15 7.03125 15H22.9688C23.7454 15 24.375 15.6296 24.375 16.4062V18.75ZM26.8036 12.1875L27.1158 10.3125H28.1967L28.5089 12.1875H26.8036ZM29.0625 21.0938H25.7812V16.875H29.0625V21.0938Z'
@@ -338,21 +271,16 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       fill='black'
                     />
                   </svg>
-                </Link>
-                <Link
-                  to='/catalog?room=living'
-                  className='categories__link'
-                >
-                  Living rooms
+                  <span className='categories__link'>Living rooms</span>
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[2].map(({ link, text }) => (
+                  {subLists.current[2]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
                     >
                       <Link
-                        to='/catalog?room=living'
+                        to={`/catalog?room=living&type=${link}`}
                         className='sub-list__link'
                       >
                         {text}
@@ -365,13 +293,14 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
               <li className='categories__item'>
                 <Link
                   to='/catalog?room=hall'
-                  className='categories__item-img'
+                  className='categories__item-a'
                 >
                   <svg
                     width='22'
                     height='22'
                     viewBox='0 0 22 22'
                     fill='none'
+                    className='categories__item-img'
                     xmlns='http://www.w3.org/2000/svg'
                   >
                     <path
@@ -387,21 +316,17 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       fill='black'
                     />
                   </svg>
-                </Link>
-                <Link
-                  to='/catalog?room=hall'
-                  className='categories__link'
-                >
-                  Halls
+
+                  <span className='categories__link'>Halls</span>
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[3].map(({ link, text }) => (
+                  {subLists.current[3]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
                     >
                       <Link
-                        to='/catalog?room=hall'
+                        to={`/catalog?room=hall&type=${link}`}
                         className='sub-list__link'
                       >
                         {text}
@@ -414,13 +339,14 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
               <li className='categories__item'>
                 <Link
                   to='/catalog?room=office'
-                  className='categories__item-img'
+                  className='categories__item-a'
                 >
                   <svg
                     width='23'
                     height='22'
                     viewBox='0 0 23 22'
                     fill='none'
+                    className='categories__item-img'
                     xmlns='http://www.w3.org/2000/svg'
                   >
                     <path
@@ -436,21 +362,16 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       fill='black'
                     />
                   </svg>
-                </Link>
-                <Link
-                  to='/catalog?room=office'
-                  className='categories__link'
-                >
-                  Offices
+                  <span className='categories__link'>Offices</span>
                 </Link>
                 <ul className='header__sub-list'>
-                  {subLists.current[4].map(({ link, text }) => (
+                  {subLists.current[4]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
                     >
                       <Link
-                        to='/catalog?room=office'
+                        to={`/catalog?room=office&type=${link}`}
                         className='sub-list__link'
                       >
                         {text}
@@ -462,14 +383,15 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
 
               <li className='categories__item'>
                 <Link
-                  to='/catalog/children'
-                  className='categories__item-img'
+                  className='categories__item-a'
+                  to='/catalog?room=children'
                 >
                   <svg
                     width='23'
                     height='22'
                     viewBox='0 0 23 22'
                     fill='none'
+                    className='categories__item-img'
                     xmlns='http://www.w3.org/2000/svg'
                   >
                     <path
@@ -497,21 +419,16 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       fill='black'
                     />
                   </svg>
-                </Link>
-                <Link
-                  to='/catalog?room=children'
-                  className='categories__link'
-                >
-                  Children
+                  <span className='categories__link'>Children</span>
                 </Link>
                 <ul className='header__sub-list header__sub-list--rightside'>
-                  {subLists.current[5].map(({ link, text }) => (
+                  {subLists.current[5]?.map(({ link, text }) => (
                     <li
                       key={link}
                       className='sub-list__item'
                     >
                       <Link
-                        to='/catalog?room=children'
+                        to={`/catalog?room=children&type=${link}`}
                         className='sub-list__link'
                       >
                         {text}

@@ -1,4 +1,4 @@
-import { Actions } from '../../types/actionsTypes'
+import { Actions } from './types'
 import {
   ICartItem,
   IOrder,

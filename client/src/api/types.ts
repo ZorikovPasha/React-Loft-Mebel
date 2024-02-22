@@ -36,6 +36,34 @@ interface ICartItemResponse {
   color: string
 }
 
+export interface ISuccessfullResponse {
+  success: boolean
+}
+
+export interface IRegisterUser400 {
+  // <- this coud be actually general 400 for many requests
+  message: string | string[]
+  error: 'Bad Request' // <- can convert this to string too
+  statusCode: 400
+}
+
+export interface I500Response {
+  statusCode: 500
+  message: 'Internal server error'
+}
+
+// login
+
+export interface ILoginUser400 {
+  statusCode: 400
+  message: string
+}
+
+export interface I401Response {
+  message: 'Unauthorized'
+  statusCode: 401
+}
+
 interface IOrderResponse {
   id: number
   userId: string
@@ -59,7 +87,7 @@ export interface IUserResponse {
   user: {
     id: string
     name: string
-    surname: string
+    surname: string | null
     userName: string
     email: string
     phone: string
@@ -85,6 +113,7 @@ export interface IUserResponse {
     } | null
     role: string
     emailConfirmed: boolean
+    decidedOnWantsToReceiveEmailUpdates: boolean
     wantsToReceiveEmailUpdates: boolean
     createdAt: Date
     updatedAt: Date
@@ -117,7 +146,7 @@ export interface IImage {
   updatedAt: string
 }
 
-interface IReview {
+export interface IReview {
   id: number
   text: string
   score: number
@@ -125,6 +154,7 @@ interface IReview {
   user: {
     userName: string | undefined
     image: IImage | null
+    id: string
   }
   attachedPictures: (IImage | null)[] | null
   createdAt: string
@@ -145,6 +175,8 @@ export interface IFurniture {
   material: string
   brand: string
   image: IImage | null
+  description: string
+  specs: string
   dimensions:
     | {
         id: number
@@ -158,7 +190,8 @@ export interface IFurniture {
 }
 
 export interface IFurnitureResponse {
-  items: IFurniture[]
+  filtered: IFurniture[]
+  all: IFurniture[]
 }
 
 export interface IErrorsResponse {
@@ -172,10 +205,6 @@ export interface IErrorsResponse {
 
 export interface IErrorResponse {
   message: string
-}
-
-export interface ISuccessfullResponse {
-  success: boolean
 }
 
 export interface ICartItemRequest {
@@ -218,6 +247,33 @@ export interface IRemoveCartItemDto {
   color: string
 }
 
+export const isILogin400 = (data: ISuccessfullLoginResponse | ILoginUser400 | I500Response): data is ILoginUser400 => {
+  // @ts-expect-error this is okay here
+  return data.statusCode === 400
+}
+
+export const isSuccessfullLoginResponse = <T>(
+  data: ISuccessfullLoginResponse | T
+): data is ISuccessfullLoginResponse => {
+  // @ts-expect-error this is okay here
+  return typeof data.token === 'string' && Boolean(data.user)
+}
+
+export const isRegisterUser200 = <T>(data: ISuccessfullResponse | T): data is ISuccessfullResponse => {
+  // @ts-expect-error this is okay here
+  return data.success
+}
+
+export const isRes200 = <T>(data: ISuccessfullResponse | T): data is ISuccessfullResponse => {
+  // @ts-expect-error this is okay here
+  return data.success == true
+}
+
+export const isRes500 = <T>(data: I500Response | T): data is I500Response => {
+  // @ts-expect-error this is okay here
+  return data.statusCode === 500
+}
+
 export const isSuccessfullMakeOrderResponse = (
   dto: ISuccessfullMakeOrderResponse | IErrorResponse
 ): dto is ISuccessfullMakeOrderResponse => {
@@ -233,17 +289,10 @@ export const isSuccessfullResponse = (
 }
 
 export const isSuccessfullCancelOrderResponse = (
-  data: IErrorsResponse | IErrorResponse | ICancelOrderResponse
-): data is ICancelOrderResponse => {
-  const property: keyof ICancelOrderResponse = 'status'
-  return property in data
-}
-
-export const isSuccessfullLoginResponse = (
-  data: IErrorsResponse | IErrorResponse | ISuccessfullLoginResponse
-): data is ISuccessfullLoginResponse => {
-  const property: keyof ISuccessfullLoginResponse = 'token'
-  return property in data
+  data: IErrorsResponse | IErrorResponse | ISuccessfullResponse
+): data is ISuccessfullResponse => {
+  const property: keyof ISuccessfullResponse = 'success'
+  return property in data && data.success === true
 }
 
 export const isSuccessfullGetUserResponse = (

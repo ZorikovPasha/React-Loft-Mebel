@@ -4,6 +4,10 @@
   justify-content: center;
   align-items: center;
 
+  &--vertical {
+    min-height: 100%;
+  }
+
   &--fixed {
     position: fixed;
     z-index: 5;

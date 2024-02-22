@@ -5,7 +5,6 @@
 
   &__list {
     display: flex;
-    align-items: flex-start;
     justify-content: space-between;
 
     @media #{$tablet} {
@@ -15,28 +14,31 @@
 
   &__item {
     position: relative;
-    display: flex;
-    align-items: center;
     flex-grow: 1;
-    padding: 24px;
-    cursor: pointer;
-    background-color: transparent;
+    height: inherit;
 
-    @media (width >=767px) {
-      &:hover {
-        background: #245462;
-        color: #fff;
-      
-        path {
-          fill: white;
-        }
-      
-        .header__sub-list {
-          display: block;
-        }
+    &:hover {
+      background: #245462;
+      color: #fff;
+
+      path {
+        fill: white;
       }
     }
 
+    &:hover {
+      .header__sub-list {
+        display: block;
+      }
+    }
+  }
+
+  &__item-a {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    background-color: transparent;
+    height: 100%;
 
     @media #{$tablet} {
       padding: 24px 15px;
@@ -44,57 +46,18 @@
       text-align: center;
     }
 
-      @media #{$mobile} {
-        padding: 0 15px;
-      }
-
-        @media (width <=510px) {
-            padding: 0 4px;
-          }
-        
-
-    &:first-child {
-      padding-left: 40px;
-
-      @media #{$mobile} {
-        padding-left: 15px;
-      }
-
-        @media (width <=510px) {
-            padding-left: 4px;
-          }
-    }
-  }
-
-  &__item--new {
-    display: none;
-
     @media #{$mobile} {
-      display: block;
+      padding: 15px;
+      justify-content: center;
     }
-  }
 
-  &__item--promo {
-    display: none;
-
-    @media #{$mobile} {
-      display: block;
+    @media (width <=510px) {
+      padding: 4px;
     }
   }
 
   &__item-img {
     display: block;
-
-    @media #{$mobile} {
-      background: #fff;
-      box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
-      padding: 15px;
-      min-height: 55px;
-  
-      img {
-        display: block;
-      }
-    }
   }
 
   &__link {
@@ -105,8 +68,13 @@
       margin-top: 5px;
       margin-left: 0;
     }
-    
+
     @media #{$mobile} {
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    @media (width <=510px) {
       font-size: 9px;
       line-height: 11px;
     }

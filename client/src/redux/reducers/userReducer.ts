@@ -1,5 +1,5 @@
 import { OrderStatusType } from '../../api/types'
-import { Actions } from '../../types/actionsTypes'
+import { Actions } from '../actions/types'
 
 export type userActionType = {
   type: typeof Actions.LOGIN | typeof Actions.LOGOUT | typeof Actions.EDIT_USER_DATA | typeof Actions.ADD_CART_ITEM
@@ -60,6 +60,7 @@ export interface IUserState {
     url: string
   } | null
   emailConfirmed: boolean
+  decidedOnWantsToReceiveEmailUpdates: boolean
   wantsToReceiveEmailUpdates: boolean
   createdAt?: Date
   updatedAt?: Date
@@ -82,6 +83,7 @@ export const initialState: IUserState = {
   image: null,
   emailConfirmed: false,
   wantsToReceiveEmailUpdates: false,
+  decidedOnWantsToReceiveEmailUpdates: false,
   favorites: [],
   orders: [],
   cart: []
@@ -95,12 +97,12 @@ export const userReducer = (
     case Actions.LOGIN: {
       const newFavorites =
         action.payload.favorites?.reduce((accum: number[], next) => {
-          return state.favorites.includes(next) ? accum.filter((f) => f !== next) : [...accum, next]
+          return state.favorites.includes(next) ? accum.filter((f) => f !== next) : accum.concat(next)
         }, []) ?? []
       return {
         ...state,
         ...action.payload,
-        favorites: [...state.favorites, ...newFavorites],
+        favorites: state.favorites.concat(newFavorites),
         isLoggedIn: true
       }
     }
@@ -108,11 +110,13 @@ export const userReducer = (
     case Actions.EDIT_USER_DATA: {
       let newFavorites: number[] = []
 
-      action.payload.favorites?.map((next) => {
-        newFavorites = state.favorites.includes(next)
-          ? state.favorites.filter((f) => f !== next)
-          : [...state.favorites, next]
-      }, []) ?? []
+      action.payload.favorites?.forEach((next) => {
+        if (state.favorites.includes(next)) {
+          newFavorites = state.favorites.filter((f) => f !== next)
+        } else {
+          newFavorites.push(next)
+        }
+      }) ?? []
 
       return {
         ...state,
@@ -135,7 +139,7 @@ export const userReducer = (
       }
       return {
         ...state,
-        cart: candidate ? state.cart : [...state.cart, payload]
+        cart: candidate ? state.cart : state.cart.concat(payload)
       }
     }
 
@@ -152,7 +156,7 @@ export const userReducer = (
     case Actions.EDIT_ORDER: {
       return {
         ...state,
-        orders: state.orders.map((o) => (o.id === action.payload.id ? { ...o, ...action.payload } : o))
+        orders: state.orders.map((o) => (o.id === action.payload.id ? Object.assign(o, action.payload) : o))
       }
     }
 

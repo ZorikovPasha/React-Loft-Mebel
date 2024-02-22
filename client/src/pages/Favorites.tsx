@@ -35,18 +35,16 @@ const Favorites: React.FC = () => {
   return (
     <>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <section className='cart'>
+      <section>
         <div className='container'>
           <div className='cart__top'>
-            <p>Вам понравилось:</p>
-            <p>
-              <span className='cart__top-num'>Предметов: {favorites?.length}</span>
-            </p>
+            <p className='cart__bottom-total'>You liked:</p>
+            <p className='cart__bottom-total'>Total: {favorites?.length}</p>
           </div>
         </div>
       </section>
       {favorites.length ? (
-        <section className='sales'>
+        <section className='mt-40'>
           <div className='container'>
             <div className='sales__items sales__items--cart'>
               {favoriteItems?.map((item) => (

@@ -1,4 +1,5 @@
 import React from 'react'
+import { IUserResponse, OrderStatusType } from '../api/types'
 
 export const validateEmail = (email: string): boolean => {
   return email.trim().length > 4 && email.includes('@') && email.includes('.')
@@ -17,12 +18,12 @@ export const getPasswordFieldErrorMessage = (str: string): string => {
     return 'Please enter your paassword'
   }
 
-  if (str.trim().length < 6) {
+  if (str.trim().length < 7) {
     return 'Password length should be more than 6 characters'
   }
 
   if (str.trim() !== '1234') {
-    return 'Password is to simple'
+    return 'Password is too simple'
   }
 
   return ''
@@ -37,11 +38,11 @@ export const getTextInputErrorMessage = (val: string) => {
 }
 
 export const getEmailInputErrorMessage = (str: string) => {
-  return str.trim().length === 0 ? 'Please fill in your email' : validateEmail(str) ? '' : 'Email is incorrect'
+  return str.trim().length === 0 ? 'Please enter your email' : validateEmail(str) ? '' : 'Email is incorrect'
 }
 
 export const getQueryParams = (paramName: string) => {
-  if (typeof window !== `undefined`) {
+  if (typeof window !== 'undefined') {
     const urlSearchParams = new URLSearchParams(window.location.search)
     const params = Object.fromEntries(urlSearchParams.entries())
     return params[paramName]
@@ -80,7 +81,7 @@ export const breakString: breakStringType = (originalStr = '', query = '') => {
       {positions.map(({ start, end }, idx) => (
         <React.Fragment key={start}>
           <span className='highlight'>{originalStr.slice(start, end)}</span>
-          {positions.length > 1 && positions[idx + 1] && originalStr.slice(end, positions[idx + 1].start)}
+          {positions.length > 1 && positions[idx + 1] && originalStr.slice(end, positions[idx + 1]?.start)}
         </React.Fragment>
       ))}
       {originalStr.slice(lastFoundEntryPositions.end, originalStr.length)}
@@ -88,4 +89,76 @@ export const breakString: breakStringType = (originalStr = '', query = '') => {
   ) : (
     <>{originalStr}</>
   )
+}
+
+interface IProcessedOrder {
+  id: number
+  userId: string
+  name: string
+  status: OrderStatusType
+  createdAt: string
+  updatedAt: string
+  items: {
+    id: number
+    furnitureId: number
+    orderId: number
+    quintity: number
+    color: string
+  }[]
+}
+
+export const sanitizeUserRes = (userData: IUserResponse['user']) => {
+  const processedOrders: IProcessedOrder[] = []
+  if (userData.orders) {
+    userData.orders.forEach((o) => {
+      processedOrders.push({
+        id: o.id,
+        userId: o.userId,
+        name: o.name,
+        status: o.status,
+        createdAt: o.createdAt,
+        updatedAt: o.updatedAt,
+        items: Array.isArray(o.items) ? o.items : []
+      })
+    })
+  }
+
+  return {
+    id: userData.id,
+    isLoggedIn: true,
+    name: userData.name ?? '',
+    email: userData.email ?? '',
+    surname: userData.surname ?? '',
+    phone: userData.phone ?? '',
+    city: userData.city ?? '',
+    street: userData.street ?? '',
+    house: userData.house ?? '',
+    apartment: userData.apartment ?? '',
+    image: userData.image
+      ? {
+          name: userData.image.name,
+          url: import.meta.env.VITE_BACKEND + userData.image.url
+        }
+      : null,
+    emailConfirmed: userData.emailConfirmed,
+    decidedOnWantsToReceiveEmailUpdates: userData.decidedOnWantsToReceiveEmailUpdates,
+    wantsToReceiveEmailUpdates: userData.wantsToReceiveEmailUpdates,
+    createdAt: userData.createdAt,
+    updatedAt: userData.updatedAt,
+    favorites: userData.favorites ?? [],
+    orders: processedOrders,
+    cart: userData.cart ?? []
+  }
+}
+
+export const splitPriceWithSpaces = (total: number) => {
+  let totalToRender = ''
+  let charsCount = total.toString().length
+
+  while (charsCount > 3) {
+    totalToRender = totalToRender + total.toString().slice(0, 2) + ' ' + total.toString().slice(charsCount - 3)
+    charsCount = charsCount - 3
+  }
+
+  return totalToRender
 }

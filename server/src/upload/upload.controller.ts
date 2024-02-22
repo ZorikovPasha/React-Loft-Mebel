@@ -1,45 +1,30 @@
-import { NextFunction, Request, Response } from 'express'
-import { injectable, inject } from 'inversify'
+import { Controller, Get, Param, Res, BadRequestException, NotFoundException } from '@nestjs/common'
+import { Response } from 'express'
 
-import { ApiError } from '../error/api.error.js'
-import { LoggerService } from '../logger/logger.service.js'
-import { TYPES } from '../types.js'
-import { IUploadController } from './upload.controller.interface.js'
-import { PrismaService } from '../prisma.service.js'
+import { PrismaService } from '../prisma/prisma.service'
+import { ApiTags } from '@nestjs/swagger'
 
-@injectable()
-export class UploadController implements IUploadController {
-  constructor(
-    @inject(TYPES.ILoggerService) public logger: LoggerService,
-    @inject(TYPES.Prisma) private prisma: PrismaService
-  ) {}
+@ApiTags('Uploads')
+@Controller('uploads')
+export class UploadController {
+  constructor(private readonly prisma: PrismaService) {}
 
-  async getUpload(
-    req: Request<{ url?: string }, {}, {}>,
-    res: Response,
-    next: NextFunction
-  ): Promise<void | Response<Record<string, string>, Record<string, unknown>>> {
-    try {
-      this.logger.log(`[${req.method}] ${req.path}`)
-
-      if (!req.params.url) {
-        return next(ApiError.badRequest('Url was not provided'))
-      }
-
-      const media = await this.prisma.client.image.findFirst({
-        where: {
-          url: `/uploads/${req.params.url}`
-        }
-      })
-
-      if (!media) {
-        return res.status(404)
-      }
-
-      return res.status(200).contentType(media.mime).end(media.data)
-    } catch (error) {
-      this.logger.error(`${req.method} [${req.path}], Error 500 : ${error}`)
-      return next(ApiError.internal(error as Error))
+  @Get(':url')
+  async findOne(@Param('url') url: string | undefined, @Res() res: Response) {
+    if (!url) {
+      throw new BadRequestException('Url was not provided')
     }
+
+    const media = await this.prisma.image.findFirst({
+      where: {
+        url: `/uploads/${url}`
+      }
+    })
+
+    if (!media) {
+      throw new NotFoundException()
+    }
+
+    return res.status(200).contentType(media.mime).end(media.data)
   }
 }

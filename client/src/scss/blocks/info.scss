@@ -1,5 +1,4 @@
 .info {
-
   @media (width <=992px) {
     margin-top: 50px;
   }
@@ -17,17 +16,11 @@
   }
 
   &__category {
-    font-size: 14px;
-    line-height: 16px;
+    font-size: 16px;
+    line-height: 20px;
     color: #686868;
     margin-bottom: 15px;
     text-transform: capitalize;
-
-
-    @media #{$mobile} {
-      font-size: 9px;
-      line-height: 11px;
-    }
   }
 
   &__shop {

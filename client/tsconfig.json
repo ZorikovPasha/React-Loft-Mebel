@@ -9,7 +9,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "allowJs": true,
+    "allowJs": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,11 +17,13 @@
     "strictNullChecks": true,
     "noErrorTruncation": false,
     "noUnusedParameters": true,
-
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "allowUnusedLabels": false
   },
   "include": ["src", "./src/global-types.d.ts"]
 }

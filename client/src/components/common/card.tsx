@@ -1,9 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { UserApiClient } from '../../api'
 import { IFurniture, isSuccessfullResponse } from '../../api/types'
-import { Link } from 'react-router-dom'
 import { getUserData } from '../../redux/getters'
 import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
@@ -15,12 +15,12 @@ interface ISalesItemProps {
 }
 
 export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
-  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors } = product
+  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors, rating, reviews } = product
 
   const dispatch = useDispatch()
   const { isLoggedIn, favorites } = useSelector(getUserData)
 
-  const onLikeProductClick = () => {
+  const onLikeProductClick = (isLoggedIn: boolean) => async () => {
     if (!isLoggedIn) {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
@@ -30,29 +30,28 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     }
 
     if (favorites.includes(id)) {
-      return UserApiClient.deleteFavoriteItem(id)
-        .then((dto) => {
-          if (!isSuccessfullResponse(dto)) {
-            return dispatch(toggleSnackbarOpen())
-          }
-
-          editUserActionCreator(payload)
-        })
-        .catch(() => {
-          dispatch(toggleSnackbarOpen())
-        })
-    }
-    UserApiClient.addFavoriteItem(id)
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
+      try {
+        const response = await UserApiClient.deleteFavoriteItem(id)
+        if (!isSuccessfullResponse(response)) {
           return dispatch(toggleSnackbarOpen())
         }
 
-        editUserActionCreator(payload)
-      })
-      .catch(() => {
+        dispatch(editUserActionCreator(payload))
+      } catch (error) {
         dispatch(toggleSnackbarOpen())
-      })
+      }
+    } else {
+      try {
+        const response = await UserApiClient.addFavoriteItem(id)
+        if (!isSuccessfullResponse(response)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        dispatch(editUserActionCreator(payload))
+      } catch (error) {
+        dispatch(toggleSnackbarOpen())
+      }
+    }
   }
 
   const onAddToCartClick = async () => {
@@ -60,34 +59,36 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
-    UserApiClient.addItemToCart({
-      productId: id,
-      quintity: 1,
-      color: colors[0]
-    })
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+    try {
+      const dto = {
+        productId: id,
+        quintity: 1,
+        color: colors[0] ?? '#FFF'
+      }
 
-        const payload = {
-          id,
-          furnitureId: id,
-          quintity: 1,
-          color: colors[0]
-        }
+      const response = await UserApiClient.addItemToCart(dto)
 
-        dispatch(addProductToCartActionCreator(payload))
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      if (!isSuccessfullResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
+
+      const payload = {
+        id,
+        furnitureId: id,
+        quintity: 1,
+        color: colors[0] ?? '#FFF'
+      }
+
+      dispatch(addProductToCartActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
-  let discount = 0
+  let discount = '0'
 
   if (priceNew < priceOld) {
-    discount = (parseInt(priceOld) - parseInt(priceNew)) / 100
+    discount = (((parseInt(priceOld) - parseInt(priceNew)) / parseInt(priceOld)) * 100).toFixed(0)
   }
 
   return (
@@ -101,7 +102,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         title='Like product'
         type='button'
         className='item-sales__like'
-        onClick={onLikeProductClick}
+        onClick={onLikeProductClick(isLoggedIn)}
       >
         <img
           src={isFavorite ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}
@@ -124,23 +125,39 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         </Link>
         <p className='item-sales__type'>{type}</p>
         <div className='item-sales__price'>
-          {priceNew ? <p className='item-sales__price-new'>{priceNew} ₽</p> : null}
-          {priceOld ? <p className='item-sales__price-old'>{priceOld + ' ₽'}</p> : null}
+          {priceNew ? <p className='item-sales__price-new'>{priceNew}$</p> : null}
+          {priceOld && sale ? <p className='item-sales__price-old'>{priceOld + '$'}</p> : null}
         </div>
-        {dimensions ? (
+        {dimensions && dimensions[0] ? (
           <div className='item-sales__bottom flex'>
-            <p className='item-sales__text'>Размеры</p>
+            <div className='flex justify-start items-center width-full'>
+              {reviews?.length ? (
+                <img
+                  className='block'
+                  src='/images/icons/star-black.svg'
+                  alt=''
+                />
+              ) : (
+                <img
+                  className='block'
+                  src='/images/icons/star.svg'
+                  alt=''
+                />
+              )}
+              {reviews?.length ? <p className='ml-5'>{rating}</p> : null}
+              <p className='ml-5'>({reviews?.length})</p>
+            </div>
             <div className='item-sales__line'>
               <div className='item-sales__size'>
-                <p className='item-sales__val'>ШИРИНА</p>
+                <p className='item-sales__val'>Width</p>
                 <p className='item-sales__num'>{dimensions[0].width} СМ</p>
               </div>
               <div className='item-sales__size'>
-                <p className='item-sales__val'>ГЛУБИНА</p>
+                <p className='item-sales__val'>Length</p>
                 <p className='item-sales__num'>{dimensions[0].length} СМ</p>
               </div>
               <div className='item-sales__size'>
-                <p className='item-sales__val'>ВЫСОТА</p>
+                <p className='item-sales__val'>Height</p>
                 <p className='item-sales__num'>{dimensions[0].height} СМ</p>
               </div>
             </div>

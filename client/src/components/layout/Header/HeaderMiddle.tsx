@@ -33,14 +33,14 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
     document.body.onclick = function (e: MouseEvent): void {
       if (isMobMenuOpen && !e.path?.includes(menuBtnRef.current)) {
         setMobMenuOpen(false)
-        document.documentElement.classList.remove('lock')
+        document.body.classList.remove('lock')
       }
     }
   }, [])
 
   const onMobMenuBtnClick = (): void => {
     setMobMenuOpen(true)
-    document.documentElement.classList.add('lock')
+    document.body.classList.add('lock')
   }
 
   const pathname = useSelector(getPathname)
@@ -49,7 +49,6 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
 
   const onLogout = () => {
     localStorage.removeItem('loft_furniture_token')
-    localStorage.removeItem('decidedOnRecieveingEmails')
     dispatch(logoutUserActionCreator())
     history.push({ pathname: '/' })
   }
@@ -92,7 +91,8 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
         <div className={`flex items-center justify-center ${isLoggedIn ? 'header__mobile-list-wrap' : ''}`}>
           <Link
             to={isLoggedIn ? ROUTES.Profile : ROUTES.Login}
-            className='user-header__link'
+            className='user-header__link user-header__link--profile'
+            title='Profile'
           >
             {isLoggedIn && image ? (
               <img

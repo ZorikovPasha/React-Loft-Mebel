@@ -8,6 +8,7 @@ import { removeProductFromCartActionCreator } from '../../redux/actions/userActi
 import { getUserData } from '../../redux/getters'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from '../common/Button'
+import { splitPriceWithSpaces } from '../../utils'
 
 interface ICartItemProps {
   item: {
@@ -32,7 +33,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
 
   const dispatch = useDispatch()
 
-  const onRemoveItemClick = () => {
+  const onRemoveItemClick = async () => {
     if (!isLoggedIn) {
       return
     }
@@ -42,65 +43,56 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
       color
     }
 
-    UserApiClient.removeCartItem(dto)
-      .then((dto) => {
-        if (!isSuccessfullResponse(dto)) {
-          return dispatch(toggleSnackbarOpen())
-        }
-        const payload = {
-          id: cartItemId,
-          furnitureId,
-          quintity,
-          color
-        }
+    try {
+      const response = await UserApiClient.removeCartItem(dto)
+      if (!isSuccessfullResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
+      const payload = {
+        id: cartItemId,
+        furnitureId,
+        quintity,
+        color
+      }
 
-        dispatch(removeProductFromCartActionCreator(payload))
-      })
-      .catch(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      dispatch(removeProductFromCartActionCreator(payload))
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
-  const totalCost = price * quintity
+  const totalToRender = splitPriceWithSpaces(price * quintity)
 
   return (
-    <div className='cart__item item'>
-      <div className='item__box'>
+    <div className='item flex relative'>
+      <div className='item__box flex'>
         <img
           className='item__box-image'
           src={import.meta.env.VITE_BACKEND + imageUrl}
           alt='furniture'
         />
         <div className='item__info'>
-          <div className='item__info-top'>
-            <h6 className='item__info-name'>
+          <div className='item__info-top flex items-center justify-between'>
+            <h6 className='item__info-name fw-500'>
               <Link to={`/products/${furnitureId}`}>{name}</Link>
             </h6>
-            <div className='item__info-nums'>
-              <p className='item__info-price'>{totalCost}</p>
-            </div>
+            <p className='item__info-price'>{totalToRender} $</p>
           </div>
-          <div className='item__info-line'>
-            <div
-              className='item__info-feature info-feature'
-              data-color
-            >
+          <div className='item__info-line mt-20 flex items-center'>
+            <div className='item__info-feature info-feature flex items-center'>
               <p className='info-feature__name'>Цвет:</p>
               <span
                 style={{ backgroundColor: color }}
-                className='info-feature__color'
+                className='info-feature__color relative'
               ></span>
             </div>
-            <div className='item__info-feature info-feature'>
+            <div className='item__info-feature info-feature  flex items-center'>
               <p className='info-feature__name info-feature__name--total'>Количество:</p>
               <p className='info-feature__val'>{quintity}</p>
             </div>
-            <div
-              className='item__info-feature info-feature'
-              data-size
-            >
+            <div className='item__info-feature info-feature flex items-center'>
               <p className='info-feature__name'>Размер(Ш×Д×В):</p>
-              {dimension ? (
+              {dimension[0] ? (
                 <p className='info-feature__val'>
                   {dimension[0].width} СМ × {dimension[0].length} СМ × {dimension[0].height} СМ
                 </p>
@@ -108,11 +100,10 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
             </div>
           </div>
         </div>
-        <div className='item__bottom'></div>
       </div>
       <Button
         title='Remove product from cart'
-        className='item__remove'
+        className='item__remove flex items-center justify-center'
         type='button'
         onClick={onRemoveItemClick}
       >

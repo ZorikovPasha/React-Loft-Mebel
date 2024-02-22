@@ -9,7 +9,55 @@ import { breakString, formatStr } from '../../../utils'
 import { editSearchActionCreator } from '../../../redux/actions/search'
 import { useScreenSize } from '../../../hooks/useScreenSize'
 
-export const Search: React.FC = () => {
+interface IProps {
+  onCloseDropdown: () => void
+}
+
+const SearchResults = ({ onCloseDropdown }: IProps) => {
+  const { query, queryToRender, searchResults } = useSelector(getSearch)
+
+  return (
+    <PerfectScrollbar className='search__dropdown-list'>
+      {!searchResults?.length && (
+        <div className='search__empty'>
+          <p className='search-results__query'>{query}</p>
+          <p className='search-results__text'>
+            Searching ”{query}” found <span className='search-results__text--black'>0 results</span>
+          </p>
+        </div>
+      )}
+
+      {searchResults.length > 0 &&
+        searchResults.map(({ item: { title, link, texts, imageUrl } }, idx) => {
+          const textWithQuery = texts.find((t) => formatStr(t).includes(formatStr(queryToRender))) ?? undefined
+
+          return (
+            <Link
+              to={link}
+              key={idx + title}
+              className={`search__dropdown-item ${!idx ? 'search__dropdown-item--no-top-border' : ''} flex`}
+              onClick={onCloseDropdown}
+            >
+              <div className='search__dropdown-item-img'>
+                <img
+                  src={import.meta.env.VITE_BACKEND + imageUrl}
+                  alt=''
+                />
+              </div>
+              <div>
+                <p className='search__dropdown-item-name'>{breakString(title, queryToRender)}</p>
+                {textWithQuery ? (
+                  <p className='search__dropdown-item-text'>{breakString(textWithQuery, queryToRender)}</p>
+                ) : null}
+              </div>
+            </Link>
+          )
+        })}
+    </PerfectScrollbar>
+  )
+}
+
+export const Search = () => {
   const { query, queryToRender, searchEngine, searchResults } = useSelector(getSearch)
 
   const dropDownRef = React.useRef(null)
@@ -36,6 +84,7 @@ export const Search: React.FC = () => {
     const onCloseByOutsideClick = (e: MouseEvent) => {
       const path = e.path || (e.composedPath && e.composedPath())
       if (
+        showSearch &&
         !path.includes(searchWrapRef.current) &&
         !path.includes(searchButtonRef.current) &&
         !path.includes(dropDownRef.current) &&
@@ -92,13 +141,22 @@ export const Search: React.FC = () => {
     e.preventDefault()
   }
 
-  const onClose = () => {
+  const onCloseDropdown = () => {
     setDropdownShown(false)
   }
 
   const openSearch = () => {
     document.body.classList.add('lock')
     setShowSearch(true)
+  }
+
+  const clearSearch = () => {
+    const payload = {
+      query: '',
+      queryToRender: ''
+    }
+    dispatch(editSearchActionCreator(payload))
+    setShowSearch(false)
   }
 
   return isDesktop ? (
@@ -129,41 +187,30 @@ export const Search: React.FC = () => {
             alt='search'
           />
         </Button>
+        {query.length > 0 ? (
+          <Button
+            type='button'
+            className='header__search-close'
+            title='Clear search'
+            onClick={clearSearch}
+          >
+            <img
+              className='width-full height-full'
+              src='/images/icons/cross.svg'
+              alt='cross icon'
+            />
+          </Button>
+        ) : null}
       </form>
 
-      {dropdownShown && (
+      {dropdownShown ? (
         <div
           className='search__dropdown bwhite'
           ref={dropDownRef}
         >
-          <PerfectScrollbar className='search__dropdown-list'>
-            {!searchResults?.length && (
-              <div className='search__empty'>
-                <p className='search-results__query'>{query}</p>
-                <p className='search-results__text'>
-                  Searching ”{query}” found <span className='search-results__text--black'>0 results</span>
-                </p>
-              </div>
-            )}
-
-            {searchResults.length > 0 &&
-              searchResults.map(({ item: { title, link, texts } }, idx) => {
-                const textWithQuery = texts.find((t) => formatStr(t).includes(formatStr(queryToRender))) ?? ''
-                return (
-                  <Link
-                    to={link}
-                    key={idx + title}
-                    className={`search__dropdown-item ${!idx ? 'search__dropdown-item--no-top-border' : ''}`}
-                    onClick={onClose}
-                  >
-                    <p className='search__dropdown-item-name'>{breakString(title, queryToRender)}</p>
-                    <p className='search__dropdown-item-text'>{breakString(textWithQuery, queryToRender)}</p>
-                  </Link>
-                )
-              })}
-          </PerfectScrollbar>
+          <SearchResults onCloseDropdown={onCloseDropdown} />
         </div>
-      )}
+      ) : null}
     </div>
   ) : (
     <>
@@ -203,6 +250,20 @@ export const Search: React.FC = () => {
                   alt='search'
                 />
               </span>
+              {query.length > 0 ? (
+                <Button
+                  type='button'
+                  className='header__search-close'
+                  title='Clear search'
+                  onClick={clearSearch}
+                >
+                  <img
+                    className='width-full height-full'
+                    src='/images/icons/cross.svg'
+                    alt='cross icon'
+                  />
+                </Button>
+              ) : null}
             </form>
 
             {dropdownShown && (
@@ -210,32 +271,7 @@ export const Search: React.FC = () => {
                 className='search__dropdown'
                 ref={dropDownRef}
               >
-                <PerfectScrollbar className='search__dropdown-list'>
-                  {!searchResults?.length && (
-                    <div className='search__empty'>
-                      <p className='search-results__query'>{query}</p>
-                      <p className='search-results__text'>
-                        Searching ”{query}” found <span className='search-results__text--black'>0 results</span>
-                      </p>
-                    </div>
-                  )}
-
-                  {searchResults.length > 0 &&
-                    searchResults.map(({ item: { title, link, texts } }, idx) => {
-                      const textWithQuery = texts.find((t) => formatStr(t).includes(formatStr(queryToRender))) ?? ''
-                      return (
-                        <Link
-                          to={link}
-                          key={idx + title}
-                          className={`search__dropdown-item ${!idx ? 'search__dropdown-item--no-top-border' : ''}`}
-                          onClick={onClose}
-                        >
-                          <p className='search__dropdown-item-name'>{breakString(title, queryToRender)}</p>
-                          <p className='search__dropdown-item-text'>{breakString(textWithQuery, queryToRender)}</p>
-                        </Link>
-                      )
-                    })}
-                </PerfectScrollbar>
+                <SearchResults onCloseDropdown={onCloseDropdown} />
               </div>
             )}
           </div>

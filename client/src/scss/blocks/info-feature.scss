@@ -1,11 +1,13 @@
 .info-feature {
-  display: flex;
-  align-items: center;
   margin-right: 15px;
+
+  @media #{$mobile} {
+    margin-top: 10px;
+    margin-right: 0;
+  }
 
   &__color {
     flex-shrink: 0;
-    position: relative;
     display: inline-block;
     width: 20px;
     height: 20px;

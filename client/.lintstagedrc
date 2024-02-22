@@ -1,8 +1,0 @@
-{
-  "*.scss": [
-    "stylelint --fix"
-  ],
-  "*.{js,jsx,ts,tsx}": [
-    "prettier --write"
-  ]
-} 

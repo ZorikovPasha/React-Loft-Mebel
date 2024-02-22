@@ -16,6 +16,7 @@ import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
+import { splitPriceWithSpaces } from '../utils'
 
 const ModalContent: React.FC = () => {
   return (
@@ -65,8 +66,8 @@ const Cart: React.FC = () => {
       if (!currentItem) {
         return accum
       }
-      return [
-        ...accum,
+
+      return accum.concat([
         {
           furnitureId: currentItem.id,
           cartItemId: next.id,
@@ -77,7 +78,7 @@ const Cart: React.FC = () => {
           dimension: currentItem.dimensions?.map(({ width, length, height }) => ({ width, length, height })) ?? [],
           color: next.color
         }
-      ]
+      ])
     }, []) ?? []
 
   const quintity = collectedItems.reduce((accum, next) => {
@@ -91,42 +92,41 @@ const Cart: React.FC = () => {
 
   const onLoginModalClose = () => {
     setModalLoginOpened(false)
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
   }
 
-  const onRegisterOrder = () => {
+  const onRegisterOrder = async () => {
     if (!isLoggedIn) {
       setModalLoginOpened(true)
-      document.documentElement.classList.add('lock')
+      document.body.classList.add('lock')
       return
     }
 
     setIsLoading(true)
 
-    UserApiClient.makeOrder()
-      .then((data) => {
-        setIsLoading(false)
-        if (!isSuccessfullMakeOrderResponse(data)) {
-          return dispatch(toggleSnackbarOpen())
-        }
+    try {
+      const response = await UserApiClient.makeOrder()
+      setIsLoading(false)
+      if (!isSuccessfullMakeOrderResponse(response)) {
+        return dispatch(toggleSnackbarOpen())
+      }
 
-        const payload = {
-          cart: [],
-          orders: [
-            ...orders,
-            {
-              ...data.order,
-              items: !data.order.items ? [] : data.order.items
-            }
-          ]
-        }
-        dispatch(editUserActionCreator(payload))
-        history.push(ROUTES.Profile + '?tab=orders')
-      })
-      .then(() => {
-        dispatch(toggleSnackbarOpen())
-      })
+      const payload = {
+        cart: [],
+        orders: orders.concat(
+          Object.assign(response.order, {
+            items: response.order.items ?? []
+          })
+        )
+      }
+      dispatch(editUserActionCreator(payload))
+      history.push(ROUTES.Profile + '?tab=orders')
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
+
+  const totalToRender = splitPriceWithSpaces(total)
 
   return (
     <>
@@ -142,27 +142,30 @@ const Cart: React.FC = () => {
         <div className='container'>
           {collectedItems.length ? (
             <>
-              <div className='cart__top'>
-                <p>Your cart:</p>
-                <p>
-                  <span className='cart__top-num'>Items: {quintity}</span>
-                </p>
-              </div>
-              {collectedItems.map((item) => (
-                <CartItem
-                  key={item.name + item.color + item.quintity}
-                  item={item}
-                />
-              ))}
-              <div className='cart__bottom'>
+              <div className=''>
+                <p className='cart__bottom-total'>Items: {quintity}</p>
                 <p className='cart__bottom-total'>
                   Total cost:
-                  <span> {total} P</span>
+                  <span className='fw-500'> {totalToRender} P</span>
+                </p>
+              </div>
+              <div className='mt-20'>
+                {collectedItems.map((item) => (
+                  <CartItem
+                    key={item.name + item.color + item.quintity}
+                    item={item}
+                  />
+                ))}
+              </div>
+              <div className='cart__bottom flex items-center mt-40'>
+                <p className='cart__bottom-total'>
+                  Total cost:
+                  <span className='fw-500'> {totalToRender} P</span>
                 </p>
                 <Button
                   title='Submit order'
                   type='button'
-                  className='btn'
+                  className='cart__bottom-btn btn'
                   onClick={onRegisterOrder}
                 >
                   Submit order

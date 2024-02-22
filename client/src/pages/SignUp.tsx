@@ -12,7 +12,7 @@ import {
   validateTextInput
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
-import { isSuccessfullResponse } from '../api/types'
+import { isRegisterUser200, isRes500 } from '../api/types'
 import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
@@ -44,9 +44,15 @@ const ModalContent: React.FC = () => {
   return (
     <div className='flex items-center flex-col'>
       <h3 className='popup-message__title'>You successfully signed up</h3>
+      <div className='popup__picture'>
+        <img
+          src='/images/success.png'
+          alt=''
+        />
+      </div>
       <Link
         to={ROUTES.Login}
-        className='popup-message__btn btn mt-40'
+        className='popup-message__btn btn mt-5'
       >
         Log in
       </Link>
@@ -54,18 +60,18 @@ const ModalContent: React.FC = () => {
   )
 }
 
-const SignUp: React.FC = () => {
+const SignUp = () => {
   const history = useHistory()
 
   const { isLoggedIn } = useSelector(getUserData)
 
-  const fields = React.useRef<Record<string, IField>>({
-    name: {
+  const fields = React.useRef<Record<'userName' | 'email' | 'password', IField>>({
+    userName: {
       value: '',
       label: 'Name',
       labelClass: 'signup__form-label form-label',
-      isValid: false,
       required: true,
+      isValid: false,
       type: 'text',
       placeholder: 'Enter your name',
       className: 'mt-20',
@@ -73,7 +79,7 @@ const SignUp: React.FC = () => {
       tag: 'input',
       showErrors: false,
       errorMessage: getTextInputErrorMessage(''),
-      getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
+      getErrorMessage: getTextInputErrorMessage,
       validateFn: validateTextInput
     },
     email: {
@@ -81,16 +87,15 @@ const SignUp: React.FC = () => {
       value: '',
       label: 'Email',
       labelClass: 'signup__form-label form-label',
-      isValid: false,
       required: true,
+      isValid: false,
       type: 'email',
       placeholder: 'Enter email',
       className: 'mt-20',
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
-      getErrorMessage: (str: string) =>
-        str.trim().length === 0 ? 'Пожалуйста, заполните email' : validateEmail(str) ? 'Введите корректный email' : '',
+      getErrorMessage: getEmailInputErrorMessage,
       validateFn: validateEmail
     },
     password: {
@@ -117,64 +122,109 @@ const SignUp: React.FC = () => {
   const [form, setForm] = React.useState(fields.current)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const onChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const value = e.target.value
-    setForm((prev) => ({
-      ...prev,
-      [name]: {
-        ...prev[name],
-        value,
-        isValid: prev[name].validateFn(value),
-        showErrors: true
-      }
-    }))
-  }
+  const onChange =
+    (name: 'userName' | 'email' | 'password') => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = e.target.value
+      setForm((prev) => {
+        const props = prev[name]
+        if (!props) {
+          return prev
+        }
+        return {
+          ...prev,
+          [name]: {
+            ...props,
+            value,
+            isValid: props.validateFn(value),
+            showErrors: true,
+            errorMessage: props.getErrorMessage(value)
+          }
+        }
+      })
+    }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
-    setForm((prev) => {
-      return Object.entries(prev).reduce(
-        (accum, [key, props]) => ({
-          ...accum,
-          [key]: {
-            ...props,
-            showErrors: true
-          }
-        }),
-        {}
-      )
+    Object.values(form).forEach((props) => {
+      props.showErrors = true
     })
+    setForm({ ...form })
 
     if (!Object.values(form).every(({ isValid }) => isValid)) {
       return
     }
 
     const dto = {
-      userName: form.name.value,
+      userName: form.userName.value,
       email: form.email.value,
       password: form.password.value
     }
 
     setIsLoading(true)
-    UserApiClient.register(dto)
-      .then((data) => {
-        setIsLoading(false)
-        if (!isSuccessfullResponse(data)) {
-          return dispatch(toggleSnackbarOpen())
-        }
-        document.documentElement.classList.add('lock')
-        setModalSignUp(true)
-      })
-      .catch(() => {
-        setIsLoading(false)
+    try {
+      const response = await UserApiClient.register(dto)
+      setIsLoading(false)
+      if (isRes500(response)) {
         dispatch(toggleSnackbarOpen())
-      })
+        return
+      }
+
+      if (isRegisterUser200(response)) {
+        document.body.classList.add('lock')
+        setModalSignUp(true)
+        return
+      }
+
+      if (response.statusCode === 400) {
+        if (typeof response.message === 'string') {
+          // User already exists
+
+          form.email.errorMessage = response.message
+          setForm({ ...form })
+        } else {
+          const errorData: Record<string, string> = {}
+          response.message.forEach((message: string) => {
+            const fieldName = message.split(' ')[0]
+            if (!fieldName) {
+              return
+            }
+            errorData[fieldName] = message
+          })
+
+          setForm((prev) => {
+            const newFormState: Record<string, IField> = {}
+            Object.entries(prev).forEach(([key, props]) => {
+              const newErrorMessage = errorData[key]
+              if ((key === 'userName' || key === 'email' || key === 'password') && newErrorMessage) {
+                newFormState[key] = {
+                  ...prev[key],
+                  isValid: false,
+                  showErrors: true,
+                  errorMessage: newErrorMessage
+                }
+              } else {
+                newFormState[key] = props
+              }
+            })
+
+            return newFormState
+          })
+        }
+
+        return
+      }
+
+      dispatch(toggleSnackbarOpen())
+    } catch (error) {
+      setIsLoading(false)
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   const onModalClose = () => {
     history.push({ pathname: ROUTES.Login })
-    document.documentElement.classList.remove('lock')
+    document.body.classList.remove('lock')
     setModalSignUp(false)
   }
 
@@ -206,7 +256,7 @@ const SignUp: React.FC = () => {
                   labelClass,
                   inputWrapClass,
                   inputClassName,
-                  getErrorMessage,
+                  errorMessage,
                   showErrors
                 } = props
 
@@ -226,8 +276,8 @@ const SignUp: React.FC = () => {
                     inputWrapClass={inputWrapClass}
                     inputClassName={inputClassName}
                     showErrors={_showErrors}
-                    errorMessage={getErrorMessage(value)}
-                    onChange={onChange(key)}
+                    errorMessage={errorMessage}
+                    onChange={onChange(key as 'userName' | 'email' | 'password')}
                   />
                 )
               })}
@@ -239,6 +289,16 @@ const SignUp: React.FC = () => {
                 Sign up
               </Button>
             </form>
+
+            <div className='login__bottom mt-30'>
+              <span className='login__new'>Already have an account? </span>
+              <Link
+                className='login__new-link'
+                to={ROUTES.Login}
+              >
+                Log in
+              </Link>
+            </div>
           </div>
         </div>
       </div>

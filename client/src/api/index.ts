@@ -1,11 +1,13 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
 import {
   FormDataType,
-  ICancelOrderResponse,
+  I500Response,
   ICartItemRequest,
   IErrorResponse,
   IErrorsResponse,
   IFurnitureResponse,
+  ILoginUser400,
+  IRegisterUser400,
   IRemoveCartItemDto,
   ISuccessfullLoginResponse,
   ISuccessfullMakeOrderResponse,
@@ -79,8 +81,8 @@ class Api extends Axios {
 }
 
 class PublicApi extends Api {
-  getFurniture = (signal: AbortSignal): Promise<IFurnitureResponse> => {
-    return this.get(`/api/furniture/`, { signal })
+  getFurniture = (query: string, signal: AbortSignal): Promise<IFurnitureResponse> => {
+    return this.get(`/api/furniture/${query}`, { signal })
   }
 
   createFurniture = (dto: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
@@ -91,23 +93,20 @@ class PublicApi extends Api {
 class UserApi extends Api {
   constructor(config: AxiosRequestConfig) {
     super(config)
-    this._axios.interceptors.request.use(
-      (config) => ({
-        ...config,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('loft_furniture_token')}`
-        }
-      }),
-      (error) => console.log(error)
-    )
+    this._axios.interceptors.request.use((config) => ({
+      ...config,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('loft_furniture_token')}`
+      }
+    }))
   }
 
-  register = (credentials: SignUpCredsType): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
-    return this.post('/user/register', credentials)
+  register = (credentials: SignUpCredsType): Promise<ISuccessfullResponse | IRegisterUser400 | I500Response> => {
+    return this.post('/auth/register', credentials)
   }
 
-  login = (credentials: LoginCredsType): Promise<IErrorResponse | IErrorsResponse | ISuccessfullLoginResponse> => {
-    return this.post('/user/login', credentials)
+  login = (credentials: LoginCredsType): Promise<ISuccessfullLoginResponse | ILoginUser400 | I500Response> => {
+    return this.post('/auth/login', credentials)
   }
 
   getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {
@@ -138,7 +137,7 @@ class UserApi extends Api {
     return this.post('/user/orders')
   }
 
-  cancelOrder = (orderId: number): Promise<ICancelOrderResponse | IErrorResponse> => {
+  cancelOrder = (orderId: number): Promise<IErrorsResponse | IErrorResponse | ISuccessfullResponse> => {
     return this.put('/user/orders', { orderId })
   }
 
@@ -146,7 +145,7 @@ class UserApi extends Api {
     return this.post('/user/request', formData)
   }
 
-  sendReview = (formData: FormData) => {
+  sendReview = (formData: FormData): Promise<ISuccessfullResponse | IRegisterUser400 | I500Response> => {
     return this.post('/user/reviews', formData)
   }
 }
