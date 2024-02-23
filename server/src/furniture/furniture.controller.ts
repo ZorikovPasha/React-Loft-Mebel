@@ -45,13 +45,16 @@ export class FurnitureController {
   async findAll(
     @Query('type') type: string | undefined,
     @Query('room') room: string | undefined,
-    @Query('material') material: string | undefined
+    @Query('material') material: string | undefined,
+    @Query('brand') brand: string | undefined
   ) {
+    const collectedBrands = brand ? brand.split(',') : null
     const criteria = {
       where: {
         type: {},
         room: {},
-        material: {}
+        material: {},
+        brand: {}
       }
     }
 
@@ -70,6 +73,11 @@ export class FurnitureController {
     if (material) {
       criteria.where.material = {
         equals: material
+      }
+    }
+    if (collectedBrands && collectedBrands.length) {
+      criteria.where.brand = {
+        in: collectedBrands
       }
     }
 
