@@ -99,7 +99,8 @@ button {
   }
 
   &:active {
-    background-color: rgba(#209cee, 0.7);
+    animation: button-click;
+    animation-duration: 0.6s;
   }
 
   &--danger {

@@ -44,9 +44,8 @@
       }
 
       &:active {
-        path {
-          fill: #414141;
-        }
+        animation: button-click;
+        animation-duration: 0.6s;
       }
 
       svg {
@@ -64,6 +63,11 @@
 
   &__wish {
     padding-left: 15px;
+
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
 
     @media (width <=510px) {
       font-size: 0;

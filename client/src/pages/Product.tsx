@@ -17,7 +17,7 @@ const Product: React.FC = () => {
 
   const currentProduct = products.find((p) => p.id === Number(id))
 
-  const topSales = products.filter((item) => parseFloat(item.rating) > 4.5)
+  const topSales = products.filter((item) => (typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false))
   const youMayAlsoLike = products.filter((item) => item.type === currentProduct?.type)
 
   const breads = [
@@ -45,7 +45,7 @@ const Product: React.FC = () => {
                 <Card
                   key={product.id}
                   product={product}
-                  isFavorite={favorites.includes(product.id)}
+                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
                 />
               ))}
             </div>
@@ -62,7 +62,7 @@ const Product: React.FC = () => {
                 <Card
                   key={product.id}
                   product={product}
-                  isFavorite={favorites.includes(product.id)}
+                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
                 />
               ))}
             </div>

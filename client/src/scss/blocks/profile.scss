@@ -43,6 +43,11 @@
     white-space: nowrap;
     margin-left: 30px;
 
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
+
     @media #{$mobile} {
       font-size: 16px;
       line-height: 20px;
@@ -387,6 +392,11 @@
     &:hover {
       background-color: white;
       opacity: 0.7;
+    }
+
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
     }
 
     img {

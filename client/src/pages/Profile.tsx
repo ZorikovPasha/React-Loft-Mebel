@@ -33,7 +33,7 @@ interface IFile {
 }
 
 interface IProductInOrder {
-  id: number
+  id: number | null
   name: string
   image: {
     alternativeText: string
@@ -53,7 +53,7 @@ interface IProductInOrder {
   } | null
   quintity: number
   color: string
-  price: number
+  price: number | null
 }
 
 interface IOrderToRender {
@@ -216,8 +216,6 @@ const Profile = () => {
   const products = useSelector(getProducts)
   const user = useSelector(getUserData)
 
-  console.log('___user::', user)
-
   const collectedOrders: IOrderToRender[] = []
 
   user.orders.forEach((order) => {
@@ -229,13 +227,20 @@ const Profile = () => {
         return
       }
 
+      const currentPrice =
+        typeof product.priceNew === 'string' && product.priceNew
+          ? parseFloat(product.priceNew)
+          : typeof product.priceOld === 'string' && product.priceOld
+          ? parseFloat(product.priceOld)
+          : null
+
       furnituresInOrder.push({
         id: product.id,
-        name: product.name,
+        name: product.name ?? '',
         image: product.image,
         quintity: item.quintity,
         color: item.color,
-        price: parseFloat(product.priceNew ? product.priceNew : product.priceOld)
+        price: currentPrice
       })
     })
 
@@ -932,7 +937,7 @@ const Profile = () => {
                                       />
                                     </div>
                                     <div className='profile__table-cell flex items-center'>
-                                      <p>{price * quintity}</p>
+                                      <p>{typeof price === 'number' ? price * quintity : 'N/A'}</p>
                                     </div>
                                     <div className='profile__table-cell flex items-center'>
                                       <p>{quintity}</p>

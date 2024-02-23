@@ -25,6 +25,10 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
+    if (id === null) {
+      return
+    }
+
     const payload = {
       favorites: [id]
     }
@@ -59,6 +63,10 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
+    if (typeof id !== 'number') {
+      return
+    }
+
     try {
       const dto = {
         productId: id,
@@ -87,7 +95,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
 
   let discount = '0'
 
-  if (priceNew < priceOld) {
+  if (priceNew && priceOld && parseFloat(priceNew) < parseFloat(priceOld)) {
     discount = (((parseInt(priceOld) - parseInt(priceNew)) / parseInt(priceOld)) * 100).toFixed(0)
   }
 

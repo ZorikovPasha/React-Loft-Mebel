@@ -146,37 +146,78 @@ export interface IImage {
   updatedAt: string
 }
 
-export interface IReview {
-  id: number
-  text: string
-  score: number
-  furnitureId: number
+export interface IReviewRes {
+  id: number | null
+  text: string | null
+  score: number | null
+  furnitureId: number | null
   user: {
     userName: string | undefined
     image: IImage | null
     id: string
-  }
+  } | null
   attachedPictures: (IImage | null)[] | null
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface IReview {
+  id: number | null
+  text: string | null
+  score: number | null
+  furnitureId: number | null
+  user: {
+    userName: string | null
+    image: IImage | null
+    id: string | null
+  } | null
+  attachedPictures: IImage[]
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface IFurniture {
-  id: number
-  imageId: number
-  name: string
-  type: string
-  priceOld: string
-  priceNew: string
+  id: number | null
+  imageId: number | null
+  name: string | null
+  type: string | null
+  priceOld: string | null
+  priceNew: string | null
   colors: string[]
-  rating: string
+  rating: string | null
   sale: boolean
-  room: string
-  material: string
-  brand: string
+  room: string | null
+  material: string | null
+  brand: string | null
   image: IImage | null
-  description: string
-  specs: string
+  description: string | null
+  specs: string | null
+  dimensions: {
+    id: number
+    furnitureId: number
+    width: number
+    length: number
+    height: number
+  }[]
+  reviews: IReview[]
+}
+
+export interface IFurnitureItemRes {
+  id: number
+  imageId: number | null
+  name: string | null
+  type: string | null
+  priceOld: string | null
+  priceNew: string | null
+  colors: string[] | null
+  rating: string | null
+  sale: boolean | null
+  room: string | null
+  material: string | null
+  brand: string | null
+  image: IImage | null
+  description: string | null
+  specs: string | null
   dimensions:
     | {
         id: number
@@ -186,12 +227,12 @@ export interface IFurniture {
         height: number
       }[]
     | null
-  reviews: IReview[] | null
+  reviews: IReviewRes[] | null
 }
 
 export interface IFurnitureResponse {
-  filtered: IFurniture[]
-  all: IFurniture[]
+  filtered: IFurnitureItemRes[]
+  all: IFurnitureItemRes[]
 }
 
 export interface IErrorsResponse {

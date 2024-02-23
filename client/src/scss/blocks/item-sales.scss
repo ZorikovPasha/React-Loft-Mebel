@@ -44,6 +44,11 @@
     align-items: center;
     justify-content: center;
 
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
+    
     img {
       width: 100%;
       height: 100%;

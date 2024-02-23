@@ -103,7 +103,8 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
   const { isLoggedIn, ...user } = useSelector(getUserData)
   const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews } = product
 
-  const didCurrentUserReviewedThisFurniture = !!reviews?.find((r) => r.user.id === user.id) ?? false
+  const didCurrentUserReviewedThisFurniture =
+    Boolean(reviews?.find((r) => (r.user ? r.user.id === user.id : false))) ?? false
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
@@ -172,6 +173,11 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
+    if (typeof id !== 'number') {
+      // if there is no id then it doesnt make sense to perform request
+      return
+    }
+
     const dto = {
       productId: id,
       quintity: parseInt(form.quintity.value),
@@ -197,7 +203,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
     }
   }
 
-  const ratingWidth = (parseFloat(rating) / 5) * 95
+  const ratingWidth = typeof rating === 'string' ? (parseFloat(rating) / 5) * 95 : 0
 
   const onReviewModalClose = () => {
     setReviewModelShown(false)
@@ -211,7 +217,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
 
   return (
     <section className='product'>
-      {reviewModelShown && (
+      {reviewModelShown && typeof id === 'number' && (
         <Modal
           content={
             <ModalContent
@@ -348,7 +354,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
                 >
                   Buy
                 </Button>
-                <AddToFavorite id={id} />
+                {typeof id === 'number' ? <AddToFavorite id={id} /> : null}
               </div>
               <div className='info__features grid'>
                 {Object.entries(form).map(([key, props]) => (
