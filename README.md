@@ -128,6 +128,10 @@ TODO!:
 - [x] after going from one product to another should be scroll up
 - [x] translate contacts page
 - [x] change links in mobile menu
+- [x] translate about us page
+- [x] add ui if 0 orders
+- [x] filter furniture by brand
+
 - [ ] mark in swagger which id to send
 - [ ] /login swagger edit response types
 - [ ] nestjs swagger
@@ -142,7 +146,7 @@ TODO!:
 - [ ] type controller's outputs
 - [ ] selecting option from header doesnt trigger products refetching
 - [ ] orders with same date are not sorted right when adding new order only before reload
-- [ ] filter furniture by brand
 - [ ] should sanitize furniture after fetching
 - [ ] /profile name is not being updated
-- [ ] translate about us page
+- [ ] should add sorting of products
+- [ ] /profile floating inputs

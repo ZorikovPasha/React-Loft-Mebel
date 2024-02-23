@@ -24,6 +24,7 @@ import { useScreenSize } from '../hooks/useScreenSize'
 import { EmailsUpdatesModal } from '../components/profile/emailUpdatesModal'
 import { Check } from '../svg/check'
 import { Cross } from '../svg/cross'
+import { Empty } from '../components/common/Empty'
 
 interface IFile {
   file: File | null
@@ -63,7 +64,7 @@ interface IOrderToRender {
   createdAt: string
 }
 
-const Profile: React.FC = () => {
+const Profile = () => {
   const history = useHistory()
 
   const fileProps: IFile = {
@@ -151,7 +152,7 @@ const Profile: React.FC = () => {
     value: '',
     isValid: false,
     required: false,
-    placeholder: 'Type city you live in',
+    placeholder: 'Type your city',
     labelClass: 'newproduct__subtitle',
     label: 'City',
     type: 'text',
@@ -171,7 +172,7 @@ const Profile: React.FC = () => {
     isValid: false,
     required: false,
     label: 'Street',
-    placeholder: 'Type street you live in',
+    placeholder: 'Type your street',
     showErrors: false,
     labelClass: 'newproduct__subtitle',
     className: 'profile__form-block',
@@ -221,28 +222,10 @@ const Profile: React.FC = () => {
   const dispatch = useDispatch()
   const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
 
-  const onDrop = React.useCallback((acceptedFiles: File[]) => {
-    if (!acceptedFiles[0]) {
-      return
-    }
-    if (acceptedFiles[0].type === 'image/jpeg' || acceptedFiles[0].type === 'image/png') {
-      const reader = new FileReader()
-      reader.readAsDataURL(acceptedFiles[0])
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        setProfilePicture({
-          file: acceptedFiles[0] ?? null,
-          url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null,
-          isTouched: true
-        })
-      }
-    } else {
-      return dispatch(toggleSnackbarOpen('You can attach .png or .jpg images only.'))
-    }
-  }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
   const products = useSelector(getProducts)
   const user = useSelector(getUserData)
+
+  console.log('___user::', user)
 
   const collectedOrders: IOrderToRender[] = []
 
@@ -287,6 +270,8 @@ const Profile: React.FC = () => {
   const isAnyFieldTouched = [name, email, surname, phone, city, street, house, apartment, profilePicture].some(
     (props) => props.isTouched
   )
+
+  console.log('name::', name)
 
   React.useEffect(() => {
     if (!user.isLoggedIn) {
@@ -602,6 +587,27 @@ const Profile: React.FC = () => {
     return null
   }
 
+  const onDrop = React.useCallback((acceptedFiles: File[]) => {
+    if (!acceptedFiles[0]) {
+      return
+    }
+    if (acceptedFiles[0].type === 'image/jpeg' || acceptedFiles[0].type === 'image/png') {
+      const reader = new FileReader()
+      reader.readAsDataURL(acceptedFiles[0])
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        setProfilePicture({
+          file: acceptedFiles[0] ?? null,
+          url: e.target ? (typeof e.target.result === 'string' ? e.target.result : null) : null,
+          isTouched: true
+        })
+      }
+    } else {
+      return dispatch(toggleSnackbarOpen('You can attach .png or .jpg images only.'))
+    }
+  }, [])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
   return (
     <>
       {isLoading && <Loader rootElClass='loader--fixed' />}
@@ -867,92 +873,98 @@ const Profile: React.FC = () => {
                 </>
               )}
 
-              {activeTab === 'orders' && (
-                <div className='profile__orders orders'>
-                  <h3 className='profile__title'>My orders: {collectedOrders.length}</h3>
-                  <div className='mt-30'>
-                    {collectedOrders.map(({ id, name, status, createdAt, products }) => (
-                      <div
-                        className='mt-10'
-                        key={id}
-                      >
-                        <div className='profile__orders-info grid items-center justify-between'>
-                          <div className='flex items-center'>
-                            <p className='profile__order-name'>
-                              Order name: {name} №{id}
-                            </p>
-                            {status !== 'CANCELED' && (
-                              <Button
-                                className='profile__order-cancel flex items-center justify-center'
-                                type='button'
-                                aria-label='Cancel order'
-                                title='Cancel order'
-                                onClick={onCancelOrder(id)}
-                              >
-                                <img
-                                  src='/images/icons/cross.svg'
-                                  alt=''
-                                />
-                              </Button>
-                            )}
-                          </div>
-
-                          <p
-                            className={`profile__order-name ${
-                              status === 'CANCELED' ? 'profile__order-name--red' : 'profile__order-name--blue'
-                            }`}
+              {activeTab === 'orders' ? (
+                <>
+                  {collectedOrders.length ? (
+                    <div className='profile__orders orders'>
+                      <h3 className='profile__title'>My orders: {collectedOrders.length}</h3>
+                      <div className='mt-30'>
+                        {collectedOrders.map(({ id, name, status, createdAt, products }) => (
+                          <div
+                            className='mt-10'
+                            key={id}
                           >
-                            Status: {status}
-                          </p>
-                          <p className='profile__order-name profile__order-name--right'>
-                            {new Date(createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-
-                        {products.length > 0 ? (
-                          <div className='profile__table grid items-center mt-10'>
-                            <p className='profile__table-cell'>Product</p>
-                            <p className='profile__table-cell'>Price</p>
-                            <p className='profile__table-cell'>Quintity</p>
-                            <p className='profile__table-cell'>Color</p>
-                            {products.map(({ id, name, image, color, quintity, price }) => (
-                              <React.Fragment key={id}>
-                                <div className='profile__table-cell flex items-center'>
-                                  <Link
-                                    to={`/products/${id}`}
-                                    className=''
+                            <div className='profile__orders-info grid items-center justify-between'>
+                              <div className='flex items-center'>
+                                <p className='profile__order-name'>
+                                  Order name: {name} №{id}
+                                </p>
+                                {status !== 'CANCELED' && (
+                                  <Button
+                                    className='profile__order-cancel flex items-center justify-center'
+                                    type='button'
+                                    aria-label='Cancel order'
+                                    title='Cancel order'
+                                    onClick={onCancelOrder(id)}
                                   >
-                                    <p>{name}</p>
-                                  </Link>
-                                  <img
-                                    className='profile__table-image'
-                                    src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
-                                    alt=''
-                                  />
-                                </div>
-                                <div className='profile__table-cell flex items-center'>
-                                  <p>{price * quintity}</p>
-                                </div>
-                                <div className='profile__table-cell flex items-center'>
-                                  <p>{quintity}</p>
-                                </div>
-                                <div className='profile__table-cell flex items-center'>
-                                  <p>
-                                    <span
-                                      className='profile__table-color colors__checkbox-fake'
-                                      style={{ backgroundColor: color ? color : '#fff' }}
+                                    <img
+                                      src='/images/icons/cross.svg'
+                                      alt=''
                                     />
-                                  </p>
-                                </div>
-                              </React.Fragment>
-                            ))}
+                                  </Button>
+                                )}
+                              </div>
+
+                              <p
+                                className={`profile__order-name ${
+                                  status === 'CANCELED' ? 'profile__order-name--red' : 'profile__order-name--blue'
+                                }`}
+                              >
+                                Status: {status}
+                              </p>
+                              <p className='profile__order-name profile__order-name--right'>
+                                {new Date(createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+
+                            {products.length > 0 ? (
+                              <div className='profile__table grid items-center mt-10'>
+                                <p className='profile__table-cell'>Product</p>
+                                <p className='profile__table-cell'>Price</p>
+                                <p className='profile__table-cell'>Quintity</p>
+                                <p className='profile__table-cell'>Color</p>
+                                {products.map(({ id, name, image, color, quintity, price }) => (
+                                  <React.Fragment key={id}>
+                                    <div className='profile__table-cell flex items-center'>
+                                      <Link
+                                        to={`/products/${id}`}
+                                        className=''
+                                      >
+                                        <p>{name}</p>
+                                      </Link>
+                                      <img
+                                        className='profile__table-image'
+                                        src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
+                                        alt=''
+                                      />
+                                    </div>
+                                    <div className='profile__table-cell flex items-center'>
+                                      <p>{price * quintity}</p>
+                                    </div>
+                                    <div className='profile__table-cell flex items-center'>
+                                      <p>{quintity}</p>
+                                    </div>
+                                    <div className='profile__table-cell flex items-center'>
+                                      <p>
+                                        <span
+                                          className='profile__table-color colors__checkbox-fake'
+                                          style={{ backgroundColor: color ? color : '#fff' }}
+                                        />
+                                      </p>
+                                    </div>
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            ) : null}
                           </div>
-                        ) : null}
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    </div>
+                  ) : (
+                    <Empty text='You have no orders yet' />
+                  )}
+                </>
+              ) : null}
             </div>
           </div>
         </div>

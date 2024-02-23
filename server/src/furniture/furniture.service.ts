@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+import { Furniture } from '@prisma/client'
+
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
-import { Furniture } from '@prisma/client'
 import { FurnitureRes } from './dto/create-furniture.dto'
 
 class CreateFurnitureData {

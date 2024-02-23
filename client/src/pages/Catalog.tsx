@@ -91,6 +91,7 @@ const Catalog = () => {
     const furnitureType = getQueryParams('type')
     const furnitureRoom = getQueryParams('room')
     const furnitureMaterial = getQueryParams('material')
+    const furnitureBrand = getQueryParams('brand')
     const showOnlyDiscountedProducts = getQueryParams('sale')
     const assembleQueries: string[] = []
     if (furnitureType) {
@@ -101,6 +102,9 @@ const Catalog = () => {
     }
     if (furnitureMaterial) {
       assembleQueries.push(`material=${furnitureMaterial}`)
+    }
+    if (furnitureBrand) {
+      assembleQueries.push(`brand=${furnitureBrand}`)
     }
 
     let query = ''
@@ -162,15 +166,21 @@ const Catalog = () => {
           label: materials.label,
           options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption)
         })
-        setBrands({
-          value: brands.value,
-          label: brands.label,
-          options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-        })
         setColors((prev) => ({
           ...prev,
           options: allColors.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
         }))
+        setBrands((prev) => {
+          if (!furnitureBrand) {
+            return prev
+          }
+
+          return {
+            value: furnitureBrand.split(','),
+            label: brands.label,
+            options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+          }
+        })
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -193,7 +203,7 @@ const Catalog = () => {
       materials.value === 'all' || materials.value === undefined ? '' : `&material=${materials.value}`
     }`
     const typeQuery = `${type.value === 'all' || type.value === undefined ? '' : `&type=${type.value}`}`
-    const brandsQuery = makeQueryParametersFromStringArr(brands.value, 'brand')
+    const brandsQuery = `${brands.value.length ? '&brand=' + brands.value.join(',') : ''}`
     const colorsQuery = makeQueryParametersFromStringArr(colors.value, 'color')
     const sortQuery = filters.current.sort ? '&sort=' + filters.current.sort : ''
 
