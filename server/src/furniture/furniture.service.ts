@@ -3,7 +3,8 @@ import { Furniture } from '@prisma/client'
 
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
-import { FurnitureRes } from './dto/create-furniture.dto'
+import { IFurniture } from './dto/create-furniture.dto'
+// import { FurnitureRes } from './dto/create-furniture.dto'
 
 class CreateFurnitureData {
   name: string
@@ -83,7 +84,7 @@ export class FurnitureService {
     )
   }
 
-  async findMany(criteria: Record<string, unknown>): Promise<Omit<typeof FurnitureRes, 'prototype'>[]> {
+  async findMany(criteria: Record<string, unknown>): Promise<IFurniture[]> {
     // @ts-expect-error this is okay for now
     const furniture = await this.prisma.furniture.findMany(criteria)
     return await Promise.all(
@@ -93,7 +94,7 @@ export class FurnitureService {
     )
   }
 
-  async findAll() {
+  async findAll(): Promise<IFurniture[]> {
     const furniture = await this.prisma.furniture.findMany()
     return await Promise.all(
       furniture.map(async (furnitureItem) => {
@@ -153,6 +154,7 @@ export class FurnitureService {
               size: true,
               url: true,
               mime: true,
+              provider: true,
               createdAt: true,
               updatedAt: true
             }
@@ -236,7 +238,7 @@ export class FurnitureService {
     return dto
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<IFurniture> {
     const furnitureItem = await this.prisma.furniture.findFirst({
       where: {
         id: id
@@ -250,23 +252,17 @@ export class FurnitureService {
   }
 
   async recalculateFurnitureScore(furnitureId: number) {
-    console.log('furnitureId', furnitureId)
-
     const thisFurnitureReviews = await this.prisma.review.findMany({
       where: {
         furnitureId: furnitureId
       }
     })
 
-    console.log('thisFurnitureReviews', thisFurnitureReviews)
-
     if (thisFurnitureReviews.length > 0) {
       const normalizedScore =
         thisFurnitureReviews.reduce((accum: number, next) => {
           return accum + next.score
         }, 0) / thisFurnitureReviews.length
-
-      console.log('normalizedScore', normalizedScore, String(normalizedScore))
 
       await this.prisma.furniture.update({
         where: {
@@ -277,7 +273,5 @@ export class FurnitureService {
         }
       })
     }
-
-    console.log('_____end')
   }
 }

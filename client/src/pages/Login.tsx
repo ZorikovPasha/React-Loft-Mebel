@@ -32,13 +32,11 @@ const Login: React.FC = () => {
     email: {
       tag: 'input',
       value: '',
-      label: 'Email',
-      labelClass: 'form__label',
+      customPlaceholder: 'E-mail',
       isValid: false,
       required: true,
       type: 'email',
-      placeholder: 'Enter email',
-      className: 'form-block',
+      className: 'relative',
       inputClassName: 'form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
@@ -46,14 +44,12 @@ const Login: React.FC = () => {
       validateFn: validateEmail
     },
     password: {
+      customPlaceholder: 'Password',
       value: '',
-      label: 'Password',
-      labelClass: 'form__label',
       isValid: false,
       required: true,
       type: 'password',
-      placeholder: 'Enter password',
-      className: 'form-block',
+      className: 'relative mt-40',
       inputClassName: 'form-input',
       tag: 'input',
       showErrors: false,
@@ -165,13 +161,11 @@ const Login: React.FC = () => {
               const {
                 tag,
                 required,
-                placeholder,
+                customPlaceholder,
                 type,
                 value,
                 isValid,
                 className,
-                label,
-                labelClass,
                 errorMessage,
                 inputWrapClass,
                 inputClassName,
@@ -183,14 +177,12 @@ const Login: React.FC = () => {
                 <AppTextField
                   elementType={tag}
                   key={key}
-                  placeholder={placeholder}
+                  customPlaceholder={customPlaceholder}
                   name={key as string}
                   type={type}
                   value={value}
                   required={false}
                   rootElclass={className}
-                  label={label}
-                  labelClass={labelClass}
                   inputWrapClass={inputWrapClass}
                   inputClassName={inputClassName}
                   showErrors={_showErrors}
@@ -201,7 +193,7 @@ const Login: React.FC = () => {
             })}
             <Button
               title='Log in'
-              className='login__form-btn btn'
+              className='login__form-btn btn mt-40'
               type='submit'
             >
               Log in

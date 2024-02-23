@@ -3,7 +3,7 @@ import React from 'react'
 type InputType = 'text' | 'email' | 'tel' | 'password'
 type ElementType = 'input' | 'textarea'
 
-interface IInputProps {
+export interface IInputProps {
   elementType: ElementType
   name: string
   label?: string
@@ -14,7 +14,8 @@ interface IInputProps {
   labelClass?: string
   inputWrapClass?: string
   inputClassName?: string
-  placeholder: string
+  placeholder?: string
+  customPlaceholder?: string
   required: boolean | undefined
   showErrors: boolean
   onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
@@ -33,9 +34,12 @@ const AppTextField: React.FC<IInputProps> = ({
   inputWrapClass = '',
   inputClassName = '',
   placeholder = '',
+  customPlaceholder,
   errorMessage,
   onChange
 }) => {
+  console.log('customPlaceholder', customPlaceholder, required)
+
   return (
     <div className={rootElclass}>
       {label && <label className={labelClass}>{label}</label>}
@@ -60,6 +64,15 @@ const AppTextField: React.FC<IInputProps> = ({
             onChange={onChange}
           />
         )}
+
+        {customPlaceholder ? (
+          <label
+            className='profile__custom-placeholder'
+            htmlFor={name}
+          >
+            {customPlaceholder}
+          </label>
+        ) : null}
       </div>
 
       {errorMessage && showErrors && <span className='form__error'>{errorMessage}</span>}

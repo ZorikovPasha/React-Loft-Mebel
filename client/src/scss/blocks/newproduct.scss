@@ -8,7 +8,7 @@
     margin-top: 30px;
   }
 
-  &__colors-wrap  {
+  &__colors-wrap {
     grid-template-columns: 200px 1fr;
     grid-gap: 30px;
   }
@@ -18,7 +18,7 @@
     grid-gap: 30px;
   }
 
-  &__color-row  {
+  &__color-row {
     grid-gap: 30px;
   }
 
@@ -32,14 +32,14 @@
     &--active {
       position: relative;
 
-      &:after {
+      &::after {
         position: absolute;
         top: 0;
         right: 0;
         left: 0;
         bottom: 0;
         border: 2px solid black;
-        content: "";
+        content: '';
         border-radius: 50%;
       }
     }
@@ -63,7 +63,7 @@
     padding-left: 45px;
 
     &--danger {
-      background-color: #D41367;
+      background-color: #d41367;
 
       &:hover,
       &:focus {
@@ -85,7 +85,7 @@
 
     svg {
       position: absolute;
-      content: "";
+      content: '';
       top: 50%;
       left: 17px;
       transform: translate(0, -50%);

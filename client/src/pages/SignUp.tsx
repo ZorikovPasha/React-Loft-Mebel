@@ -25,7 +25,7 @@ export interface IField {
   isValid: boolean
   required: boolean
   type: 'text' | 'email' | 'tel' | 'password'
-  placeholder: string
+  placeholder?: string
   customPlaceholder?: string
   className?: string
   inputClassName?: string
@@ -68,13 +68,11 @@ const SignUp = () => {
   const fields = React.useRef<Record<'userName' | 'email' | 'password', IField>>({
     userName: {
       value: '',
-      label: 'Name',
-      labelClass: 'signup__form-label form-label',
+      customPlaceholder: 'Name',
       required: true,
       isValid: false,
       type: 'text',
-      placeholder: 'Enter your name',
-      className: 'mt-20',
+      className: 'mt-40 relative',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
@@ -85,13 +83,11 @@ const SignUp = () => {
     email: {
       tag: 'input',
       value: '',
-      label: 'Email',
-      labelClass: 'signup__form-label form-label',
+      customPlaceholder: 'Email',
       required: true,
       isValid: false,
       type: 'email',
-      placeholder: 'Enter email',
-      className: 'mt-20',
+      className: 'mt-40 relative',
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
@@ -100,13 +96,11 @@ const SignUp = () => {
     },
     password: {
       value: '',
-      label: 'Password',
-      labelClass: 'signup__form-label form-label',
+      customPlaceholder: 'Password',
       isValid: false,
       required: true,
       type: 'password',
-      placeholder: 'Enter password',
-      className: 'mt-20',
+      className: 'mt-40 relative',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
@@ -252,8 +246,7 @@ const SignUp = () => {
                   value,
                   isValid,
                   className,
-                  label,
-                  labelClass,
+                  customPlaceholder,
                   inputWrapClass,
                   inputClassName,
                   errorMessage,
@@ -271,8 +264,7 @@ const SignUp = () => {
                     value={value}
                     required={required}
                     rootElclass={className}
-                    label={label}
-                    labelClass={labelClass}
+                    customPlaceholder={customPlaceholder}
                     inputWrapClass={inputWrapClass}
                     inputClassName={inputClassName}
                     showErrors={_showErrors}
@@ -284,13 +276,13 @@ const SignUp = () => {
               <Button
                 title='Sign up'
                 type='submit'
-                className='signup__form-btn btn mt-20'
+                className='signup__form-btn btn mt-40'
               >
                 Sign up
               </Button>
             </form>
 
-            <div className='login__bottom mt-30'>
+            <div className='login__bottom mt-20'>
               <span className='login__new'>Already have an account? </span>
               <Link
                 className='login__new-link'

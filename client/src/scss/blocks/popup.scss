@@ -1,9 +1,11 @@
 .popup {
   @extend %pop-up;
+
   display: none;
 
   &__body {
     @extend %pop-up-body;
+
     border-radius: 4px;
 
     &--max {

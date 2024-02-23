@@ -22,7 +22,6 @@ html {
 body {
   min-width: 320px;
   overflow-x: hidden;
-  min-height: 100%;
   height: inherit;
   min-height: 100vh;
   font-family: Roboto, sans-serif;
@@ -140,6 +139,7 @@ button {
     color: #414141;
   }
 }
+
 .fw-500 {
   font-weight: 500;
 }

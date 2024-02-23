@@ -26,13 +26,11 @@ interface IModalContentProps {
 export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModalClose }) => {
   const scoreProps: IField = {
     value: '',
-    label: 'Score',
-    labelClass: 'signup__form-label form-label',
+    customPlaceholder: 'Score',
     isValid: false,
     required: true,
     type: 'text',
-    placeholder: 'Enter your score',
-    className: 'mt-20',
+    className: 'relative mt-40',
     inputClassName: 'signup__form-input form-input',
     tag: 'input',
     showErrors: false,
@@ -46,12 +44,10 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
     value: '',
     type: 'text',
     isValid: true,
-    placeholder: 'Write your review',
     required: false,
-    labelClass: 'signup__form-label form-label',
-    label: 'Review',
+    customPlaceholder: 'Review',
     showErrors: false,
-    className: 'mt-20',
+    className: 'relative mt-40',
     inputClassName: 'form-input',
     errorMessage: '',
     getErrorMessage: getTextInputErrorMessage,
@@ -159,7 +155,7 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
     <>
       {isLoading && <Loader rootElClass='loader--fixed' />}
 
-      <h3 className='popup__title popup__title--narrow text-center'>Liked this product? Leave your review!</h3>
+      <h3 className='popup__title popup__title--narrow text-center'>Like this product? Leave your review!</h3>
       <form
         className='flex flex-col'
         onSubmit={handleSubmit}
@@ -172,8 +168,7 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
           value={score.value}
           required={score.required}
           rootElclass={score.className}
-          label={score.label}
-          labelClass={score.labelClass}
+          customPlaceholder={score.customPlaceholder}
           inputWrapClass={score.inputWrapClass}
           inputClassName={score.inputClassName}
           showErrors={!score.isValid && score.showErrors}
@@ -189,8 +184,7 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
           value={text.value}
           required={text.required}
           rootElclass={text.className}
-          label={text.label}
-          labelClass={text.labelClass}
+          customPlaceholder={text.customPlaceholder}
           inputWrapClass={text.inputWrapClass}
           inputClassName={text.inputClassName}
           showErrors={!text.isValid && text.showErrors}

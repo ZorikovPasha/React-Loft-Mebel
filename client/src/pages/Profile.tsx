@@ -65,8 +65,6 @@ interface IOrderToRender {
 }
 
 const Profile = () => {
-  const history = useHistory()
-
   const fileProps: IFile = {
     file: null,
     url: null,
@@ -77,13 +75,12 @@ const Profile = () => {
 
   const nameProps: IField = {
     value: '',
-    label: 'Name',
+    customPlaceholder: 'Name',
     labelClass: 'newproduct__subtitle',
     isValid: false,
     required: true,
     type: 'text',
-    placeholder: 'Type your name',
-    className: 'profile__form-block',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     tag: 'input',
     showErrors: false,
@@ -95,13 +92,12 @@ const Profile = () => {
 
   const surnameProps: IField = {
     value: '',
-    label: 'Surname',
+    customPlaceholder: 'Surname',
     labelClass: 'newproduct__subtitle',
     isValid: false,
     required: true,
     type: 'text',
-    placeholder: 'Type your surname',
-    className: 'profile__form-block',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     tag: 'input',
     showErrors: false,
@@ -114,13 +110,12 @@ const Profile = () => {
   const emailProps: IField = {
     tag: 'input',
     value: '',
-    label: 'E-mail',
+    customPlaceholder: 'E-mail',
     labelClass: 'newproduct__subtitle',
     isValid: false,
     required: true,
     type: 'email',
-    placeholder: 'Type your e-mail',
-    className: 'profile__form-block',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     showErrors: false,
     errorMessage: '',
@@ -134,10 +129,9 @@ const Profile = () => {
     value: '',
     isValid: false,
     required: false,
-    placeholder: 'Type your phone number',
     labelClass: 'newproduct__subtitle',
-    label: 'Phone',
-    className: 'profile__form-block',
+    customPlaceholder: 'Phone',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     type: 'tel',
     showErrors: false,
@@ -152,12 +146,11 @@ const Profile = () => {
     value: '',
     isValid: false,
     required: false,
-    placeholder: 'Type your city',
     labelClass: 'newproduct__subtitle',
-    label: 'City',
+    customPlaceholder: 'City',
     type: 'text',
     showErrors: false,
-    className: 'profile__form-block',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     errorMessage: '',
     isTouched: false,
@@ -171,11 +164,10 @@ const Profile = () => {
     type: 'text',
     isValid: false,
     required: false,
-    label: 'Street',
-    placeholder: 'Type your street',
+    customPlaceholder: 'Street',
     showErrors: false,
     labelClass: 'newproduct__subtitle',
-    className: 'profile__form-block',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     errorMessage: '',
     isTouched: false,
@@ -188,12 +180,11 @@ const Profile = () => {
     value: '',
     type: 'text',
     isValid: false,
-    placeholder: 'Type your house',
     required: false,
     labelClass: 'newproduct__subtitle',
-    label: 'House',
+    customPlaceholder: 'House',
     showErrors: false,
-    className: 'profile__form-block',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     errorMessage: '',
     isTouched: false,
@@ -206,12 +197,11 @@ const Profile = () => {
     value: '',
     type: 'text',
     isValid: true,
-    placeholder: 'Type your apartment',
     required: false,
     labelClass: 'newproduct__subtitle',
-    label: 'Apartment',
+    customPlaceholder: 'Apartment',
     showErrors: false,
-    className: 'profile__form-block',
+    className: 'profile__form-block relative',
     inputClassName: 'form-input',
     errorMessage: '',
     isTouched: false,
@@ -221,6 +211,7 @@ const Profile = () => {
 
   const dispatch = useDispatch()
   const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
+  const history = useHistory()
 
   const products = useSelector(getProducts)
   const user = useSelector(getUserData)
@@ -678,7 +669,7 @@ const Profile = () => {
               {activeTab === 'personal' && (
                 <>
                   <h3 className='profile__title'>Profile</h3>
-                  <form className='profile__form mt-30'>
+                  <form className='profile__form grid mt-30'>
                     <div className='profile__form-block'>
                       <p className='newproduct__subtitle'>Avatar</p>
                       <div
@@ -706,168 +697,170 @@ const Profile = () => {
                         )}
                       </div>
                     </div>
+                    <div>
+                      <AppTextField
+                        elementType={name.tag}
+                        placeholder={name.placeholder}
+                        name='name'
+                        type={name.type}
+                        value={name.value}
+                        required={name.required}
+                        rootElclass={name.className}
+                        customPlaceholder={name.customPlaceholder}
+                        labelClass={name.labelClass}
+                        inputWrapClass={name.inputWrapClass}
+                        inputClassName={name.inputClassName}
+                        showErrors={showErrors(name)}
+                        errorMessage={name.getErrorMessage(name.value)}
+                        onChange={onChange(setName, user.name)}
+                      />
+                      <AppTextField
+                        elementType={surname.tag}
+                        placeholder={surname.placeholder}
+                        name='surname'
+                        type={surname.type}
+                        value={surname.value}
+                        required={surname.required}
+                        rootElclass={surname.className}
+                        customPlaceholder={surname.customPlaceholder}
+                        labelClass={surname.labelClass}
+                        inputWrapClass={surname.inputWrapClass}
+                        inputClassName={surname.inputClassName}
+                        showErrors={showErrors(surname)}
+                        errorMessage={surname.getErrorMessage(surname.value)}
+                        onChange={onChange(setSurname, user.surname)}
+                      />
+                      <AppTextField
+                        elementType={email.tag}
+                        placeholder={email.placeholder}
+                        name='email'
+                        type={email.type}
+                        value={email.value}
+                        required={email.required}
+                        rootElclass={email.className}
+                        customPlaceholder={email.customPlaceholder}
+                        labelClass={email.labelClass}
+                        inputWrapClass={email.inputWrapClass}
+                        inputClassName={email.inputClassName}
+                        showErrors={showErrors(email)}
+                        errorMessage={email.getErrorMessage(email.value)}
+                        onChange={onChange(setEmail, user.email)}
+                      />
+                      <AppTextField
+                        elementType={phone.tag}
+                        placeholder={phone.placeholder}
+                        name='phone'
+                        type={phone.type}
+                        value={phone.value}
+                        required={phone.required}
+                        rootElclass={phone.className}
+                        customPlaceholder={phone.customPlaceholder}
+                        labelClass={phone.labelClass}
+                        inputWrapClass={phone.inputWrapClass}
+                        inputClassName={phone.inputClassName}
+                        showErrors={showErrors(phone)}
+                        errorMessage={phone.getErrorMessage(phone.value)}
+                        onChange={onChange(setPhone, user.phone)}
+                      />
+                      <AppTextField
+                        elementType={city.tag}
+                        placeholder={city.placeholder}
+                        name='city'
+                        type={city.type}
+                        value={city.value}
+                        required={city.required}
+                        rootElclass={city.className}
+                        customPlaceholder={city.customPlaceholder}
+                        labelClass={city.labelClass}
+                        inputWrapClass={city.inputWrapClass}
+                        inputClassName={city.inputClassName}
+                        showErrors={showErrors(city)}
+                        errorMessage={city.getErrorMessage(city.value)}
+                        onChange={onChange(setCity, user.city)}
+                      />
+                      <AppTextField
+                        elementType={street.tag}
+                        placeholder={street.placeholder}
+                        name='street'
+                        type={street.type}
+                        value={street.value}
+                        required={street.required}
+                        rootElclass={street.className}
+                        customPlaceholder={street.customPlaceholder}
+                        labelClass={street.labelClass}
+                        inputWrapClass={street.inputWrapClass}
+                        inputClassName={street.inputClassName}
+                        showErrors={showErrors(street)}
+                        errorMessage={street.getErrorMessage(street.value)}
+                        onChange={onChange(setStreet, user.street)}
+                      />
 
-                    <AppTextField
-                      elementType={name.tag}
-                      placeholder={name.placeholder}
-                      name='name'
-                      type={name.type}
-                      value={name.value}
-                      required={name.required}
-                      rootElclass={name.className}
-                      label={name.label}
-                      labelClass={name.labelClass}
-                      inputWrapClass={name.inputWrapClass}
-                      inputClassName={name.inputClassName}
-                      showErrors={showErrors(name)}
-                      errorMessage={name.getErrorMessage(name.value)}
-                      onChange={onChange(setName, user.name)}
-                    />
-                    <AppTextField
-                      elementType={surname.tag}
-                      placeholder={surname.placeholder}
-                      name='surname'
-                      type={surname.type}
-                      value={surname.value}
-                      required={surname.required}
-                      rootElclass={surname.className}
-                      label={surname.label}
-                      labelClass={surname.labelClass}
-                      inputWrapClass={surname.inputWrapClass}
-                      inputClassName={surname.inputClassName}
-                      showErrors={showErrors(surname)}
-                      errorMessage={surname.getErrorMessage(surname.value)}
-                      onChange={onChange(setSurname, user.surname)}
-                    />
-                    <AppTextField
-                      elementType={email.tag}
-                      placeholder={email.placeholder}
-                      name='email'
-                      type={email.type}
-                      value={email.value}
-                      required={email.required}
-                      rootElclass={email.className}
-                      label={email.label}
-                      labelClass={email.labelClass}
-                      inputWrapClass={email.inputWrapClass}
-                      inputClassName={email.inputClassName}
-                      showErrors={showErrors(email)}
-                      errorMessage={email.getErrorMessage(email.value)}
-                      onChange={onChange(setEmail, user.email)}
-                    />
-                    <AppTextField
-                      elementType={phone.tag}
-                      placeholder={phone.placeholder}
-                      name='phone'
-                      type={phone.type}
-                      value={phone.value}
-                      required={phone.required}
-                      rootElclass={phone.className}
-                      label={phone.label}
-                      labelClass={phone.labelClass}
-                      inputWrapClass={phone.inputWrapClass}
-                      inputClassName={phone.inputClassName}
-                      showErrors={showErrors(phone)}
-                      errorMessage={phone.getErrorMessage(phone.value)}
-                      onChange={onChange(setPhone, user.phone)}
-                    />
-                    <AppTextField
-                      elementType={city.tag}
-                      placeholder={city.placeholder}
-                      name='city'
-                      type={city.type}
-                      value={city.value}
-                      required={city.required}
-                      rootElclass={city.className}
-                      label={city.label}
-                      labelClass={city.labelClass}
-                      inputWrapClass={city.inputWrapClass}
-                      inputClassName={city.inputClassName}
-                      showErrors={showErrors(city)}
-                      errorMessage={city.getErrorMessage(city.value)}
-                      onChange={onChange(setCity, user.city)}
-                    />
-                    <AppTextField
-                      elementType={street.tag}
-                      placeholder={street.placeholder}
-                      name='street'
-                      type={street.type}
-                      value={street.value}
-                      required={street.required}
-                      rootElclass={street.className}
-                      label={street.label}
-                      labelClass={street.labelClass}
-                      inputWrapClass={street.inputWrapClass}
-                      inputClassName={street.inputClassName}
-                      showErrors={showErrors(street)}
-                      errorMessage={street.getErrorMessage(street.value)}
-                      onChange={onChange(setStreet, user.street)}
-                    />
+                      <AppTextField
+                        elementType={house.tag}
+                        placeholder={house.placeholder}
+                        name='house'
+                        type={house.type}
+                        value={house.value}
+                        required={house.required}
+                        rootElclass={house.className}
+                        customPlaceholder={house.customPlaceholder}
+                        labelClass={house.labelClass}
+                        inputWrapClass={house.inputWrapClass}
+                        inputClassName={house.inputClassName}
+                        showErrors={showErrors(house)}
+                        errorMessage={house.getErrorMessage(house.value)}
+                        onChange={onChange(setHouse, user.house)}
+                      />
+                      <AppTextField
+                        elementType={apartment.tag}
+                        placeholder={apartment.placeholder}
+                        name='apartment'
+                        type={apartment.type}
+                        value={apartment.value}
+                        required={apartment.required}
+                        rootElclass={apartment.className}
+                        customPlaceholder={apartment.customPlaceholder}
+                        labelClass={apartment.labelClass}
+                        inputWrapClass={apartment.inputWrapClass}
+                        inputClassName={apartment.inputClassName}
+                        showErrors={showErrors(apartment)}
+                        errorMessage={apartment.getErrorMessage(apartment.value)}
+                        onChange={onChange(setApartment, user.apartment)}
+                      />
 
-                    <AppTextField
-                      elementType={house.tag}
-                      placeholder={house.placeholder}
-                      name='house'
-                      type={house.type}
-                      value={house.value}
-                      required={house.required}
-                      rootElclass={house.className}
-                      label={house.label}
-                      labelClass={house.labelClass}
-                      inputWrapClass={house.inputWrapClass}
-                      inputClassName={house.inputClassName}
-                      showErrors={showErrors(house)}
-                      errorMessage={house.getErrorMessage(house.value)}
-                      onChange={onChange(setHouse, user.house)}
-                    />
-                    <AppTextField
-                      elementType={apartment.tag}
-                      placeholder={apartment.placeholder}
-                      name='apartment'
-                      type={apartment.type}
-                      value={apartment.value}
-                      required={apartment.required}
-                      rootElclass={apartment.className}
-                      label={apartment.label}
-                      labelClass={apartment.labelClass}
-                      inputWrapClass={apartment.inputWrapClass}
-                      inputClassName={apartment.inputClassName}
-                      showErrors={showErrors(apartment)}
-                      errorMessage={apartment.getErrorMessage(apartment.value)}
-                      onChange={onChange(setApartment, user.apartment)}
-                    />
-                    <div className='flex items-center gg30'>
-                      <Button
-                        title='Edit'
-                        className='profile__check btn-hollow relative'
-                        disabled={!isAnyFieldTouched}
-                        type='button'
-                        onClick={handleSubmit}
-                      >
-                        <>
-                          <Check
-                            className='profile__cancel-check'
-                            stroke={isAnyFieldTouched ? '#209cee' : 'grey'}
-                          />
-                          Update
-                        </>
-                      </Button>
+                      <div className='flex items-center gg30 mt-30'>
+                        <Button
+                          title='Edit'
+                          className='profile__check btn-hollow relative'
+                          disabled={!isAnyFieldTouched}
+                          type='button'
+                          onClick={handleSubmit}
+                        >
+                          <>
+                            <Check
+                              className='profile__cancel-check'
+                              stroke={isAnyFieldTouched ? '#209cee' : 'grey'}
+                            />
+                            {isNotMobile ? 'Update' : ''}
+                          </>
+                        </Button>
 
-                      <Button
-                        title='Cancel edtis'
-                        className='profile__cancel flex items-center justify-center relative'
-                        type='button'
-                        disabled={!isAnyFieldTouched}
-                        onClick={resetEdits}
-                      >
-                        <>
-                          <Cross
-                            fill={isAnyFieldTouched ? '#D41367' : 'grey'}
-                            className='profile__cancel-cross'
-                          />
-                          Cancel
-                        </>
-                      </Button>
+                        <Button
+                          title='Cancel edtis'
+                          className='profile__cancel flex items-center justify-center relative'
+                          type='button'
+                          disabled={!isAnyFieldTouched}
+                          onClick={resetEdits}
+                        >
+                          <>
+                            <Cross
+                              fill={isAnyFieldTouched ? '#D41367' : 'grey'}
+                              className='profile__cancel-cross'
+                            />
+                            {isNotMobile ? 'Cancel' : ''}
+                          </>
+                        </Button>
+                      </div>
                     </div>
                   </form>
                 </>

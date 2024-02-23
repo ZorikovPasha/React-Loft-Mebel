@@ -18,10 +18,10 @@
     @media #{$mobile} {
       min-width: 100%;
     }
-  } 
+  }
 
   &__slider {
-    padding: 45px 25px 45px;
+    padding: 45px 25px;
 
     @media (width <=992px) {
       padding: 40px 0 35px;
@@ -68,9 +68,8 @@
       cursor: pointer;
 
       @media (width <=510px) {
-          display: none;
+        display: none;
       }
-
 
       &.slick-disabled path {
         fill: rgb(157 157 157 / 28%);
@@ -102,13 +101,11 @@
     }
   }
 
-
   &__review-uploads {
     flex-wrap: wrap;
     grid-gap: 20px;
   }
 }
-
 
 @media (width <=510px) {
   .sales__items--product {

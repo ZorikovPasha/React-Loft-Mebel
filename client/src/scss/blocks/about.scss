@@ -1,11 +1,10 @@
 .about {
-
   &__top {
     padding-bottom: 100px;
 
     @media (width <=992px) {
-        padding-bottom: 30px;
-      }
+      padding-bottom: 30px;
+    }
   }
 
   &__top-container {
@@ -25,25 +24,25 @@
       background-color: #d7e8ed;
 
       @media (width <=992px) {
-          position: static;
-          display: none;
-        }
+        position: static;
+        display: none;
+      }
     }
   }
 
   &__top-inner {
     margin-right: -60px;
     padding: 89px 0 72px 100px;
-    
+
     @media (width <=1200px) {
       margin-right: 0;
       padding-left: 0;
     }
-      
+
     @media (width <=992px) {
       padding: 40px 0;
     }
-      
+
     @media (width <=890px) {
       flex-direction: column-reverse;
     }
@@ -69,12 +68,11 @@
     }
 
     @media (width <=890px) {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 30px;
-      }
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 30px;
+    }
   }
-
 
   &__top-label {
     font-size: 12px;
@@ -91,9 +89,9 @@
     margin-bottom: 15px;
 
     @media (width <=510px) {
-        font-size: 18px;
-        line-height: 21px;
-      }
+      font-size: 18px;
+      line-height: 21px;
+    }
   }
 
   &__top-par {
@@ -117,7 +115,7 @@
       width: 100%;
       padding-bottom: 53%;
       margin-bottom: 25px;
-  
+
       &::after {
         content: '';
         position: absolute;
@@ -169,7 +167,7 @@
 
     @media (width <=992px) {
       padding-bottom: 45px;
-      }
+    }
   }
 
   &__economy-title {
@@ -183,11 +181,11 @@
       margin-bottom: 27px;
     }
 
-      @media (width <=510px) {
-        font-size: 18px;
-        line-height: 140.19%;
-        padding: 0 10px;
-      }
+    @media (width <=510px) {
+      font-size: 18px;
+      line-height: 140.19%;
+      padding: 0 10px;
+    }
   }
 
   &__economy-items {
@@ -201,7 +199,6 @@
       width: 100%;
       margin-left: auto;
     }
-      
   }
 
   &__economy-item {
@@ -211,7 +208,6 @@
     @media (width <=766px) {
       width: 100%;
     }
-    
   }
 
   &__economy-item + &__economy-item {
@@ -262,11 +258,10 @@
     }
   }
 
-
   &__descr {
     padding: 80px 0;
     background: #d7e8ed;
-  
+
     @media (width <=510px) {
       padding: 50px 0;
     }
@@ -324,8 +319,6 @@
       line-height: 140.19%;
     }
   }
-
-
 
   &__benefits {
     padding-bottom: 95px;
@@ -415,19 +408,17 @@
     }
   }
 
-
   &__features {
     padding: 70px 0 100px;
 
     @media (width <=992px) {
       padding: 50px 0;
     }
-  
+
     @media (width <=510px) {
       padding: 35px 0 50px;
     }
   }
-
 
   &__features-items {
     display: grid;
@@ -516,4 +507,3 @@
     }
   }
 }
-

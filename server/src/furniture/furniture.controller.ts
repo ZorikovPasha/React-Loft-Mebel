@@ -46,7 +46,8 @@ export class FurnitureController {
     @Query('type') type: string | undefined,
     @Query('room') room: string | undefined,
     @Query('material') material: string | undefined,
-    @Query('brand') brand: string | undefined
+    @Query('brand') brand: string | undefined,
+    @Query('sort') sort: string | undefined
   ) {
     const collectedBrands = brand ? brand.split(',') : null
     const criteria = {
@@ -83,26 +84,23 @@ export class FurnitureController {
 
     const filtered = await this.furnitureService.findMany(criteria)
     const all = await this.furnitureService.findAll()
-    // const findCriteria = Object.keys(req.query).reduce((accum, key) => {
-    //   if (key === 'color' || key === 'sort') return accum;
-    //     return {...accum, [this.mappedValues[key]]: req.query[key]};
-    // }, {});
 
-    // switch (req.query.sort) {
-    //   case 'asc':
-    //     furnitureItems = await Furniture.find(findCriteria).sort({ priceNew: 1 });
-    //     break;
-    //   case 'desc':
-    //     furnitureItems = await Furniture.find(findCriteria).sort({ priceNew: -1 });
-    //     break;
-    //   case 'pop':
-    //     furnitureItems = await Furniture.find(findCriteria).sort({ rating: -1 });
-    //     break;
-    //   default:
-    //     furnitureItems = await Furniture.find(findCriteria);
-    //     break;
-    //   }
-
+    if (sort === 'asc') {
+      filtered.sort((a, b) => {
+        return parseFloat(a.priceNew) - parseFloat(b.priceNew)
+      })
+      all.sort((a, b) => {
+        return parseFloat(a.priceNew) - parseFloat(b.priceNew)
+      })
+    }
+    if (sort === 'desc') {
+      filtered.sort((a, b) => {
+        return parseFloat(b.priceNew) - parseFloat(a.priceNew)
+      })
+      all.sort((a, b) => {
+        return parseFloat(b.priceNew) - parseFloat(a.priceNew)
+      })
+    }
     return { filtered: filtered, all: all }
   }
 
