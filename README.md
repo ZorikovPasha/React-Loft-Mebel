@@ -131,22 +131,18 @@ TODO!:
 - [x] translate about us page
 - [x] add ui if 0 orders
 - [x] filter furniture by brand
+- [x] should add sorting of products
+
+- [?] loader while fetching user data? (react-query) (nextjs is better)
+- [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 
 - [ ] mark in swagger which id to send
-- [ ] /login swagger edit response types
-- [ ] nestjs swagger
-- [ ] at the start two equal api call `api/furniture` in catalog
 - [ ] add confirmation email
 - [ ] after login via yandex login shows in a moment before profile
 - [ ] add remaining products
 - [ ] user gets exprired in a middle of using site
-- [ ] loader while fetching user data? (react-query) (nextjs is better)
-- [ ] write backend tests
-- [ ] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
-- [ ] type controller's outputs
 - [ ] selecting option from header doesnt trigger products refetching
 - [ ] orders with same date are not sorted right when adding new order only before reload
 - [ ] should sanitize furniture after fetching
-- [ ] /profile name is not being updated
-- [ ] should add sorting of products
-- [ ] /profile floating inputs
+- [x] /profile floating inputs
+- [ ] add :active state for buttons

@@ -39,7 +39,9 @@
 
   &__review {
     padding: 15px;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 7px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      0px 1px 1px rgba(0, 0, 0, 0.075) inset,
+      0px 0px 7px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
   }
 
@@ -93,8 +95,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      content: "";
-      background-image: url("/images/icons/magnifier.svg");
+      content: '';
+      background-image: url('/images/icons/magnifier.svg');
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center;
@@ -121,14 +123,14 @@
 
   &__slider {
     .slick-list,
-   .slick-track,
-   .slick-slide div {
+    .slick-track,
+    .slick-slide div {
       height: 100%;
-   } 
+    }
 
-   .slick-slider {
-    height: calc(100% - 30px);
-   }
+    .slick-slider {
+      height: calc(100% - 30px);
+    }
   }
 
   &__slider-arrows {
@@ -140,13 +142,16 @@
     border-radius: 10px;
 
     &:hover {
-      box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 7px rgba(0, 0, 0, 0.2);
+      box-shadow:
+        0px 1px 1px rgba(0, 0, 0, 0.075) inset,
+        0px 0px 7px rgba(0, 0, 0, 0.2);
     }
 
     &[disabled] {
       white-space: nowrap;
       touch-action: none;
       cursor: default;
+
       &:hover {
         box-shadow: none;
       }

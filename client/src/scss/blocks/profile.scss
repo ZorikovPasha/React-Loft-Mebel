@@ -104,14 +104,12 @@
   }
 
   &__term + &__term {
+    margin-left: 58px;
+
     @media #{$mobile} {
       margin-left: 0;
       margin-top: 15px;
     }
-  }
-
-  &__term + &__term {
-    margin-left: 58px;
   }
 
   &__term-text {
@@ -175,16 +173,25 @@
   }
 
   &__box {
-    padding: 60px 20px 20px 20px;
+    padding: 60px 20px 20px;
     border-radius: 10px;
 
     @media #{$tablet} {
-      padding: 40px 15px 40px 15px;
+      padding: 40px 15px;
     }
   }
 
-  &__form-block {
-    margin-bottom: 20px;
+  &__form {
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 20px;
+
+    @media #{$mobile} {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__form-block + &__form-block {
+    margin-top: 35px;
   }
 
   &__form-label {
@@ -402,6 +409,10 @@
     padding: 14px 30px 14px 45px;
     transition: $transition;
 
+    @media #{$mobile} {
+      padding: 20px;
+    }
+
     &[disabled] {
       border: 1px solid grey;
       pointer-events: none;
@@ -412,6 +423,7 @@
       background-color: #d41367;
       color: white;
     }
+
     &:hover path {
       fill: white;
     }
@@ -421,6 +433,7 @@
       border: 1px solid #d41367;
       color: #414141;
     }
+
     &:active path {
       fill: #d41367;
     }
@@ -432,6 +445,10 @@
 
   &__check {
     padding: 14px 30px 14px 45px;
+
+    @media #{$mobile} {
+      padding: 20px;
+    }
 
     &:hover path {
       stroke: white;
@@ -458,6 +475,11 @@
     top: 50%;
     left: 25px;
     transform: translate(0, -50%) scale(3);
+
+    @media #{$mobile} {
+      left: 50%;
+      transform: translate(-50%, -50%) scale(3);
+    }
   }
 
   &__cancel-check {
@@ -466,5 +488,38 @@
     top: 50%;
     left: 20px;
     transform: translate(0, -50%) scale(2);
+
+    @media #{$mobile} {
+      left: 50%;
+      transform: translate(-50%, -50%) scale(2);
+    }
+  }
+
+  &__custom-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    font-size: 14px;
+    line-height: 16px;
+    color: $main;
+    border: 1px solid transparent;
+    padding: 16px 20px;
+    pointer-events: none;
+    transition: 0.3s;
+    text-align: left;
+
+    &:hover {
+      box-shadow: 0 0 6px rgb(29 181 119 / 25%);
+    }
+  }
+
+  input:not(:placeholder-shown) + &__custom-placeholder,
+  input:focus + &__custom-placeholder,
+  textarea:not(:placeholder-shown) + &__custom-placeholder,
+  textarea:focus + &__custom-placeholder {
+    font-size: 18px;
+    line-height: 24px;
+    transform: translate(-15px, -40px);
   }
 }

@@ -27,15 +27,14 @@ const Contacts = () => {
   const fields = React.useRef<Record<FieldsNames, IField>>({
     name: {
       value: '',
-      label: 'Your name',
-      labelClass: 'form__label',
+      customPlaceholder: 'Your name',
       isValid: false,
       required: true,
       type: 'text',
-      placeholder: 'Type your name',
       inputClassName: 'form-input',
       tag: 'input',
       showErrors: false,
+      className: 'relative',
       errorMessage: getTextInputErrorMessage(''),
       getErrorMessage: getTextInputErrorMessage,
       validateFn: validateTextInput
@@ -43,13 +42,11 @@ const Contacts = () => {
     email: {
       tag: 'input',
       value: '',
-      label: 'Your e-mail',
-      labelClass: 'form__label',
+      customPlaceholder: 'Your e-mail',
       isValid: false,
       required: true,
       type: 'email',
-      placeholder: 'Your e-mail',
-      className: 'mt-30',
+      className: 'relative mt-40',
       inputClassName: 'form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
@@ -58,13 +55,11 @@ const Contacts = () => {
     },
     message: {
       value: '',
-      label: 'Your message',
-      labelClass: 'form__label',
-      className: 'mt-30',
+      customPlaceholder: 'Your message',
+      className: 'relative mt-40',
       isValid: false,
       required: true,
       type: 'text',
-      placeholder: 'Type your message',
       inputClassName: 'form-input',
       tag: 'textarea',
       showErrors: false,
@@ -164,10 +159,9 @@ const Contacts = () => {
                 name='name'
                 type={name.type}
                 value={name.value}
-                required={false}
+                required
+                customPlaceholder={name.customPlaceholder}
                 rootElclass={name.className}
-                label={name.label}
-                labelClass={name.labelClass}
                 inputWrapClass={name.inputWrapClass}
                 inputClassName={name.inputClassName}
                 showErrors={showNameInputError}
@@ -180,10 +174,9 @@ const Contacts = () => {
                 name='email'
                 type={email.type}
                 value={email.value}
-                required={false}
+                required
+                customPlaceholder={email.customPlaceholder}
                 rootElclass={email.className}
-                label={email.label}
-                labelClass={email.labelClass}
                 inputWrapClass={email.inputWrapClass}
                 inputClassName={email.inputClassName}
                 showErrors={showEmailInputError}
@@ -196,10 +189,9 @@ const Contacts = () => {
                 name='message'
                 type={message.type}
                 value={message.value}
-                required={false}
+                required
+                customPlaceholder={message.customPlaceholder}
                 rootElclass={message.className}
-                label={message.label}
-                labelClass={message.labelClass}
                 inputWrapClass={message.inputWrapClass}
                 inputClassName={message.inputClassName}
                 showErrors={showMessageInputError}

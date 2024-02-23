@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import { Aside } from '../components/Catalog/Aside'
-import { SortPopup } from '../components/Catalog/SortPopup'
+import { SortOptions, SortPopup } from '../components/Catalog/SortPopup'
 import { Card } from '../components/common/card'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
@@ -84,8 +84,11 @@ const Catalog = () => {
   const [materials, setMaterials] = React.useState(materialProps)
   const [brands, setBrands] = React.useState(brandProps)
   const [colors, setColors] = React.useState(colorsProps)
+  const [activeSortOption, setActiveSortOption] = React.useState<SortOptions>('asc')
 
   const topSales = allProducts.current.filter((item) => parseFloat(item.rating) > 4.5)
+
+  console.log('brands', brands)
 
   React.useEffect(() => {
     const furnitureType = getQueryParams('type')
@@ -93,6 +96,7 @@ const Catalog = () => {
     const furnitureMaterial = getQueryParams('material')
     const furnitureBrand = getQueryParams('brand')
     const showOnlyDiscountedProducts = getQueryParams('sale')
+    const sortBy = getQueryParams('sort')
     const assembleQueries: string[] = []
     if (furnitureType) {
       assembleQueries.push(`type=${furnitureType}`)
@@ -105,6 +109,9 @@ const Catalog = () => {
     }
     if (furnitureBrand) {
       assembleQueries.push(`brand=${furnitureBrand}`)
+    }
+    if (sortBy === 'asc' || sortBy === 'desc' || sortBy === 'pop') {
+      assembleQueries.push(`sort=${sortBy}`)
     }
 
     let query = ''
@@ -134,6 +141,8 @@ const Catalog = () => {
         const allBrands = data.all.reduce((accum: string[], next) => {
           return accum.includes(next.brand) ? accum : accum.concat(next.brand)
         }, [])
+        console.log('allBrands', allBrands)
+
         const allColors = data.all.reduce((accum: string[], next) => {
           const absentColors = next.colors.filter((c) => !accum.includes(c))
           return accum.concat(absentColors)
@@ -172,7 +181,11 @@ const Catalog = () => {
         }))
         setBrands((prev) => {
           if (!furnitureBrand) {
-            return prev
+            return {
+              value: prev.value,
+              label: brands.label,
+              options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+            }
           }
 
           return {
@@ -180,6 +193,13 @@ const Catalog = () => {
             label: brands.label,
             options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
           }
+        })
+        setActiveSortOption((prev) => {
+          if (sortBy === 'asc' || sortBy === 'desc' || sortBy === 'pop') {
+            return sortBy
+          }
+
+          return prev
         })
         setLoading(false)
       })
@@ -376,7 +396,11 @@ const Catalog = () => {
                     Filter
                   </>
                 </Button>
-                <SortPopup onSelectSortType={onSelectSortType} />
+                <SortPopup
+                  activeSortOption={activeSortOption}
+                  setActiveSortOption={setActiveSortOption}
+                  onSelectSortType={onSelectSortType}
+                />
               </div>
               {isLoading ? (
                 <Loader />

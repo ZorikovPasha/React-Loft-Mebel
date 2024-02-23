@@ -218,3 +218,63 @@ export class FurnitureRes {
   @ApiProperty({ type: 'array', oneOf: [{ $ref: getSchemaPath(FurnitureReview) }] })
   reviews: (typeof FurnitureReview)[]
 }
+
+interface IImage {
+  id: number
+  name: string
+  alternativeText: string | null
+  caption: string | null
+  width: number
+  height: number
+  hash: string
+  ext: string
+  size: number
+  url: string
+  mime: string
+  provider: 'string' | string
+  createdAt: Date
+  updatedAt: Date
+}
+
+interface IReview {
+  id: number
+  text: string
+  score: number
+  furnitureId: number
+  user: {
+    userName?: string | undefined
+    image?: IImage | null
+    id?: string
+  }
+  attachedPictures: (IImage | null)[] | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface IFurniture {
+  id: number
+  imageId: number
+  name: string
+  type: string
+  priceOld: string
+  priceNew: string
+  colors: string[]
+  rating: string
+  sale: boolean
+  room: string
+  material: string
+  brand: string
+  image: IImage | null
+  description: string
+  specs: string
+  dimensions:
+    | {
+        id: number
+        furnitureId: number
+        width: number
+        length: number
+        height: number
+      }[]
+    | null
+  reviews: IReview[] | null
+}

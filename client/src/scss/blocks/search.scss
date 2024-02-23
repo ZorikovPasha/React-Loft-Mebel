@@ -37,10 +37,9 @@
     left: 0;
     background: #fff;
     box-shadow: 0 6px 30px rgb(4 43 87 / 10%);
-    max-height: 535px;
     min-height: 350px;
-    height: calc(100vh - $dropdown-offset-top);
     max-height: 500px;
+    height: calc(100vh - $dropdown-offset-top);
     border-radius: 0 0 4px 4px;
 
     @media #{$tablet} {
