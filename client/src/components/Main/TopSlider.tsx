@@ -73,7 +73,7 @@ export const TopSlider: React.FC = () => {
       link: '/catalog?room=living'
     },
     {
-      title: 'Kithens',
+      title: 'Kitchens',
       imageUrl: '/images/top-bg-2.jpg',
       link: '/catalog?room=kitchen'
     },

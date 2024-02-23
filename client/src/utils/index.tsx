@@ -129,6 +129,7 @@ export const sanitizeUserRes = (userData: IUserResponse['user']) => {
     name: userData.name ?? '',
     email: userData.email ?? '',
     surname: userData.surname ?? '',
+    userName: userData.userName ?? '',
     phone: userData.phone ?? '',
     city: userData.city ?? '',
     street: userData.street ?? '',
