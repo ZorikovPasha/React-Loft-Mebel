@@ -32,7 +32,7 @@ const SearchResult: React.FC = () => {
                   <Card
                     key={item.id}
                     product={item}
-                    isFavorite={favorites.includes(item.id)}
+                    isFavorite={typeof item.id === 'number' ? favorites.includes(item.id) : false}
                   />
                 ))}
               </div>

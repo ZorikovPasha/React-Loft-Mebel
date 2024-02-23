@@ -1,5 +1,13 @@
 import React from 'react'
-import { IUserResponse, OrderStatusType } from '../api/types'
+import {
+  IFurniture,
+  IFurnitureItemRes,
+  IImage,
+  IReview,
+  IReviewRes,
+  IUserResponse,
+  OrderStatusType
+} from '../api/types'
 
 export const validateEmail = (email: string): boolean => {
   return email.trim().length > 4 && email.includes('@') && email.includes('.')
@@ -156,10 +164,60 @@ export const splitPriceWithSpaces = (total: number) => {
   let totalToRender = ''
   let charsCount = total.toString().length
 
+  if (charsCount < 4) {
+    return total.toString()
+  }
+
   while (charsCount > 3) {
-    totalToRender = totalToRender + total.toString().slice(0, 2) + ' ' + total.toString().slice(charsCount - 3)
+    totalToRender = totalToRender + total.toString().slice(0, 1) + ' ' + total.toString().slice(charsCount - 3)
     charsCount = charsCount - 3
   }
 
   return totalToRender
+}
+
+export const sanitizeFurnitureItem = (furniture: IFurnitureItemRes): IFurniture => {
+  const sanitizeReviews = (review: IReviewRes): IReview => {
+    const filteredAttachments: IImage[] = []
+    review.attachedPictures?.forEach((picture) => {
+      if (picture) {
+        filteredAttachments.push(picture)
+      }
+    })
+    return {
+      id: typeof review.id === 'number' ? review.id : null,
+      text: typeof review.text === 'string' ? review.text : null,
+      score: typeof review.score === 'number' ? review.score : null,
+      furnitureId: typeof review.furnitureId === 'number' ? review.furnitureId : null,
+      user: review.user
+        ? {
+            userName: typeof review.user.userName === 'string' ? review.user.userName : null,
+            image: review.user.image,
+            id: typeof review.user.id === 'string' ? review.user.id : null
+          }
+        : null,
+      attachedPictures: filteredAttachments,
+      createdAt: review.createdAt,
+      updatedAt: review.updatedAt
+    }
+  }
+  return {
+    id: typeof furniture.id === 'number' ? furniture.id : null,
+    imageId: typeof furniture.imageId === 'number' ? furniture.imageId : null,
+    name: typeof furniture.name === 'string' ? furniture.name : null,
+    type: typeof furniture.type === 'string' ? furniture.type : null,
+    priceOld: typeof furniture.priceOld === 'string' ? furniture.priceOld : null,
+    priceNew: typeof furniture.priceNew === 'string' ? furniture.priceNew : null,
+    colors: furniture.colors ?? [],
+    rating: typeof furniture.rating === 'string' ? furniture.rating : null,
+    sale: typeof furniture.sale === 'boolean' ? furniture.sale : false,
+    room: typeof furniture.room === 'string' ? furniture.room : null,
+    material: typeof furniture.material === 'string' ? furniture.material : null,
+    brand: typeof furniture.brand === 'string' ? furniture.brand : null,
+    image: furniture.image,
+    description: typeof furniture.description === 'string' ? furniture.description : null,
+    specs: typeof furniture.specs === 'string' ? furniture.specs : null,
+    dimensions: furniture.dimensions ?? [],
+    reviews: furniture.reviews ? furniture.reviews.map(sanitizeReviews) : []
+  }
 }

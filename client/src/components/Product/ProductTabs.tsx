@@ -56,7 +56,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
   })
 
   const specsToRender: string[][] = []
-  specs.split(';').forEach((string) => {
+  specs?.split(';').forEach((string) => {
     if (string.trim().length > 0) {
       specsToRender.push(string.split(':'))
     }
@@ -121,11 +121,15 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
                       <div className='flex items-center'>
                         <img
                           className='product-tabs__review-avatar'
-                          src={user.image ? import.meta.env.VITE_BACKEND + user.image.url : '/images/user-stub.jpg'}
+                          src={
+                            user && user?.image
+                              ? import.meta.env.VITE_BACKEND + user.image.url
+                              : '/images/user-stub.jpg'
+                          }
                           alt=''
                         />
                         <div className='product-tabs__review-right'>
-                          <p className='product-tabs__review-name'>{user.userName}</p>
+                          <p className='product-tabs__review-name'>{user?.userName}</p>
                           <p className='mt-5'>{new Date(createdAt).toLocaleDateString()}</p>
                           <div className='flex info__rating-parent mt-5'>
                             <img
@@ -155,7 +159,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
                             />
 
                             <div
-                              style={{ width: (score / 5) * 95 }}
+                              style={{ width: score ? (score / 5) * 95 : 0 }}
                               className='flex info__rating-child'
                             >
                               <img

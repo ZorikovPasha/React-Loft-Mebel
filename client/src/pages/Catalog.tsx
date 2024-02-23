@@ -13,7 +13,7 @@ import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFr
 import { PublicApiClient } from '../api'
 import { IFurniture } from '../api/types'
 import { Button } from '../components/common/Button'
-import { capitalizeFirstLetter, getQueryParams } from '../utils'
+import { capitalizeFirstLetter, getQueryParams, sanitizeFurnitureItem } from '../utils'
 
 export interface ISelectOption {
   label: string
@@ -86,7 +86,9 @@ const Catalog = () => {
   const [colors, setColors] = React.useState(colorsProps)
   const [activeSortOption, setActiveSortOption] = React.useState<SortOptions>('asc')
 
-  const topSales = allProducts.current.filter((item) => parseFloat(item.rating) > 4.5)
+  const topSales = allProducts.current.filter((item) =>
+    typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false
+  )
 
   console.log('brands', brands)
 
@@ -129,31 +131,43 @@ const Catalog = () => {
     setLoading(true)
     PublicApiClient.getFurniture(query, controller.signal)
       .then((data) => {
-        const allRoomsOptions = data.all.reduce((accum: string[], next) => {
-          return accum.includes(next.room) ? accum : accum.concat(next.room)
-        }, [])
-        const allTypes = data.all.reduce((accum: string[], next) => {
-          return accum.includes(next.type) ? accum : accum.concat(next.type)
-        }, [])
-        const allMaterials = data.all.reduce((accum: string[], next) => {
-          return accum.includes(next.material) ? accum : accum.concat(next.material)
-        }, [])
-        const allBrands = data.all.reduce((accum: string[], next) => {
-          return accum.includes(next.brand) ? accum : accum.concat(next.brand)
-        }, [])
-        console.log('allBrands', allBrands)
+        const sanitizedAll = data.all.map(sanitizeFurnitureItem)
+        const sanitizedFiltered = data.filtered.map(sanitizeFurnitureItem)
 
-        const allColors = data.all.reduce((accum: string[], next) => {
+        const allRoomsOptions = sanitizedAll.reduce((accum: string[], next) => {
+          return typeof next.room === 'string' && accum.includes(next.room) ? accum : accum.concat(next.room as string)
+        }, [])
+        const allTypes = sanitizedAll.reduce((accum: string[], next) => {
+          return typeof next.type === 'string' && accum.includes(next.type) ? accum : accum.concat(next.type as string)
+        }, [])
+        const allMaterials = sanitizedAll.reduce((accum: string[], next) => {
+          return typeof next.material === 'string' && accum.includes(next.material)
+            ? accum
+            : accum.concat(next.material as string)
+        }, [])
+        const allBrands = sanitizedAll.reduce((accum: string[], next) => {
+          return typeof next.brand === 'string' && accum.includes(next.brand)
+            ? accum
+            : accum.concat(next.brand as string)
+        }, [])
+
+        const allColors = sanitizedAll.reduce((accum: string[], next) => {
           const absentColors = next.colors.filter((c) => !accum.includes(c))
           return accum.concat(absentColors)
         }, [])
         if (showOnlyDiscountedProducts === '1') {
-          const discountedProducts = data.filtered.filter((p) => parseFloat(p.priceOld) - parseFloat(p.priceNew) > 0)
+          const discountedProducts = sanitizedFiltered.filter((p) => {
+            if (typeof p.priceOld === 'string' && typeof p.priceNew === 'string') {
+              return parseFloat(p.priceOld) - parseFloat(p.priceNew) > 0
+            } else {
+              return false
+            }
+          })
           setItems(discountedProducts)
         } else {
-          setItems(data.filtered)
+          setItems(sanitizedFiltered)
         }
-        allProducts.current = data.all
+        allProducts.current = sanitizedAll
 
         const defaultOption = {
           label: 'All',
@@ -244,24 +258,34 @@ const Catalog = () => {
       setLoading(true)
       PublicApiClient.getFurniture(searchQuery, controller.signal)
         .then((data) => {
-          const allRoomsOptions = data.all.reduce((accum: string[], next) => {
-            return accum.includes(next.room) ? accum : accum.concat(next.room)
+          const sanitizedAll = data.all.map(sanitizeFurnitureItem)
+          const sanitizedFiltered = data.filtered.map(sanitizeFurnitureItem)
+          const allRoomsOptions = sanitizedAll.reduce((accum: string[], next) => {
+            return typeof next.room === 'string' && accum.includes(next.room)
+              ? accum
+              : accum.concat(next.room as string)
           }, [])
-          const allTypes = data.all.reduce((accum: string[], next) => {
-            return accum.includes(next.type) ? accum : accum.concat(next.type)
+          const allTypes = sanitizedAll.reduce((accum: string[], next) => {
+            return typeof next.type === 'string' && accum.includes(next.type)
+              ? accum
+              : accum.concat(next.type as string)
           }, [])
-          const allMaterials = data.all.reduce((accum: string[], next) => {
-            return accum.includes(next.material) ? accum : accum.concat(next.material)
+          const allMaterials = sanitizedAll.reduce((accum: string[], next) => {
+            return typeof next.material === 'string' && accum.includes(next.material)
+              ? accum
+              : accum.concat(next.material as string)
           }, [])
-          const allBrands = data.all.reduce((accum: string[], next) => {
-            return accum.includes(next.brand) ? accum : accum.concat(next.brand)
+          const allBrands = sanitizedAll.reduce((accum: string[], next) => {
+            return typeof next.brand === 'string' && accum.includes(next.brand)
+              ? accum
+              : accum.concat(next.brand as string)
           }, [])
-          const allColors = data.all.reduce((accum: string[], next) => {
+          const allColors = sanitizedAll.reduce((accum: string[], next) => {
             const absentColors = next.colors.filter((c) => !accum.includes(c))
             return accum.concat(absentColors)
           }, [])
-          setItems(data.filtered)
-          allProducts.current = data.all
+          setItems(sanitizedFiltered)
+          allProducts.current = sanitizedAll
           setRoom({
             value: room.value,
             options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })), // roomSelectOptions,
@@ -410,7 +434,7 @@ const Catalog = () => {
                     <Card
                       key={item.id}
                       product={item}
-                      isFavorite={favorites.includes(item.id)}
+                      isFavorite={typeof item.id === 'number' ? favorites.includes(item.id) : false}
                     />
                   ))}
                 </div>
@@ -431,7 +455,7 @@ const Catalog = () => {
                 <Card
                   key={product.id}
                   product={product}
-                  isFavorite={favorites.includes(product.id)}
+                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
                 />
               ))}
             </div>

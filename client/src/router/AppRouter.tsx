@@ -11,9 +11,9 @@ import { publicRoutes, authRoutes, WithPathname } from './routes'
 import { useAuth } from '../hooks/useAuth'
 import { fetchItemsThunkCreator } from '../redux/actions/items'
 import { getProducts } from '../redux/getters'
-import '../scss/style.scss'
 import { Snackbar } from '../components/common/snackBar'
 import { editSearchActionCreator } from '../redux/actions/search'
+import '../scss/style.scss'
 
 export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
@@ -27,7 +27,7 @@ export const AppRouter = () => {
 
   React.useEffect(() => {
     const searchData = products.map((p) => ({
-      title: p.name,
+      title: p.name ?? '',
       link: `/products/${p.id}`,
       imageUrl: p.image?.url,
       texts: [] as string[]

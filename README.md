@@ -132,10 +132,13 @@ TODO!:
 - [x] add ui if 0 orders
 - [x] filter furniture by brand
 - [x] should add sorting of products
+- [x] /profile floating inputs
+- [x] add :active state for buttons
+- [x] 400 when trying to wish product again in product/id
+- [x] should sanitize furniture after fetching
 
 - [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
-
 - [ ] mark in swagger which id to send
 - [ ] add confirmation email
 - [ ] after login via yandex login shows in a moment before profile
@@ -143,6 +146,4 @@ TODO!:
 - [ ] user gets exprired in a middle of using site
 - [ ] selecting option from header doesnt trigger products refetching
 - [ ] orders with same date are not sorted right when adding new order only before reload
-- [ ] should sanitize furniture after fetching
-- [x] /profile floating inputs
-- [ ] add :active state for buttons
+- [ ] should sanitize user after fetching

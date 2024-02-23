@@ -24,19 +24,32 @@ export const AddToFavorite: React.FC<IProps> = ({ id }) => {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
-    try {
-      const response = await UserApiClient.addFavoriteItem(id)
-      if (!isSuccessfullResponse(response)) {
-        return dispatch(toggleSnackbarOpen())
-      }
+    const payload = {
+      favorites: [id]
+    }
 
-      const payload = {
-        favorites: [id]
-      }
+    if (favorites.includes(id)) {
+      try {
+        const response = await UserApiClient.deleteFavoriteItem(id)
+        if (!isSuccessfullResponse(response)) {
+          return dispatch(toggleSnackbarOpen())
+        }
 
-      dispatch(editUserActionCreator(payload))
-    } catch (error) {
-      dispatch(toggleSnackbarOpen())
+        dispatch(editUserActionCreator(payload))
+      } catch (error) {
+        dispatch(toggleSnackbarOpen())
+      }
+    } else {
+      try {
+        const response = await UserApiClient.addFavoriteItem(id)
+        if (!isSuccessfullResponse(response)) {
+          return dispatch(toggleSnackbarOpen())
+        }
+
+        dispatch(editUserActionCreator(payload))
+      } catch (error) {
+        dispatch(toggleSnackbarOpen())
+      }
     }
   }
 

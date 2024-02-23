@@ -140,3 +140,17 @@
 .animate__fadeInUp {
   animation-name: fadeInUp;
 }
+
+@keyframes button-click {
+  0% {
+    transform: scale(1);
+  }
+
+  10% {
+    transform: scale(0.94);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

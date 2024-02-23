@@ -16,7 +16,7 @@ interface ICartItemProps {
     cartItemId: number
     name: string
     imageUrl: string
-    price: number
+    price: number | null
     quintity: number
     dimension: {
       width: number
@@ -61,7 +61,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
     }
   }
 
-  const totalToRender = splitPriceWithSpaces(price * quintity)
+  const totalToRender = typeof price === 'number' ? splitPriceWithSpaces(price * quintity) : null
 
   return (
     <div className='item flex relative'>
@@ -76,7 +76,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
             <h6 className='item__info-name fw-500'>
               <Link to={`/products/${furnitureId}`}>{name}</Link>
             </h6>
-            <p className='item__info-price'>{totalToRender} $</p>
+            <p className='item__info-price'>{typeof totalToRender === 'string' ? `${totalToRender}$` : 'N/A'}</p>
           </div>
           <div className='item__info-line mt-20 flex items-center'>
             <div className='item__info-feature info-feature flex items-center'>

@@ -114,7 +114,7 @@ export class UserController {
     const candidate = await this.userService.findFavoriteFurniture(user.sub, id)
 
     if (candidate) {
-      throw new BadRequestException('Item already exists')
+      return { success: true }
     }
 
     await this.userService.addFavoriteFurnitureItem(user.sub, id)

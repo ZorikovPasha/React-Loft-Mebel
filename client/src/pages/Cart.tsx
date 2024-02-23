@@ -38,7 +38,7 @@ interface ICollectedCartItem {
   cartItemId: number
   name: string
   imageUrl: string
-  price: number
+  price: number | null
   quintity: number
   dimension: {
     width: number
@@ -48,7 +48,7 @@ interface ICollectedCartItem {
   color: string
 }
 
-const Cart: React.FC = () => {
+const Cart = () => {
   const dispatch = useDispatch()
 
   const history = useHistory()
@@ -60,20 +60,27 @@ const Cart: React.FC = () => {
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const collectedItems =
+  const collectedProductsInCart =
     cart?.reduce((accum: ICollectedCartItem[], next) => {
       const currentItem = items.find((item) => item.id === next.furnitureId)
-      if (!currentItem) {
+      if (!currentItem || typeof currentItem.id !== 'number') {
         return accum
       }
+
+      const currentPrice =
+        typeof currentItem.priceNew === 'string' && currentItem.priceNew
+          ? parseFloat(currentItem.priceNew)
+          : typeof currentItem.priceOld === 'string' && currentItem.priceOld
+          ? parseFloat(currentItem.priceOld)
+          : null
 
       return accum.concat([
         {
           furnitureId: currentItem.id,
           cartItemId: next.id,
-          name: currentItem.name,
+          name: currentItem.name ?? '',
           imageUrl: currentItem.image?.url ?? '',
-          price: parseFloat(currentItem.priceNew ? currentItem.priceNew : currentItem.priceOld),
+          price: currentPrice,
           quintity: next.quintity,
           dimension: currentItem.dimensions?.map(({ width, length, height }) => ({ width, length, height })) ?? [],
           color: next.color
@@ -81,14 +88,16 @@ const Cart: React.FC = () => {
       ])
     }, []) ?? []
 
-  const quintity = collectedItems.reduce((accum, next) => {
+  const quintity = collectedProductsInCart.reduce((accum, next) => {
     return accum + next.quintity
   }, 0)
-  const total = collectedItems.reduce((accum, next) => {
-    return accum + next.price * next.quintity
+  const total = collectedProductsInCart.reduce((accum, next) => {
+    return next.price ? accum + next.price * next.quintity : 0
   }, 0)
-
-  const youMayAlsoLikeThese = cart.length ? items.filter((item) => parseFloat(item.rating) > 4) : []
+  const totalToRender = splitPriceWithSpaces(total)
+  const youMayAlsoLikeThese = cart.length
+    ? items.filter((item) => (item.rating && typeof item.rating === 'string' ? parseFloat(item.rating) > 4 : false))
+    : []
 
   const onLoginModalClose = () => {
     setModalLoginOpened(false)
@@ -126,8 +135,6 @@ const Cart: React.FC = () => {
     }
   }
 
-  const totalToRender = splitPriceWithSpaces(total)
-
   return (
     <>
       {isLoading && <Loader />}
@@ -140,17 +147,17 @@ const Cart: React.FC = () => {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='cart'>
         <div className='container'>
-          {collectedItems.length ? (
+          {collectedProductsInCart.length ? (
             <>
               <div className=''>
                 <p className='cart__bottom-total'>Items: {quintity}</p>
                 <p className='cart__bottom-total'>
                   Total cost:
-                  <span className='fw-500'> {totalToRender} P</span>
+                  <span className='fw-500'> {totalToRender}$</span>
                 </p>
               </div>
               <div className='mt-20'>
-                {collectedItems.map((item) => (
+                {collectedProductsInCart.map((item) => (
                   <CartItem
                     key={item.name + item.color + item.quintity}
                     item={item}
@@ -160,7 +167,7 @@ const Cart: React.FC = () => {
               <div className='cart__bottom flex items-center mt-40'>
                 <p className='cart__bottom-total'>
                   Total cost:
-                  <span className='fw-500'> {totalToRender} P</span>
+                  <span className='fw-500'> {totalToRender}$</span>
                 </p>
                 <Button
                   title='Submit order'
@@ -186,7 +193,7 @@ const Cart: React.FC = () => {
                 <Card
                   key={product.id}
                   product={product}
-                  isFavorite={favorites.includes(product.id)}
+                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
                 />
               ))}
             </div>
