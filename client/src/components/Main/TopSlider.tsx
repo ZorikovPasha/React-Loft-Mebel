@@ -31,6 +31,7 @@ export const TopSlider: React.FC = () => {
 
   const settings = {
     loop: true,
+    arrows: false,
     autoplay: true,
     responsive: [
       {

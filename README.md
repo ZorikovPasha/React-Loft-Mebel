@@ -137,6 +137,7 @@ TODO!:
 - [x] 400 when trying to wish product again in product/id
 - [x] should sanitize furniture after fetching
 - [x] add remaining products
+- [x] catalog option `all` in select disappeares after aside submit
 - [ ] selecting option from header doesnt trigger products refetching
 
 - [?] loader while fetching user data? (react-query) (nextjs is better)

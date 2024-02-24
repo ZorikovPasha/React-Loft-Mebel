@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import { Aside } from '../components/Catalog/Aside'
@@ -8,12 +8,13 @@ import { Card } from '../components/common/card'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
-import { getUserData } from '../redux/getters'
+import { getProducts, getUserData } from '../redux/getters'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { PublicApiClient } from '../api'
-import { IFurniture } from '../api/types'
+import { IFurniture, IFurnitureResponse } from '../api/types'
 import { Button } from '../components/common/Button'
 import { capitalizeFirstLetter, getQueryParams, sanitizeFurnitureItem } from '../utils'
+import { setItemsActionCreator } from '../redux/actions/items'
 
 export interface ISelectOption {
   label: string
@@ -64,7 +65,8 @@ const Catalog = () => {
 
   const history = useHistory()
 
-  const allProducts = React.useRef<IFurniture[]>([])
+  const products = useSelector(getProducts)
+
   const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
   const filters = React.useRef({
     room: '',
@@ -77,7 +79,7 @@ const Catalog = () => {
   const QueryCache = React.useRef(history.location.search + '&sort=asc')
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false)
-  const [items, setItems] = React.useState<IFurniture[]>([])
+  const [filteredProducts, setFilteredProducts] = React.useState<IFurniture[]>([])
   const [isLoading, setLoading] = React.useState(false)
   const [room, setRoom] = React.useState(roomProps)
   const [type, setType] = React.useState(typeProps)
@@ -86,11 +88,9 @@ const Catalog = () => {
   const [colors, setColors] = React.useState(colorsProps)
   const [activeSortOption, setActiveSortOption] = React.useState<SortOptions>('asc')
 
-  const topSales = allProducts.current.filter((item) =>
-    typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false
-  )
+  const topSales = products.filter((item) => (typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false))
 
-  console.log('brands', brands)
+  const dispatch = useDispatch()
 
   React.useEffect(() => {
     const furnitureType = getQueryParams('type')
@@ -131,44 +131,23 @@ const Catalog = () => {
     setLoading(true)
     PublicApiClient.getFurniture(query, controller.signal)
       .then((data) => {
-        const sanitizedAll = data.all.map(sanitizeFurnitureItem)
-        const sanitizedFiltered = data.filtered.map(sanitizeFurnitureItem)
+        const { allFurniture, filteredFurniture, allTypes, allBrands, allColors, allMaterials, allRoomsOptions } =
+          processResponse(data)
 
-        const allRoomsOptions = sanitizedAll.reduce((accum: string[], next) => {
-          return typeof next.room === 'string' && accum.includes(next.room) ? accum : accum.concat(next.room as string)
-        }, [])
-        const allTypes = sanitizedAll.reduce((accum: string[], next) => {
-          return typeof next.type === 'string' && accum.includes(next.type) ? accum : accum.concat(next.type as string)
-        }, [])
-        const allMaterials = sanitizedAll.reduce((accum: string[], next) => {
-          return typeof next.material === 'string' && accum.includes(next.material)
-            ? accum
-            : accum.concat(next.material as string)
-        }, [])
-        const allBrands = sanitizedAll.reduce((accum: string[], next) => {
-          return typeof next.brand === 'string' && accum.includes(next.brand)
-            ? accum
-            : accum.concat(next.brand as string)
-        }, [])
-
-        const allColors = sanitizedAll.reduce((accum: string[], next) => {
-          const absentColors = next.colors.filter((c) => !accum.includes(c))
-          return accum.concat(absentColors)
-        }, [])
         if (showOnlyDiscountedProducts === '1') {
-          const discountedProducts = sanitizedFiltered.filter((p) => {
+          const discountedProducts = filteredFurniture.filter((p) => {
             if (typeof p.priceOld === 'string' && typeof p.priceNew === 'string') {
               return parseFloat(p.priceOld) - parseFloat(p.priceNew) > 0
             } else {
               return false
             }
           })
-          setItems(discountedProducts)
+          setFilteredProducts(discountedProducts)
         } else {
-          setItems(sanitizedFiltered)
+          setFilteredProducts(filteredFurniture)
         }
-        allProducts.current = sanitizedAll
 
+        dispatch(setItemsActionCreator(allFurniture))
         const defaultOption = {
           label: 'All',
           value: 'all'
@@ -231,7 +210,40 @@ const Catalog = () => {
     }
   ]
 
-  const handleFiltersSubmit = () => {
+  const processResponse = (data: IFurnitureResponse) => {
+    const sanitizedAll = data.all.map(sanitizeFurnitureItem)
+    const sanitizedFiltered = data.filtered.map(sanitizeFurnitureItem)
+
+    const allRoomsOptions = sanitizedAll.reduce((accum: string[], next) => {
+      return typeof next.room === 'string' && accum.includes(next.room) ? accum : accum.concat(next.room as string)
+    }, [])
+    const allTypes = sanitizedAll.reduce((accum: string[], next) => {
+      return typeof next.type === 'string' && accum.includes(next.type) ? accum : accum.concat(next.type as string)
+    }, [])
+    const allMaterials = sanitizedAll.reduce((accum: string[], next) => {
+      return typeof next.material === 'string' && accum.includes(next.material)
+        ? accum
+        : accum.concat(next.material as string)
+    }, [])
+    const allBrands = sanitizedAll.reduce((accum: string[], next) => {
+      return typeof next.brand === 'string' && accum.includes(next.brand) ? accum : accum.concat(next.brand as string)
+    }, [])
+    const allColors = sanitizedAll.reduce((accum: string[], next) => {
+      const absentColors = next.colors.filter((c) => !accum.includes(c))
+      return accum.concat(absentColors)
+    }, [])
+    return {
+      allFurniture: sanitizedAll,
+      filteredFurniture: sanitizedFiltered,
+      allRoomsOptions: allRoomsOptions,
+      allTypes,
+      allMaterials,
+      allBrands,
+      allColors
+    }
+  }
+
+  const handleFiltersSubmit = async () => {
     const roomQuery = `${room.value === 'all' || room.value === undefined ? '' : `&room=${room.value}`}`
     const materialQuery = `${
       materials.value === 'all' || materials.value === undefined ? '' : `&material=${materials.value}`
@@ -256,63 +268,48 @@ const Catalog = () => {
       })
       const controller = new AbortController()
       setLoading(true)
-      PublicApiClient.getFurniture(searchQuery, controller.signal)
-        .then((data) => {
-          const sanitizedAll = data.all.map(sanitizeFurnitureItem)
-          const sanitizedFiltered = data.filtered.map(sanitizeFurnitureItem)
-          const allRoomsOptions = sanitizedAll.reduce((accum: string[], next) => {
-            return typeof next.room === 'string' && accum.includes(next.room)
-              ? accum
-              : accum.concat(next.room as string)
-          }, [])
-          const allTypes = sanitizedAll.reduce((accum: string[], next) => {
-            return typeof next.type === 'string' && accum.includes(next.type)
-              ? accum
-              : accum.concat(next.type as string)
-          }, [])
-          const allMaterials = sanitizedAll.reduce((accum: string[], next) => {
-            return typeof next.material === 'string' && accum.includes(next.material)
-              ? accum
-              : accum.concat(next.material as string)
-          }, [])
-          const allBrands = sanitizedAll.reduce((accum: string[], next) => {
-            return typeof next.brand === 'string' && accum.includes(next.brand)
-              ? accum
-              : accum.concat(next.brand as string)
-          }, [])
-          const allColors = sanitizedAll.reduce((accum: string[], next) => {
-            const absentColors = next.colors.filter((c) => !accum.includes(c))
-            return accum.concat(absentColors)
-          }, [])
-          setItems(sanitizedFiltered)
-          allProducts.current = sanitizedAll
-          setRoom({
-            value: room.value,
-            options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })), // roomSelectOptions,
-            label: 'Room'
-          })
-          setType({
-            value: type.value,
-            options: allTypes.map((t) => ({ label: capitalizeFirstLetter(t), value: t })),
-            label: 'Type'
-          })
-          setMaterials({
-            value: materials.value,
-            label: materials.label,
-            options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-          })
-          setBrands({
-            value: brands.value,
-            label: brands.label,
-            options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-          })
-          setColors((prev) => ({
-            ...prev,
-            options: allColors.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-          }))
-          setLoading(false)
+
+      try {
+        const data = await PublicApiClient.getFurniture(searchQuery, controller.signal)
+        const { allFurniture, filteredFurniture, allTypes, allBrands, allColors, allMaterials, allRoomsOptions } =
+          processResponse(data)
+
+        const defaultOption = {
+          label: 'All',
+          value: 'all'
+        }
+
+        setFilteredProducts(filteredFurniture)
+        dispatch(setItemsActionCreator(allFurniture))
+
+        setRoom({
+          value: room.value,
+          options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption),
+          label: 'Room'
         })
-        .catch(() => setLoading(false))
+        setType({
+          value: type.value,
+          options: allTypes.map((t) => ({ label: capitalizeFirstLetter(t), value: t })).concat(defaultOption),
+          label: 'Type'
+        })
+        setMaterials({
+          value: materials.value,
+          label: materials.label,
+          options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption)
+        })
+        setBrands({
+          value: brands.value,
+          label: brands.label,
+          options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+        })
+        setColors((prev) => ({
+          ...prev,
+          options: allColors.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+        }))
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
     }
 
     toggleAsideVisibility(false)
@@ -428,9 +425,9 @@ const Catalog = () => {
               </div>
               {isLoading ? (
                 <Loader />
-              ) : items.length ? (
+              ) : filteredProducts.length ? (
                 <div className='catalog__items'>
-                  {items.map((item) => (
+                  {filteredProducts.map((item) => (
                     <Card
                       key={item.id}
                       product={item}
