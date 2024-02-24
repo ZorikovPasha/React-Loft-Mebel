@@ -1,11 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
+import { getProducts, getUserData } from '../redux/getters'
 import { TopSlider } from '../components/Main/TopSlider'
+import { Card } from '../components/common/card'
 
 export const Main: React.FC = () => {
+  const products = useSelector(getProducts)
+  const { favorites } = useSelector(getUserData)
+  const topSales = products.filter((item) => (typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false))
+
   return (
-    <div className='container'>
+    <div className='home container'>
       <div className='home__top top'>
         <TopSlider />
       </div>
@@ -95,6 +102,23 @@ export const Main: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {topSales.length ? (
+        <section className='mt-60'>
+          <div className='container'>
+            <h3 className='sales__title'>Top sales</h3>
+            <div className='sales__items sales__items--product mt-30'>
+              {topSales.map((product) => (
+                <Card
+                  key={product.id}
+                  product={product}
+                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
     </div>
   )
 }

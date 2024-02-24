@@ -1,11 +1,6 @@
 .catalog {
   &__body {
     flex-grow: 1;
-    padding-bottom: 100px;
-
-    @media #{$mobile} {
-      padding-bottom: 60px;
-    }
   }
 
   &__controls {
@@ -29,9 +24,6 @@
 
     @media (width <=420px) {
       grid-template-columns: 1fr;
-      width: 90%;
-      margin-left: auto;
-      margin-right: auto;
     }
   }  
 }

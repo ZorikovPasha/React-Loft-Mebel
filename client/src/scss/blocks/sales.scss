@@ -1,9 +1,13 @@
 .sales {
-  margin-top: 90px;
+  margin-top: 100px;
   padding-bottom: 70px;
 
   @media #{$tablet} {
-    margin-top: 70px;
+    margin-top: 80px;
+  }
+
+  @media #{$mobile} {
+    margin-top: 60px;
   }
 
   &__title {
@@ -20,24 +24,19 @@
   &__items {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 53px 30px;
+    grid-gap: 20px;
 
     @media (width <=992px) {
       grid-template-columns: repeat(3, 1fr);
-
-      &--product {
-        .item-sales:nth-child(n + 7) {
-          display: none;
-        }
-      }
     }
 
     @media #{$mobile} {
       grid-template-columns: repeat(2, 1fr);
     }
 
-    @media (width <=510px) {
-      grid-gap: 20px 8px;
+    @media (width <=420px) {
+      grid-gap: 10px;
+      grid-template-columns: 1fr;
     }
   }
 }

@@ -1,4 +1,10 @@
 .home {
+  padding-bottom: 80px;
+
+  @media #{$mobile} {
+    padding-bottom: 60px;
+  }
+
   &__promo {
     height: 600px;
     margin-bottom: 30px;

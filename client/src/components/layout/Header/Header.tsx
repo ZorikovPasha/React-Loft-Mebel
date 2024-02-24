@@ -33,7 +33,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
       },
       {
         text: 'Kitchenware',
-        link: 'sinks'
+        link: 'kitchenware'
       }
     ],
     [
@@ -66,7 +66,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
         link: 'hangers'
       },
       {
-        text: 'Mirros',
+        text: 'Mirrors',
         link: 'mirrors'
       },
       {

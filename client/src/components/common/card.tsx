@@ -158,15 +158,15 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
             <div className='item-sales__line'>
               <div className='item-sales__size'>
                 <p className='item-sales__val'>Width</p>
-                <p className='item-sales__num'>{dimensions[0].width} СМ</p>
+                <p className='item-sales__num'>{dimensions[0].width} SM</p>
               </div>
               <div className='item-sales__size'>
                 <p className='item-sales__val'>Length</p>
-                <p className='item-sales__num'>{dimensions[0].length} СМ</p>
+                <p className='item-sales__num'>{dimensions[0].length} SM</p>
               </div>
               <div className='item-sales__size'>
                 <p className='item-sales__val'>Height</p>
-                <p className='item-sales__num'>{dimensions[0].height} СМ</p>
+                <p className='item-sales__num'>{dimensions[0].height} SM</p>
               </div>
             </div>
             <Button
