@@ -136,14 +136,12 @@ TODO!:
 - [x] add :active state for buttons
 - [x] 400 when trying to wish product again in product/id
 - [x] should sanitize furniture after fetching
+- [x] add remaining products
+- [ ] selecting option from header doesnt trigger products refetching
 
 - [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
-- [ ] mark in swagger which id to send
-- [ ] add confirmation email
 - [ ] after login via yandex login shows in a moment before profile
-- [ ] add remaining products
 - [ ] user gets exprired in a middle of using site
-- [ ] selecting option from header doesnt trigger products refetching
 - [ ] orders with same date are not sorted right when adding new order only before reload
 - [ ] should sanitize user after fetching
