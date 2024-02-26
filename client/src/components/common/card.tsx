@@ -36,7 +36,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     if (favorites.includes(id)) {
       try {
         const response = await UserApiClient.deleteFavoriteItem(id)
-        if (!isSuccessfullResponse(response)) {
+        if (!response || !isSuccessfullResponse(response)) {
           return dispatch(toggleSnackbarOpen())
         }
 
@@ -47,7 +47,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     } else {
       try {
         const response = await UserApiClient.addFavoriteItem(id)
-        if (!isSuccessfullResponse(response)) {
+        if (!response || !isSuccessfullResponse(response)) {
           return dispatch(toggleSnackbarOpen())
         }
 
@@ -93,7 +93,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
     }
   }
 
-  let discount = '0'
+  let discount = null
 
   if (priceNew && priceOld && parseFloat(priceNew) < parseFloat(priceOld)) {
     discount = (((parseInt(priceOld) - parseInt(priceNew)) / parseInt(priceOld)) * 100).toFixed(0)
@@ -107,7 +107,7 @@ export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite
         </div>
       ) : null}
       <Button
-        title='Like product'
+        title={isFavorite ? 'Unlike product' : 'Like product'}
         type='button'
         className='item-sales__like'
         onClick={onLikeProductClick(isLoggedIn)}

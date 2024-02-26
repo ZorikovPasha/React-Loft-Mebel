@@ -6,10 +6,9 @@ export type SortOptions = 'asc' | 'desc' | 'pop'
 interface ISortPopupProps {
   activeSortOption: SortOptions
   setActiveSortOption: React.Dispatch<React.SetStateAction<SortOptions>>
-  onSelectSortType: (cat: string) => void
 }
 
-export const SortPopup: React.FC<ISortPopupProps> = ({ activeSortOption, setActiveSortOption, onSelectSortType }) => {
+export const SortPopup: React.FC<ISortPopupProps> = ({ activeSortOption, setActiveSortOption }) => {
   const items = [
     {
       value: 'desc',
@@ -36,7 +35,6 @@ export const SortPopup: React.FC<ISortPopupProps> = ({ activeSortOption, setActi
   const onListItemClick = (type: SortOptions) => () => {
     setActiveSortOption(type)
     toggleSortPopupVisibility(false)
-    onSelectSortType(type)
   }
 
   React.useEffect(() => {

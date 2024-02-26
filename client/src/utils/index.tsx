@@ -1,13 +1,11 @@
 import React from 'react'
-import {
-  IFurniture,
-  IFurnitureItemRes,
-  IImage,
-  IReview,
-  IReviewRes,
-  IUserResponse,
-  OrderStatusType
-} from '../api/types'
+import { IFurniture, IFurnitureItemRes, IImage, IReview, IReviewRes, IUserResponse } from '../api/types'
+import { UserApiClient } from '../api'
+import { Dispatch } from 'redux'
+import { useHistory } from 'react-router-dom'
+
+import { logoutUserActionCreator } from '../redux/actions/userAction'
+import { IOrder } from '../redux/reducers/userReducer'
 
 export const validateEmail = (email: string): boolean => {
   return email.trim().length > 4 && email.includes('@') && email.includes('.')
@@ -99,24 +97,8 @@ export const breakString: breakStringType = (originalStr = '', query = '') => {
   )
 }
 
-interface IProcessedOrder {
-  id: number
-  userId: string
-  name: string
-  status: OrderStatusType
-  createdAt: string
-  updatedAt: string
-  items: {
-    id: number
-    furnitureId: number
-    orderId: number
-    quintity: number
-    color: string
-  }[]
-}
-
 export const sanitizeUserRes = (userData: IUserResponse['user']) => {
-  const processedOrders: IProcessedOrder[] = []
+  const processedOrders: IOrder[] = []
   if (userData.orders) {
     userData.orders.forEach((o) => {
       processedOrders.push({
@@ -220,4 +202,11 @@ export const sanitizeFurnitureItem = (furniture: IFurnitureItemRes): IFurniture 
     dimensions: furniture.dimensions ?? [],
     reviews: furniture.reviews ? furniture.reviews.map(sanitizeReviews) : []
   }
+}
+
+// @ts-expect-error this is okay here
+export const logUserOut = (dispatch: Dispatch<unknown>, history?: ReturnType<typeof useHistory>) => async () => {
+  await UserApiClient.logout()
+  dispatch(logoutUserActionCreator())
+  history?.push({ pathname: '/' })
 }

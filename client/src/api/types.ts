@@ -123,6 +123,19 @@ export interface IUserResponse {
   }
 }
 
+export interface ISuccessfullAccessTokenRegenResponse {
+  token: string
+}
+
+export interface IOrdersResponse {
+  orders: IOrderResponse[] | null
+}
+
+export const isOrdersResponseSuccessfull = (res: IOrdersResponse | IErrorResponse): res is IOrdersResponse => {
+  // @ts-expect-error this is okay here
+  return res.orders && Array.isArray(res.orders)
+}
+
 export interface ISuccessfullLoginResponse extends IUserResponse {
   token: string
 }
@@ -351,4 +364,10 @@ export const isResponseWithErrors = <T extends Record<keyof T, unknown>>(
 
 export const isStringPropertyname = (obj: Record<string, unknown>, key: string): key is keyof typeof obj => {
   return key in obj
+}
+
+export const isSuccessfullNewAccessTokenResponse = (
+  res: ISuccessfullAccessTokenRegenResponse | Record<string, unknown>
+) => {
+  return res.token && typeof res.token === 'string'
 }

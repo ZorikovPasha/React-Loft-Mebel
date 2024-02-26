@@ -10,7 +10,9 @@ import {
   UseGuards,
   HttpCode,
   Req,
-  InternalServerErrorException
+  InternalServerErrorException,
+  ForbiddenException,
+  UnauthorizedException
 } from '@nestjs/common'
 import { User as IUser } from '@prisma/client'
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
@@ -41,6 +43,8 @@ import {
 } from './dto/auth.dto'
 import { YandexAuthGuard } from './yandex-auth.guard'
 import { Response, Request } from 'express'
+import { JwtAuthGuard } from './jwt-auth.guard'
+import { IUserPayload } from './jwt.strategy'
 
 interface IRequestWithUser extends Request {
   user: {
@@ -48,7 +52,7 @@ interface IRequestWithUser extends Request {
     id: string
     username: string
     displayName: string
-    name: { familyName: string; givenName: string } | null // { familyName: 'Павел', givenName: 'Зориков' }
+    name: { familyName: string; givenName: string } | null
     gender: null
     emails: [{ value: string }] | null
     photos:
@@ -131,8 +135,22 @@ export class AuthController {
   @ApiOkResponse(apiResponse200)
   @ApiResponse(apiResponse500)
   @Post('login')
-  async login(@User() user: IUser) {
-    return this.authService.login(user)
+  async login(@User() user: IUser, @Res({ passthrough: true }) res: Response) {
+    const { accessToken, refreshToken, userData } = await this.authService.login(user)
+    await this.prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        refreshToken: refreshToken
+      }
+    })
+
+    res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
+    return {
+      token: accessToken,
+      user: userData
+    }
   }
 
   @UseGuards(YandexAuthGuard)
@@ -161,11 +179,65 @@ export class AuthController {
     } catch (error) {
       const thisUser = await this.userService.findByEmail(req.user._json.default_email)
       if (thisUser) {
-        const token = this.authService.generateToken(thisUser.email, thisUser.id)
-        return res.redirect(`http://localhost:5173/profile?token=${token}`)
+        const { accessToken, refreshToken } = await this.authService.login(thisUser)
+        await this.prisma.user.update({
+          where: {
+            id: thisUser.id
+          },
+          data: {
+            refreshToken: refreshToken
+          }
+        })
+
+        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
+        return res.redirect(`http://localhost:5173/profile?token=${accessToken}`)
       }
 
       throw new InternalServerErrorException()
     }
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @ApiOkResponse(apiResponse200)
+  @ApiResponse(apiResponse500)
+  @Get('refresh')
+  async refreshAccessToken(@Req() request: Request) {
+    console.log('request.cookies.jwt', request.cookies.jwt)
+    if (!request.cookies.jwt) {
+      throw new UnauthorizedException()
+    }
+    const currentUser = await this.prisma.user.findFirst({
+      where: {
+        refreshToken: request.cookies.jwt
+      }
+    })
+    if (!currentUser) {
+      throw new ForbiddenException()
+    }
+
+    const { accessToken } = await this.authService.login(currentUser)
+    return { token: accessToken }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  // @UseGuards(LocalAuthGuard)
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Log user out' })
+  // @ApiUnauthorizedResponse(apiResponse401)
+  @ApiOkResponse(apiResponse200)
+  @ApiResponse(apiResponse500)
+  @Get('logout')
+  async logout(@User() user: IUserPayload, @Res({ passthrough: true }) res: Response) {
+    await this.prisma.user.update({
+      where: {
+        id: user.sub
+      },
+      data: {
+        refreshToken: ''
+      }
+    })
+
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true })
+    return { success: true }
   }
 }

@@ -267,8 +267,6 @@ const Profile = () => {
     (props) => props.isTouched
   )
 
-  console.log('name::', name)
-
   React.useEffect(() => {
     if (!user.isLoggedIn) {
       return
@@ -498,12 +496,6 @@ const Profile = () => {
     }
   }
 
-  const onLogout = () => {
-    localStorage.removeItem('loft_furniture_token')
-    dispatch(logoutUserActionCreator())
-    history.push({ pathname: '/' })
-  }
-
   const onTab = (tab: 'personal' | 'orders') => () => {
     setActiveTab(tab)
   }
@@ -578,11 +570,6 @@ const Profile = () => {
     }))
   }
 
-  if (!user.isLoggedIn) {
-    history.push(ROUTES.Login)
-    return null
-  }
-
   const onDrop = React.useCallback((acceptedFiles: File[]) => {
     if (!acceptedFiles[0]) {
       return
@@ -603,6 +590,17 @@ const Profile = () => {
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
+  const logUserOut = async () => {
+    await UserApiClient.logout()
+    dispatch(logoutUserActionCreator())
+    history?.push({ pathname: '/' })
+  }
+
+  if (!user.isLoggedIn) {
+    history.push(ROUTES.Login)
+    // return null
+  }
 
   return (
     <>
@@ -633,7 +631,7 @@ const Profile = () => {
                   className='profile__logout'
                   type='button'
                   title='Log out'
-                  onClick={onLogout}
+                  onClick={logUserOut}
                 >
                   <>
                     <svg
@@ -923,18 +921,19 @@ const Profile = () => {
                                 <p className='profile__table-cell'>Color</p>
                                 {products.map(({ id, name, image, color, quintity, price }) => (
                                   <React.Fragment key={id}>
-                                    <div className='profile__table-cell flex items-center'>
+                                    <div className='profile__table-cell'>
                                       <Link
                                         to={`/products/${id}`}
-                                        className=''
+                                        className='flex items-center'
                                       >
+                                        <img
+                                          className='profile__table-image'
+                                          src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
+                                          alt=''
+                                        />
+
                                         <p>{name}</p>
                                       </Link>
-                                      <img
-                                        className='profile__table-image'
-                                        src={image ? import.meta.env.VITE_BACKEND + image.url : ''}
-                                        alt=''
-                                      />
                                     </div>
                                     <div className='profile__table-cell flex items-center'>
                                       <p>{typeof price === 'number' ? price * quintity : 'N/A'}</p>

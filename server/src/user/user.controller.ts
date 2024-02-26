@@ -67,7 +67,6 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  // @HttpCode(204)
   @UseInterceptors(FileInterceptor('image'))
   @UsePipes(new ValidationPipe({ transform: true }))
   @Put()
@@ -107,12 +106,11 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Post('favorites')
   async addFavoriteItem(@Body() dto: AddFavoriteFurnitureDto, @User() user: IUserPayload) {
     const { id } = dto // this is product id
-
     const candidate = await this.userService.findFavoriteFurniture(user.sub, id)
-
     if (candidate) {
       return { success: true }
     }
@@ -121,6 +119,7 @@ export class UserController {
     return { success: true }
   }
 
+  @UsePipes(new ValidationPipe({ transform: true }))
   @UseGuards(JwtAuthGuard)
   @Delete('favorites')
   async deleteFavouriteItem(@Body() dto: AddFavoriteFurnitureDto, @User() user: IUserPayload) {
@@ -201,7 +200,8 @@ export class UserController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('request')
   makeRequest(@Body() dto: UserRequestDto) {
-    console.log('data.message', dto.message)
+    console.log(dto)
+
     return { success: true }
   }
 

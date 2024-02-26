@@ -138,11 +138,15 @@ TODO!:
 - [x] should sanitize furniture after fetching
 - [x] add remaining products
 - [x] catalog option `all` in select disappeares after aside submit
-- [ ] selecting option from header doesnt trigger products refetching
+- [x] user gets exprired in a middle of using site
+- [x] /login after click errors do not appear
+- [x] /cart if not logged in show message to log in
+- [x] /profile orders image should be on the left side
+- [x] orders with same date are not sorted right when adding new order only before reload (after post should refetch orders)
 
+- [ ] selecting option from header doesnt trigger products refetching
+- [ ] logout logic in separate function and test it
 - [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 - [ ] after login via yandex login shows in a moment before profile
-- [ ] user gets exprired in a middle of using site
-- [ ] orders with same date are not sorted right when adding new order only before reload
 - [ ] should sanitize user after fetching

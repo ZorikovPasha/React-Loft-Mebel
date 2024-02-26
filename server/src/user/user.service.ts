@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+// import jwt from 'jsonwebtoken'
 import { User } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
@@ -54,24 +54,6 @@ export class UserService {
         house: '',
         apartment: ''
       }
-    })
-  }
-
-  generateToken(id: string, email: string, password: string): string | undefined {
-    const payload = {
-      id,
-      email,
-      password
-    }
-
-    const jwtSecret = process.env.JWT_SECRET
-
-    if (!jwtSecret) {
-      return
-    }
-
-    return jwt.sign(payload, jwtSecret ?? '', {
-      expiresIn: process.env.JWT_EXPIRATION
     })
   }
 
@@ -244,6 +226,9 @@ export class UserService {
     const orders = await this.prisma.order.findMany({
       where: {
         userId: userId
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
 
@@ -262,6 +247,8 @@ export class UserService {
         })
       )
     }
+
+    return ordersData
   }
 
   async makeOrder(userId: string) {

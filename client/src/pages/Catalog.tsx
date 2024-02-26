@@ -8,7 +8,7 @@ import { Card } from '../components/common/card'
 import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
-import { getProducts, getUserData } from '../redux/getters'
+import { getProducts, getProductsBool, getUserData } from '../redux/getters'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { PublicApiClient } from '../api'
 import { IFurniture, IFurnitureResponse } from '../api/types'
@@ -63,20 +63,14 @@ const Catalog = () => {
     options: []
   }
 
+  const defaultSortOption = 'asc'
+
   const history = useHistory()
 
   const products = useSelector(getProducts)
+  const bool = useSelector(getProductsBool)
 
   const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
-  const filters = React.useRef({
-    room: '',
-    material: '',
-    type: '',
-    brands: [] as string[],
-    colors: [] as string[],
-    sort: 'asc'
-  })
-  const QueryCache = React.useRef(history.location.search + '&sort=asc')
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false)
   const [filteredProducts, setFilteredProducts] = React.useState<IFurniture[]>([])
@@ -86,13 +80,33 @@ const Catalog = () => {
   const [materials, setMaterials] = React.useState(materialProps)
   const [brands, setBrands] = React.useState(brandProps)
   const [colors, setColors] = React.useState(colorsProps)
-  const [activeSortOption, setActiveSortOption] = React.useState<SortOptions>('asc')
+  const [activeSortOption, setActiveSortOption] = React.useState<SortOptions>(defaultSortOption)
+
+  // interface IFiltersCache {
+  //   room: string | undefined
+  //   material: string | undefined
+  //   type: string | undefined
+  //   colors: string | undefined
+  //   brand: string | undefined
+  //   sort: SortOptions
+  // }
+
+  // const filtersCache = React.useRef<IFiltersCache>({
+  //   room: undefined,
+  //   material: undefined,
+  //   type: undefined,
+  //   colors: undefined,
+  //   brand: undefined,
+  //   sort: defaultSortOption
+  // })
 
   const topSales = products.filter((item) => (typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false))
 
   const dispatch = useDispatch()
 
   React.useEffect(() => {
+    // console.log('React.useEffect')
+
     const furnitureType = getQueryParams('type')
     const furnitureRoom = getQueryParams('room')
     const furnitureMaterial = getQueryParams('material')
@@ -115,6 +129,92 @@ const Catalog = () => {
     if (sortBy === 'asc' || sortBy === 'desc' || sortBy === 'pop') {
       assembleQueries.push(`sort=${sortBy}`)
     }
+
+    // console.log('filters.current', filtersCache.current)
+    // console.log({
+    //   furnitureBrand,
+    //   colors: '??',
+    //   furnitureMaterial,
+    //   furnitureRoom,
+    //   sortBy,
+    //   furnitureType
+    // })
+
+    // let ifsCount = 0
+    // let shouldMatchIfsCount = 5
+    // // или если есть значение в кэше а в параметре undefined то
+    // if (typeof furnitureRoom !== 'undefined' && furnitureRoom.trim().length > 0) {
+    //   if (furnitureRoom === filtersCache.current.room) {
+    //     ifsCount++
+    //     console.log(1)
+    //   }
+    // } else if (typeof furnitureRoom === 'undefined' && Boolean(filtersCache.current.room)) {
+    //   ifsCount++
+    //   console.log(1)
+    // } else {
+    //   shouldMatchIfsCount--
+    // }
+    // if (typeof furnitureMaterial !== 'undefined' && furnitureMaterial.trim().length > 0) {
+    //   if (furnitureMaterial === filtersCache.current.material) {
+    //     ifsCount++
+    //     console.log(2)
+    //   }
+    // } else if (typeof furnitureMaterial === 'undefined' && Boolean(filtersCache.current.material)) {
+    //   ifsCount++
+    //   console.log(2)
+    // } else {
+    //   shouldMatchIfsCount--
+    // }
+    // if (typeof furnitureType !== 'undefined' && furnitureType.trim().length > 0) {
+    //   if (furnitureType === filtersCache.current.type) {
+    //     ifsCount++
+    //     console.log(3)
+    //   }
+    // } else if (typeof furnitureType === 'undefined' && Boolean(filtersCache.current.type)) {
+    //   ifsCount++
+    //   console.log(3)
+    // } else {
+    //   shouldMatchIfsCount--
+    // }
+    // if (typeof furnitureBrand !== 'undefined' && furnitureBrand.trim().length > 0) {
+    //   if (furnitureBrand === filtersCache.current.brand) {
+    //     ifsCount++
+    //     console.log(4)
+    //   }
+    // } else if (typeof furnitureBrand === 'undefined' && Boolean(filtersCache.current.brand)) {
+    //   ifsCount++
+    //   console.log(4)
+    // } else {
+    //   shouldMatchIfsCount--
+    // }
+    // if (typeof sortBy !== 'undefined' && sortBy.trim().length > 0) {
+    //   if (sortBy === filtersCache.current.sort) {
+    //     ifsCount++
+    //     console.log(5)
+    //   }
+    // } else {
+    //   shouldMatchIfsCount--
+    // }
+
+    // console.log('ifsCount', ifsCount)
+    // console.log('shouldMatchIfsCount', shouldMatchIfsCount)
+
+    // if (ifsCount === shouldMatchIfsCount) {
+    //   return
+    // }
+
+    // if (
+    //   filters.current.room === furnitureRoom &&
+    //   filters.current.material === furnitureMaterial &&
+    //   filters.current.type === furnitureType &&
+    //   filters.current.brand === furnitureBrand &&
+    //   filters.current.sort === sortBy
+    //   // && filters.current.color === furnitureBrand
+    // ) {
+    //   return
+    // }
+
+    // console.log('________________further')
 
     let query = ''
     if (assembleQueries.length) {
@@ -152,6 +252,17 @@ const Catalog = () => {
           label: 'All',
           value: 'all'
         }
+
+        // updating cache
+        // filtersCache.current.room = furnitureRoom
+        // filtersCache.current.material = furnitureMaterial
+        // filtersCache.current.type = furnitureType
+        // filtersCache.current.brand = furnitureBrand
+        // if (sortBy === 'asc' || sortBy === 'desc' || sortBy === 'pop') {
+        //   filtersCache.current.sort = sortBy
+        // } else {
+        //   filtersCache.current.sort = defaultSortOption
+        // }
 
         setRoom({
           value: furnitureRoom,
@@ -198,7 +309,7 @@ const Catalog = () => {
       })
       .catch(() => setLoading(false))
     return () => controller.abort()
-  }, [])
+  }, [bool])
 
   const { favorites } = useSelector(getUserData)
 
@@ -243,7 +354,9 @@ const Catalog = () => {
     }
   }
 
-  const handleFiltersSubmit = async () => {
+  const handleFiltersSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
+
     const roomQuery = `${room.value === 'all' || room.value === undefined ? '' : `&room=${room.value}`}`
     const materialQuery = `${
       materials.value === 'all' || materials.value === undefined ? '' : `&material=${materials.value}`
@@ -251,7 +364,7 @@ const Catalog = () => {
     const typeQuery = `${type.value === 'all' || type.value === undefined ? '' : `&type=${type.value}`}`
     const brandsQuery = `${brands.value.length ? '&brand=' + brands.value.join(',') : ''}`
     const colorsQuery = makeQueryParametersFromStringArr(colors.value, 'color')
-    const sortQuery = filters.current.sort ? '&sort=' + filters.current.sort : ''
+    const sortQuery = activeSortOption ? '&sort=' + activeSortOption : ''
 
     let searchQuery = roomQuery + materialQuery + typeQuery + brandsQuery + colorsQuery + sortQuery
 
@@ -259,58 +372,62 @@ const Catalog = () => {
       searchQuery = '?' + searchQuery.substring(1)
     }
 
-    if (QueryCache.current !== searchQuery) {
-      QueryCache.current = searchQuery
+    history.push({
+      pathname: '',
+      search: searchQuery
+    })
+    const controller = new AbortController()
+    setLoading(true)
 
-      history.push({
-        pathname: '',
-        search: searchQuery
-      })
-      const controller = new AbortController()
-      setLoading(true)
+    try {
+      const data = await PublicApiClient.getFurniture(searchQuery, controller.signal)
+      const { allFurniture, filteredFurniture, allTypes, allBrands, allColors, allMaterials, allRoomsOptions } =
+        processResponse(data)
 
-      try {
-        const data = await PublicApiClient.getFurniture(searchQuery, controller.signal)
-        const { allFurniture, filteredFurniture, allTypes, allBrands, allColors, allMaterials, allRoomsOptions } =
-          processResponse(data)
-
-        const defaultOption = {
-          label: 'All',
-          value: 'all'
-        }
-
-        setFilteredProducts(filteredFurniture)
-        dispatch(setItemsActionCreator(allFurniture))
-
-        setRoom({
-          value: room.value,
-          options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption),
-          label: 'Room'
-        })
-        setType({
-          value: type.value,
-          options: allTypes.map((t) => ({ label: capitalizeFirstLetter(t), value: t })).concat(defaultOption),
-          label: 'Type'
-        })
-        setMaterials({
-          value: materials.value,
-          label: materials.label,
-          options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption)
-        })
-        setBrands({
-          value: brands.value,
-          label: brands.label,
-          options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-        })
-        setColors((prev) => ({
-          ...prev,
-          options: allColors.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-        }))
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
+      const defaultOption = {
+        label: 'All',
+        value: 'all'
       }
+
+      setFilteredProducts(filteredFurniture)
+      dispatch(setItemsActionCreator(allFurniture))
+
+      // updating cache
+      // filtersCache.current.room = room.value
+      // filtersCache.current.material = materials.value
+      // filtersCache.current.type = type.value
+      // filtersCache.current.brand = brands.value.join(',')
+      // filtersCache.current.sort = activeSortOption
+
+      setRoom({
+        value: room.value,
+        options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption),
+        label: 'Room'
+      })
+      setType({
+        value: type.value,
+        options: allTypes.map((t) => ({ label: capitalizeFirstLetter(t), value: t })).concat(defaultOption),
+        label: 'Type'
+      })
+      setMaterials({
+        value: materials.value,
+        label: materials.label,
+        options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption)
+      })
+      setBrands({
+        value: brands.value,
+        label: brands.label,
+        options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+      })
+      setColors((prev) => ({
+        ...prev,
+        options: allColors.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
+      }))
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
     }
+    // }
 
     toggleAsideVisibility(false)
     document.body.classList.remove('lock')
@@ -326,10 +443,6 @@ const Catalog = () => {
     toggleAsideVisibility(false)
     document.body.classList.remove('lock')
   }
-
-  const onSelectSortType = React.useCallback((cat: string): void => {
-    filters.current.sort = cat
-  }, [])
 
   const onSelect = (setState: React.Dispatch<React.SetStateAction<ISelectField>>) => (value: ISelectOption | null) => {
     setState((prev) => {
@@ -420,7 +533,6 @@ const Catalog = () => {
                 <SortPopup
                   activeSortOption={activeSortOption}
                   setActiveSortOption={setActiveSortOption}
-                  onSelectSortType={onSelectSortType}
                 />
               </div>
               {isLoading ? (

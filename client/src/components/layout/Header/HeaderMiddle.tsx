@@ -9,8 +9,9 @@ import { Const, ROUTES, SCREEN_SIZES } from '../../../utils/const'
 import { IHeaderProps } from './Header'
 import { getPathname, getUserData } from '../../../redux/getters'
 import { useScreenSize } from '../../../hooks/useScreenSize'
-import { logoutUserActionCreator } from '../../../redux/actions/userAction'
 import { Button } from '../../common/Button'
+import { UserApiClient } from '../../../api'
+import { logoutUserActionCreator } from '../../../redux/actions/userAction'
 
 type ItemType = {
   name: string
@@ -38,19 +39,19 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
     }
   }, [])
 
-  const onMobMenuBtnClick = (): void => {
-    setMobMenuOpen(true)
-    document.body.classList.add('lock')
-  }
-
   const pathname = useSelector(getPathname)
 
   const isLoginOrProfilePage = pathname === ROUTES.Login || pathname === ROUTES.Profile
 
-  const onLogout = () => {
-    localStorage.removeItem('loft_furniture_token')
+  const logUserOut = async () => {
+    await UserApiClient.logout()
     dispatch(logoutUserActionCreator())
-    history.push({ pathname: '/' })
+    history?.push({ pathname: '/' })
+  }
+
+  const onMobMenuBtnClick = () => {
+    setMobMenuOpen(true)
+    document.body.classList.add('lock')
   }
 
   return (
@@ -140,7 +141,7 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
                   className='profile__logout'
                   type='button'
                   title='Log out'
-                  onClick={onLogout}
+                  onClick={logUserOut}
                 >
                   <>
                     <svg

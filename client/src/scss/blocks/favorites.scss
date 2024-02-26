@@ -6,6 +6,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 15%;
+    flex-direction: column;
   }
 
   &__empty-text {
@@ -19,5 +20,12 @@
       font-size: 25px;
       line-height: 31px;
     }
+  }
+
+  &__empty-p {
+    font-size: 24px;
+    line-height: 28px;
+    background: #f1d152;
+    font-weight: 700;
   }
 }

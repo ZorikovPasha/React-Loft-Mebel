@@ -5,12 +5,14 @@ export interface IProductsState {
   items: IFurniture[]
   isLoaded: boolean
   isError: boolean
+  bool: boolean
 }
 
 const initialState: IProductsState = {
   items: [],
   isLoaded: false,
-  isError: false
+  isError: false,
+  bool: false
 }
 
 export const itemsReducer = (state = initialState, action: fetchItemsActionType): IProductsState => {
@@ -19,6 +21,11 @@ export const itemsReducer = (state = initialState, action: fetchItemsActionType)
       return {
         ...state,
         ...action.payload
+      }
+    case Actions.FORCE_RERENDER:
+      return {
+        ...state,
+        bool: !state.bool
       }
     default:
       return state
