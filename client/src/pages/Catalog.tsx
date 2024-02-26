@@ -16,6 +16,7 @@ import { Button } from '../components/common/Button'
 import { capitalizeFirstLetter, getQueryParams, sanitizeFurnitureItem } from '../utils'
 import { setItemsActionCreator } from '../redux/actions/items'
 import { IGetFurnitureSuccessRes } from '../../../server/src/furniture/types'
+import { Pagination } from '../components/pagination'
 
 export interface ISelectOption {
   label: string
@@ -71,17 +72,19 @@ const Catalog = () => {
   const products = useSelector(getProducts)
   const bool = useSelector(getProductsBool)
 
+  const scrollToTopTimeout = React.useRef<number | null>(null)
   const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false)
   const [filteredProducts, setFilteredProducts] = React.useState<IFurniture[]>([])
-  const [isLoading, setLoading] = React.useState(false)
+  const [isLoading, setLoading] = React.useState(true)
   const [room, setRoom] = React.useState(roomProps)
   const [type, setType] = React.useState(typeProps)
   const [materials, setMaterials] = React.useState(materialProps)
   const [brands, setBrands] = React.useState(brandProps)
   const [colors, setColors] = React.useState(colorsProps)
   const [activeSortOption, setActiveSortOption] = React.useState<SortOptions>(defaultSortOption)
+  const [currentChunk, setCurrentChunk] = React.useState(1)
 
   // interface IFiltersCache {
   //   room: string | undefined
@@ -475,6 +478,22 @@ const Catalog = () => {
     }))
   }
 
+  const productsPerPage = 20
+  const currentBunchOfProducts = filteredProducts.slice(
+    (currentChunk - 1) * productsPerPage,
+    currentChunk * productsPerPage
+  )
+  // 0, 19
+  // 1, 39
+  const onChangeChunk = () => {
+    if (typeof scrollToTopTimeout.current === 'number') {
+      window.clearTimeout(scrollToTopTimeout.current)
+    }
+    scrollToTopTimeout.current = window.setTimeout(() => {
+      document.querySelector('.breadcrumbs')?.scrollIntoView()
+    }, 1000)
+  }
+
   return (
     <>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
@@ -545,15 +564,26 @@ const Catalog = () => {
               </div>
               {isLoading ? (
                 <Loader />
-              ) : filteredProducts.length ? (
-                <div className='catalog__items'>
-                  {filteredProducts.map((item) => (
-                    <Card
-                      key={item.id}
-                      product={item}
-                      isFavorite={typeof item.id === 'number' ? favorites.includes(item.id) : false}
-                    />
-                  ))}
+              ) : currentBunchOfProducts.length ? (
+                <div>
+                  <div className='catalog__items'>
+                    {currentBunchOfProducts.map((item) => (
+                      <Card
+                        key={item.id}
+                        product={item}
+                        isFavorite={typeof item.id === 'number' ? favorites.includes(item.id) : false}
+                      />
+                    ))}
+                  </div>
+
+                  <Pagination
+                    rootElClass='mt-40'
+                    currentPage={currentChunk}
+                    totalCount={filteredProducts.length}
+                    pageSize={productsPerPage}
+                    setCurrentPage={setCurrentChunk}
+                    onChange={onChangeChunk}
+                  />
                 </div>
               ) : (
                 <Empty text='Nothing found' />
@@ -568,7 +598,7 @@ const Catalog = () => {
           <div className='container'>
             <h3 className='sales__title'>Top sales</h3>
             <div className='sales__items sales__items--product mt-30'>
-              {topSales.map((product) => (
+              {topSales.slice(0, 11).map((product) => (
                 <Card
                   key={product.id}
                   product={product}
