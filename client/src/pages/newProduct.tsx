@@ -125,7 +125,9 @@ const NewProduct = (): JSX.Element => {
       { value: 'corners', label: 'Corners' },
       { value: 'kitchenware', label: 'Kitchenware' },
       { value: 'countertops', label: 'Countertops' },
-      { value: 'hangers', label: 'Hangers' }
+      { value: 'hangers', label: 'Hangers' },
+      { value: 'shoeRacks', label: 'Shoe Racks' },
+      { value: 'walls', label: 'Walls' }
     ],
     showErrors: false
   }
