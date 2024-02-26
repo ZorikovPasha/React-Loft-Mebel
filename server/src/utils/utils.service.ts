@@ -31,14 +31,23 @@ export class UtilsService {
       return { status: false, deserializedDimensions: [] }
     }
 
-    const deserializedDimensions = stringDimensions.map((str) => {
+    const deserializedDimensions: {
+      width: number
+      length: number
+      height: number
+    }[] = []
+
+    stringDimensions.forEach((str) => {
       const strings = str.split(',')
 
-      return {
+      if (typeof strings[0] === 'undefined' || typeof strings[1] === 'undefined' || typeof strings[2] === 'undefined') {
+        return
+      }
+      deserializedDimensions.push({
         width: parseInt(strings[0]),
         length: parseInt(strings[1]),
         height: parseInt(strings[2])
-      }
+      })
     })
 
     const isSerializedCorrectly = deserializedDimensions.every(({ width, length, height }) => {

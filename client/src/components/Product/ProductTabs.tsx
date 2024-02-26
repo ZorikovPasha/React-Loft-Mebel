@@ -98,8 +98,11 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
               {activeTab === 'features' && (
                 <div className='product-tabs__content-item product-content'>
                   <div className='product-content__box'>
-                    {specsToRender.map((item) => (
-                      <div className='product-content__row'>
+                    {specsToRender.map((item, idx) => (
+                      <div
+                        className='product-content__row'
+                        key={idx}
+                      >
                         <div className='product-content__line'>
                           <p className='product-content__text product-content__text--left'>{item[0]}</p>
                           <div className='product-content__dots'></div>

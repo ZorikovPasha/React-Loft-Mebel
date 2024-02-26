@@ -14,7 +14,7 @@ import {
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { ROUTES } from '../utils/const'
-import { isILogin400, isSuccessfullLoginResponse } from '../api/types'
+import { isILogin400, isRes500, isSuccessfullLoginResponse } from '../api/types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
 import { getUserData } from '../redux/getters'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
@@ -113,6 +113,7 @@ const Login = () => {
       const response = await UserApiClient.login(dto)
 
       setIsLoading(false)
+
       if (isILogin400(response)) {
         setForm((prev) => ({
           email: Object.assign(prev.email, {
@@ -137,7 +138,7 @@ const Login = () => {
         return
       }
 
-      if (response.statusCode === 500) {
+      if (isRes500(response)) {
         dispatch(toggleSnackbarOpen())
       }
     } catch (error) {

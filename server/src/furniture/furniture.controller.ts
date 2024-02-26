@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Param,
-  Delete,
   HttpCode,
   BadRequestException,
   UsePipes,
@@ -16,10 +15,11 @@ import {
 } from '@nestjs/common'
 import { FurnitureService } from './furniture.service'
 import { CreateFurnitureDto, FurnitureRes, apiResponse200 } from './dto/create-furniture.dto'
-import { PrismaService } from '../prisma/prisma.service'
+// import { PrismaService } from '../prisma/prisma.service'
 import { UtilsService } from '../utils/utils.service'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger'
+import { ICreateFurniture, IGetFurnitureRes } from './types'
 
 export interface IFurnitureDimension {
   width: number
@@ -33,7 +33,7 @@ export interface IFurnitureDimension {
 export class FurnitureController {
   constructor(
     private readonly furnitureService: FurnitureService,
-    private readonly prisma: PrismaService,
+    // private readonly prisma: PrismaService,
     private readonly utils: UtilsService
   ) {}
 
@@ -48,7 +48,7 @@ export class FurnitureController {
     @Query('material') material: string | undefined,
     @Query('brand') brand: string | undefined,
     @Query('sort') sort: string | undefined
-  ) {
+  ): Promise<IGetFurnitureRes> {
     const collectedBrands = brand ? brand.split(',') : null
     const criteria = {
       where: {
@@ -129,7 +129,10 @@ export class FurnitureController {
   @UseInterceptors(FileInterceptor('image'))
   @HttpCode(200)
   @Post()
-  async create(@Body() dto: CreateFurnitureDto, @UploadedFile() uploadedImage: Express.Multer.File) {
+  async create(
+    @Body() dto: CreateFurnitureDto,
+    @UploadedFile() uploadedImage: Express.Multer.File
+  ): Promise<ICreateFurniture> {
     if (!uploadedImage) {
       throw new BadRequestException('Image was not provided')
     }
@@ -164,25 +167,25 @@ export class FurnitureController {
     return { success: true }
   }
 
-  @ApiOkResponse(apiResponse200)
-  @HttpCode(200)
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    if (!id) {
-      throw new BadRequestException()
-    }
+  // @ApiOkResponse(apiResponse200)
+  // @HttpCode(200)
+  // @Delete(':id')
+  // async remove(@Param('id') id: string) {
+  //   if (!id) {
+  //     throw new BadRequestException()
+  //   }
 
-    const processedId = parseInt(id)
+  //   const processedId = parseInt(id)
 
-    if (Number.isNaN(processedId)) {
-      throw new BadRequestException('Incorrect id was provided')
-    }
-    await this.prisma.furniture.delete({
-      where: {
-        id: processedId
-      }
-    })
+  //   if (Number.isNaN(processedId)) {
+  //     throw new BadRequestException('Incorrect id was provided')
+  //   }
+  //   await this.prisma.furniture.delete({
+  //     where: {
+  //       id: processedId
+  //     }
+  //   })
 
-    return { success: true }
-  }
+  //   return { success: true }
+  // }
 }

@@ -14,7 +14,7 @@ const Favorites: React.FC = () => {
   const dispatch = useDispatch()
 
   const items = useSelector(getProducts)
-  const { favorites } = useSelector(getUserData)
+  const { favorites, isLoggedIn } = useSelector(getUserData)
 
   const favoriteItems: IFurniture[] = []
   favorites.forEach((id) => {
@@ -35,28 +35,36 @@ const Favorites: React.FC = () => {
   return (
     <>
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <section>
-        <div className='container'>
-          <div className='cart__top'>
-            <p className='cart__bottom-total'>You liked:</p>
-            <p className='cart__bottom-total'>Total: {favorites?.length}</p>
-          </div>
-        </div>
-      </section>
-      {favorites.length ? (
-        <section className='mt-40'>
-          <div className='container'>
-            <div className='sales__items sales__items--cart'>
-              {favoriteItems?.map((item) => (
-                <Card
-                  key={item.id}
-                  product={item}
-                  isFavorite={true}
-                />
-              ))}
+      {isLoggedIn ? (
+        <>
+          <section>
+            <div className='container'>
+              <div className='cart__top'>
+                <p className='cart__bottom-total'>You liked:</p>
+                <p className='cart__bottom-total'>Total: {favorites?.length}</p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+          {favorites.length ? (
+            <section className='mt-40'>
+              <div className='container'>
+                <div className='sales__items sales__items--cart'>
+                  {favoriteItems?.map((item) => (
+                    <Card
+                      key={item.id}
+                      product={item}
+                      isFavorite={true}
+                    />
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : (
+            <div className='container'>
+              <Empty text='There is nothing in here('></Empty>
+            </div>
+          )}
+        </>
       ) : (
         <div className='container'>
           <Empty text='There is nothing in here('>

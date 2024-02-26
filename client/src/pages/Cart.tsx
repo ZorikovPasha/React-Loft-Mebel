@@ -10,7 +10,7 @@ import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
 import { editUserActionCreator } from '../redux/actions/userAction'
-import { isOrdersResponseSuccessfull, isSuccessfullMakeOrderResponse } from '../api/types'
+import { isGetOrdersResponseSuccessfull, isSuccessfullMakeOrderResponse } from '../api/types'
 import { Loader } from '../components/common/Loader'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
@@ -102,6 +102,14 @@ const Cart = () => {
       )
     : []
 
+  const discountedProducts = allProducts.filter((p) => {
+    if (typeof p.priceOld === 'string' && typeof p.priceNew === 'string') {
+      return parseFloat(p.priceOld) - parseFloat(p.priceNew) > 0
+    } else {
+      return false
+    }
+  })
+
   const onLoginModalClose = () => {
     setModalLoginOpened(false)
     document.body.classList.remove('lock')
@@ -127,7 +135,7 @@ const Cart = () => {
       const ordersResponse = await UserApiClient.getOrders()
       console.log(1)
 
-      if (ordersResponse && isOrdersResponseSuccessfull(ordersResponse)) {
+      if (ordersResponse && isGetOrdersResponseSuccessfull(ordersResponse)) {
         console.log(2)
 
         const processedOrders: IOrder[] = []
@@ -136,7 +144,10 @@ const Cart = () => {
             id: o.id,
             userId: o.userId,
             name: o.name,
-            status: o.status,
+            status:
+              o.status === 'CREATED' || o.status === 'WORKING' || o.status === 'COMPLETED' || o.status === 'CANCELED'
+                ? o.status
+                : null,
             createdAt: o.createdAt,
             updatedAt: o.updatedAt,
             items: Array.isArray(o.items) ? o.items : []
@@ -169,63 +180,85 @@ const Cart = () => {
         />
       )}
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <section className='cart'>
-        <div className='container'>
-          {collectedProductsInCart.length ? (
-            <>
-              <div className=''>
-                <p className='cart__bottom-total'>Items: {quintity}</p>
-                <p className='cart__bottom-total'>
-                  Total cost:
-                  <span className='fw-500'> {totalToRender}$</span>
-                </p>
-              </div>
-              <div className='mt-20'>
-                {collectedProductsInCart.map((item) => (
-                  <CartItem
-                    key={item.name + item.color + item.quintity}
-                    item={item}
-                  />
-                ))}
-              </div>
-              <div className='cart__bottom flex items-center mt-40'>
-                <p className='cart__bottom-total'>
-                  Total cost:
-                  <span className='fw-500'> {totalToRender}$</span>
-                </p>
-                <Button
-                  title='Submit order'
-                  type='button'
-                  className='cart__bottom-btn btn'
-                  onClick={onRegisterOrder}
-                >
-                  Submit order
-                </Button>
-              </div>
-            </>
-          ) : (
-            <Empty text='There is nothing in here('>
-              <p className='favorites__empty-p mt-20'>Please login to see your cart</p>
-            </Empty>
-          )}
-        </div>
-      </section>
-      {youMayAlsoLikeThese.length ? (
-        <section className='sales mt-30'>
-          <div className='container'>
-            <h6 className='sales__title'>You may also like:</h6>
-            <div className='sales__items sales__items--cart'>
-              {youMayAlsoLikeThese.map((product) => (
-                <Card
-                  key={product.id}
-                  product={product}
-                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
-                />
-              ))}
+      {isLoggedIn ? (
+        <>
+          <section className='cart'>
+            <div className='container'>
+              {collectedProductsInCart.length ? (
+                <>
+                  <div className=''>
+                    <p className='cart__bottom-total'>Items: {quintity}</p>
+                    <p className='cart__bottom-total'>
+                      Total cost:
+                      <span className='fw-500'> {totalToRender}$</span>
+                    </p>
+                  </div>
+                  <div className='mt-20'>
+                    {collectedProductsInCart.map((item) => (
+                      <CartItem
+                        key={item.name + item.color + item.quintity}
+                        item={item}
+                      />
+                    ))}
+                  </div>
+                  <div className='cart__bottom flex items-center mt-40'>
+                    <p className='cart__bottom-total'>
+                      Total cost:
+                      <span className='fw-500'> {totalToRender}$</span>
+                    </p>
+                    <Button
+                      title='Submit order'
+                      type='button'
+                      className='cart__bottom-btn btn'
+                      onClick={onRegisterOrder}
+                    >
+                      Submit order
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <Empty text='There is nothing in here('></Empty>
+              )}
             </div>
-          </div>
-        </section>
-      ) : null}
+          </section>
+          {youMayAlsoLikeThese.length ? (
+            <section className='sales mt-30'>
+              <div className='container'>
+                <h6 className='sales__title'>You may also like:</h6>
+                <div className='sales__items sales__items--cart'>
+                  {youMayAlsoLikeThese.map((product) => (
+                    <Card
+                      key={product.id}
+                      product={product}
+                      isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
+                    />
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : null}
+          {discountedProducts.length ? (
+            <section className='sales mt-30'>
+              <div className='container'>
+                <h6 className='sales__title'>These hot products under sale wont last long without you!</h6>
+                <div className='sales__items sales__items--cart'>
+                  {discountedProducts.map((product) => (
+                    <Card
+                      key={product.id}
+                      product={product}
+                      isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
+                    />
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : null}
+        </>
+      ) : (
+        <Empty text='There is nothing in here('>
+          <p className='favorites__empty-p mt-20'>Please login to see your cart</p>
+        </Empty>
+      )}
     </>
   )
 }

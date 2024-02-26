@@ -1,5 +1,5 @@
 import { useDropzone } from 'react-dropzone'
-import { isRes200, isRes500 } from '../../api/types'
+import { isSuccessfullResponse } from '../../api/types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -128,26 +128,22 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
 
     try {
       const response = await UserApiClient.sendReview(formData)
-      if (isRes500(response)) {
-        dispatch(toggleSnackbarOpen())
-        setIsLoading(false)
-        return
-      }
+      setIsLoading(false)
 
-      if (isRes200(response)) {
-        setIsLoading(false)
+      if (isSuccessfullResponse(response)) {
         setText(textProps)
         setScore(scoreProps)
         setPictures({ files: [] })
         onModalClose()
         return
+      } else {
+        dispatch(toggleSnackbarOpen())
       }
 
       dispatch(toggleSnackbarOpen())
-      setIsLoading(false)
     } catch (error) {
-      dispatch(toggleSnackbarOpen())
       setIsLoading(false)
+      dispatch(toggleSnackbarOpen())
     }
   }
 

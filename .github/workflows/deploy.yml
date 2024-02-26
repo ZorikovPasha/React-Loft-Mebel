@@ -9,6 +9,9 @@ jobs:
         with:
           node-version: 16.14.2
       - run: |
+          cd server
+          npm ci --production
+          cd ..
           cd client
           npm ci
           npm run lintstyles

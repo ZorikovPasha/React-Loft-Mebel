@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-// import jwt from 'jsonwebtoken'
 import { User } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
+import { ICollectedUserData, IOrder } from 'src/auth/types'
 
 interface CreateUserData {
   userName: string
@@ -57,7 +57,7 @@ export class UserService {
     })
   }
 
-  async collectUserData(user: User) {
+  async collectUserData(user: User): Promise<ICollectedUserData> {
     const getImage = async (photoId: number | null) => {
       if (!photoId) {
         return
@@ -99,7 +99,7 @@ export class UserService {
         })
       : []
 
-    const ordersData = []
+    const ordersData: IOrder[] = []
 
     for (const order of orders) {
       const productsInOrder = await this.prisma.orderedFurniture.findMany({
@@ -108,11 +108,10 @@ export class UserService {
         }
       })
 
-      ordersData.push(
-        Object.assign(order, {
-          items: productsInOrder
-        })
-      )
+      ordersData.push({
+        ...order,
+        items: productsInOrder
+      })
     }
 
     return {

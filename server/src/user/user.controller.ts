@@ -6,13 +6,11 @@ import {
   Put,
   Delete,
   HttpCode,
-  Request,
   ValidationPipe,
   UsePipes,
   BadRequestException,
   UseInterceptors,
   UploadedFile,
-  NotFoundException,
   UseGuards
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
@@ -28,11 +26,22 @@ import {
   UpdateUserDto,
   UserRequestDto
 } from './dto/create-user.dto'
-import { PrismaService } from '../prisma/prisma.service'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { IUserPayload } from '../auth/jwt.strategy'
 import { ApiTags } from '@nestjs/swagger'
 import { FurnitureService } from '../furniture/furniture.service'
+import {
+  IAddCartItemRes,
+  IAddFavoriteItemRes,
+  IAddOrderRes,
+  ICancelOrderRes,
+  IDeleteFavouriteItemRes,
+  IGetOrdersRes,
+  IMakeRequestRes,
+  IMakeReviewRes,
+  IRemoveCartItemRes,
+  IUpdateUserRes
+} from './types'
 
 export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest()
@@ -44,27 +53,26 @@ export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) 
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly furnitureService: FurnitureService,
-    private readonly prisma: PrismaService
+    private readonly furnitureService: FurnitureService // private readonly prisma: PrismaService
   ) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async getUserData(@Request() req: Request, @User() user: IUserPayload) {
-    const foundUser = await this.prisma.user.findFirst({
-      where: {
-        id: user.sub
-      }
-    })
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // async getUserData(@User() user: IUserPayload): Promise<IGetUserRes> {
+  //   const foundUser = await this.prisma.user.findFirst({
+  //     where: {
+  //       id: user.sub
+  //     }
+  //   })
 
-    if (!foundUser) {
-      return new NotFoundException()
-    }
+  //   if (!foundUser) {
+  //     return new NotFoundException()
+  //   }
 
-    return {
-      user: await this.userService.collectUserData(foundUser)
-    }
-  }
+  //   return {
+  //     user: await this.userService.collectUserData(foundUser)
+  //   }
+  // }
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
@@ -74,7 +82,7 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() image: Express.Multer.File | null,
     @User() user: IUserPayload
-  ) {
+  ): Promise<IUpdateUserRes> {
     let hasAnyFieldsToUpdate = false
     const dataToUpdate: Record<string, string | number | boolean> = {}
     Object.entries(updateUserDto).forEach(([key, value]) => {
@@ -98,17 +106,20 @@ export class UserController {
     return { success: true }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('favorites')
-  async getFavorites(@User() user: IUserPayload) {
-    const favorites = await this.userService.getUserFavorites(user.sub)
-    return { items: favorites }
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('favorites')
+  // async getFavorites(@User() user: IUserPayload): Promise<IGetFavoritesRes> {
+  //   const favorites = await this.userService.getUserFavorites(user.sub)
+  //   return { items: favorites }
+  // }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('favorites')
-  async addFavoriteItem(@Body() dto: AddFavoriteFurnitureDto, @User() user: IUserPayload) {
+  async addFavoriteItem(
+    @Body() dto: AddFavoriteFurnitureDto,
+    @User() user: IUserPayload
+  ): Promise<IAddFavoriteItemRes> {
     const { id } = dto // this is product id
     const candidate = await this.userService.findFavoriteFurniture(user.sub, id)
     if (candidate) {
@@ -122,7 +133,10 @@ export class UserController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseGuards(JwtAuthGuard)
   @Delete('favorites')
-  async deleteFavouriteItem(@Body() dto: AddFavoriteFurnitureDto, @User() user: IUserPayload) {
+  async deleteFavouriteItem(
+    @Body() dto: AddFavoriteFurnitureDto,
+    @User() user: IUserPayload
+  ): Promise<IDeleteFavouriteItemRes> {
     const { id } = dto
 
     await this.userService.deleteFavoriteFurniture(user.sub, id)
@@ -131,17 +145,17 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('orders')
-  async getOrders(@User() user: IUserPayload) {
+  async getOrders(@User() user: IUserPayload): Promise<IGetOrdersRes> {
     const orders = await this.userService.getOrders(user.sub)
     return { orders: orders }
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('orders')
-  async addOrder(@User() user: IUserPayload) {
+  async addOrder(@User() user: IUserPayload): Promise<IAddOrderRes> {
     const dto = await this.userService.makeOrder(user.sub)
     if (!dto) {
-      throw new BadRequestException('User has not cart')
+      throw new BadRequestException('User has no cart')
     }
 
     return dto
@@ -151,28 +165,28 @@ export class UserController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseGuards(JwtAuthGuard)
   @Put('orders')
-  async cancelOrder(@Body() dto: EditOrderDto) {
+  async cancelOrder(@Body() dto: EditOrderDto): Promise<ICancelOrderRes> {
     const { orderId } = dto
 
     await this.userService.updateOrder(orderId, { status: 'CANCELED' })
     return { success: true }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('cart')
-  async getCartItems(@User() user: IUserPayload) {
-    const dto = await this.userService.getCartItems(user.sub)
-    if (!dto) {
-      return { items: [] }
-    }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('cart')
+  // async getCartItems(@User() user: IUserPayload): Promise<IGetCartResponse> {
+  //   const dto = await this.userService.getCartItems(user.sub)
+  //   if (!dto) {
+  //     return []
+  //   }
 
-    return dto
-  }
+  //   return dto
+  // }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('cart')
-  async addCartItem(@Body() dto: AddCartItemDto, @User() user: IUserPayload) {
+  async addCartItem(@Body() dto: AddCartItemDto, @User() user: IUserPayload): Promise<IAddCartItemRes> {
     await this.userService.addCartItem({
       userId: user.sub,
       quintity: dto.quintity,
@@ -185,7 +199,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   @Delete('cart')
-  async removeCartItem(@Body() dto: RemoveCartItemDto, @User() user: IUserPayload) {
+  async removeCartItem(@Body() dto: RemoveCartItemDto, @User() user: IUserPayload): Promise<IRemoveCartItemRes> {
     await this.userService.deleteCartItem({
       color: dto.color,
       userId: user.sub,
@@ -199,7 +213,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('request')
-  makeRequest(@Body() dto: UserRequestDto) {
+  makeRequest(@Body() dto: UserRequestDto): IMakeRequestRes {
     console.log(dto)
 
     return { success: true }
@@ -213,7 +227,7 @@ export class UserController {
     @Body() dto: MakeReviewDto,
     @UploadedFile() attachments: Express.Multer.File | null,
     @User() user: IUserPayload
-  ) {
+  ): Promise<IMakeReviewRes> {
     await Promise.all([
       this.userService.makeReview({
         userId: user.sub,

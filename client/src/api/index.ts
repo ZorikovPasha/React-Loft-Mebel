@@ -1,23 +1,27 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
+import { LoginCredsType, isSuccessfullNewAccessTokenResponse } from './types'
 import {
-  FormDataType,
-  I500Response,
-  ICartItemRequest,
-  IErrorResponse,
-  IErrorsResponse,
-  IFurnitureResponse,
-  ILoginUser400,
-  ISuccessfullAccessTokenRegenResponse,
-  IRegisterUser400,
-  IRemoveCartItemDto,
-  ISuccessfullLoginResponse,
-  ISuccessfullMakeOrderResponse,
-  ISuccessfullResponse,
-  LoginCredsType,
-  SignUpCredsType,
-  isSuccessfullNewAccessTokenResponse,
-  IOrdersResponse
-} from './types'
+  IAddCartItemRes,
+  IAddFavoriteItemRes,
+  IAddOrderRes,
+  ICancelOrderRes,
+  IDeleteFavouriteItemRes,
+  IGetOrdersRes,
+  IMakeRequestRes,
+  IMakeReviewRes,
+  IRemoveCartItemRes,
+  IUpdateUserRes
+} from '../../../server/src/user/types'
+import { ICreateFurniture, IGetFurnitureRes } from '../../../server/src/furniture/types'
+import { IAccessTokenRegenRes, ILoginRes, ILogoutRes, IRegisterRes } from '../../../server/src/auth/types'
+import {
+  CreateUserDto,
+  AddFavoriteFurnitureDto,
+  AddCartItemDto,
+  RemoveCartItemDto,
+  EditOrderDto,
+  UserRequestDto
+} from '../../../server/src/user/dto/create-user.dto'
 
 const apiConfig = {
   returnRejectedPromiseOnError: true,
@@ -95,11 +99,11 @@ class Api extends Axios {
 }
 
 class PublicApi extends Api {
-  getFurniture = (query: string, signal: AbortSignal): Promise<IFurnitureResponse> => {
+  getFurniture = (query: string, signal: AbortSignal): Promise<IGetFurnitureRes> => {
     return this.get(`/api/furniture/${query}`, { signal })
   }
 
-  createFurniture = (dto: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
+  createFurniture = (dto: FormData): Promise<ICreateFurniture> => {
     return this.post('/api/furniture/', dto, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 }
@@ -130,7 +134,7 @@ class UserApi extends Api {
         console.log('prevRequest', prevRequest)
         if (status === 401 && !prevRequest.url?.includes('auth/refresh')) {
           const response = await this.getNewAccessToken()
-          if (prevRequest.headers && isSuccessfullNewAccessTokenResponse(response)) {
+          if (prevRequest.headers && response && isSuccessfullNewAccessTokenResponse(response)) {
             this.applyNewTokenAndReloadRequestInterceptor(response.token as string)
             if (prevRequest.method === 'get') {
               return this._axios.get(prevRequest.url as string, prevRequest.headers)
@@ -160,64 +164,60 @@ class UserApi extends Api {
     }))
   }
 
-  register = (credentials: SignUpCredsType): Promise<ISuccessfullResponse | IRegisterUser400 | I500Response> => {
+  register = (credentials: CreateUserDto): Promise<IRegisterRes> => {
     return this.post('/auth/register', credentials)
   }
 
-  login = (credentials: LoginCredsType): Promise<ISuccessfullLoginResponse | ILoginUser400 | I500Response> => {
+  login = (credentials: LoginCredsType): Promise<ILoginRes> => {
     return this.post('/auth/login', credentials)
   }
 
   getNewAccessToken = () => {
-    return this.get<ISuccessfullAccessTokenRegenResponse | Record<string, unknown>>('/auth/refresh')
+    return this.get<IAccessTokenRegenRes>('/auth/refresh')
   }
 
   logout = async () => {
-    await this.get<ISuccessfullResponse>('/auth/logout')
+    await this.get<ILogoutRes>('/auth/logout')
     this.applyNewTokenAndReloadRequestInterceptor('')
   }
 
-  getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {
-    return this.get('/user')
-  }
-
-  addFavoriteItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.post('/user/favorites', { id })
-  }
-
-  deleteFavoriteItem = (id: number): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.delete('/user/favorites', { id })
-  }
-
-  addItemToCart = (dto: ICartItemRequest): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.post('/user/cart', dto)
-  }
-
-  removeCartItem = (dto: IRemoveCartItemDto): Promise<ISuccessfullResponse | IErrorResponse> => {
-    return this.delete('/user/cart', dto)
-  }
-
-  updateUserData = (formData: FormData): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
+  updateUserData = (formData: FormData): Promise<IUpdateUserRes> => {
     return this.put('/user', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 
-  getOrders = (): Promise<IOrdersResponse | IErrorResponse> => {
+  addFavoriteItem = (id: number) => {
+    return this.post<IAddFavoriteItemRes, AddFavoriteFurnitureDto>('/user/favorites', { id })
+  }
+
+  deleteFavoriteItem = (id: number) => {
+    return this.delete<IDeleteFavouriteItemRes, AddFavoriteFurnitureDto>('/user/favorites', { id })
+  }
+
+  addItemToCart = (dto: AddCartItemDto): Promise<IAddCartItemRes> => {
+    return this.post('/user/cart', dto)
+  }
+
+  removeCartItem = (dto: RemoveCartItemDto): Promise<IRemoveCartItemRes> => {
+    return this.delete('/user/cart', dto)
+  }
+
+  getOrders = (): Promise<IGetOrdersRes> => {
     return this.get('/user/orders')
   }
 
-  makeOrder = (): Promise<ISuccessfullMakeOrderResponse | IErrorResponse> => {
+  makeOrder = (): Promise<IAddOrderRes> => {
     return this.post('/user/orders')
   }
 
-  cancelOrder = (orderId: number): Promise<IErrorsResponse | IErrorResponse | ISuccessfullResponse> => {
-    return this.put('/user/orders', { orderId })
+  cancelOrder = (orderId: number): Promise<ICancelOrderRes> => {
+    return this.put<ICancelOrderRes, EditOrderDto>('/user/orders', { orderId })
   }
 
-  sendMessage = (formData: FormDataType): Promise<ISuccessfullResponse | IErrorsResponse | IErrorResponse> => {
-    return this.post('/user/request', formData)
+  sendMessage = (formData: UserRequestDto) => {
+    return this.post<IMakeRequestRes, UserRequestDto>('/user/request', formData)
   }
 
-  sendReview = (formData: FormData): Promise<ISuccessfullResponse | IRegisterUser400 | I500Response> => {
+  sendReview = (formData: FormData): Promise<IMakeReviewRes> => {
     return this.post('/user/reviews', formData)
   }
 }

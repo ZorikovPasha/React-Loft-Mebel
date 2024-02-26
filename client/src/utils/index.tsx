@@ -1,11 +1,13 @@
 import React from 'react'
-import { IFurniture, IFurnitureItemRes, IImage, IReview, IReviewRes, IUserResponse } from '../api/types'
+import { IFurniture, IImage, IReview } from '../api/types'
 import { UserApiClient } from '../api'
 import { Dispatch } from 'redux'
 import { useHistory } from 'react-router-dom'
 
 import { logoutUserActionCreator } from '../redux/actions/userAction'
 import { IOrder } from '../redux/reducers/userReducer'
+import { IFurnitureItemRes, IReviewRes } from '../../../server/src/furniture/types'
+import { ILoginSuccessfullRes } from '../../../server/src/auth/types'
 
 export const validateEmail = (email: string): boolean => {
   return email.trim().length > 4 && email.includes('@') && email.includes('.')
@@ -97,7 +99,7 @@ export const breakString: breakStringType = (originalStr = '', query = '') => {
   )
 }
 
-export const sanitizeUserRes = (userData: IUserResponse['user']) => {
+export const sanitizeUserRes = (userData: ILoginSuccessfullRes['user']) => {
   const processedOrders: IOrder[] = []
   if (userData.orders) {
     userData.orders.forEach((o) => {
@@ -105,7 +107,10 @@ export const sanitizeUserRes = (userData: IUserResponse['user']) => {
         id: o.id,
         userId: o.userId,
         name: o.name,
-        status: o.status,
+        status:
+          o.status === 'CREATED' || o.status === 'WORKING' || o.status === 'COMPLETED' || o.status === 'CANCELED'
+            ? o.status
+            : null,
         createdAt: o.createdAt,
         updatedAt: o.updatedAt,
         items: Array.isArray(o.items) ? o.items : []

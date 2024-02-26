@@ -15,7 +15,7 @@ import {
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
-import { isSuccessfullCancelOrderResponse, isSuccessfullResponse } from '../api/types'
+import { IImage, isSuccessfullResponse } from '../api/types'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
@@ -35,22 +35,7 @@ interface IFile {
 interface IProductInOrder {
   id: number | null
   name: string
-  image: {
-    alternativeText: string
-    caption: string
-    createdAt: string
-    ext: string
-    hash: string
-    height: number
-    id: number
-    mime: string
-    name: string
-    provider: 'database' | string
-    size: number
-    updatedAt: string
-    url: string
-    width: number
-  } | null
+  image: IImage | null
   quintity: number
   color: string
   price: number | null
@@ -60,8 +45,8 @@ interface IOrderToRender {
   products: IProductInOrder[]
   id: number
   name: string
-  status: string
-  createdAt: string
+  status: string | null
+  createdAt: Date
 }
 
 const Profile = () => {
@@ -478,7 +463,7 @@ const Profile = () => {
   const onCancelOrder = (orderId: number) => async () => {
     try {
       const dto = await UserApiClient.cancelOrder(orderId)
-      if (!isSuccessfullCancelOrderResponse(dto)) {
+      if (!isSuccessfullResponse(dto)) {
         return dispatch(toggleSnackbarOpen())
       }
 

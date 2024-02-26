@@ -143,10 +143,12 @@ TODO!:
 - [x] /cart if not logged in show message to log in
 - [x] /profile orders image should be on the left side
 - [x] orders with same date are not sorted right when adding new order only before reload (after post should refetch orders)
+- [x] should sanitize user after fetching
+- [x] selecting option from header doesnt trigger products refetching
 
-- [ ] selecting option from header doesnt trigger products refetching
+- [ ] pagination of products
 - [ ] logout logic in separate function and test it
 - [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 - [ ] after login via yandex login shows in a moment before profile
-- [ ] should sanitize user after fetching
+- [ ] when loading /catalog filters aside is not fully covered with loader (can see some labels and button)
