@@ -57,6 +57,7 @@ model User {
   updatedAt                           DateTime            @updatedAt
   cart                                Cart?
   reviews                             Review[]
+  refreshToken String @default("")
 }
 
 model FavoriteFurniture {

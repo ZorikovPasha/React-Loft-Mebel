@@ -10,15 +10,16 @@ import { getProducts, getUserData } from '../redux/getters'
 import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { UserApiClient } from '../api'
 import { editUserActionCreator } from '../redux/actions/userAction'
-import { isSuccessfullMakeOrderResponse } from '../api/types'
+import { isOrdersResponseSuccessfull, isSuccessfullMakeOrderResponse } from '../api/types'
 import { Loader } from '../components/common/Loader'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { splitPriceWithSpaces } from '../utils'
+import { IOrder } from '../redux/reducers/userReducer'
 
-const ModalContent: React.FC = () => {
+const ModalContent = () => {
   return (
     <>
       <h3 className='popup-message__title'>We do not know who you are(</h3>
@@ -52,8 +53,8 @@ const Cart = () => {
   const dispatch = useDispatch()
 
   const history = useHistory()
-  const items = useSelector(getProducts)
-  const { favorites, isLoggedIn, cart, orders } = useSelector(getUserData)
+  const allProducts = useSelector(getProducts)
+  const { favorites, isLoggedIn, cart } = useSelector(getUserData)
 
   const breadcrumbs = useBreadcrumbs()
 
@@ -62,7 +63,7 @@ const Cart = () => {
 
   const collectedProductsInCart =
     cart?.reduce((accum: ICollectedCartItem[], next) => {
-      const currentItem = items.find((item) => item.id === next.furnitureId)
+      const currentItem = allProducts.find((item) => item.id === next.furnitureId)
       if (!currentItem || typeof currentItem.id !== 'number') {
         return accum
       }
@@ -96,7 +97,9 @@ const Cart = () => {
   }, 0)
   const totalToRender = splitPriceWithSpaces(total)
   const youMayAlsoLikeThese = cart.length
-    ? items.filter((item) => (item.rating && typeof item.rating === 'string' ? parseFloat(item.rating) > 4 : false))
+    ? allProducts.filter((item) =>
+        item.rating && typeof item.rating === 'string' ? parseFloat(item.rating) > 4 : false
+      )
     : []
 
   const onLoginModalClose = () => {
@@ -116,21 +119,42 @@ const Cart = () => {
     try {
       const response = await UserApiClient.makeOrder()
       setIsLoading(false)
+
       if (!isSuccessfullMakeOrderResponse(response)) {
         return dispatch(toggleSnackbarOpen())
       }
 
-      const payload = {
-        cart: [],
-        orders: orders.concat(
-          Object.assign(response.order, {
-            items: response.order.items ?? []
+      const ordersResponse = await UserApiClient.getOrders()
+      console.log(1)
+
+      if (ordersResponse && isOrdersResponseSuccessfull(ordersResponse)) {
+        console.log(2)
+
+        const processedOrders: IOrder[] = []
+        ordersResponse.orders?.forEach((o) => {
+          processedOrders.push({
+            id: o.id,
+            userId: o.userId,
+            name: o.name,
+            status: o.status,
+            createdAt: o.createdAt,
+            updatedAt: o.updatedAt,
+            items: Array.isArray(o.items) ? o.items : []
           })
-        )
+        })
+
+        const payload = {
+          cart: [],
+          orders: processedOrders
+        }
+        console.log(3)
+
+        dispatch(editUserActionCreator(payload))
+        history.push(ROUTES.Profile + '?tab=orders')
+        console.log(4)
       }
-      dispatch(editUserActionCreator(payload))
-      history.push(ROUTES.Profile + '?tab=orders')
     } catch (error) {
+      setIsLoading(false)
       dispatch(toggleSnackbarOpen())
     }
   }
@@ -180,7 +204,9 @@ const Cart = () => {
               </div>
             </>
           ) : (
-            <Empty text='There is nothing in here(' />
+            <Empty text='There is nothing in here('>
+              <p className='favorites__empty-p mt-20'>Please login to see your cart</p>
+            </Empty>
           )}
         </div>
       </section>

@@ -18,7 +18,7 @@ interface IAsideProps {
   onSelectBrand: (brand: string) => () => void
   onSelectColor: (color: string) => () => void
   onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement>
-  handleFiltersSubmit: () => void
+  handleFiltersSubmit: React.FormEventHandler<HTMLFormElement>
 }
 
 export const Aside: React.FC<IAsideProps> = ({
@@ -36,17 +36,12 @@ export const Aside: React.FC<IAsideProps> = ({
   onAsideCloseClick,
   handleFiltersSubmit
 }) => {
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault()
-    handleFiltersSubmit()
-  }
-
   return (
     <aside className={`catalog__aside aside ${isAsideVisible ? 'opened' : ''}`}>
       <div className={`aside__box ${isAsideVisible ? 'opened' : ''}`}>
         <form
           className='aside__form'
-          onSubmit={handleSubmit}
+          onSubmit={handleFiltersSubmit}
         >
           <div className='aside__filter filter'>
             <Button

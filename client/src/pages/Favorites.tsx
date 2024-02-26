@@ -59,7 +59,9 @@ const Favorites: React.FC = () => {
         </section>
       ) : (
         <div className='container'>
-          <Empty text='Seems like you have not liked anything so far' />
+          <Empty text='There is nothing in here('>
+            <p className='favorites__empty-p mt-20'>Please login to see what you liked</p>
+          </Empty>
         </div>
       )}
     </>

@@ -38,8 +38,6 @@ const AppTextField: React.FC<IInputProps> = ({
   errorMessage,
   onChange
 }) => {
-  console.log('customPlaceholder', customPlaceholder, required)
-
   return (
     <div className={rootElclass}>
       {label && <label className={labelClass}>{label}</label>}

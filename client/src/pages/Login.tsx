@@ -22,7 +22,7 @@ import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
 import { Yandex } from '../svg/yandex-logo'
 
-const Login: React.FC = () => {
+const Login = () => {
   const dispatch = useDispatch()
 
   const { isLoggedIn } = useSelector(getUserData)
@@ -49,7 +49,7 @@ const Login: React.FC = () => {
       isValid: false,
       required: true,
       type: 'password',
-      className: 'relative mt-40',
+      className: 'relative mt-30',
       inputClassName: 'form-input',
       tag: 'input',
       showErrors: false,
@@ -89,11 +89,11 @@ const Login: React.FC = () => {
     const newFormState = {
       email: {
         ...form.email,
-        showErroers: true
+        showErrors: true
       },
       password: {
         ...form.password,
-        showErroers: true
+        showErrors: true
       }
     }
 
@@ -129,8 +129,9 @@ const Login: React.FC = () => {
 
       if (isSuccessfullLoginResponse(response)) {
         setForm(fields.current)
-        localStorage.setItem('loft_furniture_token', response.token)
+        // localStorage.setItem('loft_furniture_token', response.token)
         const payload = sanitizeUserRes(response.user)
+        UserApiClient.applyNewTokenAndReloadRequestInterceptor(response.token)
         dispatch(loginUserActionCreator(payload))
         history.push({ pathname: ROUTES.Profile })
         return

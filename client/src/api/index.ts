@@ -7,18 +7,32 @@ import {
   IErrorsResponse,
   IFurnitureResponse,
   ILoginUser400,
+  ISuccessfullAccessTokenRegenResponse,
   IRegisterUser400,
   IRemoveCartItemDto,
   ISuccessfullLoginResponse,
   ISuccessfullMakeOrderResponse,
   ISuccessfullResponse,
   LoginCredsType,
-  SignUpCredsType
+  SignUpCredsType,
+  isSuccessfullNewAccessTokenResponse,
+  IOrdersResponse
 } from './types'
 
 const apiConfig = {
   returnRejectedPromiseOnError: true,
   baseURL: import.meta.env.VITE_BACKEND,
+  headers: {
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  }
+}
+
+const userApiConfig = {
+  returnRejectedPromiseOnError: true,
+  baseURL: import.meta.env.VITE_BACKEND,
+  withCredentials: true,
   headers: {
     'Cache-Control': 'no-cache, no-store, must-revalidate',
     'Content-Type': 'application/json',
@@ -39,7 +53,7 @@ class Api extends Axios {
   }
 
   success = <T>(response: AxiosResponse<T>): T => {
-    return response.data
+    return response?.data
   }
 
   error = <T>(error: AxiosError<T>): void => {
@@ -91,12 +105,57 @@ class PublicApi extends Api {
 }
 
 class UserApi extends Api {
+  #accessToken: string = ''
+  #requestInterceptor: number
+
   constructor(config: AxiosRequestConfig) {
     super(config)
-    this._axios.interceptors.request.use((config) => ({
+    this.#requestInterceptor = this._axios.interceptors.request.use(
+      (config) => ({
+        ...config,
+        headers: {
+          Authorization: `Bearer ${this.#accessToken}`
+        }
+      }),
+      (error) => Promise.reject(error)
+    )
+
+    this._axios.interceptors.response.use(
+      (response) => {
+        return response
+      },
+      async (error: AxiosError<Error>) => {
+        const status = error?.response?.status
+        const prevRequest = error.config
+        console.log('prevRequest', prevRequest)
+        if (status === 401 && !prevRequest.url?.includes('auth/refresh')) {
+          const response = await this.getNewAccessToken()
+          if (prevRequest.headers && isSuccessfullNewAccessTokenResponse(response)) {
+            this.applyNewTokenAndReloadRequestInterceptor(response.token as string)
+            if (prevRequest.method === 'get') {
+              return this._axios.get(prevRequest.url as string, prevRequest.headers)
+            } else if (prevRequest.method === 'post') {
+              return this._axios.post(prevRequest.url as string, JSON.parse(prevRequest.data), prevRequest.headers)
+            } else if (prevRequest.method === 'put') {
+              return this._axios.put(prevRequest.url as string, JSON.parse(prevRequest.data), prevRequest.headers)
+            } else if (prevRequest.method === 'delete') {
+              return this._axios.delete(prevRequest.url as string, JSON.parse(prevRequest.data))
+            } else {
+              return Promise.reject(error)
+            }
+          }
+        }
+      }
+    )
+  }
+
+  applyNewTokenAndReloadRequestInterceptor = (accessToken: string) => {
+    this.#accessToken = accessToken
+    this._axios.interceptors.request.eject(this.#requestInterceptor)
+    this.#requestInterceptor = this._axios.interceptors.request.use((config) => ({
       ...config,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('loft_furniture_token')}`
+        Authorization: `Bearer ${this.#accessToken}`
       }
     }))
   }
@@ -107,6 +166,15 @@ class UserApi extends Api {
 
   login = (credentials: LoginCredsType): Promise<ISuccessfullLoginResponse | ILoginUser400 | I500Response> => {
     return this.post('/auth/login', credentials)
+  }
+
+  getNewAccessToken = () => {
+    return this.get<ISuccessfullAccessTokenRegenResponse | Record<string, unknown>>('/auth/refresh')
+  }
+
+  logout = async () => {
+    await this.get<ISuccessfullResponse>('/auth/logout')
+    this.applyNewTokenAndReloadRequestInterceptor('')
   }
 
   getUserData = (): Promise<ISuccessfullLoginResponse | IErrorResponse> => {
@@ -133,6 +201,10 @@ class UserApi extends Api {
     return this.put('/user', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
   }
 
+  getOrders = (): Promise<IOrdersResponse | IErrorResponse> => {
+    return this.get('/user/orders')
+  }
+
   makeOrder = (): Promise<ISuccessfullMakeOrderResponse | IErrorResponse> => {
     return this.post('/user/orders')
   }
@@ -150,5 +222,5 @@ class UserApi extends Api {
   }
 }
 
-export const UserApiClient = new UserApi(apiConfig)
+export const UserApiClient = new UserApi(userApiConfig)
 export const PublicApiClient = new PublicApi(apiConfig)

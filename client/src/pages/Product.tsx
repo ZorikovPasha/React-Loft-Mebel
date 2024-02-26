@@ -10,7 +10,7 @@ import { Card } from '../components/common/card'
 import { Page404 } from './404'
 import { ROUTES } from '../utils/const'
 
-const Product: React.FC = () => {
+const Product = () => {
   const { id } = useParams<{ id: string }>()
   const products = useSelector(getProducts)
   const { favorites } = useSelector(getUserData)
@@ -18,7 +18,7 @@ const Product: React.FC = () => {
   const currentProduct = products.find((p) => p.id === Number(id))
 
   const topSales = products.filter((item) => (typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false))
-  const youMayAlsoLike = products.filter((item) => item.type === currentProduct?.type)
+  const youMayAlsoLike = products.filter((item) => item.type === currentProduct?.type && item.id !== currentProduct.id)
 
   const breads = [
     { name: 'Catalog', href: ROUTES.Catalog, isLink: true },

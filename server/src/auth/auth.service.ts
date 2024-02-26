@@ -13,7 +13,6 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findByEmail(email)
-    console.log('authservice.validateUser::user', user)
     if (!user) {
       return null
     }
@@ -35,16 +34,18 @@ export class AuthService {
   }
 
   async login(user: User) {
-    console.log('login user', user)
     const payload = { email: user.email, sub: user.id }
-    return {
-      token: this.jwtService.sign(payload),
-      user: await this.userService.collectUserData(user)
-    }
-  }
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: '1h'
+    })
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: '1d'
+    })
 
-  generateToken(email: string, userId: string) {
-    const payload = { email: email, sub: userId }
-    return this.jwtService.sign(payload)
+    return {
+      accessToken: accessToken,
+      refreshToken,
+      userData: await this.userService.collectUserData(user)
+    }
   }
 }

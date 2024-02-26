@@ -27,3 +27,7 @@ export const resetItemsActionCreator: actionCreatorType<IFurniture[]> = (items) 
   type: Actions.SET_PRODUCTS,
   payload: { items, isLoaded: false }
 })
+
+export const triggerCatalogRerender = () => ({
+  type: Actions.FORCE_RERENDER
+})

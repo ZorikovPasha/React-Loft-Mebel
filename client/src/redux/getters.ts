@@ -10,6 +10,7 @@ export const getFilteredProductsByName =
     return state.items.items.filter((item) => item.name?.toLowerCase().includes(query.toLowerCase()))
   }
 
+export const getProductsBool = (state: RootState): boolean => state.items.bool
 export const getUserData = (state: RootState): IUserState => state.user
 export const getPathname = (state: RootState): string => state.pathname.pathname
 export const getError = (state: RootState): IErrorsState => state.errors

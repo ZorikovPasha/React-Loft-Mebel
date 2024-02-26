@@ -72,7 +72,7 @@ const SignUp = () => {
       required: true,
       isValid: false,
       type: 'text',
-      className: 'mt-40 relative',
+      className: 'mt-30 relative',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
@@ -87,7 +87,7 @@ const SignUp = () => {
       required: true,
       isValid: false,
       type: 'email',
-      className: 'mt-40 relative',
+      className: 'mt-30 relative',
       inputClassName: 'signup__form-input form-input',
       showErrors: false,
       errorMessage: getEmailInputErrorMessage(''),
@@ -100,7 +100,7 @@ const SignUp = () => {
       isValid: false,
       required: true,
       type: 'password',
-      className: 'mt-40 relative',
+      className: 'mt-30 relative',
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
@@ -262,7 +262,7 @@ const SignUp = () => {
                     name={key as string}
                     type={type}
                     value={value}
-                    required={required}
+                    required={false}
                     rootElclass={className}
                     customPlaceholder={customPlaceholder}
                     inputWrapClass={inputWrapClass}

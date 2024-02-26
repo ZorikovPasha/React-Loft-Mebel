@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom'
 import { HeaderMiddle } from './HeaderMiddle'
 import { ROUTES, SCREEN_SIZES } from '../../../utils/const'
 import { useScreenSize } from '../../../hooks/useScreenSize'
+import { useDispatch } from 'react-redux'
+import { triggerCatalogRerender } from '../../../redux/actions/items'
 
 export interface IHeaderProps {
   isMobMenuOpen: boolean
   setMobMenuOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }) => {
+export const Header = ({ isMobMenuOpen, setMobMenuOpen }: IHeaderProps) => {
   const items = [
     { name: 'Home', link: ROUTES.Home },
     { name: 'About us', link: ROUTES.About },
@@ -101,6 +103,11 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
   ])
 
   const isMobile = !useScreenSize(SCREEN_SIZES.tablet)
+  const dispatch = useDispatch()
+
+  const onClick = () => {
+    dispatch(triggerCatalogRerender())
+  }
 
   return (
     <header className='header'>
@@ -118,6 +125,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                   <Link
                     className='categories__item-a'
                     to='/catalog?sale=1'
+                    onClick={onClick}
                   >
                     <svg
                       width='19'
@@ -140,6 +148,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                 <Link
                   to='/catalog?room=kitchen'
                   className='categories__item-a'
+                  onClick={onClick}
                 >
                   <svg
                     width='23'
@@ -194,6 +203,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       <Link
                         to={`/catalog?room=kitchen&type=${link}`}
                         className='sub-list__link'
+                        onClick={onClick}
                       >
                         {text}
                       </Link>
@@ -206,6 +216,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                 <Link
                   to='/catalog?room=bedroom'
                   className='categories__item-a'
+                  onClick={onClick}
                 >
                   <svg
                     width='28'
@@ -237,6 +248,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       <Link
                         to={`/catalog?room=bedroom&type=${link}`}
                         className='sub-list__link'
+                        onClick={onClick}
                       >
                         {text}
                       </Link>
@@ -249,6 +261,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                 <Link
                   to='/catalog?room=living'
                   className='categories__item-a'
+                  onClick={onClick}
                 >
                   <svg
                     width='30'
@@ -282,6 +295,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       <Link
                         to={`/catalog?room=living&type=${link}`}
                         className='sub-list__link'
+                        onClick={onClick}
                       >
                         {text}
                       </Link>
@@ -294,6 +308,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                 <Link
                   to='/catalog?room=hall'
                   className='categories__item-a'
+                  onClick={onClick}
                 >
                   <svg
                     width='22'
@@ -328,6 +343,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       <Link
                         to={`/catalog?room=hall&type=${link}`}
                         className='sub-list__link'
+                        onClick={onClick}
                       >
                         {text}
                       </Link>
@@ -340,6 +356,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                 <Link
                   to='/catalog?room=office'
                   className='categories__item-a'
+                  onClick={onClick}
                 >
                   <svg
                     width='23'
@@ -373,6 +390,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       <Link
                         to={`/catalog?room=office&type=${link}`}
                         className='sub-list__link'
+                        onClick={onClick}
                       >
                         {text}
                       </Link>
@@ -385,6 +403,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                 <Link
                   className='categories__item-a'
                   to='/catalog?room=children'
+                  onClick={onClick}
                 >
                   <svg
                     width='23'
@@ -430,6 +449,7 @@ export const Header: React.FC<IHeaderProps> = ({ isMobMenuOpen, setMobMenuOpen }
                       <Link
                         to={`/catalog?room=children&type=${link}`}
                         className='sub-list__link'
+                        onClick={onClick}
                       >
                         {text}
                       </Link>

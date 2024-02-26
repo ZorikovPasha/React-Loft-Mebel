@@ -9,11 +9,12 @@ export const Actions = {
   EDIT_USER_DATA: 'EDIT_USER_DATA',
   SET_PATHNAME: 'SET_PATHNAME',
   EDIT_ORDER: 'EDIT_ORDER',
-  SEARCH: 'SEARCH'
+  SEARCH: 'SEARCH',
+  FORCE_RERENDER: 'FORCE_RERENDER'
 } as const
 
 export type fetchItemsActionType = {
-  type: typeof Actions.SET_PRODUCTS
+  type: typeof Actions.SET_PRODUCTS | typeof Actions.FORCE_RERENDER
   payload: {
     items: IFurniture[]
     isLoaded: boolean
