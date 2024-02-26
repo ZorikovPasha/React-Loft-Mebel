@@ -45,6 +45,7 @@ import { YandexAuthGuard } from './yandex-auth.guard'
 import { Response, Request } from 'express'
 import { JwtAuthGuard } from './jwt-auth.guard'
 import { IUserPayload } from './jwt.strategy'
+import { IAccessTokenRegenRes, ILoginRes, ILogoutRes, IRegisterRes } from './types'
 
 interface IRequestWithUser extends Request {
   user: {
@@ -107,7 +108,7 @@ export class AuthController {
   @ApiInternalServerErrorResponse(apiResponse500)
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserDto): Promise<IRegisterRes> {
     const { userName, email, password } = createUserDto
 
     const candidate = await this.prisma.user.findFirst({
@@ -135,7 +136,7 @@ export class AuthController {
   @ApiOkResponse(apiResponse200)
   @ApiResponse(apiResponse500)
   @Post('login')
-  async login(@User() user: IUser, @Res({ passthrough: true }) res: Response) {
+  async login(@User() user: IUser, @Res({ passthrough: true }) res: Response): Promise<ILoginRes> {
     const { accessToken, refreshToken, userData } = await this.authService.login(user)
     await this.prisma.user.update({
       where: {
@@ -201,8 +202,7 @@ export class AuthController {
   @ApiOkResponse(apiResponse200)
   @ApiResponse(apiResponse500)
   @Get('refresh')
-  async refreshAccessToken(@Req() request: Request) {
-    console.log('request.cookies.jwt', request.cookies.jwt)
+  async refreshAccessToken(@Req() request: Request): Promise<IAccessTokenRegenRes> {
     if (!request.cookies.jwt) {
       throw new UnauthorizedException()
     }
@@ -220,14 +220,12 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  // @UseGuards(LocalAuthGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Log user out' })
-  // @ApiUnauthorizedResponse(apiResponse401)
   @ApiOkResponse(apiResponse200)
   @ApiResponse(apiResponse500)
   @Get('logout')
-  async logout(@User() user: IUserPayload, @Res({ passthrough: true }) res: Response) {
+  async logout(@User() user: IUserPayload, @Res({ passthrough: true }) res: Response): Promise<ILogoutRes> {
     await this.prisma.user.update({
       where: {
         id: user.sub

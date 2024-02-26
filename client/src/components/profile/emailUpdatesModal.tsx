@@ -26,7 +26,7 @@ export const EmailsUpdatesModal: React.FC<{ onModalClose: () => void }> = ({ onM
 
     try {
       const dto = await UserApiClient.updateUserData(formData)
-      if (!isSuccessfullResponse(dto)) {
+      if (typeof dto !== 'undefined' && !isSuccessfullResponse(dto)) {
         return dispatch(toggleSnackbarOpen())
       }
 

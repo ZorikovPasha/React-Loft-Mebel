@@ -11,10 +11,11 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { getProducts, getProductsBool, getUserData } from '../redux/getters'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { PublicApiClient } from '../api'
-import { IFurniture, IFurnitureResponse } from '../api/types'
+import { IFurniture, isDataOfFurniture } from '../api/types'
 import { Button } from '../components/common/Button'
 import { capitalizeFirstLetter, getQueryParams, sanitizeFurnitureItem } from '../utils'
 import { setItemsActionCreator } from '../redux/actions/items'
+import { IGetFurnitureSuccessRes } from '../../../server/src/furniture/types'
 
 export interface ISelectOption {
   label: string
@@ -231,6 +232,10 @@ const Catalog = () => {
     setLoading(true)
     PublicApiClient.getFurniture(query, controller.signal)
       .then((data) => {
+        if (!isDataOfFurniture(data)) {
+          return setLoading(false)
+        }
+
         const { allFurniture, filteredFurniture, allTypes, allBrands, allColors, allMaterials, allRoomsOptions } =
           processResponse(data)
 
@@ -321,7 +326,7 @@ const Catalog = () => {
     }
   ]
 
-  const processResponse = (data: IFurnitureResponse) => {
+  const processResponse = (data: IGetFurnitureSuccessRes) => {
     const sanitizedAll = data.all.map(sanitizeFurnitureItem)
     const sanitizedFiltered = data.filtered.map(sanitizeFurnitureItem)
 
@@ -381,6 +386,9 @@ const Catalog = () => {
 
     try {
       const data = await PublicApiClient.getFurniture(searchQuery, controller.signal)
+      if (!isDataOfFurniture(data)) {
+        return setLoading(false)
+      }
       const { allFurniture, filteredFurniture, allTypes, allBrands, allColors, allMaterials, allRoomsOptions } =
         processResponse(data)
 

@@ -32,9 +32,9 @@ export interface IOrder {
   id: number
   userId: string
   name: string
-  status: OrderStatusType
-  createdAt: string
-  updatedAt: string
+  status: OrderStatusType | null
+  createdAt: Date
+  updatedAt: Date
   items: {
     id: number
     furnitureId: number

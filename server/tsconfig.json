@@ -24,9 +24,8 @@
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "strict": true
+    "strict": true,
+    "noUncheckedIndexedAccess": true
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules", "./dist/**/*"]
 }

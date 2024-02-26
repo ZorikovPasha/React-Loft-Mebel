@@ -23,7 +23,9 @@
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
-    "allowUnusedLabels": false
+    "allowUnusedLabels": false,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
   },
   "include": ["src", "./src/global-types.d.ts"]
 }

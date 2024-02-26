@@ -12,7 +12,7 @@ import {
   validateTextInput
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
-import { isRegisterUser200, isRes500 } from '../api/types'
+import { isSuccessfullResponse } from '../api/types'
 import { getUserData } from '../redux/getters'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
@@ -159,55 +159,51 @@ const SignUp = () => {
     try {
       const response = await UserApiClient.register(dto)
       setIsLoading(false)
-      if (isRes500(response)) {
-        dispatch(toggleSnackbarOpen())
-        return
-      }
-
-      if (isRegisterUser200(response)) {
+      if (isSuccessfullResponse(response)) {
         document.body.classList.add('lock')
         setModalSignUp(true)
-        return
+      } else {
+        dispatch(toggleSnackbarOpen())
       }
 
-      if (response.statusCode === 400) {
-        if (typeof response.message === 'string') {
-          // User already exists
+      // if (response.statusCode === 400) {
+      //   if (typeof response.message === 'string') {
+      //     // User already exists
 
-          form.email.errorMessage = response.message
-          setForm({ ...form })
-        } else {
-          const errorData: Record<string, string> = {}
-          response.message.forEach((message: string) => {
-            const fieldName = message.split(' ')[0]
-            if (!fieldName) {
-              return
-            }
-            errorData[fieldName] = message
-          })
+      //     form.email.errorMessage = response.message
+      //     setForm({ ...form })
+      //   } else {
+      //     const errorData: Record<string, string> = {}
+      //     response.message.forEach((message: string) => {
+      //       const fieldName = message.split(' ')[0]
+      //       if (!fieldName) {
+      //         return
+      //       }
+      //       errorData[fieldName] = message
+      //     })
 
-          setForm((prev) => {
-            const newFormState: Record<string, IField> = {}
-            Object.entries(prev).forEach(([key, props]) => {
-              const newErrorMessage = errorData[key]
-              if ((key === 'userName' || key === 'email' || key === 'password') && newErrorMessage) {
-                newFormState[key] = {
-                  ...prev[key],
-                  isValid: false,
-                  showErrors: true,
-                  errorMessage: newErrorMessage
-                }
-              } else {
-                newFormState[key] = props
-              }
-            })
+      //     setForm((prev) => {
+      //       const newFormState: Record<string, IField> = {}
+      //       Object.entries(prev).forEach(([key, props]) => {
+      //         const newErrorMessage = errorData[key]
+      //         if ((key === 'userName' || key === 'email' || key === 'password') && newErrorMessage) {
+      //           newFormState[key] = {
+      //             ...prev[key],
+      //             isValid: false,
+      //             showErrors: true,
+      //             errorMessage: newErrorMessage
+      //           }
+      //         } else {
+      //           newFormState[key] = props
+      //         }
+      //       })
 
-            return newFormState
-          })
-        }
+      //       return newFormState
+      //     })
+      //   }
 
-        return
-      }
+      //   return
+      // }
 
       dispatch(toggleSnackbarOpen())
     } catch (error) {
