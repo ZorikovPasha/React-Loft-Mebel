@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common'
 import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
 import crypto from 'node:crypto'
-import { UtilsService } from '../utils/utils.service'
+import slugify from 'slugify'
 
 @Injectable()
 export class ImageService {
-  constructor(private readonly utils: UtilsService) {}
+  constructor() {}
   async prepare(image: Express.Multer.File) {
     const imageDimensions = sizeOf(image.buffer)
 
     const compressedImage = await sharp(image.buffer).toBuffer()
     const imageNameWithoutExtension = image.originalname.split('.').slice(0, -1).join('')
-    const processedImageNameWithoutExtension = this.utils.replaceSpacesWithUnderscores(imageNameWithoutExtension)
+    const processedImageNameWithoutExtension = slugify(imageNameWithoutExtension, { replacement: '_' }) // this.utils.replaceSpacesWithUnderscores()
     const imageExtension = image.originalname.split('.').pop()
 
     const hash = crypto.createHash('md5')
@@ -27,12 +27,11 @@ export class ImageService {
       hash: digest,
       ext: imageExtension ?? '',
       mime: image.mimetype,
-      size: image.size / 1000,
+      size: image.size / 1024,
       url: `/uploads/${processedImageNameWithoutExtension}_${digest}.${imageExtension}`,
       provider: 'database',
       data: compressedImage
     }
-
     return photo
   }
 }
