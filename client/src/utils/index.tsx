@@ -215,3 +215,35 @@ export const logUserOut = (dispatch: Dispatch<unknown>, history?: ReturnType<typ
   dispatch(logoutUserActionCreator())
   history?.push({ pathname: '/' })
 }
+
+export const disableReactDevTools = () => {
+  const hasWindowObject = typeof window !== 'undefined' && window.document
+  if (!hasWindowObject) {
+    return
+  }
+
+  const isObject = (obj: unknown) => {
+    const type = typeof obj
+    return type === 'function' || (type === 'object' && !!obj)
+  }
+
+  // Ensure the React Developer Tools global hook exists
+  if (!isObject(window.__REACT_DEVTOOLS_GLOBAL_HOOK__)) {
+    return
+  }
+
+  if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+    return
+  }
+
+  // Replace all global hook properties with a no-op function or a null value
+  for (const prop in window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+    if (prop === 'renderers') {
+      // prevents console error when dev tools try to iterate of renderers
+      window.__REACT_DEVTOOLS_GLOBAL_HOOK__[prop] = new Map()
+      continue
+    }
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__[prop] =
+      typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__[prop] === 'function' ? Function.prototype : null
+  }
+}

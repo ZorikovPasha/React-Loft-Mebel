@@ -146,9 +146,13 @@ TODO!:
 - [x] should sanitize user after fetching
 - [x] selecting option from header doesnt trigger products refetching
 - [x] when loading /catalog filters aside is not fully covered with loader (can see some labels and button)
-
 - [x] pagination of products
-- [ ] logout logic in separate function and test it
+- [x] remove devtools in prod
+- [x] slugify furniture images' names correctly
+- [x] slugify user's image name correctly
+- [x] swc should check types
+
 - [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 - [ ] after login via yandex login shows in a moment before profile
+- [ ] logout logic in separate function and test it

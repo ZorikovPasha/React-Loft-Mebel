@@ -41,6 +41,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "sharp": "^0.32.6",
+    "slugify": "^1.6.6",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {

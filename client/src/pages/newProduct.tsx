@@ -8,6 +8,7 @@ import { isResponseWithErrors, isSuccessfullResponse } from '../api/types'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { useDispatch } from 'react-redux'
 import { Button } from '../components/common/Button'
+import slugify from 'slugify'
 
 interface ISelectOption {
   label: string
@@ -114,7 +115,7 @@ const NewProduct = (): JSX.Element => {
     type: 'select',
     placeholder: 'Тип Мебели',
     options: [
-      { value: 'coach', label: 'Coaches' },
+      { value: 'coach', label: 'Couches' },
       { value: 'bed', label: 'Beds' },
       { value: 'table', label: 'Tables' },
       { value: 'chair', label: 'Chairs' },
@@ -292,13 +293,21 @@ const NewProduct = (): JSX.Element => {
     }))
   }
 
-  const onFile = (e: React.ChangeEvent): void => {
+  const onFile = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement
+    const fileToAttach = target.files?.[0]
+    if (!fileToAttach) {
+      return dispatch(toggleSnackbarOpen('No files has been attached'))
+    }
 
-    setImage((prev) => ({
-      ...prev,
-      value: target.files?.[0] ?? null
-    }))
+    if (fileToAttach.type === 'image/jpeg' || fileToAttach.type === 'image/png') {
+      setImage((prev) => ({
+        ...prev,
+        value: target.files?.[0] ?? null
+      }))
+    } else {
+      dispatch(toggleSnackbarOpen('You can attach .png or .jpg images only.'))
+    }
   }
 
   const onToggle = (setState: React.Dispatch<React.SetStateAction<IRadioProps>>) => () => {
@@ -423,6 +432,11 @@ const NewProduct = (): JSX.Element => {
     )
     const serializedSale = sale.value ? '1' : '0'
 
+    const copiedFile = new File([image.value], slugify(image.value.name, { replacement: '_' }), {
+      type: image.value.type,
+      lastModified: image.value.lastModified
+    })
+
     const formData = new FormData()
     formData.append('name', name.value)
     formData.append('description', description.value)
@@ -437,7 +451,7 @@ const NewProduct = (): JSX.Element => {
     formData.append('material', material.value)
     formData.append('brand', brand.value)
     formData.append('dimensions', serializeddimensions)
-    formData.append('image', image.value)
+    formData.append('image', copiedFile)
 
     try {
       const response = await PublicApiClient.createFurniture(formData)

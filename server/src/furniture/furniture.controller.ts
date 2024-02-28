@@ -82,8 +82,10 @@ export class FurnitureController {
       }
     }
 
-    const filtered = await this.furnitureService.findMany(criteria)
-    const all = await this.furnitureService.findAll()
+    const [filtered, all] = await Promise.all([
+      this.furnitureService.findMany(criteria),
+      this.furnitureService.findAll()
+    ])
 
     if (sort === 'asc') {
       filtered.sort((a, b) => {

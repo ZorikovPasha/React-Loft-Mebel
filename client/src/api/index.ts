@@ -147,6 +147,9 @@ class UserApi extends Api {
             } else {
               return Promise.reject(error)
             }
+          } else {
+            return Promise.reject(error)
+            // should do logout??
           }
         }
       }

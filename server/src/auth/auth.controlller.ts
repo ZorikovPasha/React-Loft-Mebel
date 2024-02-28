@@ -202,20 +202,27 @@ export class AuthController {
   @ApiOkResponse(apiResponse200)
   @ApiResponse(apiResponse500)
   @Get('refresh')
-  async refreshAccessToken(@Req() request: Request): Promise<IAccessTokenRegenRes> {
-    if (!request.cookies.jwt) {
+  async refreshAccessToken(
+    @Req() request: Request,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<IAccessTokenRegenRes> {
+    const jwtFromCookie = request.cookies.jwt
+    if (!jwtFromCookie) {
       throw new UnauthorizedException()
     }
     const currentUser = await this.prisma.user.findFirst({
       where: {
-        refreshToken: request.cookies.jwt
+        refreshToken: jwtFromCookie
       }
     })
     if (!currentUser) {
       throw new ForbiddenException()
     }
 
-    const { accessToken } = await this.authService.login(currentUser)
+    const { accessToken, refreshToken } = await this.authService.login(currentUser)
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true })
+    res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
+
     return { token: accessToken }
   }
 

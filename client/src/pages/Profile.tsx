@@ -25,6 +25,7 @@ import { EmailsUpdatesModal } from '../components/profile/emailUpdatesModal'
 import { Check } from '../svg/check'
 import { Cross } from '../svg/cross'
 import { Empty } from '../components/common/Empty'
+import slugify from 'slugify'
 
 interface IFile {
   file: File | null
@@ -409,7 +410,12 @@ const Profile = () => {
     formData.append('apartment', apartment.value)
 
     if (profilePicture.file) {
-      formData.append('image', profilePicture.file)
+      const copiedFile = new File([profilePicture.file], slugify(profilePicture.file.name, { replacement: '_' }), {
+        type: profilePicture.file.type,
+        lastModified: profilePicture.file.lastModified
+      })
+
+      formData.append('image', copiedFile)
     }
 
     document.body.classList.add('lock')

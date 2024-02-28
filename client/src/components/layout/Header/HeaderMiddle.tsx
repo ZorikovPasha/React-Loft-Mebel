@@ -57,10 +57,10 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
   return (
     <div className='header__mid'>
       <button
+        ref={menuBtnRef}
         type='button'
         className='header__menu-btn'
         onClick={onMobMenuBtnClick}
-        ref={menuBtnRef}
       >
         <div></div>
         <div></div>
