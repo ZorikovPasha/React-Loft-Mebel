@@ -109,8 +109,6 @@ const Catalog = () => {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    // console.log('React.useEffect')
-
     const furnitureType = getQueryParams('type')
     const furnitureRoom = getQueryParams('room')
     const furnitureMaterial = getQueryParams('material')
