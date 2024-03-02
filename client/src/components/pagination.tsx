@@ -123,10 +123,8 @@ export const Pagination = ({
   }
 
   if (currentPage === 0) {
-    return <></>
+    return null
   }
-
-  console.log('range', range)
 
   return (
     <div className={`pagination ${rootElClass}`}>

@@ -19,6 +19,8 @@ export class CreateUserDto {
   password: string
 }
 
+export type CreateUserDtoType = typeof CreateUserDto
+
 export class LoginUserDto {
   @ApiProperty({ example: 'test45email@gmail.com' })
   @IsString()

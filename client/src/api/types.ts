@@ -114,6 +114,35 @@ export interface IErrorResponse {
   message: string
 }
 
+export interface CreateUserDto {
+  userName: string
+  email: string
+  password: string
+}
+
+export interface AddFavoriteFurnitureDto {
+  id: number
+}
+
+export interface AddCartItemDto {
+  productId: number
+  quintity: number
+  color: string
+}
+
+export interface RemoveCartItemDto {
+  productId: number
+  color: string
+}
+
+export interface EditOrderDto {
+  orderId: number
+}
+
+export interface UserRequestDto {
+  message: string
+}
+
 export const isGetOrdersResponseSuccessfull = (res: IGetOrdersRes): res is IGetOrdersSuccessfullRes => {
   if (typeof res === 'undefined') {
     return false

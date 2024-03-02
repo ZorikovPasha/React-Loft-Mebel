@@ -1,5 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios'
-import { LoginCredsType, isSuccessfullNewAccessTokenResponse } from './types'
+import {
+  AddCartItemDto,
+  AddFavoriteFurnitureDto,
+  CreateUserDto,
+  EditOrderDto,
+  LoginCredsType,
+  RemoveCartItemDto,
+  UserRequestDto,
+  isSuccessfullNewAccessTokenResponse
+} from './types'
 import {
   IAddCartItemRes,
   IAddFavoriteItemRes,
@@ -14,14 +23,6 @@ import {
 } from '../../../server/src/user/types'
 import { ICreateFurniture, IGetFurnitureRes } from '../../../server/src/furniture/types'
 import { IAccessTokenRegenRes, ILoginRes, ILogoutRes, IRegisterRes } from '../../../server/src/auth/types'
-import {
-  CreateUserDto,
-  AddFavoriteFurnitureDto,
-  AddCartItemDto,
-  RemoveCartItemDto,
-  EditOrderDto,
-  UserRequestDto
-} from '../../../server/src/user/dto/create-user.dto'
 
 const apiConfig = {
   returnRejectedPromiseOnError: true,

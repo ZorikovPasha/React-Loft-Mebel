@@ -1,6 +1,6 @@
 name: Building apps
 on: [push, workflow_dispatch]
-jobs: 
+jobs:
   building_front:
     runs-on: ubuntu-latest
     steps:
@@ -9,9 +9,6 @@ jobs:
         with:
           node-version: 16.14.2
       - run: |
-          cd server
-          npm ci --production
-          cd ..
           cd client
           npm ci
           npm run lintstyles
@@ -19,13 +16,6 @@ jobs:
           npm run typecheck
           npm run test
           npm run build
-      - name: 🚀 Deploy to Netlify
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --dir="./client/dist" --prod
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
   building_backend:
     runs-on: ubuntu-latest
     steps:
@@ -35,4 +25,3 @@ jobs:
           serviceId: ${{ secrets.RENDER_SERVICE_ID }}
           apiKey: ${{ secrets.RENDER_API_KEY }}
           deployHookURL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-
