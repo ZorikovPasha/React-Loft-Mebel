@@ -126,8 +126,8 @@ export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
         : '',
       options:
         dimensions?.map((d) => ({
-          value: `${d.width} CM × ${d.length} CM × ${d.height} CM`,
-          label: `${d.width} CM × ${d.length} CM × ${d.height} CM`
+          value: `${d.width} SM × ${d.length} SM × ${d.height} SM`,
+          label: `${d.width} SM × ${d.length} CSM × ${d.height} SM`
         })) ?? []
     }
   })

@@ -151,6 +151,8 @@ TODO!:
 - [x] slugify furniture images' names correctly
 - [x] slugify user's image name correctly
 - [x] swc should check types
+- [x] /product/id buy remove focus
+- [x] /product/id select has см
 
 - [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
