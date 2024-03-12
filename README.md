@@ -153,6 +153,7 @@ TODO!:
 - [x] swc should check types
 - [x] /product/id buy remove focus
 - [x] /product/id select has см
+- [x] /product/id straight go to page shows 404 first and product itself
 
 - [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
