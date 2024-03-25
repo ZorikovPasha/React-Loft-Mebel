@@ -149,20 +149,7 @@ model Review {
   userId      String
   furnitureId Int
   furniture   Furniture @relation(fields: [furnitureId], references: [id])
+  usersFoundThisReviewHelpful String @default("")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now()) @updatedAt
 }
-
-// enum Role {
-//   BASIC
-//   EDITOR
-//   AUTHOR
-//   ADMIN
-// }
-
-// enum OrderStatus {
-//   CREATED
-//   WORKING
-//   COMPLETED
-//   CANCELED
-// }

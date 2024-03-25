@@ -89,18 +89,34 @@ export class FurnitureController {
 
     if (sort === 'asc') {
       filtered.sort((a, b) => {
-        return parseFloat(a.priceNew) - parseFloat(b.priceNew)
+        if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
+          return parseFloat(a.priceNew) - parseFloat(b.priceNew)
+        } else {
+          return 0
+        }
       })
       all.sort((a, b) => {
-        return parseFloat(a.priceNew) - parseFloat(b.priceNew)
+        if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
+          return parseFloat(a.priceNew) - parseFloat(b.priceNew)
+        } else {
+          return 0
+        }
       })
     }
     if (sort === 'desc') {
       filtered.sort((a, b) => {
-        return parseFloat(b.priceNew) - parseFloat(a.priceNew)
+        if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
+          return parseFloat(b.priceNew) - parseFloat(a.priceNew)
+        } else {
+          return 0
+        }
       })
       all.sort((a, b) => {
-        return parseFloat(b.priceNew) - parseFloat(a.priceNew)
+        if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
+          return parseFloat(b.priceNew) - parseFloat(a.priceNew)
+        } else {
+          return 0
+        }
       })
     }
     return { filtered: filtered, all: all }

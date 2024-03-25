@@ -3,8 +3,7 @@ import { Furniture } from '@prisma/client'
 
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
-import { IFurniture } from './dto/create-furniture.dto'
-// import { FurnitureRes } from './dto/create-furniture.dto'
+import { IFurnitureItemRes } from './types'
 
 class CreateFurnitureData {
   name: string
@@ -84,7 +83,7 @@ export class FurnitureService {
     )
   }
 
-  async findMany(criteria: Record<string, unknown>): Promise<IFurniture[]> {
+  async findMany(criteria: Record<string, unknown>): Promise<IFurnitureItemRes[]> {
     // @ts-expect-error this is okay for now
     const furniture = await this.prisma.furniture.findMany(criteria)
     return await Promise.all(
@@ -94,7 +93,7 @@ export class FurnitureService {
     )
   }
 
-  async findAll(): Promise<IFurniture[]> {
+  async findAll(): Promise<IFurnitureItemRes[]> {
     const furniture = await this.prisma.furniture.findMany()
     return await Promise.all(
       furniture.map(async (furnitureItem) => {
@@ -103,7 +102,7 @@ export class FurnitureService {
     )
   }
 
-  async prepareFurniture(furnitureItem: Furniture) {
+  async prepareFurniture(furnitureItem: Furniture): Promise<IFurnitureItemRes> {
     const [image, dimensions, reviews] = await Promise.all([
       this.prisma.image.findFirst({
         where: {
@@ -190,15 +189,17 @@ export class FurnitureService {
                     }
                   : null
               }
-            : {},
+            : null,
           attachedPictures,
+          usersFoundThisHelpful: r.usersFoundThisReviewHelpful.split(';').filter((string) => string.trim() !== '')
+            .length,
           createdAt: r.createdAt,
           updatedAt: r.updatedAt
         }
       })
     )
 
-    const dto = {
+    return {
       id: furnitureItem.id,
       imageId: furnitureItem.imageId,
       name: furnitureItem.name,
@@ -234,11 +235,9 @@ export class FurnitureService {
       dimensions,
       reviews: processedReviews
     }
-
-    return dto
   }
 
-  async findOne(id: number): Promise<IFurniture> {
+  async findOne(id: number): Promise<IFurnitureItemRes> {
     const furnitureItem = await this.prisma.furniture.findFirst({
       where: {
         id: id

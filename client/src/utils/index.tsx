@@ -1,12 +1,11 @@
 import React from 'react'
-import { IFurniture, IImage, IReview } from '../api/types'
 import { UserApiClient } from '../api'
 import { Dispatch } from 'redux'
 import { useHistory } from 'react-router-dom'
 
 import { logoutUserActionCreator } from '../redux/actions/userAction'
 import { IOrder } from '../redux/reducers/userReducer'
-import { IFurnitureItemRes, IReviewRes } from '../../../server/src/furniture/types'
+import { IFurnitureItemRes, IImage, IReviewRes } from '../../../server/src/furniture/types'
 import { ILoginSuccessfullRes } from '../../../server/src/auth/types'
 
 export const validateEmail = (email: string): boolean => {
@@ -141,6 +140,8 @@ export const sanitizeUserRes = (userData: ILoginSuccessfullRes['user']) => {
     wantsToReceiveEmailUpdates: userData.wantsToReceiveEmailUpdates,
     createdAt: userData.createdAt,
     updatedAt: userData.updatedAt,
+    // reviews user found helpfull
+    reviews: userData.reviews,
     favorites: userData.favorites ?? [],
     orders: processedOrders,
     cart: userData.cart ?? []
@@ -163,8 +164,50 @@ export const splitPriceWithSpaces = (total: number) => {
   return totalToRender
 }
 
-export const sanitizeFurnitureItem = (furniture: IFurnitureItemRes): IFurniture => {
-  const sanitizeReviews = (review: IReviewRes): IReview => {
+export interface IProcessedFurniture {
+  id: number
+  imageId: number | null
+  name: string | null
+  type: string | null
+  priceOld: string | null
+  priceNew: string | null
+  colors: string[]
+  rating: string | null
+  sale: boolean
+  room: string | null
+  material: string | null
+  brand: string | null
+  image: IImage | null
+  description: string | null
+  specs: string | null
+  dimensions: {
+    id: number
+    furnitureId: number
+    width: number
+    length: number
+    height: number
+  }[]
+  reviews: IProcessedReview[]
+}
+
+export interface IProcessedReview {
+  id: number | null
+  text: string | null
+  score: number | null
+  furnitureId: number | null
+  user: {
+    userName: string | null
+    image: IImage | null
+    id: string | null
+  } | null
+  attachedPictures: IImage[]
+  usersFoundThisHelpful: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+export const sanitizeFurnitureItem = (furniture: IFurnitureItemRes): IProcessedFurniture => {
+  const sanitizeReviews = (review: IReviewRes): IProcessedReview => {
     const filteredAttachments: IImage[] = []
     review.attachedPictures?.forEach((picture) => {
       if (picture) {
@@ -184,12 +227,13 @@ export const sanitizeFurnitureItem = (furniture: IFurnitureItemRes): IFurniture 
           }
         : null,
       attachedPictures: filteredAttachments,
+      usersFoundThisHelpful: review.usersFoundThisHelpful,
       createdAt: review.createdAt,
       updatedAt: review.updatedAt
     }
   }
   return {
-    id: typeof furniture.id === 'number' ? furniture.id : null,
+    id: furniture.id,
     imageId: typeof furniture.imageId === 'number' ? furniture.imageId : null,
     name: typeof furniture.name === 'string' ? furniture.name : null,
     type: typeof furniture.type === 'string' ? furniture.type : null,

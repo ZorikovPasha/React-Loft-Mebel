@@ -138,14 +138,6 @@ export class AuthController {
   @Post('login')
   async login(@User() user: IUser, @Res({ passthrough: true }) res: Response): Promise<ILoginRes> {
     const { accessToken, refreshToken, userData } = await this.authService.login(user)
-    await this.prisma.user.update({
-      where: {
-        id: user.id
-      },
-      data: {
-        refreshToken: refreshToken
-      }
-    })
 
     res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
     return {
@@ -181,14 +173,6 @@ export class AuthController {
       const thisUser = await this.userService.findByEmail(req.user._json.default_email)
       if (thisUser) {
         const { accessToken, refreshToken } = await this.authService.login(thisUser)
-        await this.prisma.user.update({
-          where: {
-            id: thisUser.id
-          },
-          data: {
-            refreshToken: refreshToken
-          }
-        })
 
         res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
         return res.redirect(`http://localhost:5173/profile?token=${accessToken}`)

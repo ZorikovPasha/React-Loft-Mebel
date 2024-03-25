@@ -1,22 +1,27 @@
 import React from 'react'
-import { IFurniture, IImage, IReview } from '../../api/types'
+import { useSelector, useDispatch } from 'react-redux'
+
 import { Modal } from '../common/Modal'
 import { AttachmentsPopupBody } from './attachmentsModal'
 import { Button } from '../common/Button'
 import { Empty } from '../common/Empty'
+import { IProcessedFurniture, IProcessedReview } from '../../utils'
+import { IImage } from '../../../../server/src/furniture/types'
+import { UserApiClient } from '../../api'
+import { isReviewWasHelpfullSuccess } from '../../api/types'
+import { toggleSnackbarOpen } from '../../redux/actions/errors'
+import { bumpReviewHelpCount, dumpReviewHelpCount } from '../../redux/actions/items'
+import { getUserData } from '../../redux/getters'
 
-type NewReviewsType = Omit<IReview, 'attachedPictures'> & {
+type NewReviewsType = Omit<IProcessedReview, 'attachedPictures'> & {
   attachedPictures: IImage[]
 }
 
-export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
-  const { reviews, specs } = product
+interface IProps {
+  product: IProcessedFurniture
+}
 
-  const attachmentsInModal = React.useRef<IImage[]>([])
-
-  const [showAttachmentsModel, setShowAttachmentsModel] = React.useState(false)
-  const [activeTab, setActiveTab] = React.useState<keyof typeof tabsContents>('features')
-
+export const ProductTabs = ({ product }: IProps) => {
   const tabsContents = {
     features: {
       name: 'Specs'
@@ -25,6 +30,36 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
       name: 'Reviews'
     }
   }
+
+  const specsToRender: string[][] = []
+  product.specs?.split(';').forEach((string) => {
+    if (string.trim().length > 0) {
+      specsToRender.push(string.split(':'))
+    }
+  })
+
+  const attachmentsInModal = React.useRef<IImage[]>([])
+
+  const userState = useSelector(getUserData)
+
+  const [showAttachmentsModel, setShowAttachmentsModel] = React.useState(false)
+  const [activeTab, setActiveTab] = React.useState<keyof typeof tabsContents>('features')
+  const [helpfulReviews, setHelpfulReviews] = React.useState<number[]>([])
+
+  const dispatch = useDispatch()
+
+  React.useEffect(() => {
+    setHelpfulReviews((prev) => {
+      const newState: number[] = []
+      userState.reviews.forEach((r) => {
+        if (!prev.includes(r.id) && r.helpfulForThisUser) {
+          newState.push(r.id)
+        }
+      })
+
+      return [...prev, ...newState]
+    })
+  }, [userState.reviews, userState.reviews.length])
 
   const openAttachmentsModal = (attachedPictures: IImage[]) => () => {
     attachmentsInModal.current = attachedPictures
@@ -38,7 +73,7 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
   }
 
   const reviewsToRender: NewReviewsType[] = []
-  reviews?.forEach((r) => {
+  product.reviews?.forEach((r) => {
     if (!r) {
       return
     }
@@ -55,16 +90,36 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
     reviewsToRender.push(r as NewReviewsType)
   })
 
-  const specsToRender: string[][] = []
-  specs?.split(';').forEach((string) => {
-    if (string.trim().length > 0) {
-      specsToRender.push(string.split(':'))
-    }
-  })
-
   const onAttachmentsodalClose = () => {
     setShowAttachmentsModel(false)
     document.body.classList.remove('locked')
+  }
+
+  const thisReviewIsHelpful = (reviewId: number | null) => async () => {
+    if (reviewId === null) {
+      return
+    }
+
+    try {
+      const res = await UserApiClient.thisReviewWasHelpfull(reviewId)
+      if (isReviewWasHelpfullSuccess(res)) {
+        if (res.wasHelpfull) {
+          setHelpfulReviews((prev) => (prev.includes(reviewId) ? prev : [...prev, reviewId]))
+          dispatch(bumpReviewHelpCount(product.id, reviewId))
+        } else {
+          setHelpfulReviews((prev) => prev.filter((number) => number !== reviewId))
+          dispatch(dumpReviewHelpCount(product.id, reviewId))
+        }
+        ;[]
+      } else if (res?.statusCode === 401) {
+        // means user has not logged in
+        dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
+      } else {
+        dispatch(toggleSnackbarOpen())
+      }
+    } catch (error) {
+      dispatch(toggleSnackbarOpen())
+    }
   }
 
   return (
@@ -116,105 +171,116 @@ export const ProductTabs: React.FC<{ product: IFurniture }> = ({ product }) => {
               {activeTab === 'reviews' && (
                 <div className='product-tabs__content-item product-content'>
                   {reviewsToRender.length === 0 ? <Empty text='No reviews yet' /> : null}
-                  {reviewsToRender.map(({ id, text, score, user, attachedPictures, createdAt }) => (
-                    <div
-                      className='product-tabs__review'
-                      key={id}
-                    >
-                      <div className='flex items-center'>
-                        <img
-                          className='product-tabs__review-avatar'
-                          src={
-                            user && user?.image
-                              ? import.meta.env.VITE_BACKEND + user.image.url
-                              : '/images/user-stub.jpg'
-                          }
-                          alt=''
-                        />
-                        <div className='product-tabs__review-right'>
-                          <p className='product-tabs__review-name'>{user?.userName}</p>
-                          <p className='mt-5'>{new Date(createdAt).toLocaleDateString()}</p>
-                          <div className='flex info__rating-parent mt-5'>
-                            <img
-                              className='info__rating-img'
-                              src='/images/icons/star.svg'
-                              alt=''
-                            />
-                            <img
-                              className='info__rating-img'
-                              src='/images/icons/star.svg'
-                              alt=''
-                            />
-                            <img
-                              className='info__rating-img'
-                              src='/images/icons/star.svg'
-                              alt=''
-                            />
-                            <img
-                              className='info__rating-img'
-                              src='/images/icons/star.svg'
-                              alt=''
-                            />
-                            <img
-                              className='info__rating-img'
-                              src='/images/icons/star.svg'
-                              alt=''
-                            />
+                  {reviewsToRender.map(
+                    ({ id, text, score, user, attachedPictures, createdAt, usersFoundThisHelpful }) => (
+                      <div
+                        className='product-tabs__review'
+                        key={id}
+                      >
+                        <div className='flex items-center'>
+                          <img
+                            className='product-tabs__review-avatar'
+                            src={
+                              user && user?.image
+                                ? import.meta.env.VITE_BACKEND + user.image.url
+                                : '/images/user-stub.jpg'
+                            }
+                            alt=''
+                          />
+                          <div className='product-tabs__review-right'>
+                            <p className='product-tabs__review-name'>{user?.userName}</p>
+                            <p className='mt-5'>{new Date(createdAt).toLocaleDateString()}</p>
+                            <div className='flex info__rating-parent mt-5'>
+                              <img
+                                className='info__rating-img'
+                                src='/images/icons/star.svg'
+                                alt=''
+                              />
+                              <img
+                                className='info__rating-img'
+                                src='/images/icons/star.svg'
+                                alt=''
+                              />
+                              <img
+                                className='info__rating-img'
+                                src='/images/icons/star.svg'
+                                alt=''
+                              />
+                              <img
+                                className='info__rating-img'
+                                src='/images/icons/star.svg'
+                                alt=''
+                              />
+                              <img
+                                className='info__rating-img'
+                                src='/images/icons/star.svg'
+                                alt=''
+                              />
 
-                            <div
-                              style={{ width: score ? (score / 5) * 95 : 0 }}
-                              className='flex info__rating-child'
-                            >
-                              <img
-                                className='info__rating-img'
-                                src='/images/icons/star-black.svg'
-                                alt=''
-                              />
-                              <img
-                                className='info__rating-img'
-                                src='/images/icons/star-black.svg'
-                                alt=''
-                              />
-                              <img
-                                className='info__rating-img'
-                                src='/images/icons/star-black.svg'
-                                alt=''
-                              />
-                              <img
-                                className='info__rating-img'
-                                src='/images/icons/star-black.svg'
-                                alt=''
-                              />
-                              <img
-                                className='info__rating-img'
-                                src='/images/icons/star-black.svg'
-                                alt=''
-                              />
+                              <div
+                                style={{ width: score ? (score / 5) * 95 : 0 }}
+                                className='flex info__rating-child'
+                              >
+                                <img
+                                  className='info__rating-img'
+                                  src='/images/icons/star-black.svg'
+                                  alt=''
+                                />
+                                <img
+                                  className='info__rating-img'
+                                  src='/images/icons/star-black.svg'
+                                  alt=''
+                                />
+                                <img
+                                  className='info__rating-img'
+                                  src='/images/icons/star-black.svg'
+                                  alt=''
+                                />
+                                <img
+                                  className='info__rating-img'
+                                  src='/images/icons/star-black.svg'
+                                  alt=''
+                                />
+                                <img
+                                  className='info__rating-img'
+                                  src='/images/icons/star-black.svg'
+                                  alt=''
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <p className='product-tabs__review-p mt-30'>{text}</p>
+                        {attachedPictures.length ? (
+                          <div className='product-tabs__review-attachments flex mt-20 gap-20'>
+                            {attachedPictures.map((p) => (
+                              <div
+                                key={p.url}
+                                onClick={openAttachmentsModal(attachedPictures)}
+                                className='product-tabs__review-attach-box relative'
+                              >
+                                <img
+                                  src={import.meta.env.VITE_BACKEND + p.url}
+                                  className='product-tabs__review-attach'
+                                  alt=''
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                        <p className='product-tabs__review-label mt-20'>Did this review help you?</p>
+                        <button
+                          type='button'
+                          className={`product-tabs__review-button ${
+                            typeof id === 'number' && helpfulReviews.includes(id) ? 'active' : ''
+                          }`}
+                          onClick={thisReviewIsHelpful(id)}
+                        >
+                          Yes {usersFoundThisHelpful}
+                        </button>
                       </div>
-
-                      <p className='product-tabs__review-p mt-30'>{text}</p>
-                      {attachedPictures.length ? (
-                        <div className='product-tabs__review-attachments flex mt-20 gap-20'>
-                          {attachedPictures.map((p) => (
-                            <div
-                              key={p.url}
-                              onClick={openAttachmentsModal(attachedPictures)}
-                              className='product-tabs__review-attach-box relative'
-                            >
-                              <img
-                                src={import.meta.env.VITE_BACKEND + p.url}
-                                className='product-tabs__review-attach'
-                                alt=''
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      ) : null}
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               )}
             </div>

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { AddToFavorite } from '../common/AddToFavorite'
 import CustomSelect from '../common/CustomSelect'
-import { IFurniture, isSuccessfullResponse } from '../../api/types'
+import { isSuccessfullResponse } from '../../api/types'
 import { addProductToCartActionCreator } from '../../redux/actions/userAction'
 import { UserApiClient } from '../../api'
 import { getUserData } from '../../redux/getters'
@@ -12,10 +12,7 @@ import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from '../common/Button'
 import { Modal } from '../common/Modal'
 import { ModalContent } from './leaveReviewPopup'
-
-interface IProductCardProps {
-  product: IFurniture
-}
+import { IProcessedFurniture } from '../../utils'
 
 const SliderPrevArrow = () => {
   return (
@@ -98,7 +95,11 @@ interface ISelectField {
   options: ColorOptionType[]
 }
 
-export const ProductCard: React.FC<IProductCardProps> = ({ product }) => {
+interface IProps {
+  product: IProcessedFurniture
+}
+
+export const ProductCard = ({ product }: IProps) => {
   const dispatch = useDispatch()
   const { isLoggedIn, ...user } = useSelector(getUserData)
   const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews } = product

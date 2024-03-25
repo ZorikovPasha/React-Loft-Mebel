@@ -4,11 +4,11 @@ interface ISuccessfullResponse {
 
 export type ICreateFurniture = ISuccessfullResponse | Record<string, unknown> | undefined
 
-interface IImage {
+export interface IImage {
   id: number
   name: string
-  alternativeText: string
-  caption: string
+  alternativeText: string | null
+  caption: string | null
   width: number
   height: number
   hash: string
@@ -16,9 +16,9 @@ interface IImage {
   size: number
   url: string
   mime: string
-  provider: string
-  createdAt: string
-  updatedAt: string
+  provider: 'database' | string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface IReviewRes {
@@ -27,11 +27,12 @@ export interface IReviewRes {
   score: number | null
   furnitureId: number | null
   user: {
-    userName: string | undefined
+    userName: string | null
     image: IImage | null
     id: string
   } | null
   attachedPictures: IImage[] | null
+  usersFoundThisHelpful: number
   createdAt: Date
   updatedAt: Date
 }

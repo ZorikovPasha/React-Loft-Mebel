@@ -3,18 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { UserApiClient } from '../../api'
-import { IFurniture, isSuccessfullResponse } from '../../api/types'
+import { isSuccessfullResponse } from '../../api/types'
 import { getUserData } from '../../redux/getters'
 import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from './Button'
+import { IProcessedFurniture } from '../../utils'
 
-interface ISalesItemProps {
-  product: IFurniture
+interface IProps {
+  product: IProcessedFurniture
   isFavorite: boolean
 }
 
-export const Card: React.FC<ISalesItemProps> = React.memo(({ product, isFavorite }) => {
+export const Card = React.memo(({ product, isFavorite }: IProps) => {
   const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors, rating, reviews } = product
 
   const dispatch = useDispatch()

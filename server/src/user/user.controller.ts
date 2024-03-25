@@ -11,7 +11,8 @@ import {
   BadRequestException,
   UseInterceptors,
   UploadedFile,
-  UseGuards
+  UseGuards,
+  Param
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
@@ -40,6 +41,7 @@ import {
   IMakeRequestRes,
   IMakeReviewRes,
   IRemoveCartItemRes,
+  IThisReviewWasHelpfulRes,
   IUpdateUserRes
 } from './types'
 
@@ -53,26 +55,8 @@ export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) 
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly furnitureService: FurnitureService // private readonly prisma: PrismaService
+    private readonly furnitureService: FurnitureService
   ) {}
-
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // async getUserData(@User() user: IUserPayload): Promise<IGetUserRes> {
-  //   const foundUser = await this.prisma.user.findFirst({
-  //     where: {
-  //       id: user.sub
-  //     }
-  //   })
-
-  //   if (!foundUser) {
-  //     return new NotFoundException()
-  //   }
-
-  //   return {
-  //     user: await this.userService.collectUserData(foundUser)
-  //   }
-  // }
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
@@ -105,13 +89,6 @@ export class UserController {
     await this.userService.updateUser(user.sub, dataToUpdate, image)
     return { success: true }
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Get('favorites')
-  // async getFavorites(@User() user: IUserPayload): Promise<IGetFavoritesRes> {
-  //   const favorites = await this.userService.getUserFavorites(user.sub)
-  //   return { items: favorites }
-  // }
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -172,17 +149,6 @@ export class UserController {
     return { success: true }
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('cart')
-  // async getCartItems(@User() user: IUserPayload): Promise<IGetCartResponse> {
-  //   const dto = await this.userService.getCartItems(user.sub)
-  //   if (!dto) {
-  //     return []
-  //   }
-
-  //   return dto
-  // }
-
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('cart')
@@ -240,5 +206,22 @@ export class UserController {
     ])
 
     return { success: true }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('reviews/:id')
+  async updateReview(
+    @Param('id') reviewId: string | undefined,
+    @User() user: IUserPayload
+  ): Promise<IThisReviewWasHelpfulRes> {
+    if (typeof reviewId === 'undefined') {
+      throw new BadRequestException('Review d was not provided')
+    }
+
+    const reviewWasHelpful = await this.userService.updateReview(Number(reviewId), user.sub)
+    if (typeof reviewWasHelpful === 'undefined') {
+      throw new BadRequestException()
+    }
+    return { wasHelpfull: reviewWasHelpful }
   }
 }

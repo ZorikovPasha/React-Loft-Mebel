@@ -130,7 +130,6 @@ const Login = () => {
 
       if (isSuccessfullLoginResponse(response)) {
         setForm(fields.current)
-        // localStorage.setItem('loft_furniture_token', response.token)
         const payload = sanitizeUserRes(response.user)
         UserApiClient.applyNewTokenAndReloadRequestInterceptor(response.token)
         dispatch(loginUserActionCreator(payload))

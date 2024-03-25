@@ -240,7 +240,7 @@ const Cart = () => {
           {discountedProducts.length ? (
             <section className='sales mt-30'>
               <div className='container'>
-                <h6 className='sales__title'>These hot products under sale wont last long without you!</h6>
+                <h6 className='sales__title'>These products under sale wont last long without you!</h6>
                 <div className='sales__items sales__items--cart'>
                   {discountedProducts.map((product) => (
                     <Card

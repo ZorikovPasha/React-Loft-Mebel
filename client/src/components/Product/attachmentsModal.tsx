@@ -1,8 +1,9 @@
 import Slider from 'react-slick'
 import React from 'react'
-import { IImage } from '../../api/types'
+
 import { SliderArrowLeft } from '../../svg/arrow-prev'
 import { SliderArrowNext } from '../../svg/arrow-next'
+import { IImage } from '../../../../server/src/furniture/types'
 
 interface IProps {
   pictures: IImage[]
