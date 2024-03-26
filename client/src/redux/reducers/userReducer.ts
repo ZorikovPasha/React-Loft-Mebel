@@ -62,8 +62,12 @@ export interface IUserState {
   emailConfirmed: boolean
   decidedOnWantsToReceiveEmailUpdates: boolean
   wantsToReceiveEmailUpdates: boolean
-  createdAt?: Date
-  updatedAt?: Date
+  createdAt: Date | null
+  updatedAt: Date | null
+  reviews: {
+    id: number
+    helpfulForThisUser: boolean
+  }[]
   favorites: number[]
   orders: IOrder[]
   cart: ICartItem[]
@@ -84,9 +88,12 @@ export const initialState: IUserState = {
   emailConfirmed: false,
   wantsToReceiveEmailUpdates: false,
   decidedOnWantsToReceiveEmailUpdates: false,
+  reviews: [],
   favorites: [],
   orders: [],
-  cart: []
+  cart: [],
+  createdAt: null,
+  updatedAt: null
 }
 
 export const userReducer = (

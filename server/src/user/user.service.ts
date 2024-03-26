@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt'
 import { User } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
-import { ICollectedUserData, IOrder } from 'src/auth/types'
+import { ICollectedUserData, IOrder, IReviewUserFoundHelpfull } from 'src/auth/types'
 
 interface CreateUserData {
   userName: string
@@ -41,7 +41,7 @@ export class UserService {
     const { userName, email, password, name, surname } = createUserData
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    await this.prisma.user.create({
+    return await this.prisma.user.create({
       data: {
         name: name ?? '',
         surname: surname,
@@ -114,6 +114,18 @@ export class UserService {
       })
     }
 
+    const reviews = await this.prisma.review.findMany()
+
+    const reviewsThisUserFoundHelpful: IReviewUserFoundHelpfull[] = []
+    reviews.forEach((r) => {
+      if (r.usersFoundThisReviewHelpful.includes(user.id)) {
+        reviewsThisUserFoundHelpful.push({
+          id: r.id,
+          helpfulForThisUser: r.usersFoundThisReviewHelpful.includes(user.id)
+        })
+      }
+    })
+
     return {
       id: user.id,
       name: user.name,
@@ -150,6 +162,7 @@ export class UserService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       favorites: favorites.map((f) => f.furnitureId),
+      reviews: reviewsThisUserFoundHelpful,
       orders: ordersData ? ordersData : [],
       cart: cartData
     }
@@ -294,11 +307,6 @@ export class UserService {
         cartId: cart.id
       }
     })
-    // await this.prisma.client.cart.deleteMany({
-    //   where: {
-    //     userId: res.locals.user.id
-    //   }
-    // })
 
     return {
       order: Object.assign(userOrder, { items: productsInOrder })
@@ -427,5 +435,29 @@ export class UserService {
     await this.prisma.image.create({
       data: Object.assign(imageDataToSave, { reviewId: savedReview.id })
     })
+  }
+
+  async updateReview(id: number, userId: string) {
+    const foundReview = await this.prisma.review.findFirst({
+      where: {
+        id
+      }
+    })
+    if (!foundReview) {
+      return
+    }
+
+    await this.prisma.review.update({
+      where: {
+        id: foundReview.id
+      },
+      data: {
+        usersFoundThisReviewHelpful: foundReview.usersFoundThisReviewHelpful.includes(userId)
+          ? foundReview.usersFoundThisReviewHelpful.replace(userId + ';', '')
+          : foundReview.usersFoundThisReviewHelpful + userId + ';'
+      }
+    })
+
+    return !foundReview.usersFoundThisReviewHelpful.includes(userId)
   }
 }

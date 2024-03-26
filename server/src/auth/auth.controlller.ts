@@ -10,7 +10,6 @@ import {
   UseGuards,
   HttpCode,
   Req,
-  InternalServerErrorException,
   ForbiddenException,
   UnauthorizedException
 } from '@nestjs/common'
@@ -138,14 +137,6 @@ export class AuthController {
   @Post('login')
   async login(@User() user: IUser, @Res({ passthrough: true }) res: Response): Promise<ILoginRes> {
     const { accessToken, refreshToken, userData } = await this.authService.login(user)
-    await this.prisma.user.update({
-      where: {
-        id: user.id
-      },
-      data: {
-        refreshToken: refreshToken
-      }
-    })
 
     res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
     return {
@@ -162,40 +153,35 @@ export class AuthController {
   @ApiResponse(apiResponse500)
   @Get('login/yandex')
   async loginViaYandex() {
-    console.log('__this is not gonna be called (loginViaYandex)')
     return {}
   }
 
   @UseGuards(YandexAuthGuard)
   @Get('login/yandex/callback')
   async loginViaYandexCallback(@Req() req: IRequestWithUser, @Res() res: Response) {
-    try {
-      await this.userService.create({
-        userName: req.user.username,
-        email: req.user._json.default_email,
-        password: '',
-        name: req.user.name?.familyName,
-        surname: req.user.name?.givenName
-      })
-    } catch (error) {
-      const thisUser = await this.userService.findByEmail(req.user._json.default_email)
-      if (thisUser) {
-        const { accessToken, refreshToken } = await this.authService.login(thisUser)
-        await this.prisma.user.update({
-          where: {
-            id: thisUser.id
-          },
-          data: {
-            refreshToken: refreshToken
-          }
-        })
+    console.log('req.user', req.user)
 
-        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
-        return res.redirect(`http://localhost:5173/profile?token=${accessToken}`)
-      }
+    const candidate = await this.userService.findByEmail(req.user._json.default_email)
+    console.log('candidate', candidate)
 
-      throw new InternalServerErrorException()
+    if (candidate) {
+      const { accessToken, refreshToken } = await this.authService.login(candidate)
+      res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
+      return res.redirect(`${process.env.FRONT}/login-finish?accessToken=${accessToken}`)
+    } else {
     }
+    const newUser = await this.userService.create({
+      userName: req.user.username,
+      email: req.user._json.default_email,
+      password: '',
+      name: req.user.name?.familyName,
+      surname: req.user.name?.givenName
+    })
+    console.log('newUser', newUser)
+
+    const { accessToken, refreshToken } = await this.authService.login(newUser)
+    res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
+    return res.redirect(`${process.env.FRONT}/login-finish?accessToken=${accessToken}`)
   }
 
   // @UseGuards(JwtAuthGuard)

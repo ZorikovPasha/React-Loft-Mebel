@@ -1,4 +1,4 @@
-import { IFurniture } from '../../api/types'
+import { IProcessedFurniture } from '../../utils'
 
 export const Actions = {
   SET_PRODUCTS: 'SET_PRODUCTS',
@@ -10,13 +10,15 @@ export const Actions = {
   SET_PATHNAME: 'SET_PATHNAME',
   EDIT_ORDER: 'EDIT_ORDER',
   SEARCH: 'SEARCH',
-  FORCE_RERENDER: 'FORCE_RERENDER'
+  FORCE_RERENDER: 'FORCE_RERENDER',
+  BUMP_REVIEW_HELP_COUNT: 'BUMP_REVIEW_HELP_COUNT',
+  DUMP_REVIEW_HELP_COUNT: 'DUMP_REVIEW_HELP_COUNT'
 } as const
 
 export type fetchItemsActionType = {
   type: typeof Actions.SET_PRODUCTS | typeof Actions.FORCE_RERENDER
   payload: {
-    items: IFurniture[]
+    items: IProcessedFurniture[]
     isLoaded: boolean
   }
 }

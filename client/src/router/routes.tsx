@@ -16,6 +16,7 @@ const LazySignup = React.lazy(() => import('../pages/SignUp'))
 const LazyProfile = React.lazy(() => import('../pages/Profile'))
 const LazyProfileSearchReult = React.lazy(() => import('../pages/SearchResult'))
 const LazyNewProduct = React.lazy(() => import('../pages/newProduct'))
+const LoginFinish = React.lazy(() => import('../pages/loginFinish'))
 
 interface IRoute {
   path: string
@@ -87,6 +88,11 @@ export const publicRoutes: IRoute[] = [
   {
     path: ROUTES.SearchResult,
     component: <LazyProfileSearchReult />,
+    exact: true
+  },
+  {
+    path: '/login-finish',
+    component: <LoginFinish />,
     exact: true
   },
   {

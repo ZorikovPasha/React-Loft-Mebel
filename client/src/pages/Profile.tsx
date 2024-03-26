@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import { useDropzone } from 'react-dropzone'
+import slugify from 'slugify'
 
 import { UserApiClient } from '../api'
 import { getProducts, getUserData } from '../redux/getters'
@@ -15,7 +16,7 @@ import {
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { IField } from './SignUp'
-import { IImage, isSuccessfullResponse } from '../api/types'
+import { isSuccessfullResponse } from '../api/types'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
@@ -25,7 +26,7 @@ import { EmailsUpdatesModal } from '../components/profile/emailUpdatesModal'
 import { Check } from '../svg/check'
 import { Cross } from '../svg/cross'
 import { Empty } from '../components/common/Empty'
-import slugify from 'slugify'
+import { IImage } from '../../../server/src/furniture/types'
 
 interface IFile {
   file: File | null
@@ -585,7 +586,7 @@ const Profile = () => {
   const logUserOut = async () => {
     await UserApiClient.logout()
     dispatch(logoutUserActionCreator())
-    history?.push({ pathname: '/' })
+    history.push({ pathname: '/' })
   }
 
   if (!user.isLoggedIn) {

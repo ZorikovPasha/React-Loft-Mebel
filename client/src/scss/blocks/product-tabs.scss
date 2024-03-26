@@ -121,6 +121,37 @@
     margin-left: 20px;
   }
 
+  &__review-label {
+    font-size: 14px;
+    line-height: 16px;
+    padding-top: 10px;
+    border-top: 1px solid hsl(0deg, 0%, 80%);
+  }
+
+  &__review-button {
+    font-size: 14px;
+    line-height: 16px;
+    margin-top: 5px;
+    padding: 4px 10px;
+    border: 1px solid transparent;
+    border-radius: 30px;
+
+    &:hover {
+      border: 1px solid #209cee;
+    }
+
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
+
+    &.active {
+      border: 1px solid #209cee;
+      background-color: #209cee;
+      color: white;
+    }
+  }
+
   &__slider {
     .slick-list,
     .slick-track,

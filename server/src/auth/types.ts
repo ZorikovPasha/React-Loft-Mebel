@@ -18,6 +18,11 @@ export interface IOrder {
   updatedAt: Date
 }
 
+export interface IReviewUserFoundHelpfull {
+  id: number
+  helpfulForThisUser: boolean
+}
+
 export interface ICollectedUserData {
   id: string
   name: string
@@ -49,8 +54,7 @@ export interface ICollectedUserData {
   emailConfirmed: boolean
   decidedOnWantsToReceiveEmailUpdates: boolean
   wantsToReceiveEmailUpdates: boolean
-  createdAt: Date
-  updatedAt: Date
+  reviews: IReviewUserFoundHelpfull[]
   favorites: number[]
   orders: IOrder[]
   cart: {
@@ -60,6 +64,8 @@ export interface ICollectedUserData {
     quintity: number
     color: string
   }[]
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type ILogoutRes = ISuccessfullResponse | Record<string, unknown> | undefined

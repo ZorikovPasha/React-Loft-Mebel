@@ -1,3 +1,5 @@
+import { ICollectedUserData } from '../auth/types'
+
 export interface ISuccessfullResponse {
   success: true
 }
@@ -59,3 +61,27 @@ export type ICancelOrderRes = ISuccessfullResponse | Record<string, unknown> | u
 export type IMakeRequestRes = ISuccessfullResponse | Record<string, unknown> | undefined
 
 export type IMakeReviewRes = ISuccessfullResponse | Record<string, unknown> | undefined
+
+export interface IThisReviewWasHelpfulSuccessRes {
+  wasHelpfull: boolean
+}
+
+export type IThisReviewWasHelpfulRes =
+  | IThisReviewWasHelpfulSuccessRes
+  | {
+      statusCode: number
+      message: string
+    }
+  | undefined
+
+export interface IGetUSerDataSuccessRes {
+  user: ICollectedUserData
+}
+
+export type IGetUSerDataRes =
+  | IGetUSerDataSuccessRes
+  | {
+      statusCode: number
+      message: string
+    }
+  | undefined

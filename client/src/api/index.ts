@@ -16,9 +16,11 @@ import {
   ICancelOrderRes,
   IDeleteFavouriteItemRes,
   IGetOrdersRes,
+  IGetUSerDataRes,
   IMakeRequestRes,
   IMakeReviewRes,
   IRemoveCartItemRes,
+  IThisReviewWasHelpfulRes,
   IUpdateUserRes
 } from '../../../server/src/user/types'
 import { ICreateFurniture, IGetFurnitureRes } from '../../../server/src/furniture/types'
@@ -81,7 +83,7 @@ class Api extends Axios {
         return error?.response?.data
       })
   }
-  put = <T, B>(url: string, data: B, config?: AxiosRequestConfig): Promise<T> => {
+  put = <T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<T> => {
     return this._axios
       .put(url, data, config)
       .then(this.success)
@@ -132,7 +134,6 @@ class UserApi extends Api {
       async (error: AxiosError<Error>) => {
         const status = error?.response?.status
         const prevRequest = error.config
-        console.log('prevRequest', prevRequest)
         if (status === 401 && !prevRequest.url?.includes('auth/refresh')) {
           const response = await this.getNewAccessToken()
           if (prevRequest.headers && response && isSuccessfullNewAccessTokenResponse(response)) {
@@ -174,6 +175,10 @@ class UserApi extends Api {
 
   login = (credentials: LoginCredsType): Promise<ILoginRes> => {
     return this.post('/auth/login', credentials)
+  }
+
+  getUserData = () => {
+    return this.get<IGetUSerDataRes>('/user')
   }
 
   getNewAccessToken = () => {
@@ -223,6 +228,10 @@ class UserApi extends Api {
 
   sendReview = (formData: FormData): Promise<IMakeReviewRes> => {
     return this.post('/user/reviews', formData)
+  }
+
+  thisReviewWasHelpfull = (reviewId: number) => {
+    return this.put<IThisReviewWasHelpfulRes, void>('/user/reviews/' + reviewId)
   }
 }
 

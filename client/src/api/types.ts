@@ -5,7 +5,11 @@ import {
   IAddOrderSuccessRes,
   IGetOrdersRes,
   IGetOrdersSuccessfullRes,
-  ISuccessfullResponse
+  IGetUSerDataRes,
+  IGetUSerDataSuccessRes,
+  ISuccessfullResponse,
+  IThisReviewWasHelpfulRes,
+  IThisReviewWasHelpfulSuccessRes
 } from '../../../server/src/user/types'
 
 export type LoginCredsType = {
@@ -41,64 +45,6 @@ export interface I401Response {
 
 export interface ISuccessfullAccessTokenRegenResponse {
   token: string
-}
-
-export interface IImage {
-  id: number
-  name: string
-  alternativeText: string
-  caption: string
-  width: number
-  height: number
-  hash: string
-  ext: string
-  size: number
-  url: string
-  mime: string
-  provider: string
-  createdAt: string
-  updatedAt: string
-}
-
-export interface IReview {
-  id: number | null
-  text: string | null
-  score: number | null
-  furnitureId: number | null
-  user: {
-    userName: string | null
-    image: IImage | null
-    id: string | null
-  } | null
-  attachedPictures: IImage[]
-  createdAt: Date
-  updatedAt: Date
-}
-
-export interface IFurniture {
-  id: number | null
-  imageId: number | null
-  name: string | null
-  type: string | null
-  priceOld: string | null
-  priceNew: string | null
-  colors: string[]
-  rating: string | null
-  sale: boolean
-  room: string | null
-  material: string | null
-  brand: string | null
-  image: IImage | null
-  description: string | null
-  specs: string | null
-  dimensions: {
-    id: number
-    furnitureId: number
-    width: number
-    length: number
-    height: number
-  }[]
-  reviews: IReview[]
 }
 
 export interface IErrorsResponse {
@@ -210,4 +156,21 @@ export const isDataOfFurniture = (data: IGetFurnitureRes): data is IGetFurniture
     return false
   }
   return Array.isArray(data.all) && Array.isArray(data.filtered)
+}
+
+export const isReviewWasHelpfullSuccess = (res: IThisReviewWasHelpfulRes): res is IThisReviewWasHelpfulSuccessRes => {
+  if (typeof res === 'undefined') {
+    return false
+  }
+
+  const property: keyof IThisReviewWasHelpfulSuccessRes = 'wasHelpfull'
+  return property in res
+}
+
+export const isSuccessfullGetUserResponse = (res: IGetUSerDataRes): res is IGetUSerDataSuccessRes => {
+  if (typeof res === 'undefined') {
+    return false
+  }
+  const property: keyof IGetUSerDataSuccessRes = 'user'
+  return property in res
 }

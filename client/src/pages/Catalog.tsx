@@ -11,9 +11,9 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { getProducts, getProductsBool, getUserData } from '../redux/getters'
 import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { PublicApiClient } from '../api'
-import { IFurniture, isDataOfFurniture } from '../api/types'
+import { isDataOfFurniture } from '../api/types'
 import { Button } from '../components/common/Button'
-import { capitalizeFirstLetter, getQueryParams, sanitizeFurnitureItem } from '../utils'
+import { IProcessedFurniture, capitalizeFirstLetter, getQueryParams, sanitizeFurnitureItem } from '../utils'
 import { setItemsActionCreator } from '../redux/actions/items'
 import { IGetFurnitureSuccessRes } from '../../../server/src/furniture/types'
 import { Pagination } from '../components/pagination'
@@ -76,7 +76,7 @@ const Catalog = () => {
   const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false)
-  const [filteredProducts, setFilteredProducts] = React.useState<IFurniture[]>([])
+  const [filteredProducts, setFilteredProducts] = React.useState<IProcessedFurniture[]>([])
   const [isLoading, setLoading] = React.useState(true)
   const [room, setRoom] = React.useState(roomProps)
   const [type, setType] = React.useState(typeProps)

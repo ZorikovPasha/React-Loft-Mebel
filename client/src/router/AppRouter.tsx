@@ -14,12 +14,27 @@ import { getProducts } from '../redux/getters'
 import { Snackbar } from '../components/common/snackBar'
 import { editSearchActionCreator } from '../redux/actions/search'
 import '../scss/style.scss'
+import { UserApiClient } from '../api'
 
 export const AppRouter = () => {
   const [isMobMenuOpen, setMobMenuOpen] = React.useState(false)
 
   const dispatch = useDispatch()
   const products = useSelector(getProducts)
+
+  React.useEffect(() => {
+    window.addEventListener(
+      'beforeunload',
+      () => {
+        UserApiClient.logout()
+      },
+      false
+    )
+
+    return () => {
+      UserApiClient.logout()
+    }
+  }, [])
 
   React.useLayoutEffect(() => {
     dispatch(fetchItemsThunkCreator())

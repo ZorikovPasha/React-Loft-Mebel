@@ -3,10 +3,12 @@ import { UserService } from '../user/user.service'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
+import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly prisma: PrismaService,
     private userService: UserService,
     private jwtService: JwtService
   ) {}
@@ -40,6 +42,15 @@ export class AuthService {
     })
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: '1d'
+    })
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        refreshToken: refreshToken
+      }
     })
 
     return {

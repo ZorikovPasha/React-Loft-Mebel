@@ -6,17 +6,17 @@ import { useBreadcrumbs } from '../hooks/useBreadcrumbs'
 import { Card } from '../components/common/card'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Empty } from '../components/common/Empty'
-import { IFurniture } from '../api/types'
 import { setPathnameActionCreator } from '../redux/actions/pathname'
+import { IProcessedFurniture } from '../utils'
 
-const Favorites: React.FC = () => {
+const Favorites = () => {
   const breadcrumbs = useBreadcrumbs()
   const dispatch = useDispatch()
 
   const items = useSelector(getProducts)
   const { favorites, isLoggedIn } = useSelector(getUserData)
 
-  const favoriteItems: IFurniture[] = []
+  const favoriteItems: IProcessedFurniture[] = []
   favorites.forEach((id) => {
     const item = items.find((item) => item.id === id)
     if (item) {

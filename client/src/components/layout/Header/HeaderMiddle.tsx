@@ -46,7 +46,7 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
   const logUserOut = async () => {
     await UserApiClient.logout()
     dispatch(logoutUserActionCreator())
-    history?.push({ pathname: '/' })
+    history.push({ pathname: '/' })
   }
 
   const onMobMenuBtnClick = () => {
@@ -62,9 +62,9 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
         className='header__menu-btn'
         onClick={onMobMenuBtnClick}
       >
-        <div></div>
-        <div></div>
-        <div></div>
+        <span />
+        <span />
+        <span />
       </button>
       <Link
         to='/'
