@@ -9,7 +9,6 @@ import { Empty } from '../components/common/Empty'
 import { Loader } from '../components/common/Loader'
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { getProducts, getProductsBool, getUserData } from '../redux/getters'
-import { makeQueryParametersFromStringArr } from '../utils/makeQueryParametersFromStringArr'
 import { PublicApiClient } from '../api'
 import { isDataOfFurniture } from '../api/types'
 import { Button } from '../components/common/Button'
@@ -216,8 +215,6 @@ const Catalog = () => {
     //   return
     // }
 
-    // console.log('________________further')
-
     let query = ''
     if (assembleQueries.length) {
       query = '?' + query
@@ -369,7 +366,7 @@ const Catalog = () => {
     }`
     const typeQuery = `${type.value === 'all' || type.value === undefined ? '' : `&type=${type.value}`}`
     const brandsQuery = `${brands.value.length ? '&brand=' + brands.value.join(',') : ''}`
-    const colorsQuery = makeQueryParametersFromStringArr(colors.value, 'color')
+    const colorsQuery = `${colors.value.length ? 'colors=' + colors.value.join(',') : ''}`
     const sortQuery = activeSortOption ? '&sort=' + activeSortOption : ''
 
     let searchQuery = roomQuery + materialQuery + typeQuery + brandsQuery + colorsQuery + sortQuery
