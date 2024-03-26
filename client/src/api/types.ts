@@ -19,32 +19,14 @@ export type LoginCredsType = {
 
 export type OrderStatusType = 'CREATED' | 'WORKING' | 'COMPLETED' | 'CANCELED'
 
-export interface IRegisterUser400 {
-  // <- this coud be actually general 400 for many requests
-  message: string | string[]
-  error: 'Bad Request' // <- can convert this to string too
-  statusCode: 400
-}
-
 export interface I500Response {
   statusCode: 500
   message: 'Internal server error'
 }
 
-// login
-
-export interface ILoginUser400 {
+interface ILoginUser400 {
   statusCode: 400
   message: string
-}
-
-export interface I401Response {
-  message: 'Unauthorized'
-  statusCode: 401
-}
-
-export interface ISuccessfullAccessTokenRegenResponse {
-  token: string
 }
 
 export interface IErrorsResponse {

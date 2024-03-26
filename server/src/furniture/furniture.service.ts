@@ -268,7 +268,7 @@ export class FurnitureService {
           id: furnitureId
         },
         data: {
-          rating: String(normalizedScore)
+          rating: normalizedScore.toFixed(1)
         }
       })
     }
