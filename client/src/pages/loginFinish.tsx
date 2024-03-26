@@ -22,9 +22,6 @@ const LoginFinish: React.FC = () => {
     UserApiClient.applyNewTokenAndReloadRequestInterceptor(accessToken)
     UserApiClient.getUserData()
       .then((res) => {
-        console.log('res', res)
-        console.log('isSuccessfullLoginResponse(res)', isSuccessfullGetUserResponse(res))
-
         if (isSuccessfullGetUserResponse(res)) {
           const payload = sanitizeUserRes(res.user)
           dispatch(loginUserActionCreator(payload))
@@ -34,9 +31,7 @@ const LoginFinish: React.FC = () => {
           history.push({ pathname: ROUTES.Login })
         }
       })
-      .catch((eror) => {
-        console.log('eror', eror)
-
+      .catch(() => {
         dispatch(toggleSnackbarOpen())
         history.push({ pathname: ROUTES.Login })
       })

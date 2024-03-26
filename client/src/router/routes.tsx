@@ -1,9 +1,9 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 
 import { ROUTES } from '../utils/const'
 import { Main } from '../pages/Main'
 import { Page404 } from '../pages/404'
-import { useDispatch } from 'react-redux'
 import { setPathnameActionCreator } from '../redux/actions/pathname'
 const LazyCart = React.lazy(() => import('../pages/Cart'))
 const LazyCatalog = React.lazy(() => import('../pages/Catalog'))
@@ -91,7 +91,7 @@ export const publicRoutes: IRoute[] = [
     exact: true
   },
   {
-    path: '/login-finish',
+    path: ROUTES.LoginFinish,
     component: <LoginFinish />,
     exact: true
   },

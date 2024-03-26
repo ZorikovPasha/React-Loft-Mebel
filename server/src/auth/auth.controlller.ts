@@ -159,11 +159,7 @@ export class AuthController {
   @UseGuards(YandexAuthGuard)
   @Get('login/yandex/callback')
   async loginViaYandexCallback(@Req() req: IRequestWithUser, @Res() res: Response) {
-    console.log('req.user', req.user)
-
     const candidate = await this.userService.findByEmail(req.user._json.default_email)
-    console.log('candidate', candidate)
-
     if (candidate) {
       const { accessToken, refreshToken } = await this.authService.login(candidate)
       res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
@@ -177,8 +173,6 @@ export class AuthController {
       name: req.user.name?.familyName,
       surname: req.user.name?.givenName
     })
-    console.log('newUser', newUser)
-
     const { accessToken, refreshToken } = await this.authService.login(newUser)
     res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
     return res.redirect(`${process.env.FRONT}/login-finish?accessToken=${accessToken}`)

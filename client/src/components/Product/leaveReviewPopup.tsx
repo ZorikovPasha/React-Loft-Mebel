@@ -1,5 +1,4 @@
 import { useDropzone } from 'react-dropzone'
-import { isSuccessfullResponse } from '../../api/types'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -10,6 +9,7 @@ import { Loader } from '../common/Loader'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { UserApiClient } from '../../api'
 import { Button } from '../common/Button'
+import { isSuccessfullResponse } from '../../api/types'
 
 interface IFile {
   files: {

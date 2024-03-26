@@ -133,11 +133,7 @@ const Cart = () => {
       }
 
       const ordersResponse = await UserApiClient.getOrders()
-      console.log(1)
-
       if (ordersResponse && isGetOrdersResponseSuccessfull(ordersResponse)) {
-        console.log(2)
-
         const processedOrders: IOrder[] = []
         ordersResponse.orders?.forEach((o) => {
           processedOrders.push({
@@ -158,11 +154,8 @@ const Cart = () => {
           cart: [],
           orders: processedOrders
         }
-        console.log(3)
-
         dispatch(editUserActionCreator(payload))
         history.push(ROUTES.Profile + '?tab=orders')
-        console.log(4)
       }
     } catch (error) {
       setIsLoading(false)

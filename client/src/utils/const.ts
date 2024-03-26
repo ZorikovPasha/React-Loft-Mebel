@@ -10,7 +10,8 @@ export const ROUTES = {
   Profile: '/profile',
   SearchResult: '/search',
   Home: '/',
-  NewProduct: '/products/new'
+  NewProduct: '/products/new',
+  LoginFinish: '/login-finish'
 } as const
 
 export const Const = {

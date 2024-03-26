@@ -15,7 +15,6 @@ import {
 } from '@nestjs/common'
 import { FurnitureService } from './furniture.service'
 import { CreateFurnitureDto, FurnitureRes, apiResponse200 } from './dto/create-furniture.dto'
-// import { PrismaService } from '../prisma/prisma.service'
 import { UtilsService } from '../utils/utils.service'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiExtraModels, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger'
@@ -33,7 +32,6 @@ export interface IFurnitureDimension {
 export class FurnitureController {
   constructor(
     private readonly furnitureService: FurnitureService,
-    // private readonly prisma: PrismaService,
     private readonly utils: UtilsService
   ) {}
 
@@ -184,26 +182,4 @@ export class FurnitureController {
     await this.furnitureService.create(furniture)
     return { success: true }
   }
-
-  // @ApiOkResponse(apiResponse200)
-  // @HttpCode(200)
-  // @Delete(':id')
-  // async remove(@Param('id') id: string) {
-  //   if (!id) {
-  //     throw new BadRequestException()
-  //   }
-
-  //   const processedId = parseInt(id)
-
-  //   if (Number.isNaN(processedId)) {
-  //     throw new BadRequestException('Incorrect id was provided')
-  //   }
-  //   await this.prisma.furniture.delete({
-  //     where: {
-  //       id: processedId
-  //     }
-  //   })
-
-  //   return { success: true }
-  // }
 }
