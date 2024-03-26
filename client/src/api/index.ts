@@ -16,6 +16,7 @@ import {
   ICancelOrderRes,
   IDeleteFavouriteItemRes,
   IGetOrdersRes,
+  IGetUSerDataRes,
   IMakeRequestRes,
   IMakeReviewRes,
   IRemoveCartItemRes,
@@ -174,6 +175,10 @@ class UserApi extends Api {
 
   login = (credentials: LoginCredsType): Promise<ILoginRes> => {
     return this.post('/auth/login', credentials)
+  }
+
+  getUserData = () => {
+    return this.get<IGetUSerDataRes>('/user')
   }
 
   getNewAccessToken = () => {

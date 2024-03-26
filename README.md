@@ -154,10 +154,10 @@ TODO!:
 - [x] /product/id buy remove focus
 - [x] /product/id select has см
 - [x] /product/id straight go to page shows 404 first and product itself
-- [ ] login via yanedx is probably broken on production
+- [x] login via yanedx is probably broken on production
 - [x] add was review helpfull
+- [x] review was added indicator
 
-- [?] loader while fetching user data? (react-query) (nextjs is better)
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
-- [ ] after login via yandex login shows in a moment before profile
+- [?] after login via yandex login shows in a moment before profile
 - [ ] logout logic in separate function and test it

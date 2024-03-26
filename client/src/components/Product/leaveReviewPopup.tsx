@@ -135,6 +135,7 @@ export const ModalContent: React.FC<IModalContentProps> = ({ furnitureId, onModa
         setScore(scoreProps)
         setPictures({ files: [] })
         onModalClose()
+        dispatch(toggleSnackbarOpen('Your review was added!', 'success'))
         return
       } else {
         dispatch(toggleSnackbarOpen())

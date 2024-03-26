@@ -38,6 +38,7 @@ import {
   ICancelOrderRes,
   IDeleteFavouriteItemRes,
   IGetOrdersRes,
+  IGetUSerDataRes,
   IMakeRequestRes,
   IMakeReviewRes,
   IRemoveCartItemRes,
@@ -57,6 +58,17 @@ export class UserController {
     private readonly userService: UserService,
     private readonly furnitureService: FurnitureService
   ) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getUserData(@User() user: IUserPayload): Promise<IGetUSerDataRes> {
+    const candidate = await this.userService.findByEmail(user.email)
+    if (candidate) {
+      return { user: await this.userService.collectUserData(candidate) }
+    } else {
+      throw new BadRequestException('User not found')
+    }
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))

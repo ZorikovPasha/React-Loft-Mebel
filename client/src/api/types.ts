@@ -5,6 +5,8 @@ import {
   IAddOrderSuccessRes,
   IGetOrdersRes,
   IGetOrdersSuccessfullRes,
+  IGetUSerDataRes,
+  IGetUSerDataSuccessRes,
   ISuccessfullResponse,
   IThisReviewWasHelpfulRes,
   IThisReviewWasHelpfulSuccessRes
@@ -162,5 +164,13 @@ export const isReviewWasHelpfullSuccess = (res: IThisReviewWasHelpfulRes): res i
   }
 
   const property: keyof IThisReviewWasHelpfulSuccessRes = 'wasHelpfull'
+  return property in res
+}
+
+export const isSuccessfullGetUserResponse = (res: IGetUSerDataRes): res is IGetUSerDataSuccessRes => {
+  if (typeof res === 'undefined') {
+    return false
+  }
+  const property: keyof IGetUSerDataSuccessRes = 'user'
   return property in res
 }
