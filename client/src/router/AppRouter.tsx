@@ -23,17 +23,9 @@ export const AppRouter = () => {
   const products = useSelector(getProducts)
 
   React.useEffect(() => {
-    window.addEventListener(
-      'beforeunload',
-      () => {
-        UserApiClient.logout()
-      },
-      false
-    )
-
-    return () => {
+    window.addEventListener('beforeunload', async () => {
       UserApiClient.logout()
-    }
+    })
   }, [])
 
   React.useLayoutEffect(() => {

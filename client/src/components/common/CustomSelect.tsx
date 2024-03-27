@@ -23,11 +23,12 @@ interface ICustomSelect {
 }
 
 export const CustomSelect: React.FC<ICustomSelect> = ({ options, value, showErrors, onChange }) => {
-  const defaultValue = (options: IOption[], value: string | undefined): IOption | undefined => {
+  const defaultValue = (options: IOption[], value: string | undefined) => {
     if (options) {
       return options.find((option) => option?.value === value)
     }
   }
+
   return (
     <Select
       className={showErrors ? 'error' : ''}
