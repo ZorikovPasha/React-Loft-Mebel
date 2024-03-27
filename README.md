@@ -157,6 +157,7 @@ TODO!:
 - [x] login via yanedx is probably broken on production
 - [x] add was review helpfull
 - [x] review was added indicator
+- [ ] should load cards by portions
 
 - [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
 - [?] after login via yandex login shows in a moment before profile
