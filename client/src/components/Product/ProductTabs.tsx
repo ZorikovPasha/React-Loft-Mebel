@@ -169,7 +169,23 @@ export const ProductTabs = ({ product }: IProps) => {
                 </div>
               )}
               {activeTab === 'reviews' && (
-                <div className='product-tabs__content-item product-content'>
+                <div className='product-tabs__content-item'>
+                  <div className='product-tabs__photos flex'>
+                    {reviewsToRender.map(({ attachedPictures }) => {
+                      return attachedPictures.map(({ url }) => (
+                        <div
+                          className='product-tabs__photo'
+                          key={url}
+                        >
+                          <img
+                            src={import.meta.env.VITE_BACKEND + url}
+                            alt=''
+                          />
+                        </div>
+                      ))
+                    })}
+                  </div>
+
                   {reviewsToRender.length === 0 ? <Empty text='No reviews yet' /> : null}
                   {reviewsToRender.map(
                     ({ id, text, score, user, attachedPictures, createdAt, usersFoundThisHelpful }) => (

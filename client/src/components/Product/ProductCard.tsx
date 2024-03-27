@@ -89,27 +89,24 @@ type ColorOptionType = {
   label: string
 }
 
-interface ISelectField {
-  value: string
-  label: string
-  options: ColorOptionType[]
-}
-
 interface IProps {
   product: IProcessedFurniture
 }
 
+const formatDimension = (width: number, length: number, height: number) => {
+  return `${width} SM × ${length} SM × ${height} SM`
+}
+
 export const ProductCard = ({ product }: IProps) => {
   const dispatch = useDispatch()
-  const { isLoggedIn, ...user } = useSelector(getUserData)
+  const user = useSelector(getUserData)
   const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews } = product
 
-  const didCurrentUserReviewedThisFurniture =
-    Boolean(reviews?.find((r) => (r.user ? r.user.id === user.id : false))) ?? false
+  const didCurrentUserReviewedThisFurniture = Boolean(reviews?.find((r) => (r.user ? r.user.id === user.id : false)))
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
-  const fields = React.useRef<Record<'quintity' | 'dimensions', ISelectField>>({
+  const fields = {
     quintity: {
       label: 'Quintity',
       value: '1',
@@ -122,16 +119,14 @@ export const ProductCard = ({ product }: IProps) => {
     },
     dimensions: {
       label: 'Dimensions (W × L × H)',
-      value: dimensions
-        ? `${dimensions[0]?.width ?? 0} × ${dimensions[0]?.length ?? 0} × ${dimensions[0]?.height ?? 0}`
-        : '',
+      value: dimensions[0] ? formatDimension(dimensions[0].width, dimensions[0].length, dimensions[0].height) : '',
       options:
         dimensions?.map((d) => ({
-          value: `${d.width} SM × ${d.length} SM × ${d.height} SM`,
-          label: `${d.width} SM × ${d.length} CSM × ${d.height} SM`
+          value: formatDimension(d.width, d.length, d.height),
+          label: formatDimension(d.width, d.length, d.height)
         })) ?? []
     }
-  })
+  }
 
   const colorProps = {
     label: 'Color',
@@ -141,7 +136,7 @@ export const ProductCard = ({ product }: IProps) => {
 
   const [nav1, setNav1] = React.useState<Slider>()
   const [nav2, setNav2] = React.useState<Slider>()
-  const [form, setForm] = React.useState(fields.current)
+  const [form, setForm] = React.useState(fields)
   const [colorsState, setColorsState] = React.useState(colorProps)
   const [reviewModelShown, setReviewModelShown] = React.useState(false)
 
@@ -170,7 +165,7 @@ export const ProductCard = ({ product }: IProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!isLoggedIn) {
+    if (!user.isLoggedIn) {
       return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
     }
 
@@ -392,7 +387,7 @@ export const ProductCard = ({ product }: IProps) => {
             </form>
             <p className='info__text mt-20'>{description}</p>
 
-            {isLoggedIn && !didCurrentUserReviewedThisFurniture && (
+            {user.isLoggedIn && !didCurrentUserReviewedThisFurniture && (
               <Button
                 className='shop__btn--plain btn-hollow mt-20'
                 title='Leave review'
