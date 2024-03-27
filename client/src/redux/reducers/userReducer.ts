@@ -115,15 +115,15 @@ export const userReducer = (
     }
 
     case Actions.EDIT_USER_DATA: {
-      let newFavorites: number[] = []
+      let newFavorites: number[] = [...state.favorites]
 
-      action.payload.favorites?.forEach((next) => {
-        if (state.favorites.includes(next)) {
-          newFavorites = state.favorites.filter((f) => f !== next)
+      action.payload.favorites?.forEach((id) => {
+        if (state.favorites.includes(id)) {
+          newFavorites = state.favorites.filter((f) => f !== id).concat(newFavorites)
         } else {
-          newFavorites.push(next)
+          newFavorites.push(id)
         }
-      }) ?? []
+      })
 
       return {
         ...state,
@@ -134,7 +134,6 @@ export const userReducer = (
 
     case Actions.LOGOUT:
       return initialState
-
     case Actions.ADD_CART_ITEM: {
       const payload = action.payload as ICartItem
       const candidate = state.cart.find((item) => {
