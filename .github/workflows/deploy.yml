@@ -9,13 +9,12 @@ jobs:
         with:
           node-version: 16.14.2
       - run: |
-          cd client
+          cd frontend
           npm ci
-          npm run lintstyles
+          npm run stylelint
           npm run lint
           npm run typecheck
           npm run test
-          npm run build
   building_backend:
     runs-on: ubuntu-latest
     steps:

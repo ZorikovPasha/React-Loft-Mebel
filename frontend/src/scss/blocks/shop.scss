@@ -1,0 +1,76 @@
+.shop {
+  &__price {
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 33px;
+    margin-right: 30px;
+    white-space: nowrap;
+
+    @media (width <=510px) {
+      font-size: 16px;
+      line-height: 19px;
+    }
+  }
+
+  &__btn {
+    font-size: 14px;
+    line-height: 18px;
+    color: #fff;
+    padding: 12px 50px;
+    background: #245462;
+    margin-right: 20px;
+    transition: all 0.2s;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      opacity: 0.6;
+    }
+
+    &--plain {
+      position: relative;
+      padding: 12px 50px;
+      padding: 12px 40px 12px 50px;
+      font-size: 14px;
+      line-height: 18px;
+
+      &:hover {
+        path {
+          fill: white;
+        }
+      }
+
+      &:active {
+        animation: button-click;
+        animation-duration: 0.6s;
+      }
+
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translate(0, -50%);
+      }
+
+      path {
+        transition: all 0.2s;
+      }
+    }
+  }
+
+  &__wish {
+    margin-left: 15px;
+
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
+
+    @media (width <=510px) {
+      font-size: 0;
+    }
+  }
+}
