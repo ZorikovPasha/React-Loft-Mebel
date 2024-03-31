@@ -1,0 +1,29 @@
+.catalog {
+  &__body {
+    flex-grow: 1;
+  }
+
+  &__controls {
+    justify-content: flex-end;
+
+    @media (width <=992px) {
+      justify-content: space-between;
+    }
+  }
+
+  &__items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    margin-top: 40px;
+
+    @media #{$mobile} {
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: 30px;
+    }
+
+    @media (width <=420px) {
+      grid-template-columns: 1fr;
+    }
+  }  
+}

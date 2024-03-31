@@ -1,0 +1,186 @@
+import React from 'react'
+import { useRouter } from 'next/router'
+import { useDispatch, useSelector } from 'react-redux'
+import Link from 'next/link'
+
+import { Search } from './Search'
+import { HeaderWishListIcon } from './HeaderWishListIcon'
+import { HeaderBagIcon } from './HeaderBagIcon'
+import { Const, ROUTES, SCREEN_SIZES } from '../../../utils/const'
+import { IHeaderProps } from './Header'
+import { getUserData } from '../../../redux/getters'
+import { useScreenSize } from '../../../hooks/useScreenSize'
+import { Button } from '../../common/Button'
+import { UserApiClient } from '../../../api'
+import { logoutUserActionCreator } from '../../../redux/actions/userAction'
+
+type ItemType = {
+  name: string
+  link: string
+}
+
+interface IHeaderMiddleProps extends IHeaderProps {
+  items: ItemType[]
+}
+
+export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setMobMenuOpen, search, setSearch }) => {
+  const { isLoggedIn, image } = useSelector(getUserData)
+  const menuBtnRef = React.useRef(null)
+
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
+
+  React.useEffect(() => {
+    document.body.onclick = function (e: MouseEvent): void {
+      if (isMobMenuOpen && !e.path?.includes(menuBtnRef.current)) {
+        setMobMenuOpen(false)
+        document.body.classList.remove('lock')
+      }
+    }
+  }, [])
+
+  const isLoginOrProfilePage = router.pathname === ROUTES.Login || router.pathname === ROUTES.Profile
+
+  const logUserOut = async () => {
+    await UserApiClient.logout()
+    dispatch(logoutUserActionCreator())
+    router.push('/')
+  }
+
+  const onMobMenuBtnClick = () => {
+    setMobMenuOpen(true)
+    document.body.classList.add('lock')
+  }
+
+  return (
+    <div className='header__mid'>
+      <button
+        ref={menuBtnRef}
+        type='button'
+        className='header__menu-btn'
+        onClick={onMobMenuBtnClick}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+      <Link href='/'>
+        <a className='header__logo'>
+          <img
+            src={isNotMobile ? '/images/logo.svg' : '/images/icons/footer-logo.svg'}
+            alt='logo'
+          />
+        </a>
+      </Link>
+
+      <Search
+        state={search}
+        setSearch={setSearch}
+      />
+      <div className='header__connect'>
+        <a
+          className='header__phone header__phone--black'
+          href='tel:89648999119'
+        >
+          {Const.phone}
+        </a>
+      </div>
+      <div className='flex justify-between items-center'>
+        {isNotMobile && isLoggedIn && <HeaderWishListIcon />}
+        {isNotMobile && isLoggedIn && <HeaderBagIcon />}
+
+        <div className={`flex items-center justify-center ${isLoggedIn ? 'header__mobile-list-wrap' : ''}`}>
+          <Link
+            href={isLoggedIn ? ROUTES.Profile : ROUTES.Login}
+            title='Profile'
+          >
+            <a className='user-header__link user-header__link--profile'>
+              {isLoggedIn && image ? (
+                <img
+                  className='user-header__picture'
+                  src={image.url}
+                  alt='profile'
+                />
+              ) : (
+                <img
+                  src={isLoginOrProfilePage ? '/images/icons/profile-icon.svg' : '/images/icons/profile.svg'}
+                  alt=''
+                />
+              )}
+            </a>
+          </Link>
+
+          <div className='header__mobile-list'>
+            <ul className='header__mobile-list-inner flex flex-col'>
+              <li className='header__mobile-list-item'>
+                <Link href={ROUTES.Favorites}>
+                  <a className='header__mobile-list-link'>
+                    <img
+                      src='/images/icons/wishlist.svg'
+                      alt='wishlist'
+                    />
+                    Your favorites
+                  </a>
+                </Link>
+              </li>
+              <li className='header__mobile-list-item'>
+                <Link href={ROUTES.Cart}>
+                  <a className='header__mobile-list-link'>
+                    <img
+                      src='/images/icons/bag.svg'
+                      alt='bag'
+                    />
+                    Your cart
+                  </a>
+                </Link>
+              </li>
+
+              <li>
+                <Button
+                  className='profile__logout'
+                  type='button'
+                  title='Log out'
+                  onClick={logUserOut}
+                >
+                  <>
+                    <svg
+                      width='24'
+                      height='24'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        d='M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9'
+                        stroke='#D41367'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                      <path
+                        d='M16 17L21 12L16 7'
+                        stroke='#D41367'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                      <path
+                        d='M21 12H9'
+                        stroke='#D41367'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                    </svg>
+                    Log out
+                  </>
+                </Button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

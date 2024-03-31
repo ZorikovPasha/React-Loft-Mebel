@@ -1,0 +1,33 @@
+.breadcrumbs {
+  padding: 0 0 20px;
+
+  &__list {
+    display: flex;
+  }
+
+  &__item {
+    position: relative;
+    padding-right: 12px;
+    margin-right: 10px;
+    font-size: 12px;
+    line-height: 14px;
+    color: #969696;
+  }
+
+  &__item-back {
+    display: none;
+  }
+
+  &__item:not(:last-child)::after {
+    content: '/';
+    position: absolute;
+    right: 0;
+    font-size: 12px;
+    line-height: 14px;
+    color: #575757;
+  }
+
+  &__link {
+    text-transform: capitalize;
+  }
+}
