@@ -99,14 +99,17 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
     initialMaterialsProps,
     initialRoomProps,
     initialSortOption,
-    initialTypeProps
+    initialTypeProps,
+    resolvedUrlFromBuildTime
   } = pageData
   const router = useRouter()
 
   const scrollToTopTimeout = React.useRef<number | null>(null)
   const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
-  // const initialQuery = React.useRef<string | null>(null)
-  // const refetchesNumber = React.useRef(0)
+  const initialQuery = React.useRef<string | null>(null)
+  const refetchesNumber = React.useRef(0)
+
+  console.log('furniture.filtered', furniture.filtered)
 
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false)
   const [filteredProducts, setFilteredProducts] = React.useState<IProcessedFurniture[]>(furniture.filtered)
@@ -126,23 +129,19 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    console.log('React.useEffect')
-  }, [router.asPath])
-
-  React.useEffect(() => {
-    // console.log('resolvedUrlFromBuildTime', resolvedUrlFromBuildTime)
-    // if (!initialQuery.current) {
-    //   initialQuery.current = resolvedUrlFromBuildTime
-    // }
+    console.log('resolvedUrlFromBuildTime', resolvedUrlFromBuildTime)
+    if (!initialQuery.current) {
+      initialQuery.current = resolvedUrlFromBuildTime
+    }
     // /catalog?x=y...
     // if query is same as from build we do not perform request
-    // if (initialQuery.current === router.asPath && refetchesNumber.current === 0) {
-    //   return
-    // }
+    if (initialQuery.current === router.asPath && refetchesNumber.current === 0) {
+      return
+    }
 
-    // refetchesNumber.current = refetchesNumber.current + 1
+    refetchesNumber.current = refetchesNumber.current + 1
 
-    // console.log('__further')
+    console.log('__further')
 
     const furnitureType = getQueryParams('type')
     const furnitureRoom = getQueryParams('room')
