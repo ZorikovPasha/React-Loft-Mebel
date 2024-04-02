@@ -1,6 +1,7 @@
 import React from 'react'
 import Slider, { Settings } from 'react-slick'
 import { useDispatch, useSelector } from 'react-redux'
+import Link from 'next/link'
 
 import { AddToFavorite } from '../common/AddToFavorite'
 import CustomSelect from '../common/CustomSelect'
@@ -100,22 +101,37 @@ const formatDimension = (width: number, length: number, height: number) => {
 export const ProductCard = ({ product }: IProps) => {
   const dispatch = useDispatch()
   const user = useSelector(getUserData)
-  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews } = product
+  const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews, leftInStock } =
+    product
+
+  const isItemOnSale =
+    typeof priceNew === 'string' && typeof priceOld === 'string' && parseFloat(priceNew) < parseFloat(priceOld)
 
   const didCurrentUserReviewedThisFurniture = Boolean(reviews?.find((r) => (r.user ? r.user.id === user.id : false)))
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
 
+  const collectQuintityOptions = (leftInStock: number | null | undefined) => {
+    if (leftInStock === null || typeof leftInStock === 'undefined') {
+      return []
+    }
+
+    const options: ColorOptionType[] = []
+    for (let i = 1; i <= leftInStock; i++) {
+      options.push({
+        value: String(i),
+        label: String(i)
+      })
+    }
+
+    return options
+  }
+
   const fields = {
     quintity: {
       label: 'Quintity',
       value: '1',
-      options: [
-        { value: '1', label: '1' },
-        { value: '2', label: '2' },
-        { value: '3', label: '3' },
-        { value: '4', label: '4' }
-      ]
+      options: collectQuintityOptions(leftInStock)
     },
     dimensions: {
       label: 'Dimensions (W × L × H)',
@@ -267,7 +283,9 @@ export const ProductCard = ({ product }: IProps) => {
           </div>
           <div className='info'>
             <h1 className='info__title'>{name}</h1>
-            <p className='info__category'>{type}</p>
+            <p className='info__category'>
+              <Link href={`/catalog?type=${type}`}>{type}</Link>
+            </p>
             <div className='flex items-center'>
               {reviews?.length ? (
                 <div className='flex info__rating-parent'>
@@ -343,6 +361,7 @@ export const ProductCard = ({ product }: IProps) => {
             >
               <div className='info__shop shop'>
                 <p className='shop__price'>{priceNew ? priceNew : priceOld}$</p>
+                {isItemOnSale ? <p className='shop__price crossed'>${priceOld}</p> : null}
                 <Button
                   className='shop__btn btn'
                   title='Buy product'
@@ -352,19 +371,31 @@ export const ProductCard = ({ product }: IProps) => {
                 </Button>
                 {typeof id === 'number' ? <AddToFavorite id={id} /> : null}
               </div>
-              <div className='info__features grid'>
-                {Object.entries(form).map(([key, props]) => (
-                  <div key={props.label}>
-                    <p className='features__title'>{props.label}</p>
-                    <CustomSelect
-                      value={props.value}
-                      options={props.options}
-                      onChange={onSelect(key as 'quintity' | 'dimensions')}
-                    />
-                  </div>
-                ))}
+
+              <div className='mt-10'>
+                <p className='features__title'>{form.dimensions.label}</p>
+                <CustomSelect
+                  value={form.dimensions.value}
+                  options={form.dimensions.options}
+                  onChange={onSelect('dimensions')}
+                />
               </div>
-              <div className='colors'>
+
+              <div className='info__features flex items-end mt-10'>
+                <div style={{ minWidth: 90 }}>
+                  <p className='features__title'>{form.quintity.label}</p>
+                  <CustomSelect
+                    value={form.quintity.value}
+                    options={form.quintity.options}
+                    onChange={onSelect('quintity')}
+                  />
+                </div>
+
+                <p className='product__left'>
+                  Left: <b>{leftInStock}</b>
+                </p>
+              </div>
+              <div className='product__colors colors mt-20'>
                 {colorsState.options.map((color) => (
                   <label
                     className='colors__item'

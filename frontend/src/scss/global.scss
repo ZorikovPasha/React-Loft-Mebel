@@ -2,14 +2,6 @@ html {
   box-sizing: border-box;
   scroll-behavior: smooth;
   height: 100%;
-
-  // &.lock {
-  //   overflow: hidden;
-
-  //   @media (hover: hover) {
-  //     margin-right: calc(100vw - 100%);
-  //   }
-  // }
 }
 
 *,
@@ -208,6 +200,10 @@ button {
 
 .items-center {
   align-items: center;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .align-start {

@@ -10,7 +10,6 @@ export const HeaderBagIcon: React.FC = () => {
   const { cart } = useSelector(getUserData)
 
   const router = useRouter()
-  console.log('router', router.pathname)
 
   const isCartPage = router.pathname === ROUTES.Cart
 

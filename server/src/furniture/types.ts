@@ -62,6 +62,7 @@ export interface IFurnitureItemRes {
         height: number
       }[]
     | null
+  leftInStock: number
   reviews: IReviewRes[] | null
 }
 

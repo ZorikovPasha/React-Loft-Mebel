@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 
 import { ProductCard } from '../../components/Product/ProductCard'
 import { Breadcrumbs } from '../../components/common/Breadcrumbs'
@@ -6,7 +7,6 @@ import { ProductTabs } from '../../components/Product/ProductTabs'
 import { getUserData } from '../../redux/getters'
 import { Card } from '../../components/common/card'
 import { ROUTES } from '../../utils/const'
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { IProcessedFurniture, sanitizeFurnitureItem } from '../../utils'
 import { PublicApiClient } from '../../api'
 import { isDataOfFurniture } from '../../api/types'
@@ -104,8 +104,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<IProps> = async ({ params }) => {
   const id = Array.isArray(params) ? params[0].id : params?.id
-
-  console.log('id', id, typeof id)
 
   if (typeof id === 'undefined' || typeof id !== 'string') {
     return {

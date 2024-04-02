@@ -942,7 +942,7 @@ const Profile: NextPage<IProps> = ({ pageData }) => {
                                       </Link>
                                     </div>
                                     <div className='profile__table-cell flex items-center'>
-                                      <p>{typeof price === 'number' ? price * quintity : 'N/A'}</p>
+                                      <p>{typeof price === 'number' ? '$' + price * quintity : 'N/A'}</p>
                                     </div>
                                     <div className='profile__table-cell flex items-center'>
                                       <p>{quintity}</p>

@@ -4,6 +4,7 @@ import { User } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
 import { ICollectedUserData, IOrder, IReviewUserFoundHelpfull } from 'src/auth/types'
+import { IFurnitureItemRes } from 'src/furniture/types'
 
 interface CreateUserData {
   userName: string
@@ -17,6 +18,13 @@ interface ICartItemProps {
   userId: string
   quintity: number
   productId: number
+  color: string
+}
+
+interface IAddCartItemProps {
+  userId: string
+  quintity: number
+  product: IFurnitureItemRes
   color: string
 }
 
@@ -290,14 +298,40 @@ export class UserService {
 
     const productsInOrder = []
     for (const product of currentProductsInCart) {
-      const createdFurniture = await this.prisma.orderedFurniture.create({
-        data: {
-          furnitureId: product.furnitureId,
-          quintity: product.quintity,
-          orderId: userOrder.id,
-          color: product.color
+      const thisProduct = await this.prisma.furniture.findFirst({
+        where: {
+          id: product.furnitureId
         }
       })
+
+      // means no product at the moment -> nothing to order
+      if (!thisProduct || thisProduct.leftInStock === 0) {
+        continue
+      }
+
+      // if leftinstock is less than quintity ordered then we issue them all
+      const productQuintityInOrder =
+        thisProduct.leftInStock > product.quintity ? product.quintity : thisProduct.leftInStock
+
+      const [createdFurniture] = await this.prisma.$transaction([
+        this.prisma.orderedFurniture.create({
+          data: {
+            furnitureId: product.furnitureId,
+            quintity: productQuintityInOrder,
+            orderId: userOrder.id,
+            color: product.color
+          }
+        }),
+        this.prisma.furniture.update({
+          where: {
+            id: thisProduct.id
+          },
+          data: {
+            id: thisProduct.id,
+            leftInStock: thisProduct.leftInStock - productQuintityInOrder
+          }
+        })
+      ])
 
       productsInOrder.push(createdFurniture)
     }
@@ -313,13 +347,41 @@ export class UserService {
     }
   }
 
-  async updateOrder(orderId: number, data: Record<string, unknown>) {
-    await this.prisma.order.update({
-      where: {
-        id: orderId
-      },
-      data: data
-    })
+  async cancelOrder(orderId: number) {
+    const [, furnitureInOrder] = await Promise.all([
+      this.prisma.order.update({
+        where: {
+          id: orderId
+        },
+        data: { status: 'CANCELED' }
+      }),
+      this.prisma.orderedFurniture.findMany({
+        where: {
+          id: orderId
+        }
+      })
+    ])
+    // freeing up reservred furniture
+    for (const fur of furnitureInOrder) {
+      const product = await this.prisma.furniture.findFirst({
+        where: {
+          id: fur.id
+        }
+      })
+
+      if (!product) {
+        continue
+      }
+
+      await this.prisma.furniture.update({
+        where: {
+          id: fur.id
+        },
+        data: {
+          leftInStock: product.leftInStock + fur.quintity
+        }
+      })
+    }
   }
 
   async getCartItems(userId: string) {
@@ -340,8 +402,8 @@ export class UserService {
     })
   }
 
-  async addCartItem(cartItemProps: ICartItemProps) {
-    const { userId, quintity, color, productId } = cartItemProps
+  async addCartItem(cartItemProps: IAddCartItemProps) {
+    const { userId, quintity, color, product } = cartItemProps
     let userCart = await this.prisma.cart.findFirst({
       where: {
         userId: userId
@@ -358,32 +420,44 @@ export class UserService {
 
     const candidate = await this.prisma.cartFurniture.findFirst({
       where: {
-        furnitureId: productId,
+        furnitureId: product.id,
         color,
         cartId: userCart.id
       }
     })
 
     if (candidate) {
-      await this.prisma.cartFurniture.updateMany({
-        where: {
-          furnitureId: productId,
-          color,
-          cartId: userCart.id
-        },
-        data: {
-          quintity: candidate.quintity + quintity
-        }
-      })
+      if (candidate.quintity + quintity < product.leftInStock) {
+        await this.prisma.cartFurniture.updateMany({
+          where: {
+            furnitureId: product.id,
+            color,
+            cartId: userCart.id
+          },
+          data: {
+            quintity: candidate.quintity + quintity
+          }
+        })
+
+        return true
+      } else {
+        return null
+      }
     } else {
-      await this.prisma.cartFurniture.create({
-        data: {
-          furnitureId: productId,
-          quintity: quintity,
-          cartId: userCart.id,
-          color
-        }
-      })
+      if (quintity < product.leftInStock) {
+        await this.prisma.cartFurniture.create({
+          data: {
+            furnitureId: product.id,
+            quintity: quintity,
+            cartId: userCart.id,
+            color
+          }
+        })
+
+        return true
+      } else {
+        return null
+      }
     }
   }
 

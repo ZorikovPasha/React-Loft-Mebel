@@ -175,6 +175,7 @@ export interface IProcessedFurniture {
   image: IImage | null
   description: string | null
   specs: string | null
+  leftInStock: number
   dimensions: {
     id: number
     furnitureId: number
@@ -243,6 +244,7 @@ export const sanitizeFurnitureItem = (furniture: IFurnitureItemRes): IProcessedF
     image: furniture.image,
     description: typeof furniture.description === 'string' ? furniture.description : null,
     specs: typeof furniture.specs === 'string' ? furniture.specs : null,
+    leftInStock: furniture.leftInStock === null ? 0 : furniture.leftInStock,
     dimensions: furniture.dimensions ?? [],
     reviews: furniture.reviews ? furniture.reviews.map(sanitizeReviews) : []
   }

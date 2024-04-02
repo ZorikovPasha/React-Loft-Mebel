@@ -233,6 +233,7 @@ export class FurnitureService {
           }
         : null,
       dimensions,
+      leftInStock: furnitureItem.leftInStock,
       reviews: processedReviews
     }
   }
