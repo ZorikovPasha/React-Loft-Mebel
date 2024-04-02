@@ -157,7 +157,7 @@ export class UserController {
   async cancelOrder(@Body() dto: EditOrderDto): Promise<ICancelOrderRes> {
     const { orderId } = dto
 
-    await this.userService.updateOrder(orderId, { status: 'CANCELED' })
+    await this.userService.cancelOrder(orderId)
     return { success: true }
   }
 
@@ -165,13 +165,24 @@ export class UserController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @Post('cart')
   async addCartItem(@Body() dto: AddCartItemDto, @User() user: IUserPayload): Promise<IAddCartItemRes> {
-    await this.userService.addCartItem({
-      userId: user.sub,
-      quintity: dto.quintity,
-      color: dto.color,
-      productId: dto.productId
-    })
-    return { success: true }
+    // if zero left in stock we throw an error
+    const product = await this.furnitureService.findOne(dto.productId)
+    if (product.leftInStock === 0) {
+      throw new BadRequestException('Product is unavailable')
+    } else {
+      const result = await this.userService.addCartItem({
+        userId: user.sub,
+        quintity: dto.quintity,
+        color: dto.color,
+        product: product
+      })
+
+      if (result) {
+        return { success: true }
+      } else {
+        throw new BadRequestException('Quintity is too big')
+      }
+    }
   }
 
   @UseGuards(JwtAuthGuard)

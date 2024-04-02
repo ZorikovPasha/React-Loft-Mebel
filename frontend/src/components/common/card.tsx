@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
@@ -9,7 +10,6 @@ import { addProductToCartActionCreator, editUserActionCreator } from '../../redu
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from './Button'
 import { IProcessedFurniture, backendImagesLoader } from '../../utils'
-import Image from 'next/image'
 
 interface IProps {
   product: IProcessedFurniture
@@ -107,6 +107,7 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
       }
 
       dispatch(addProductToCartActionCreator(payload))
+      dispatch(toggleSnackbarOpen('Product added to cart!', 'success'))
     } catch (error) {
       dispatch(toggleSnackbarOpen())
     }

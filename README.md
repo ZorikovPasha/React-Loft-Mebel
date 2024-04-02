@@ -157,9 +157,10 @@ TODO!:
 - [x] login via yanedx is probably broken on production
 - [x] add was review helpfull
 - [x] review was added indicator
-- [ ] should load cards by portions
-- [ ] should redirect to profile from login and signup of user is logged in
-
-- [?] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
-- [?] after login via yandex login shows in a moment before profile
-- [ ] logout logic in separate function and test it
+- [x] should load cards by portions
+- [x] on click `add to cart` from card's button shows no success snack
+- [x] submit cart loader is not fixed
+- [x] product card show old price too if any
+- [x] catalog specific product when loading first shows 404 and then the product itself (this is because spa)
+- [x] move to nextjs
+- [ ] after login via yandex login shows in a moment before profile

@@ -99,6 +99,7 @@ model Furniture {
   reviews           Review[]
   description       String
   specs             String
+  leftInStock       Int @default(50)
 }
 
 model Cart {

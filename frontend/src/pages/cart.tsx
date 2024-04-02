@@ -155,12 +155,14 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
           })
         })
 
-        const payload = {
-          cart: [],
-          orders: processedOrders
-        }
-        dispatch(editUserActionCreator(payload))
-        router.push(ROUTES.Profile + '?tab=orders')
+        router.push(ROUTES.Profile + '?tab=orders').then(() => {
+          // removing cart items last gracefully only after profile page is shown
+          const payload = {
+            cart: [],
+            orders: processedOrders
+          }
+          dispatch(editUserActionCreator(payload))
+        })
       }
     } catch (error) {
       setIsLoading(false)
@@ -170,7 +172,7 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
 
   return (
     <>
-      {isLoading && <Loader />}
+      {isLoading && <Loader rootElClass='loader--fixed' />}
       {modalLoginOpened && (
         <Modal
           onModalClose={onLoginModalClose}
@@ -253,9 +255,11 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
           ) : null}
         </>
       ) : (
-        <Empty text='There is nothing in here('>
-          <p className='favorites__empty-p mt-20'>Please login to see your cart</p>
-        </Empty>
+        <div className='container'>
+          <Empty text='There is nothing in here('>
+            <p className='favorites__empty-p mt-20'>Please login to see your cart</p>
+          </Empty>
+        </div>
       )}
     </>
   )

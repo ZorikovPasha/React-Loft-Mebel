@@ -109,8 +109,6 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
   const initialQuery = React.useRef<string | null>(null)
   const refetchesNumber = React.useRef(0)
 
-  console.log('furniture.filtered', furniture.filtered)
-
   const [isAsideVisible, toggleAsideVisibility] = React.useState(false)
   const [filteredProducts, setFilteredProducts] = React.useState<IProcessedFurniture[]>(furniture.filtered)
   const [isLoading, setLoading] = React.useState(false)
@@ -129,7 +127,7 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    console.log('resolvedUrlFromBuildTime', resolvedUrlFromBuildTime)
+    // console.log('resolvedUrlFromBuildTime', resolvedUrlFromBuildTime)
     if (!initialQuery.current) {
       initialQuery.current = resolvedUrlFromBuildTime
     }
@@ -141,7 +139,7 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
 
     refetchesNumber.current = refetchesNumber.current + 1
 
-    console.log('__further')
+    // console.log('__further')
 
     const furnitureType = getQueryParams('type')
     const furnitureRoom = getQueryParams('room')
