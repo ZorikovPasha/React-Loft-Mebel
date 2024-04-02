@@ -164,7 +164,6 @@ export class AuthController {
       const { accessToken, refreshToken } = await this.authService.login(candidate)
       res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 24 * 60 * 60 * 1000 })
       return res.redirect(`${process.env.FRONT}/login-finish?accessToken=${accessToken}`)
-    } else {
     }
     const newUser = await this.userService.create({
       userName: req.user.username,
