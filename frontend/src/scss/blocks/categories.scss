@@ -38,6 +38,11 @@
     background-color: transparent;
     height: 100%;
 
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
+
     @media #{$tablet} {
       padding: 24px 15px;
       flex-direction: column;
