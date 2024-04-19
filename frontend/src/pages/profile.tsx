@@ -33,6 +33,7 @@ import { IImage } from '../../../server/src/furniture/types'
 import { GetStaticProps, NextPage } from 'next'
 import { revalidate } from '../utils/const'
 import Login from './login'
+import Head from 'next/head'
 
 interface IFile {
   file: File | null
@@ -610,6 +611,14 @@ const Profile: NextPage<IProps> = ({ pageData }) => {
 
   return user.isLoggedIn ? (
     <>
+      <Head>
+        <title>Profile</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       {isLoading && <Loader rootElClass='loader--fixed' />}
 
       {modalLoginOpened && <EmailsUpdatesModal onModalClose={onLoginModalClose} />}

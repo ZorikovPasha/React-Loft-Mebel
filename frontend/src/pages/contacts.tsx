@@ -11,6 +11,7 @@ import { isSuccessfullResponse } from '../api/types'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
+import Head from 'next/head'
 
 const ModalContent = () => {
   return (
@@ -135,6 +136,14 @@ const Contacts = () => {
 
   return (
     <>
+      <Head>
+        <title>Contacts us!</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       {isModalOpened && (
         <Modal
           content={<ModalContent />}

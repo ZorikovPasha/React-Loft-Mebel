@@ -19,6 +19,7 @@ import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
+import Head from 'next/head'
 
 export interface IField {
   value: string
@@ -215,6 +216,14 @@ const SignUp = () => {
 
   return (
     <>
+      <Head>
+        <title>Sign up</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       {isLoading && <Loader rootElClass='loader--fixed' />}
 
       <div className='signup'>

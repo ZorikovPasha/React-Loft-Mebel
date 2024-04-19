@@ -9,6 +9,7 @@ import { PublicApiClient } from '../../api'
 import { isResponseWithErrors, isSuccessfullResponse } from '../../api/types'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from '../../components/common/Button'
+import Head from 'next/head'
 
 interface ISelectOption {
   label: string
@@ -522,458 +523,468 @@ const NewProduct = () => {
   }
 
   return (
-    <div className='newproduct'>
-      <div className='container'>
-        <h1 className='newproduct__heading'>Add new furniture</h1>
+    <>
+      <Head>
+        <title>Add new product</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
 
-        <form onSubmit={onSubmit}>
-          <AppTextField
-            rootElclass={name.rootElclass}
-            inputClassName={name.inputClass}
-            value={name.value}
-            elementType={name.tag}
-            label='Name'
-            labelClass='newproduct__subtitle'
-            name='name'
-            type={name.type}
-            placeholder={name.placeholder}
-            required={name.required}
-            showErrors={name.showErrors}
-            onChange={onType(setName)}
-          />
+      <div className='newproduct'>
+        <div className='container'>
+          <h1 className='newproduct__heading'>Add new furniture</h1>
 
-          <AppTextField
-            rootElclass={description.rootElclass}
-            inputClassName={description.inputClass}
-            value={description.value}
-            elementType={description.tag}
-            label='Description'
-            labelClass='newproduct__subtitle'
-            name='description'
-            type={description.type}
-            placeholder={description.placeholder}
-            required={description.required}
-            showErrors={description.showErrors}
-            onChange={onType(setDescription)}
-          />
-
-          <AppTextField
-            rootElclass={specs.rootElclass}
-            inputClassName={specs.inputClass}
-            value={specs.value}
-            elementType={specs.tag}
-            label='Specs'
-            labelClass='newproduct__subtitle'
-            name='specs'
-            type={specs.type}
-            placeholder={specs.placeholder}
-            required={specs.required}
-            showErrors={specs.showErrors}
-            onChange={onType(setSpecs)}
-          />
-
-          <div className='mt-30'>
-            <p className='newproduct__subtitle'>Type</p>
-
-            <CustomSelect
-              value={type.value ?? ''}
-              options={type.options}
-              showErrors={type.showErrors}
-              onChange={onSelect(setType)}
+          <form onSubmit={onSubmit}>
+            <AppTextField
+              rootElclass={name.rootElclass}
+              inputClassName={name.inputClass}
+              value={name.value}
+              elementType={name.tag}
+              label='Name'
+              labelClass='newproduct__subtitle'
+              name='name'
+              type={name.type}
+              placeholder={name.placeholder}
+              required={name.required}
+              showErrors={name.showErrors}
+              onChange={onType(setName)}
             />
-          </div>
 
-          <AppTextField
-            value={priceOld.value}
-            elementType={priceOld.tag}
-            rootElclass={priceOld.rootElclass}
-            inputClassName={priceOld.inputClass}
-            label='Old price not including discount'
-            labelClass='newproduct__subtitle'
-            name='priceOld'
-            type={priceOld.type}
-            placeholder={priceOld.placeholder}
-            required={priceOld.required}
-            showErrors={priceOld.showErrors}
-            onChange={onType(setPriceOld)}
-          />
+            <AppTextField
+              rootElclass={description.rootElclass}
+              inputClassName={description.inputClass}
+              value={description.value}
+              elementType={description.tag}
+              label='Description'
+              labelClass='newproduct__subtitle'
+              name='description'
+              type={description.type}
+              placeholder={description.placeholder}
+              required={description.required}
+              showErrors={description.showErrors}
+              onChange={onType(setDescription)}
+            />
 
-          <AppTextField
-            value={priceNew.value}
-            elementType={priceNew.tag}
-            rootElclass={priceNew.rootElclass}
-            inputClassName={priceNew.inputClass}
-            label='New price with discount'
-            labelClass='newproduct__subtitle'
-            name='priceNew'
-            type={priceNew.type}
-            placeholder={priceNew.placeholder}
-            required={priceNew.required}
-            showErrors={priceNew.showErrors}
-            onChange={onType(setPriceNew)}
-          />
+            <AppTextField
+              rootElclass={specs.rootElclass}
+              inputClassName={specs.inputClass}
+              value={specs.value}
+              elementType={specs.tag}
+              label='Specs'
+              labelClass='newproduct__subtitle'
+              name='specs'
+              type={specs.type}
+              placeholder={specs.placeholder}
+              required={specs.required}
+              showErrors={specs.showErrors}
+              onChange={onType(setSpecs)}
+            />
 
-          <div className='mt-30'>
-            <p className='newproduct__subtitle'>Select product&apos;s colors</p>
+            <div className='mt-30'>
+              <p className='newproduct__subtitle'>Type</p>
 
-            <div className='newproduct__colors-wrap grid mt-20'>
-              <HexColorPicker
-                color={lastPickedColor}
-                onChange={onColors(activeColor)}
+              <CustomSelect
+                value={type.value ?? ''}
+                options={type.options}
+                showErrors={type.showErrors}
+                onChange={onSelect(setType)}
               />
+            </div>
 
-              <div>
-                {colors.value.map((c, idx) => (
-                  <div
-                    className='newproduct__color-row flex items-center mt-20'
-                    key={idx}
+            <AppTextField
+              value={priceOld.value}
+              elementType={priceOld.tag}
+              rootElclass={priceOld.rootElclass}
+              inputClassName={priceOld.inputClass}
+              label='Old price not including discount'
+              labelClass='newproduct__subtitle'
+              name='priceOld'
+              type={priceOld.type}
+              placeholder={priceOld.placeholder}
+              required={priceOld.required}
+              showErrors={priceOld.showErrors}
+              onChange={onType(setPriceOld)}
+            />
+
+            <AppTextField
+              value={priceNew.value}
+              elementType={priceNew.tag}
+              rootElclass={priceNew.rootElclass}
+              inputClassName={priceNew.inputClass}
+              label='New price with discount'
+              labelClass='newproduct__subtitle'
+              name='priceNew'
+              type={priceNew.type}
+              placeholder={priceNew.placeholder}
+              required={priceNew.required}
+              showErrors={priceNew.showErrors}
+              onChange={onType(setPriceNew)}
+            />
+
+            <div className='mt-30'>
+              <p className='newproduct__subtitle'>Select product&apos;s colors</p>
+
+              <div className='newproduct__colors-wrap grid mt-20'>
+                <HexColorPicker
+                  color={lastPickedColor}
+                  onChange={onColors(activeColor)}
+                />
+
+                <div>
+                  {colors.value.map((c, idx) => (
+                    <div
+                      className='newproduct__color-row flex items-center mt-20'
+                      key={idx}
+                    >
+                      <span
+                        className={`newproduct__color ${activeColor === idx ? 'newproduct__color--active' : ''}`}
+                        style={{ backgroundColor: c }}
+                        onClick={() => setActiveColor(idx)}
+                      ></span>
+
+                      <AppTextField
+                        value={c}
+                        elementType={priceNew.tag}
+                        inputClassName='form-input'
+                        type='text'
+                        name={`color-${idx}`}
+                        placeholder=''
+                        required={false}
+                        showErrors={false}
+                        onChange={onTypeColor(idx)}
+                      />
+
+                      <Button
+                        className={`newproduct__dimensions-button newproduct__dimensions-button--danger ${
+                          colors.value.length === 1 ? 'newproduct__dimensions-button--disabled' : ''
+                        } btn`}
+                        type='button'
+                        title='Delete color'
+                        onClick={onDeleteColor(c)}
+                      >
+                        <>
+                          <svg
+                            width='24'
+                            height='24'
+                            viewBox='0 0 24 24'
+                            fill='none'
+                            xmlns='http://www.w3.org/2000/svg'
+                          >
+                            <path
+                              d='M3 6H5H21'
+                              stroke='#fff'
+                              strokeWidth='1.5'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6'
+                              stroke='#fff'
+                              strokeWidth='1.5'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M10 11V17'
+                              stroke='#fff'
+                              strokeWidth='1.5'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M14 11V17'
+                              stroke='#fff'
+                              strokeWidth='1.5'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                          </svg>
+                          Delete color
+                        </>
+                      </Button>
+                    </div>
+                  ))}
+
+                  <Button
+                    className='newproduct__dimensions-button btn mt-20'
+                    type='button'
+                    title='Add color'
+                    onClick={onAddColor}
                   >
-                    <span
-                      className={`newproduct__color ${activeColor === idx ? 'newproduct__color--active' : ''}`}
-                      style={{ backgroundColor: c }}
-                      onClick={() => setActiveColor(idx)}
-                    ></span>
-
-                    <AppTextField
-                      value={c}
-                      elementType={priceNew.tag}
-                      inputClassName='form-input'
-                      type='text'
-                      name={`color-${idx}`}
-                      placeholder=''
-                      required={false}
-                      showErrors={false}
-                      onChange={onTypeColor(idx)}
-                    />
-
-                    <Button
-                      className={`newproduct__dimensions-button newproduct__dimensions-button--danger ${
-                        colors.value.length === 1 ? 'newproduct__dimensions-button--disabled' : ''
-                      } btn`}
-                      type='button'
-                      title='Delete color'
-                      onClick={onDeleteColor(c)}
-                    >
-                      <>
-                        <svg
-                          width='24'
-                          height='24'
-                          viewBox='0 0 24 24'
-                          fill='none'
-                          xmlns='http://www.w3.org/2000/svg'
-                        >
-                          <path
-                            d='M3 6H5H21'
-                            stroke='#fff'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6'
-                            stroke='#fff'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M10 11V17'
-                            stroke='#fff'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                          <path
-                            d='M14 11V17'
-                            stroke='#fff'
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </svg>
-                        Delete color
-                      </>
-                    </Button>
-                  </div>
-                ))}
-
-                <Button
-                  className='newproduct__dimensions-button btn mt-20'
-                  type='button'
-                  title='Add color'
-                  onClick={onAddColor}
-                >
-                  <>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z'
-                        stroke='#fff'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M12 8V16'
-                        stroke='#fff'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M8 12H16'
-                        stroke='#fff'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                    Add color
-                  </>
-                </Button>
+                    <>
+                      <svg
+                        width='24'
+                        height='24'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <path
+                          d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z'
+                          stroke='#fff'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                        <path
+                          d='M12 8V16'
+                          stroke='#fff'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                        <path
+                          d='M8 12H16'
+                          stroke='#fff'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                      </svg>
+                      Add color
+                    </>
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <AppTextField
-            value={rating.value}
-            elementType={rating.tag}
-            rootElclass={rating.rootElclass}
-            inputClassName={rating.inputClass}
-            label='Rating'
-            labelClass='newproduct__subtitle'
-            name='rating'
-            type={rating.type}
-            placeholder={rating.placeholder}
-            required={rating.required}
-            showErrors={rating.showErrors}
-            onChange={onType(setRating)}
-          />
-
-          <div className='mt-30'>
-            <p className='newproduct__subtitle'>Check if product is on sale</p>
-
-            <label className='form__label'>
-              <input
-                name='check'
-                type='checkbox'
-                className='form__checkbox-real'
-                checked={sale.value}
-                onChange={onToggle(setSale)}
-              />
-              <span className='form__checkbox-fake'></span>
-              <span className='form__text'>OnSale?</span>
-            </label>
-          </div>
-
-          <div className='mt-30'>
-            <p className='newproduct__subtitle'>Room</p>
-
-            <CustomSelect
-              value={room.value ?? ''}
-              options={room.options}
-              showErrors={room.showErrors}
-              onChange={onSelect(setRoom)}
+            <AppTextField
+              value={rating.value}
+              elementType={rating.tag}
+              rootElclass={rating.rootElclass}
+              inputClassName={rating.inputClass}
+              label='Rating'
+              labelClass='newproduct__subtitle'
+              name='rating'
+              type={rating.type}
+              placeholder={rating.placeholder}
+              required={rating.required}
+              showErrors={rating.showErrors}
+              onChange={onType(setRating)}
             />
-          </div>
 
-          <div className='mt-30'>
-            <p className='newproduct__subtitle'>Material</p>
+            <div className='mt-30'>
+              <p className='newproduct__subtitle'>Check if product is on sale</p>
 
-            <CustomSelect
-              value={material.value ?? ''}
-              options={material.options}
-              showErrors={material.showErrors}
-              onChange={onSelect(setMaterial)}
-            />
-          </div>
-
-          <div className='mt-30'>
-            <p className='newproduct__subtitle'>Brand</p>
-
-            <CustomSelect
-              value={brand.value ?? ''}
-              options={brand.options}
-              showErrors={brand.showErrors}
-              onChange={onSelect(setBrand)}
-            />
-          </div>
-
-          <p className='newproduct__subtitle mt-30'>Dimesions</p>
-
-          {dimensions.value.map(({ width, length, height }, idx) => (
-            <div
-              className='grid newproduct__dimensions-row items-center'
-              key={idx}
-            >
-              <div className='newproduct__dimensions grid'>
-                <AppTextField
-                  value={width}
-                  elementType='input'
-                  name='width'
-                  inputClassName='form-input'
-                  type='text'
-                  placeholder='Width'
-                  required
-                  showErrors={dimensions.showErrors}
-                  onChange={onTypeDimension(idx, 'width')}
-                />
-                <AppTextField
-                  value={length}
-                  elementType='input'
-                  inputClassName='form-input'
-                  name='length'
-                  type='text'
-                  placeholder='Length'
-                  required
-                  showErrors={dimensions.showErrors}
-                  onChange={onTypeDimension(idx, 'length')}
-                />
-                <AppTextField
-                  value={height}
-                  elementType='input'
-                  inputClassName='form-input'
-                  name='height'
-                  type='text'
-                  placeholder='Height'
-                  required
-                  showErrors={dimensions.showErrors}
-                  onChange={onTypeDimension(idx, 'height')}
-                />
-              </div>
-
-              <div className='grid justify-center'>
-                <Button
-                  className={`newproduct__dimensions-button ${
-                    dimensions.value.length === 1 ? 'newproduct__dimensions-button--disabled' : ''
-                  } newproduct__dimensions-button--danger btn`}
-                  type='button'
-                  title='Delete dimension'
-                  onClick={onDeleteDimension(idx)}
-                >
-                  <>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M3 6H5H21'
-                        stroke='#fff'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6'
-                        stroke='#fff'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M10 11V17'
-                        stroke='#fff'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M14 11V17'
-                        stroke='#fff'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                    Delete dimension
-                  </>
-                </Button>
-              </div>
-            </div>
-          ))}
-
-          <Button
-            className='newproduct__dimensions-button btn mt-20'
-            type='button'
-            title='Add dimension'
-            onClick={onAddDimension}
-          >
-            <>
-              <svg
-                width='24'
-                height='24'
-                viewBox='0 0 24 24'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path
-                  d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z'
-                  stroke='#fff'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-                <path
-                  d='M12 8V16'
-                  stroke='#fff'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-                <path
-                  d='M8 12H16'
-                  stroke='#fff'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-              </svg>
-              Add dimension
-            </>
-          </Button>
-
-          <div className='mt-30'>
-            <p className='newproduct__subtitle'>Furniture picture</p>
-
-            {imageExtension ? (
-              <div className='newproduct__extension flex items-center mt-20'>
-                <p className='newproduct__extension-text'>{imageExtension}</p>
-              </div>
-            ) : null}
-            <p className='mt-10'>{image.value?.name}</p>
-
-            <div className='mt-10'>
-              <label className='form-file inline-flex'>
+              <label className='form__label'>
                 <input
-                  className='form-file__real'
-                  type='file'
-                  onChange={onFile}
+                  name='check'
+                  type='checkbox'
+                  className='form__checkbox-real'
+                  checked={sale.value}
+                  onChange={onToggle(setSale)}
                 />
-                <span className='btn'>Add file</span>
+                <span className='form__checkbox-fake'></span>
+                <span className='form__text'>OnSale?</span>
               </label>
             </div>
-          </div>
 
-          <div className='mt-30'>
+            <div className='mt-30'>
+              <p className='newproduct__subtitle'>Room</p>
+
+              <CustomSelect
+                value={room.value ?? ''}
+                options={room.options}
+                showErrors={room.showErrors}
+                onChange={onSelect(setRoom)}
+              />
+            </div>
+
+            <div className='mt-30'>
+              <p className='newproduct__subtitle'>Material</p>
+
+              <CustomSelect
+                value={material.value ?? ''}
+                options={material.options}
+                showErrors={material.showErrors}
+                onChange={onSelect(setMaterial)}
+              />
+            </div>
+
+            <div className='mt-30'>
+              <p className='newproduct__subtitle'>Brand</p>
+
+              <CustomSelect
+                value={brand.value ?? ''}
+                options={brand.options}
+                showErrors={brand.showErrors}
+                onChange={onSelect(setBrand)}
+              />
+            </div>
+
+            <p className='newproduct__subtitle mt-30'>Dimesions</p>
+
+            {dimensions.value.map(({ width, length, height }, idx) => (
+              <div
+                className='grid newproduct__dimensions-row items-center'
+                key={idx}
+              >
+                <div className='newproduct__dimensions grid'>
+                  <AppTextField
+                    value={width}
+                    elementType='input'
+                    name='width'
+                    inputClassName='form-input'
+                    type='text'
+                    placeholder='Width'
+                    required
+                    showErrors={dimensions.showErrors}
+                    onChange={onTypeDimension(idx, 'width')}
+                  />
+                  <AppTextField
+                    value={length}
+                    elementType='input'
+                    inputClassName='form-input'
+                    name='length'
+                    type='text'
+                    placeholder='Length'
+                    required
+                    showErrors={dimensions.showErrors}
+                    onChange={onTypeDimension(idx, 'length')}
+                  />
+                  <AppTextField
+                    value={height}
+                    elementType='input'
+                    inputClassName='form-input'
+                    name='height'
+                    type='text'
+                    placeholder='Height'
+                    required
+                    showErrors={dimensions.showErrors}
+                    onChange={onTypeDimension(idx, 'height')}
+                  />
+                </div>
+
+                <div className='grid justify-center'>
+                  <Button
+                    className={`newproduct__dimensions-button ${
+                      dimensions.value.length === 1 ? 'newproduct__dimensions-button--disabled' : ''
+                    } newproduct__dimensions-button--danger btn`}
+                    type='button'
+                    title='Delete dimension'
+                    onClick={onDeleteDimension(idx)}
+                  >
+                    <>
+                      <svg
+                        width='24'
+                        height='24'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <path
+                          d='M3 6H5H21'
+                          stroke='#fff'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                        <path
+                          d='M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6'
+                          stroke='#fff'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                        <path
+                          d='M10 11V17'
+                          stroke='#fff'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                        <path
+                          d='M14 11V17'
+                          stroke='#fff'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                      </svg>
+                      Delete dimension
+                    </>
+                  </Button>
+                </div>
+              </div>
+            ))}
+
             <Button
-              title='Create product'
-              className='btn'
-              type='submit'
+              className='newproduct__dimensions-button btn mt-20'
+              type='button'
+              title='Add dimension'
+              onClick={onAddDimension}
             >
-              Create
+              <>
+                <svg
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z'
+                    stroke='#fff'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M12 8V16'
+                    stroke='#fff'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M8 12H16'
+                    stroke='#fff'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+                Add dimension
+              </>
             </Button>
-          </div>
-        </form>
+
+            <div className='mt-30'>
+              <p className='newproduct__subtitle'>Furniture picture</p>
+
+              {imageExtension ? (
+                <div className='newproduct__extension flex items-center mt-20'>
+                  <p className='newproduct__extension-text'>{imageExtension}</p>
+                </div>
+              ) : null}
+              <p className='mt-10'>{image.value?.name}</p>
+
+              <div className='mt-10'>
+                <label className='form-file inline-flex'>
+                  <input
+                    className='form-file__real'
+                    type='file'
+                    onChange={onFile}
+                  />
+                  <span className='btn'>Add file</span>
+                </label>
+              </div>
+            </div>
+
+            <div className='mt-30'>
+              <Button
+                title='Create product'
+                className='btn'
+                type='submit'
+              >
+                Create
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

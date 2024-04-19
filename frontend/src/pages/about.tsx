@@ -1,6 +1,16 @@
+import Head from 'next/head'
+
 const About = () => {
   return (
     <>
+      <Head>
+        <title>About loft furniture store</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       <section className='about__top'>
         <div className='about-about__top-container'>
           <div className='container'>

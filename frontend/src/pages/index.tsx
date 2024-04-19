@@ -1,11 +1,12 @@
 import { useSelector } from 'react-redux'
 import Link from 'next/link'
+import Head from 'next/head'
+import { GetStaticProps, NextPage } from 'next'
 
 import { getUserData } from '../redux/getters'
 import { TopSlider } from '../components/Main/TopSlider'
 import { Card } from '../components/common/card'
 import { IProcessedFurniture, sanitizeFurnitureItem } from '../utils'
-import { GetStaticProps, NextPage } from 'next'
 import { PublicApiClient } from '../api'
 import { isDataOfFurniture } from '../api/types'
 import { revalidate } from '../utils/const'
@@ -22,99 +23,108 @@ const Main: NextPage<IProps> = ({ pageData }) => {
   const topSales = furniture.filter((item) => (typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false))
 
   return (
-    <div className='home container'>
-      <div className='home__top top'>
-        <TopSlider />
-      </div>
-      <div className='home__promo flex justify-center items-center relative'>
-        <video
-          className='home__promo-video'
-          autoPlay
-          muted
-          loop
-          preload='auto'
-        >
-          <source src='/images/promo.mp4' />
-        </video>
-        <div className='home__promo-content'>
-          <p className='home__promo-text'>New aestetic collection for your homes.</p>
-          <p className='home__promo-label'>Explore now</p>
+    <>
+      <Head>
+        <title>Loft furniture</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+      <div className='home container'>
+        <div className='home__top top'>
+          <TopSlider />
         </div>
-      </div>
-      <div className='home__gallery gallery'>
-        <div className='gallery__inner'>
-          <div className='gallery__items'>
-            <div className='gallery__item'>
-              <img
-                className='gallery__item-img'
-                src='images/gallery/1.jpg'
-                alt=''
-              />
-              <Link href='/catalog?room=hall'>
-                <a className='gallery__item-link'>Explore halls</a>
-              </Link>
-            </div>
-            <div className='gallery__item'>
-              <img
-                className='gallery__item-img'
-                src='images/gallery/2.jpg'
-                alt=''
-              />
-              <Link href='/catalog?room=office'>
-                <a className='gallery__item-link'>Explore office furniture</a>
-              </Link>
-            </div>
-            <div className='gallery__item'>
-              <img
-                className='gallery__item-img'
-                src='images/gallery/3.jpg'
-                alt=''
-              />
-              <Link href='/catalog?room=kitchen'>
-                <a className='gallery__item-link'>Explore kitchens</a>
-              </Link>
-            </div>
-            <div className='gallery__item'>
-              <img
-                className='gallery__item-img'
-                src='images/gallery/4.jpg'
-                alt=''
-              />
-              <Link href='/catalog?room=living'>
-                <a className='gallery__item-link'>Explore living rooms</a>
-              </Link>
-            </div>
-            <div className='gallery__item'>
-              <img
-                className='gallery__item-img'
-                src='images/gallery/5.jpg'
-                alt=''
-              />
-              <Link href='/catalog?room=bedroom'>
-                <a className='gallery__item-link'>Explore bedroom furniture</a>
-              </Link>
-            </div>
+        <div className='home__promo flex justify-center items-center relative'>
+          <video
+            className='home__promo-video'
+            autoPlay
+            muted
+            loop
+            preload='auto'
+          >
+            <source src='/images/promo.mp4' />
+          </video>
+          <div className='home__promo-content'>
+            <p className='home__promo-text'>New aestetic collection for your homes.</p>
+            <p className='home__promo-label'>Explore now</p>
           </div>
         </div>
-      </div>
-
-      {topSales.length ? (
-        <section className='mt-60'>
-          <div className='container'>
-            <h3 className='sales__title'>Top sales</h3>
-            <div className='sales__items sales__items--product mt-30'>
-              {topSales.map((product) => (
-                <Card
-                  key={product.id}
-                  product={product}
-                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
+        <div className='home__gallery gallery'>
+          <div className='gallery__inner'>
+            <div className='gallery__items'>
+              <div className='gallery__item'>
+                <img
+                  className='gallery__item-img'
+                  src='images/gallery/1.jpg'
+                  alt=''
                 />
-              ))}
+                <Link href='/catalog?room=hall'>
+                  <a className='gallery__item-link'>Explore halls</a>
+                </Link>
+              </div>
+              <div className='gallery__item'>
+                <img
+                  className='gallery__item-img'
+                  src='images/gallery/2.jpg'
+                  alt=''
+                />
+                <Link href='/catalog?room=office'>
+                  <a className='gallery__item-link'>Explore office furniture</a>
+                </Link>
+              </div>
+              <div className='gallery__item'>
+                <img
+                  className='gallery__item-img'
+                  src='images/gallery/3.jpg'
+                  alt=''
+                />
+                <Link href='/catalog?room=kitchen'>
+                  <a className='gallery__item-link'>Explore kitchens</a>
+                </Link>
+              </div>
+              <div className='gallery__item'>
+                <img
+                  className='gallery__item-img'
+                  src='images/gallery/4.jpg'
+                  alt=''
+                />
+                <Link href='/catalog?room=living'>
+                  <a className='gallery__item-link'>Explore living rooms</a>
+                </Link>
+              </div>
+              <div className='gallery__item'>
+                <img
+                  className='gallery__item-img'
+                  src='images/gallery/5.jpg'
+                  alt=''
+                />
+                <Link href='/catalog?room=bedroom'>
+                  <a className='gallery__item-link'>Explore bedroom furniture</a>
+                </Link>
+              </div>
             </div>
           </div>
-        </section>
-      ) : null}
-    </div>
+        </div>
+
+        {topSales.length ? (
+          <section className='mt-60'>
+            <div className='container'>
+              <h3 className='sales__title'>Top sales</h3>
+              <div className='sales__items sales__items--product mt-30'>
+                {topSales.map((product) => (
+                  <Card
+                    key={product.id}
+                    product={product}
+                    isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+      </div>
+    </>
   )
 }
 

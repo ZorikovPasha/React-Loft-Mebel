@@ -11,6 +11,7 @@ import { IProcessedFurniture, sanitizeFurnitureItem } from '../../utils'
 import { PublicApiClient } from '../../api'
 import { isDataOfFurniture } from '../../api/types'
 import { revalidate } from '../../utils/const'
+import Head from 'next/head'
 
 interface IProps {
   pageData: {
@@ -36,6 +37,14 @@ const Product: NextPage<IProps> = ({ pageData }) => {
 
   return (
     <>
+      <Head>
+        <title>{current.name}</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       <Breadcrumbs breadcrumbs={breads} />
       <ProductCard product={current} />
       <ProductTabs product={current} />

@@ -21,6 +21,7 @@ import { Button } from '../components/common/Button'
 import { IProcessedFurniture, sanitizeFurnitureItem, splitPriceWithSpaces } from '../utils'
 import { IOrder } from '../redux/reducers/userReducer'
 import { revalidate } from '../utils/const'
+import Head from 'next/head'
 
 const ModalContent = () => {
   return (
@@ -172,6 +173,14 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
 
   return (
     <>
+      <Head>
+        <title>Your cart</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       {isLoading && <Loader rootElClass='loader--fixed' />}
       {modalLoginOpened && (
         <Modal

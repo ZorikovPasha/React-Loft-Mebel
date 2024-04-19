@@ -3,7 +3,7 @@ import { Furniture } from '@prisma/client'
 
 import { PrismaService } from '../prisma/prisma.service'
 import { ImageService } from '../image/image.service'
-import { IFurnitureItemRes } from './types'
+import { IFurnitureItemRes, IGetFurnitureSuccessRes } from './types'
 
 class CreateFurnitureData {
   name: string
@@ -83,27 +83,35 @@ export class FurnitureService {
     )
   }
 
-  async findMany(criteria: Record<string, unknown>): Promise<IFurnitureItemRes[]> {
-    // @ts-expect-error this is okay for now
-    const furniture = await this.prisma.furniture.findMany(criteria)
-    return await Promise.all(
-      furniture.map(async (furnitureItem) => {
-        return await this.prepareFurniture(furnitureItem)
-      })
-    )
-  }
+  async findMany(criteria?: Record<string, unknown>): Promise<IGetFurnitureSuccessRes> {
+    const transactions = [this.prisma.furniture.findMany()]
+    if (criteria !== undefined) {
+      // @ts-expect-error this is okay for now
+      transactions.push(this.prisma.furniture.findMany(criteria))
+    }
 
-  async findAll(): Promise<IFurnitureItemRes[]> {
-    const furniture = await this.prisma.furniture.findMany()
-    return await Promise.all(
-      furniture.map(async (furnitureItem) => {
-        return await this.prepareFurniture(furnitureItem)
-      })
-    )
+    const [all, filtered] = await this.prisma.$transaction(transactions)
+
+    return {
+      all: all
+        ? await Promise.all(
+            all.map(async (furnitureItem) => {
+              return await this.prepareFurniture(furnitureItem)
+            })
+          )
+        : [],
+      filtered: filtered
+        ? await Promise.all(
+            filtered.map(async (furnitureItem) => {
+              return await this.prepareFurniture(furnitureItem)
+            })
+          )
+        : []
+    }
   }
 
   async prepareFurniture(furnitureItem: Furniture): Promise<IFurnitureItemRes> {
-    const [image, dimensions, reviews] = await Promise.all([
+    const [image, dimensions, reviews] = await this.prisma.$transaction([
       this.prisma.image.findFirst({
         where: {
           id: furnitureItem.imageId
@@ -126,6 +134,28 @@ export class FurnitureService {
         const user = await this.prisma.user.findFirst({
           where: {
             id: r.userId
+          }
+        })
+
+        await this.prisma.image.findMany({
+          where: {
+            reviewId: r.id
+          },
+          select: {
+            id: true,
+            name: true,
+            alternativeText: true,
+            caption: true,
+            width: true,
+            height: true,
+            hash: true,
+            ext: true,
+            size: true,
+            url: true,
+            mime: true,
+            provider: true,
+            createdAt: true,
+            updatedAt: true
           }
         })
 
@@ -235,6 +265,7 @@ export class FurnitureService {
       dimensions,
       leftInStock: furnitureItem.leftInStock,
       reviews: processedReviews
+      // reviews: []
     }
   }
 

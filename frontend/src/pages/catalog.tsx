@@ -17,6 +17,7 @@ import { setItemsActionCreator } from '../redux/actions/items'
 import { IGetFurnitureSuccessRes } from '../../../server/src/furniture/types'
 import { Pagination } from '../components/pagination'
 import { Loader } from '../components/common/Loader'
+import Head from 'next/head'
 
 export interface ISelectOption {
   label: string
@@ -368,6 +369,14 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
 
   return (
     <>
+      <Head>
+        <title>Catalog</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <section className='catalog'>
         <div className='container'>
