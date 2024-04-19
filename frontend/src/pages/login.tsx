@@ -20,6 +20,7 @@ import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
 import { Yandex } from '../svg/yandex-logo'
+import Head from 'next/head'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -144,74 +145,83 @@ const Login = () => {
   }
 
   return (
-    <div className='login'>
-      {isLoading && <Loader rootElClass='loader--fixed' />}
-      <div className='container'>
-        <div className='login__inner'>
-          <h1 className='login__title'>Login</h1>
-          <form
-            className='login__form mt-40'
-            onSubmit={handleSubmit}
-          >
-            {Object.entries(form).map(([key, props]) => {
-              const {
-                tag,
-                required,
-                customPlaceholder,
-                type,
-                value,
-                isValid,
-                className,
-                errorMessage,
-                inputWrapClass,
-                inputClassName,
-                showErrors
-              } = props
-
-              const _showErrors = showErrors && !isValid && (required || Boolean(value))
-              return (
-                <AppTextField
-                  elementType={tag}
-                  key={key}
-                  customPlaceholder={customPlaceholder}
-                  name={key as string}
-                  type={type}
-                  value={value}
-                  required={false}
-                  rootElclass={className}
-                  inputWrapClass={inputWrapClass}
-                  inputClassName={inputClassName}
-                  showErrors={_showErrors}
-                  errorMessage={errorMessage}
-                  onChange={onChange(key as 'email' | 'password')}
-                />
-              )
-            })}
-            <Button
-              title='Log in'
-              className='login__form-btn btn mt-40'
-              type='submit'
+    <>
+      <Head>
+        <title>Login</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+      <div className='login'>
+        {isLoading && <Loader rootElClass='loader--fixed' />}
+        <div className='container'>
+          <div className='login__inner'>
+            <h1 className='login__title'>Login</h1>
+            <form
+              className='login__form mt-40'
+              onSubmit={handleSubmit}
             >
-              Log in
-            </Button>
-          </form>
+              {Object.entries(form).map(([key, props]) => {
+                const {
+                  tag,
+                  required,
+                  customPlaceholder,
+                  type,
+                  value,
+                  isValid,
+                  className,
+                  errorMessage,
+                  inputWrapClass,
+                  inputClassName,
+                  showErrors
+                } = props
 
-          <a
-            href={yandexAuthLink}
-            className='login__form-btn--yandex flex items-center justify-center btn mt-20 w100'
-          >
-            <Yandex className='login__form-logo' />
-            <span className='block'>Log in via Yandex</span>
-          </a>
-        </div>
-        <div className='login__bottom mt-30'>
-          <span className='login__new'>Dont have an account? </span>
-          <Link href={ROUTES.Signup}>
-            <a className='login__new-link'>Sign up</a>
-          </Link>
+                const _showErrors = showErrors && !isValid && (required || Boolean(value))
+                return (
+                  <AppTextField
+                    elementType={tag}
+                    key={key}
+                    customPlaceholder={customPlaceholder}
+                    name={key as string}
+                    type={type}
+                    value={value}
+                    required={false}
+                    rootElclass={className}
+                    inputWrapClass={inputWrapClass}
+                    inputClassName={inputClassName}
+                    showErrors={_showErrors}
+                    errorMessage={errorMessage}
+                    onChange={onChange(key as 'email' | 'password')}
+                  />
+                )
+              })}
+              <Button
+                title='Log in'
+                className='login__form-btn btn mt-40'
+                type='submit'
+              >
+                Log in
+              </Button>
+            </form>
+
+            <a
+              href={yandexAuthLink}
+              className='login__form-btn--yandex flex items-center justify-center btn mt-20 w100'
+            >
+              <Yandex className='login__form-logo' />
+              <span className='block'>Log in via Yandex</span>
+            </a>
+          </div>
+          <div className='login__bottom mt-30'>
+            <span className='login__new'>Dont have an account? </span>
+            <Link href={ROUTES.Signup}>
+              <a className='login__new-link'>Sign up</a>
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -5,8 +5,9 @@ import { useRouter } from 'next/router'
 import { getFilteredProductsByName, getUserData } from '../redux/getters'
 import { Empty } from '../components/common/Empty'
 import { Card } from '../components/common/card'
+import Head from 'next/head'
 
-const SearchResult: React.FC = () => {
+const SearchResult = () => {
   const router = useRouter()
   const [searchValue, setSearchValue] = React.useState('')
   const { favorites } = useSelector(getUserData)
@@ -21,10 +22,18 @@ const SearchResult: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Search results</title>
+        <meta
+          name='description'
+          content='Loft furniture for your slick modern designes'
+        />
+      </Head>
+
       <div className='search-results'>
         <div className='container'>
           <div className='mt-30'>
-            <h1 className='search-results__title'>Результаты поиска</h1>
+            <h1 className='search-results__title'>Search results:</h1>
           </div>
 
           <div className='search-results__content'>
