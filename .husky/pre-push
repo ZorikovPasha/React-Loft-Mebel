@@ -2,12 +2,12 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd frontend
-npm run stylelint
-npm run lint
-npm run test
-npm run typecheck
+bun run stylelint
+bun run lint
+bun run test
+bun run typecheck
 
 cd ../server
-npm run lint
+bun run lint
 # npm run test:e2e
-npm run build
+bun run build
