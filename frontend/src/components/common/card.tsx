@@ -6,7 +6,11 @@ import Image from 'next/image'
 import { UserApiClient } from '../../api'
 import { isSuccessfullResponse } from '../../api/types'
 import { getUserData } from '../../redux/getters'
-import { addProductToCartActionCreator, editUserActionCreator } from '../../redux/actions/userAction'
+import {
+  addFavouriteItemAC,
+  addProductToCartActionCreator,
+  removeFavouriteItemAC
+} from '../../redux/actions/userAction'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from './Button'
 import { IProcessedFurniture, backendImagesLoader } from '../../utils'
@@ -48,10 +52,6 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
       return
     }
 
-    const payload = {
-      favorites: [id]
-    }
-
     if (favorites.includes(id)) {
       try {
         const response = await UserApiClient.deleteFavoriteItem(id)
@@ -59,7 +59,7 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
           return dispatch(toggleSnackbarOpen())
         }
 
-        dispatch(editUserActionCreator(payload))
+        dispatch(removeFavouriteItemAC(id))
       } catch (error) {
         dispatch(toggleSnackbarOpen())
       }
@@ -70,7 +70,7 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
           return dispatch(toggleSnackbarOpen())
         }
 
-        dispatch(editUserActionCreator(payload))
+        dispatch(addFavouriteItemAC(id))
       } catch (error) {
         dispatch(toggleSnackbarOpen())
       }
