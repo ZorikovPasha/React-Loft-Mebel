@@ -58,10 +58,6 @@ interface IProps {
 
 const Cart: NextPage<IProps> = ({ pageData }) => {
   const { furniture } = pageData
-  const dispatch = useDispatch()
-
-  const router = useRouter()
-
   const { favorites, isLoggedIn, cart } = useSelector(getUserData)
 
   const breadcrumbs = useBreadcrumbs()
@@ -112,6 +108,9 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
       return false
     }
   })
+
+  const dispatch = useDispatch()
+  const router = useRouter()
 
   const [modalLoginOpened, setModalLoginOpened] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)

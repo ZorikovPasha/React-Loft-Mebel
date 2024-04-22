@@ -9,6 +9,7 @@ import { getUserData } from '../../redux/getters'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from '../common/Button'
 import { splitPriceWithSpaces } from '../../utils'
+import { Loader } from '../common/Loader'
 
 interface ICartItemProps {
   item: {
@@ -32,11 +33,14 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
   const { isLoggedIn } = useSelector(getUserData)
 
   const dispatch = useDispatch()
+  const [isLoading, setIsloading] = React.useState(false)
 
   const onRemoveItemClick = async () => {
     if (!isLoggedIn) {
       return
     }
+
+    setIsloading(true)
 
     const dto = {
       productId: furnitureId,
@@ -45,6 +49,8 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
 
     try {
       const response = await UserApiClient.removeCartItem(dto)
+      setIsloading(false)
+
       if (!isSuccessfullResponse(response)) {
         return dispatch(toggleSnackbarOpen())
       }
@@ -57,6 +63,7 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
 
       dispatch(removeProductFromCartActionCreator(payload))
     } catch (error) {
+      setIsloading(false)
       dispatch(toggleSnackbarOpen())
     }
   }
@@ -105,13 +112,18 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
         title='Remove product from cart'
         className='item__remove flex items-center justify-center'
         type='button'
+        disabled={isLoading}
         onClick={onRemoveItemClick}
       >
-        <img
-          className='item__remove-cross'
-          src='/images/icons/cross.svg'
-          alt='cross'
-        />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <img
+            className='item__remove-cross'
+            src='/images/icons/cross.svg'
+            alt='cross'
+          />
+        )}
       </Button>
     </div>
   )

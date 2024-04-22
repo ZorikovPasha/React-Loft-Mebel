@@ -59,8 +59,6 @@ const ModalContent = () => {
 }
 
 const SignUp = () => {
-  const router = useRouter()
-
   const fields = React.useRef<Record<'userName' | 'email' | 'password', IField>>({
     userName: {
       value: '',
@@ -107,6 +105,7 @@ const SignUp = () => {
   } as const)
 
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const [modalSignUp, setModalSignUp] = React.useState(false)
   const [form, setForm] = React.useState(fields.current)
@@ -275,6 +274,7 @@ const SignUp = () => {
                 title='Sign up'
                 type='submit'
                 className='signup__form-btn btn mt-40'
+                disabled={isLoading}
               >
                 Sign up
               </Button>

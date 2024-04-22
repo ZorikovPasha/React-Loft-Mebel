@@ -1,67 +1,60 @@
 import React from 'react'
 import Slider, { Settings } from 'react-slick'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Link from 'next/link'
 
 import { AddToFavorite } from '../common/AddToFavorite'
 import CustomSelect from '../common/CustomSelect'
-import { isSuccessfullResponse } from '../../api/types'
-import { addProductToCartActionCreator } from '../../redux/actions/userAction'
-import { UserApiClient } from '../../api'
 import { getUserData } from '../../redux/getters'
-import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from '../common/Button'
 import { Modal } from '../common/Modal'
 import { ModalContent } from './leaveReviewPopup'
-import { IProcessedFurniture } from '../../utils'
+import { IProcessedFurniture, collectQuintityOptions } from '../../utils'
+import { useAddToCart } from 'src/hooks/useAddToCart'
 
-const SliderPrevArrow = () => {
-  return (
-    <Button
-      className='slick-btn slick-prev'
-      title='Previous slide'
-      type='button'
+const SliderPrevArrow = () => (
+  <Button
+    className='slick-btn slick-prev'
+    title='Previous slide'
+    type='button'
+  >
+    <svg
+      width='9'
+      height='14'
+      viewBox='0 0 9 14'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
     >
-      <svg
-        width='9'
-        height='14'
-        viewBox='0 0 9 14'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        <path
-          d='M7.5 1L1.5 7L7.5 13'
-          stroke='black'
-          strokeLinecap='square'
-        />
-      </svg>
-    </Button>
-  )
-}
+      <path
+        d='M7.5 1L1.5 7L7.5 13'
+        stroke='black'
+        strokeLinecap='square'
+      />
+    </svg>
+  </Button>
+)
 
-const SliderNextArrow = () => {
-  return (
-    <Button
-      className='slick-btn slick-next'
-      type='button'
-      title='Next slide'
+const SliderNextArrow = () => (
+  <Button
+    className='slick-btn slick-next'
+    type='button'
+    title='Next slide'
+  >
+    <svg
+      width='8'
+      height='14'
+      viewBox='0 0 8 14'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
     >
-      <svg
-        width='8'
-        height='14'
-        viewBox='0 0 8 14'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        <path
-          d='M1 13L7 7L1 1'
-          stroke='black'
-          strokeLinecap='square'
-        />
-      </svg>
-    </Button>
-  )
-}
+      <path
+        d='M1 13L7 7L1 1'
+        stroke='black'
+        strokeLinecap='square'
+      />
+    </svg>
+  </Button>
+)
 
 const slider1Settings: Settings = {
   arrows: false,
@@ -99,7 +92,6 @@ const formatDimension = (width: number, length: number, height: number) => {
 }
 
 export const ProductCard = ({ product }: IProps) => {
-  const dispatch = useDispatch()
   const user = useSelector(getUserData)
   const { id, name, type, priceNew, priceOld, colors, dimensions, image, rating, description, reviews, leftInStock } =
     product
@@ -110,22 +102,6 @@ export const ProductCard = ({ product }: IProps) => {
   const didCurrentUserReviewedThisFurniture = Boolean(reviews?.find((r) => (r.user ? r.user.id === user.id : false)))
 
   const thumbsUrls = image ? [image.url, image.url, image.url, image.url, image.url] : []
-
-  const collectQuintityOptions = (leftInStock: number | null | undefined) => {
-    if (leftInStock === null || typeof leftInStock === 'undefined') {
-      return []
-    }
-
-    const options: ColorOptionType[] = []
-    for (let i = 1; i <= leftInStock; i++) {
-      options.push({
-        value: String(i),
-        label: String(i)
-      })
-    }
-
-    return options
-  }
 
   const fields = {
     quintity: {
@@ -155,6 +131,8 @@ export const ProductCard = ({ product }: IProps) => {
   const [form, setForm] = React.useState(fields)
   const [colorsState, setColorsState] = React.useState(colorProps)
   const [reviewModelShown, setReviewModelShown] = React.useState(false)
+  const ratingWidth = typeof rating === 'string' ? (parseFloat(rating) / 5) * 95 : 0
+  const { isProcessingRequest: isProcessingBuy, buy } = useAddToCart(product, parseInt(form.quintity.value))
 
   const onSelect = (name: 'quintity' | 'dimensions') => (value: ColorOptionType | null) => {
     setForm((prev) => {
@@ -177,45 +155,6 @@ export const ProductCard = ({ product }: IProps) => {
       value: color
     }))
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!user.isLoggedIn) {
-      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
-    }
-
-    if (typeof id !== 'number') {
-      // if there is no id then it doesnt make sense to perform request
-      return
-    }
-
-    const dto = {
-      productId: id,
-      quintity: parseInt(form.quintity.value),
-      color: colorsState.value ?? '#FFF'
-    }
-
-    try {
-      const response = await UserApiClient.addItemToCart(dto)
-      if (!isSuccessfullResponse(response)) {
-        return dispatch(toggleSnackbarOpen())
-      }
-
-      const payload = {
-        id,
-        furnitureId: id,
-        color: colorsState.value ?? '#FFF',
-        quintity: parseInt(form.quintity.value)
-      }
-
-      dispatch(addProductToCartActionCreator(payload))
-    } catch (error) {
-      dispatch(toggleSnackbarOpen())
-    }
-  }
-
-  const ratingWidth = typeof rating === 'string' ? (parseFloat(rating) / 5) * 95 : 0
 
   const onReviewModalClose = () => {
     setReviewModelShown(false)
@@ -355,17 +294,16 @@ export const ProductCard = ({ product }: IProps) => {
               )}
               <p className='ml-5'>({reviews?.length ?? 0})</p>
             </div>
-            <form
-              className='mt-10'
-              onSubmit={handleSubmit}
-            >
+            <form className='mt-10'>
               <div className='info__shop shop'>
                 <p className='shop__price'>{priceNew ? priceNew : priceOld}$</p>
                 {isItemOnSale ? <p className='shop__price crossed'>${priceOld}</p> : null}
                 <Button
                   className='shop__btn btn'
                   title='Buy product'
-                  type='submit'
+                  type='button'
+                  disabled={isProcessingBuy}
+                  onClick={buy}
                 >
                   Buy
                 </Button>

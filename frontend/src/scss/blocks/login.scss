@@ -46,9 +46,16 @@
     padding: 12px 98px 9px;
     display: inline-block;
 
+    &[disabled] {
+      touch-action: none;
+      background-color: #c4c4c4;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
     &--yandex {
       background-color: white;
-      border: 1px solid #FF0000; 
+      border: 1px solid #ff0000;
       color: $text;
       transition: $transition;
 
@@ -56,16 +63,23 @@
         color: $text;
         background-color: white;
       }
-      
+
       &:hover {
         color: white;
-        background-color: rgba(#FF0000, 0.8);
+        background-color: rgba(#ff0000, 0.8);
       }
 
-      &:active { 
+      &:active {
         background-color: white;
-        border: 1px solid #FF0000; 
+        border: 1px solid #ff0000;
         color: $text;
+      }
+
+      &[data-disabled] {
+        touch-action: none;
+        border-color: #c4c4c4;
+        pointer-events: none;
+        cursor: not-allowed;
       }
     }
   }

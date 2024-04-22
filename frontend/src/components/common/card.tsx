@@ -1,19 +1,11 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
 import Image from 'next/image'
 
-import { UserApiClient } from '../../api'
-import { isSuccessfullResponse } from '../../api/types'
-import { getUserData } from '../../redux/getters'
-import {
-  addFavouriteItemAC,
-  addProductToCartActionCreator,
-  removeFavouriteItemAC
-} from '../../redux/actions/userAction'
-import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { Button } from './Button'
 import { IProcessedFurniture, backendImagesLoader } from '../../utils'
+import { useFavoriteProduct } from 'src/hooks/useFavoriteProduct'
+import { useAddToCart } from 'src/hooks/useAddToCart'
 
 interface IProps {
   product: IProcessedFurniture
@@ -38,80 +30,10 @@ const toBase64 = (str: string) =>
   typeof window === 'undefined' ? Buffer.from(str).toString('base64') : window.btoa(str)
 
 export const Card = React.memo(({ product, isFavorite }: IProps) => {
-  const { id, image, name, type, priceOld, priceNew, dimensions, sale, colors, rating, reviews } = product
+  const { id, image, name, type, priceOld, priceNew, dimensions, sale, rating, reviews } = product
 
-  const dispatch = useDispatch()
-  const { isLoggedIn, favorites } = useSelector(getUserData)
-
-  const onLikeProductClick = (isLoggedIn: boolean) => async () => {
-    if (!isLoggedIn) {
-      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
-    }
-
-    if (id === null) {
-      return
-    }
-
-    if (favorites.includes(id)) {
-      try {
-        const response = await UserApiClient.deleteFavoriteItem(id)
-        if (!response || !isSuccessfullResponse(response)) {
-          return dispatch(toggleSnackbarOpen())
-        }
-
-        dispatch(removeFavouriteItemAC(id))
-      } catch (error) {
-        dispatch(toggleSnackbarOpen())
-      }
-    } else {
-      try {
-        const response = await UserApiClient.addFavoriteItem(id)
-        if (!response || !isSuccessfullResponse(response)) {
-          return dispatch(toggleSnackbarOpen())
-        }
-
-        dispatch(addFavouriteItemAC(id))
-      } catch (error) {
-        dispatch(toggleSnackbarOpen())
-      }
-    }
-  }
-
-  const onAddToCartClick = async () => {
-    if (!isLoggedIn) {
-      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
-    }
-
-    if (typeof id !== 'number') {
-      return
-    }
-
-    try {
-      const dto = {
-        productId: id,
-        quintity: 1,
-        color: colors[0] ?? '#FFF'
-      }
-
-      const response = await UserApiClient.addItemToCart(dto)
-
-      if (!isSuccessfullResponse(response)) {
-        return dispatch(toggleSnackbarOpen())
-      }
-
-      const payload = {
-        id,
-        furnitureId: id,
-        quintity: 1,
-        color: colors[0] ?? '#FFF'
-      }
-
-      dispatch(addProductToCartActionCreator(payload))
-      dispatch(toggleSnackbarOpen('Product added to cart!', 'success'))
-    } catch (error) {
-      dispatch(toggleSnackbarOpen())
-    }
-  }
+  const { isProcessingRequest: isProcessingFavorite, likeProduct } = useFavoriteProduct(id)
+  const { isProcessingRequest: isProcessingBuy, buy } = useAddToCart(product)
 
   let discount = null
 
@@ -130,7 +52,8 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
         title={isFavorite ? 'Unlike product' : 'Like product'}
         type='button'
         className='item-sales__like'
-        onClick={onLikeProductClick(isLoggedIn)}
+        disabled={isProcessingFavorite}
+        onClick={likeProduct}
       >
         <img
           src={isFavorite ? '/images/icons/wished.svg' : '/images/icons/wish.svg'}
@@ -196,7 +119,8 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
               className='item-sales__tocart btn'
               type='button'
               title='Add product to cart'
-              onClick={onAddToCartClick}
+              disabled={isProcessingBuy}
+              onClick={buy}
             >
               Add to cart
             </Button>

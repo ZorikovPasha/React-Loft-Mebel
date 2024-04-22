@@ -91,6 +91,18 @@
     cursor: pointer;
     border: 1px solid #d41367;
 
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
+
+    &[disabled] {
+      touch-action: none;
+      border-color: #c4c4c4;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
     @media #{$mobile} {
       z-index: 1;
       position: absolute;
