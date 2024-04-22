@@ -21,6 +21,16 @@ export type editOrderActionType = {
   payload: IOrder
 }
 
+export interface IAddFavouriteAction {
+  type: typeof Actions.ADD_FAVORITE
+  payload: { id: number }
+}
+
+export interface IRemoveFavouriteAction {
+  type: typeof Actions.REMOVE_FAVORITE
+  payload: { id: number }
+}
+
 export interface ICartItem {
   id: number
   furnitureId: number
@@ -98,7 +108,13 @@ export const initialState: IUserState = {
 
 export const userReducer = (
   state = initialState,
-  action: userActionType | addProductToCartActionType | removeProductToCartActionType | editOrderActionType
+  action:
+    | userActionType
+    | addProductToCartActionType
+    | removeProductToCartActionType
+    | editOrderActionType
+    | IAddFavouriteAction
+    | IRemoveFavouriteAction
 ): IUserState => {
   switch (action.type) {
     case Actions.LOGIN: {
@@ -163,6 +179,24 @@ export const userReducer = (
       return {
         ...state,
         orders: state.orders.map((o) => (o.id === action.payload.id ? Object.assign(o, action.payload) : o))
+      }
+    }
+
+    case Actions.ADD_FAVORITE: {
+      if (!state.favorites.includes(action.payload.id)) {
+        return {
+          ...state,
+          favorites: [...state.favorites, action.payload.id]
+        }
+      } else {
+        return state
+      }
+    }
+
+    case Actions.REMOVE_FAVORITE: {
+      return {
+        ...state,
+        favorites: state.favorites.filter((id) => id !== action.payload.id)
       }
     }
 
