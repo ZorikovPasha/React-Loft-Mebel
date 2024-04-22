@@ -11,7 +11,7 @@
       font-size: 24px;
       line-height: 32px;
       margin-right: 30px;
-      color: #A1A1A1;
+      color: #a1a1a1;
     }
 
     @media (width <=510px) {
@@ -34,8 +34,11 @@
       opacity: 0.8;
     }
 
-    &:active {
-      opacity: 0.6;
+    &[disabled] {
+      touch-action: none;
+      background-color: #c4c4c4;
+      pointer-events: none;
+      cursor: not-allowed;
     }
 
     &--plain {
@@ -70,11 +73,17 @@
   }
 
   &__wish {
-    margin-left: 15px;
+    padding: 5px;
 
     &:active {
       animation: button-click;
       animation-duration: 0.6s;
+    }
+
+    &[disabled] {
+      touch-action: none;
+      pointer-events: none;
+      cursor: not-allowed;
     }
 
     @media (width <=510px) {

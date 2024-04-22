@@ -503,6 +503,7 @@ const Profile: NextPage<IProps> = ({ pageData }) => {
         status: 'CANCELED'
       })
       dispatch(editOrderActionCreator(payload))
+      dispatch(toggleSnackbarOpen('Order successfullly canceled!', 'success'))
     } catch (error) {
       dispatch(toggleSnackbarOpen())
     }

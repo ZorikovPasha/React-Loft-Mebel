@@ -291,3 +291,28 @@ interface IProps {
 export const backendImagesLoader = ({ src, width, quality }: IProps) => {
   return process.env.NEXT_PUBLIC_BACKEND + src + `?w=${width}&q=${quality || 80}`
 }
+
+type ColorOptionType = {
+  value: string
+  label: string
+}
+
+export const collectQuintityOptions = (leftInStock: number | null | undefined) => {
+  if (leftInStock === null || typeof leftInStock === 'undefined') {
+    return []
+  }
+
+  if (leftInStock < 1) {
+    return []
+  }
+
+  const options: ColorOptionType[] = []
+  for (let i = 1; i <= leftInStock; i++) {
+    options.push({
+      value: String(i),
+      label: String(i)
+    })
+  }
+
+  return options
+}

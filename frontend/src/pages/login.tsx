@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import Link from 'next/link'
+import Head from 'next/head'
 
 import { UserApiClient } from '../api'
 import { IField } from './signup'
@@ -20,7 +21,6 @@ import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
 import { Yandex } from '../svg/yandex-logo'
-import Head from 'next/head'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -81,8 +81,12 @@ const Login = () => {
 
   const yandexAuthLink = `${process.env.NEXT_PUBLIC_BACKEND}/auth/login/yandex`
 
-  const handleSubmit: React.MouseEventHandler<HTMLFormElement> = async (e) => {
+  const login: React.MouseEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
+
+    if (isLoading) {
+      return
+    }
 
     const newFormState = {
       email: {
@@ -160,7 +164,7 @@ const Login = () => {
             <h1 className='login__title'>Login</h1>
             <form
               className='login__form mt-40'
-              onSubmit={handleSubmit}
+              onSubmit={login}
             >
               {Object.entries(form).map(([key, props]) => {
                 const {
@@ -200,6 +204,7 @@ const Login = () => {
                 title='Log in'
                 className='login__form-btn btn mt-40'
                 type='submit'
+                disabled={isLoading}
               >
                 Log in
               </Button>
@@ -208,8 +213,12 @@ const Login = () => {
             <a
               href={yandexAuthLink}
               className='login__form-btn--yandex flex items-center justify-center btn mt-20 w100'
+              data-disabled={isLoading}
             >
-              <Yandex className='login__form-logo' />
+              <Yandex
+                roundFill={isLoading ? '#c4c4c4' : undefined}
+                className='login__form-logo'
+              />
               <span className='block'>Log in via Yandex</span>
             </a>
           </div>

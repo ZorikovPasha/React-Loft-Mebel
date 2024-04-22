@@ -7,7 +7,7 @@ import { Button } from './Button'
 
 export const Snackbar = () => {
   const timeout = 4000
-  let timer: ReturnType<typeof setTimeout>
+  const timer = React.useRef<number>(0)
 
   const dispatch = useDispatch()
   const { message, variant, toggleSnackbar } = useSelector(getError)
@@ -17,17 +17,17 @@ export const Snackbar = () => {
       handleTimeout()
     }
 
-    return () => clearTimeout(timer)
+    return () => window.clearTimeout(timer.current)
   }, [toggleSnackbar])
 
   const handleTimeout = () => {
-    timer = setTimeout(() => {
+    timer.current = window.setTimeout(() => {
       dispatch(toggleSnackbarClose())
     }, timeout)
   }
 
   const handleClose = () => {
-    clearTimeout(timer)
+    clearTimeout(timer.current)
     dispatch(toggleSnackbarClose())
   }
 
