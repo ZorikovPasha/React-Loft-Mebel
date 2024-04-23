@@ -171,3 +171,7 @@ TODO!:
 - [x] /login badrequest bad but message is internal
 - [x] /login form is not being cleared
 - [x] after signup click on close gets user to /login
+- [x] items in orders are not equal by size
+- [x] implement ui when product is sold out
+- [x] remove buy button if product is 0
+- [ ] `Did this review was helpful` is not working
