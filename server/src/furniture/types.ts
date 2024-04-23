@@ -19,6 +19,7 @@ export interface IImage {
   provider: 'database' | string
   createdAt: Date
   updatedAt: Date
+  blurredBase64: string
 }
 
 export interface IReviewRes {

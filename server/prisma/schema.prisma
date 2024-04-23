@@ -31,6 +31,7 @@ model Image {
   user            User?
   reviewId        Int?
   review          Review?    @relation(fields: [reviewId], references: [id])
+  blurredBase64   String     @default("")
 }
 
 model User {

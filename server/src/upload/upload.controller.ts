@@ -27,4 +27,23 @@ export class UploadController {
 
     return res.status(200).contentType(media.mime).end(media.data)
   }
+
+  // @Put()
+  // async generateBlur() {
+  //   const pics = await this.prisma.image.findMany()
+  //   for (const pic of pics) {
+  //     const { base64 } = await getPlaiceholder(pic.data)
+  //     console.log('base64', base64)
+  //     await this.prisma.image.update({
+  //       where: {
+  //         id: pic.id
+  //       },
+  //       data: {
+  //         blurredBase64: base64
+  //       }
+  //     })
+  //   }
+
+  //   return { success: true }
+  // }
 }
