@@ -2,24 +2,27 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import Link from 'next/link'
+import Head from 'next/head'
+import cloneDeep from 'lodash.clonedeep'
 
 import { UserApiClient } from '../api'
 import {
   getEmailInputErrorMessage,
+  getNameInputErrorMessage,
   getPasswordFieldErrorMessage,
   getTextInputErrorMessage,
+  makeFieldsError,
   validateEmail,
   validatePassword,
   validateTextInput
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
-import { isSuccessfullResponse } from '../api/types'
+import { isILogin400, isSuccessfullResponse } from '../api/types'
 import { ROUTES } from '../utils/const'
 import { Modal } from '../components/common/Modal'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
-import Head from 'next/head'
 
 export interface IField {
   value: string
@@ -41,22 +44,20 @@ export interface IField {
   validateFn: (str: string) => boolean
 }
 
-const ModalContent = () => {
-  return (
-    <div className='flex items-center flex-col'>
-      <h3 className='popup-message__title'>You successfully signed up</h3>
-      <div className='popup__picture'>
-        <img
-          src='/images/success.png'
-          alt=''
-        />
-      </div>
-      <Link href={ROUTES.Login}>
-        <a className='popup-message__btn btn mt-5'>Log in</a>
-      </Link>
+const ModalContent = () => (
+  <div className='flex items-center flex-col'>
+    <h3 className='popup-message__title'>You successfully signed up</h3>
+    <div className='popup__picture'>
+      <img
+        src='/images/success.png'
+        alt=''
+      />
     </div>
-  )
-}
+    <Link href={ROUTES.Login}>
+      <a className='popup-message__btn btn mt-5'>Log in</a>
+    </Link>
+  </div>
+)
 
 const SignUp = () => {
   const fields = React.useRef<Record<'userName' | 'email' | 'password', IField>>({
@@ -70,7 +71,7 @@ const SignUp = () => {
       inputClassName: 'signup__form-input form-input',
       tag: 'input',
       showErrors: false,
-      errorMessage: getTextInputErrorMessage('', 'Name'),
+      errorMessage: getNameInputErrorMessage(''),
       getErrorMessage: getTextInputErrorMessage,
       validateFn: validateTextInput
     },
@@ -108,8 +109,9 @@ const SignUp = () => {
   const router = useRouter()
 
   const [modalSignUp, setModalSignUp] = React.useState(false)
-  const [form, setForm] = React.useState(fields.current)
+  const [form, setForm] = React.useState(cloneDeep(fields.current))
   const [isLoading, setIsLoading] = React.useState(false)
+  const areFieldsValid = Object.values(form).every(({ isValid, required }) => required && isValid)
 
   const onChange =
     (name: keyof typeof fields.current) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -135,12 +137,9 @@ const SignUp = () => {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
-    Object.values(form).forEach((props) => {
-      props.showErrors = true
-    })
-    setForm({ ...form })
+    setForm(makeFieldsError(form))
 
-    if (!Object.values(form).every(({ isValid }) => isValid)) {
+    if (!areFieldsValid) {
       return
     }
 
@@ -156,54 +155,19 @@ const SignUp = () => {
       setIsLoading(false)
       if (isSuccessfullResponse(response)) {
         document.body.classList.add('lock')
+        setForm(fields.current)
         setModalSignUp(true)
       } else {
         dispatch(toggleSnackbarOpen())
       }
-
-      // if (response.statusCode === 400) {
-      //   if (typeof response.message === 'string') {
-      //     // User already exists
-
-      //     form.email.errorMessage = response.message
-      //     setForm({ ...form })
-      //   } else {
-      //     const errorData: Record<string, string> = {}
-      //     response.message.forEach((message: string) => {
-      //       const fieldName = message.split(' ')[0]
-      //       if (!fieldName) {
-      //         return
-      //       }
-      //       errorData[fieldName] = message
-      //     })
-
-      //     setForm((prev) => {
-      //       const newFormState: Record<string, IField> = {}
-      //       Object.entries(prev).forEach(([key, props]) => {
-      //         const newErrorMessage = errorData[key]
-      //         if ((key === 'userName' || key === 'email' || key === 'password') && newErrorMessage) {
-      //           newFormState[key] = {
-      //             ...prev[key],
-      //             isValid: false,
-      //             showErrors: true,
-      //             errorMessage: newErrorMessage
-      //           }
-      //         } else {
-      //           newFormState[key] = props
-      //         }
-      //       })
-
-      //       return newFormState
-      //     })
-      //   }
-
-      //   return
-      // }
-
-      dispatch(toggleSnackbarOpen())
     } catch (error) {
       setIsLoading(false)
-      dispatch(toggleSnackbarOpen())
+      if (isILogin400(error)) {
+        setForm(makeFieldsError(form))
+        dispatch(toggleSnackbarOpen(error.message, 'error'))
+      } else {
+        dispatch(toggleSnackbarOpen())
+      }
     }
   }
 
@@ -274,7 +238,7 @@ const SignUp = () => {
                 title='Sign up'
                 type='submit'
                 className='signup__form-btn btn mt-40'
-                disabled={isLoading}
+                disabled={isLoading || !areFieldsValid}
               >
                 Sign up
               </Button>
@@ -291,6 +255,7 @@ const SignUp = () => {
       </div>
       {modalSignUp && (
         <Modal
+          showClose={false}
           content={<ModalContent />}
           onModalClose={onModalClose}
         />

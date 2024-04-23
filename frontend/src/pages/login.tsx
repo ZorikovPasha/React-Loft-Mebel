@@ -3,19 +3,21 @@ import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import Link from 'next/link'
 import Head from 'next/head'
+import cloneDeep from 'lodash.clonedeep'
 
 import { UserApiClient } from '../api'
 import { IField } from './signup'
 import {
   getEmailInputErrorMessage,
   getPasswordFieldErrorMessage,
+  makeFieldsError,
   sanitizeUserRes,
   validateEmail,
   validatePassword
 } from '../utils'
 import AppTextField from '../components/common/appTextField'
 import { ROUTES } from '../utils/const'
-import { isILogin400, isRes500, isSuccessfullLoginResponse } from '../api/types'
+import { isILogin400, isSuccessfullLoginResponse } from '../api/types'
 import { loginUserActionCreator } from '../redux/actions/userAction'
 import { toggleSnackbarOpen } from '../redux/actions/errors'
 import { Button } from '../components/common/Button'
@@ -23,9 +25,7 @@ import { Loader } from '../components/common/Loader'
 import { Yandex } from '../svg/yandex-logo'
 
 const Login = () => {
-  const dispatch = useDispatch()
-  const router = useRouter()
-
+  const yandexAuthLink = `${process.env.NEXT_PUBLIC_BACKEND}/auth/login/yandex`
   const fields = React.useRef<Record<'email' | 'password', IField>>({
     email: {
       tag: 'input',
@@ -57,8 +57,13 @@ const Login = () => {
     }
   })
 
-  const [form, setForm] = React.useState(fields.current)
+  const [form, setForm] = React.useState(cloneDeep(fields.current))
   const [isLoading, setIsLoading] = React.useState(false)
+
+  const areFieldsValid = Object.values(form).every(({ isValid, required }) => required && isValid)
+
+  const dispatch = useDispatch()
+  const router = useRouter()
 
   const onChange = (name: 'email' | 'password') => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target
@@ -79,8 +84,6 @@ const Login = () => {
     })
   }
 
-  const yandexAuthLink = `${process.env.NEXT_PUBLIC_BACKEND}/auth/login/yandex`
-
   const login: React.MouseEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
@@ -88,20 +91,9 @@ const Login = () => {
       return
     }
 
-    const newFormState = {
-      email: {
-        ...form.email,
-        showErrors: true
-      },
-      password: {
-        ...form.password,
-        showErrors: true
-      }
-    }
+    setForm(makeFieldsError(form))
 
-    setForm(newFormState)
-
-    if (!Object.values(form).every(({ isValid, required }) => required && isValid)) {
+    if (!areFieldsValid) {
       return
     }
 
@@ -113,38 +105,23 @@ const Login = () => {
     setIsLoading(true)
     try {
       const response = await UserApiClient.login(dto)
-
       setIsLoading(false)
-
-      if (isILogin400(response)) {
-        setForm((prev) => ({
-          email: Object.assign(prev.email, {
-            isValid: false,
-            errorMessage: response.message
-          }),
-          password: Object.assign(prev.password, {
-            isValid: false,
-            errorMessage: response.message
-          })
-        }))
-        return
-      }
-
       if (isSuccessfullLoginResponse(response)) {
         setForm(fields.current)
-        const payload = sanitizeUserRes(response.user)
         UserApiClient.applyNewTokenAndReloadRequestInterceptor(response.token)
-        dispatch(loginUserActionCreator(payload))
+        dispatch(loginUserActionCreator(sanitizeUserRes(response.user)))
         router.push(ROUTES.Profile)
-        return
-      }
-
-      if (isRes500(response)) {
+      } else {
         dispatch(toggleSnackbarOpen())
       }
     } catch (error) {
       setIsLoading(false)
-      dispatch(toggleSnackbarOpen())
+      if (isILogin400(error)) {
+        setForm(makeFieldsError(form))
+        dispatch(toggleSnackbarOpen(error.message, 'error'))
+      } else {
+        dispatch(toggleSnackbarOpen())
+      }
     }
   }
 
@@ -204,7 +181,7 @@ const Login = () => {
                 title='Log in'
                 className='login__form-btn btn mt-40'
                 type='submit'
-                disabled={isLoading}
+                disabled={isLoading || !areFieldsValid}
               >
                 Log in
               </Button>

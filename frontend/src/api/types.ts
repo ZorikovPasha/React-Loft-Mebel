@@ -78,9 +78,12 @@ export const isGetOrdersResponseSuccessfull = (res: IGetOrdersRes): res is IGetO
   return Boolean(res.orders) && Array.isArray(res.orders)
 }
 
-export const isILogin400 = (data: ILoginRes | ILoginUser400): data is ILoginUser400 => {
-  // @ts-expect-error this is okay here
-  return data.statusCode === 400
+export const isILogin400 = (data: ILoginUser400 | unknown | undefined): data is ILoginUser400 => {
+  if (typeof data === 'object' && data !== null) {
+    return (data as Record<string, unknown>)?.statusCode === 400
+  } else {
+    return false
+  }
 }
 
 export const isSuccessfullLoginResponse = (data: ILoginRes): data is ILoginSuccessfullRes => {
