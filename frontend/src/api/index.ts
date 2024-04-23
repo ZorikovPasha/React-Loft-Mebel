@@ -68,36 +68,16 @@ class Api extends Axios {
   }
 
   get = <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    return this._axios
-      .get(url, config)
-      .then(this.success)
-      .catch((error: AxiosError<Error>) => {
-        throw error
-      })
+    return this._axios.get(url, config).then(this.success).catch(this.error)
   }
-  post = <T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<T> => {
-    return this._axios
-      .post(url, data, config)
-      .then(this.success)
-      .catch((error: AxiosError<Error>) => {
-        return error?.response?.data
-      })
+  post = async <T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<T> => {
+    return this._axios.post(url, data, config).then(this.success).catch(this.error)
   }
   put = <T, B>(url: string, data?: B, config?: AxiosRequestConfig): Promise<T> => {
-    return this._axios
-      .put(url, data, config)
-      .then(this.success)
-      .catch((error: AxiosError<Error>) => {
-        return error?.response?.data
-      })
+    return this._axios.put(url, data, config).then(this.success).catch(this.error)
   }
   delete = <T, B>(url: string, data?: B): Promise<T> => {
-    return this._axios
-      .delete(url, { data: data })
-      .then(this.success)
-      .catch((error: AxiosError<Error>) => {
-        throw error
-      })
+    return this._axios.delete(url, { data: data }).then(this.success).catch(this.error)
   }
 }
 
@@ -153,6 +133,8 @@ class UserApi extends Api {
             return Promise.reject(error)
             // should do logout??
           }
+        } else {
+          return Promise.reject(error?.response?.data)
         }
       }
     )

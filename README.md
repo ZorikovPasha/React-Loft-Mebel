@@ -166,5 +166,8 @@ TODO!:
 - [ ] after login via yandex login shows in a moment before profile
 - [x] no snack after canceling order
 - [x] card -> button add to cart is not disabled while processing request
-- [ ] buy in product no loader no snack, button os not disabling
-- [ ] favourite in product, no loader, no snack, button os not disabling
+- [x] buy in product no loader no snack, button os not disabling
+- [x] favourite in product, no loader, no snack, button os not disabling
+- [x] /login badrequest bad but message is internal
+- [x] /login form is not being cleared
+- [x] after signup click on close gets user to /login

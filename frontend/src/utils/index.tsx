@@ -2,6 +2,7 @@ import React from 'react'
 import { IOrder } from '../redux/reducers/userReducer'
 import { IFurnitureItemRes, IImage, IReviewRes } from '../../../server/src/furniture/types'
 import { ILoginSuccessfullRes } from '../../../server/src/auth/types'
+import { IField } from 'src/pages/signup'
 
 export const validateEmail = (email: string): boolean => {
   return email.trim().length > 4 && email.includes('@') && email.includes('.')
@@ -24,7 +25,7 @@ export const getPasswordFieldErrorMessage = (str: string): string => {
     return 'Password length should be more than 6 characters'
   }
 
-  if (str.trim() !== '1234') {
+  if (str.trim() === '1234') {
     return 'Password is too simple'
   }
 
@@ -35,8 +36,20 @@ export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-export const getTextInputErrorMessage = (val: string, name = 'Name') => {
-  return val.trim().length === 0 ? 'Required field' : `Please enter your ${name}`
+export const getNameInputErrorMessage = (val: string) => {
+  if (val.trim().length === 0) {
+    return `Please enter your name`
+  } else {
+    return ''
+  }
+}
+
+export const getTextInputErrorMessage = (val: string) => {
+  if (val.trim().length === 0) {
+    return 'Field required'
+  } else {
+    return ''
+  }
 }
 
 export const getEmailInputErrorMessage = (str: string) => {
@@ -315,4 +328,16 @@ export const collectQuintityOptions = (leftInStock: number | null | undefined) =
   }
 
   return options
+}
+
+export const makeFieldsError = (fields: Record<string, IField>) => {
+  const newFields = {} as typeof fields
+  Object.entries(fields).forEach(([key, props]) => {
+    newFields[key] = {
+      ...props,
+      showErrors: true
+    }
+  })
+
+  return newFields
 }

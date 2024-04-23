@@ -11,6 +11,7 @@ import { editOrderActionCreator, editUserActionCreator, logoutUserActionCreator 
 import {
   IProcessedFurniture,
   getEmailInputErrorMessage,
+  getNameInputErrorMessage,
   getQueryParams,
   getTextInputErrorMessage,
   sanitizeFurnitureItem,
@@ -88,7 +89,7 @@ const Profile: NextPage<IProps> = ({ pageData }) => {
     showErrors: false,
     errorMessage: '',
     isTouched: false,
-    getErrorMessage: getTextInputErrorMessage,
+    getErrorMessage: getNameInputErrorMessage,
     validateFn: validateTextInput
   }
 

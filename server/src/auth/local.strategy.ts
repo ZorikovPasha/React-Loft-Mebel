@@ -13,10 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser(email, password)
 
     if (!user) {
-      throw new BadRequestException({
-        statusCode: 400,
-        message: 'Email or password is incorrect'
-      })
+      throw new BadRequestException('Email or password is incorrect')
     }
     return user
   }

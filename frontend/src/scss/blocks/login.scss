@@ -75,7 +75,7 @@
         color: $text;
       }
 
-      &[data-disabled] {
+      &[data-disabled="true"] {
         touch-action: none;
         border-color: #c4c4c4;
         pointer-events: none;

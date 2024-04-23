@@ -117,7 +117,7 @@ export class AuthController {
     })
 
     if (candidate) {
-      throw new BadRequestException('User already exists') // 422
+      throw new BadRequestException('User with this email already exists') // 422
     }
 
     await this.userService.create({
