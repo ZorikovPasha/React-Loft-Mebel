@@ -427,7 +427,7 @@ export class UserService {
     })
 
     if (candidate) {
-      if (candidate.quintity + quintity < product.leftInStock) {
+      if (candidate.quintity + quintity <= product.leftInStock) {
         await this.prisma.cartFurniture.updateMany({
           where: {
             furnitureId: product.id,
@@ -444,7 +444,7 @@ export class UserService {
         return null
       }
     } else {
-      if (quintity < product.leftInStock) {
+      if (quintity <= product.leftInStock) {
         await this.prisma.cartFurniture.create({
           data: {
             furnitureId: product.id,

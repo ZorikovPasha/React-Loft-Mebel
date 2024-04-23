@@ -46,8 +46,28 @@ const Product: NextPage<IProps> = ({ pageData }) => {
       </Head>
 
       <Breadcrumbs breadcrumbs={breads} />
-      <ProductCard product={current} />
-      <ProductTabs product={current} />
+      {current.leftInStock > 0 ? (
+        <>
+          <ProductCard product={current} />
+          <ProductTabs product={current} />
+        </>
+      ) : (
+        <div className='container'>
+          <div className='product__soldout flex'>
+            {current.image ? (
+              <div className='product__soldout-img'>
+                <img
+                  className=''
+                  src={process.env.NEXT_PUBLIC_BACKEND + current.image.url}
+                  alt={current.name ?? 'Product image'}
+                />
+              </div>
+            ) : null}
+
+            <p className='product__soldout-p'>This product is sold out</p>
+          </div>
+        </div>
+      )}
 
       {topSales.length ? (
         <section className='mt-60'>

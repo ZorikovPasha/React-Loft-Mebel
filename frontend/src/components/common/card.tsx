@@ -13,7 +13,7 @@ interface IProps {
 }
 
 export const Card = React.memo(({ product, isFavorite }: IProps) => {
-  const { id, image, name, type, priceOld, priceNew, dimensions, sale, rating, reviews } = product
+  const { id, image, name, type, priceOld, priceNew, dimensions, sale, rating, reviews, leftInStock } = product
 
   const { isProcessingRequest: isProcessingFavorite, likeProduct } = useFavoriteProduct(id)
   const { isProcessingRequest: isProcessingBuy, buy } = useAddToCart(product)
@@ -98,15 +98,17 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
                 <p className='item-sales__num'>{dimensions[0].height} SM</p>
               </div>
             </div>
-            <Button
-              className='item-sales__tocart btn'
-              type='button'
-              title='Add product to cart'
-              disabled={isProcessingBuy}
-              onClick={buy}
-            >
-              Add to cart
-            </Button>
+            {leftInStock > 0 ? (
+              <Button
+                className='item-sales__tocart btn'
+                type='button'
+                title='Add product to cart'
+                disabled={isProcessingBuy}
+                onClick={buy}
+              >
+                Add to cart
+              </Button>
+            ) : null}
           </div>
         ) : null}
       </div>

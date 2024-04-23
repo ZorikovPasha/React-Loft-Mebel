@@ -942,11 +942,13 @@ const Profile: NextPage<IProps> = ({ pageData }) => {
                                     <div className='profile__table-cell'>
                                       <Link href={`/products/${id}`}>
                                         <a className='flex items-center'>
-                                          <img
-                                            className='profile__table-image'
-                                            src={image ? process.env.NEXT_PUBLIC_BACKEND + image.url : ''}
-                                            alt=''
-                                          />
+                                          <div className='profile__table-image'>
+                                            <img
+                                              className=''
+                                              src={image ? process.env.NEXT_PUBLIC_BACKEND + image.url : ''}
+                                              alt=''
+                                            />
+                                          </div>
 
                                           <p>{name}</p>
                                         </a>

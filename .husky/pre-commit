@@ -5,6 +5,7 @@ cd frontend
 bun run stylelint
 bun run lint
 bun run format
+bun run typecheck
 
 cd ../server
 bun run lint

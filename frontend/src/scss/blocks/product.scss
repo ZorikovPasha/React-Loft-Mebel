@@ -1,4 +1,47 @@
 .product {
+  &__soldout {
+    padding-top: 80px;
+
+    @media #{$mobile} {
+      padding-top: 40px;
+    }  
+  }
+
+  &__soldout-img {
+    position: relative;
+    width: 200px;
+    height: 250px;
+    margin-right: 30px;
+    box-shadow: 0 1px 9px rgba(0, 0, 0, 0.11);
+
+    @media #{$mobile} {
+      width: 150px;
+      height: 170px;
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__soldout-p {
+    font-size: 26px;
+    line-height: 34px;
+    padding-top: 50px;
+
+    @media #{$mobile} {
+      font-size: 22px;
+      line-height: 30px;
+    }
+  }
+
   &__inner {
     grid-template-columns: calc(100% - 490px) 460px;
     grid-gap: 30px;
