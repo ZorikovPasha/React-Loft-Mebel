@@ -3,6 +3,7 @@ import sizeOf from 'buffer-image-size'
 import sharp from 'sharp'
 import crypto from 'node:crypto'
 import slugify from 'slugify'
+import { getPlaiceholder } from 'plaiceholder'
 
 @Injectable()
 export class ImageService {
@@ -14,6 +15,8 @@ export class ImageService {
     const imageNameWithoutExtension = image.originalname.split('.').slice(0, -1).join('')
     const processedImageNameWithoutExtension = slugify(imageNameWithoutExtension, { replacement: '_' }) // this.utils.replaceSpacesWithUnderscores()
     const imageExtension = image.originalname.split('.').pop()
+
+    const { base64 } = await getPlaiceholder(compressedImage)
 
     const hash = crypto.createHash('md5')
     const digest = hash.digest('hex')
@@ -30,7 +33,8 @@ export class ImageService {
       size: image.size / 1024,
       url: `/uploads/${processedImageNameWithoutExtension}_${digest}.${imageExtension}`,
       provider: 'database',
-      data: compressedImage
+      data: compressedImage,
+      blurredBase64: base64
     }
     return photo
   }

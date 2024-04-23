@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { GetServerSideProps, NextPage } from 'next'
+import Head from 'next/head'
 
 import { Aside } from '../components/Catalog/Aside'
 import { SortOptions, SortPopup } from '../components/Catalog/SortPopup'
@@ -17,7 +18,6 @@ import { setItemsActionCreator } from '../redux/actions/items'
 import { IGetFurnitureSuccessRes } from '../../../server/src/furniture/types'
 import { Pagination } from '../components/pagination'
 import { Loader } from '../components/common/Loader'
-import Head from 'next/head'
 
 export interface ISelectOption {
   label: string
@@ -103,7 +103,6 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
     initialTypeProps,
     resolvedUrlFromBuildTime
   } = pageData
-  const router = useRouter()
 
   const scrollToTopTimeout = React.useRef<number | null>(null)
   const asideToggleRef = React.useRef<HTMLButtonElement | null>(null)
@@ -126,6 +125,7 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
   )
 
   const dispatch = useDispatch()
+  const router = useRouter()
 
   React.useEffect(() => {
     // console.log('resolvedUrlFromBuildTime', resolvedUrlFromBuildTime)

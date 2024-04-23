@@ -92,21 +92,23 @@ export class FurnitureService {
 
     const [all, filtered] = await this.prisma.$transaction(transactions)
 
+    const processedFurniture = all
+      ? await Promise.all(
+          all.map(async (furnitureItem) => {
+            return await this.prepareFurniture(furnitureItem)
+          })
+        )
+      : []
+
     return {
-      all: all
-        ? await Promise.all(
-            all.map(async (furnitureItem) => {
-              return await this.prepareFurniture(furnitureItem)
-            })
-          )
-        : [],
+      all: processedFurniture,
       filtered: filtered
         ? await Promise.all(
             filtered.map(async (furnitureItem) => {
               return await this.prepareFurniture(furnitureItem)
             })
           )
-        : []
+        : processedFurniture
     }
   }
 
@@ -153,6 +155,7 @@ export class FurnitureService {
             size: true,
             url: true,
             mime: true,
+            blurredBase64: true,
             provider: true,
             createdAt: true,
             updatedAt: true
@@ -183,6 +186,7 @@ export class FurnitureService {
               size: true,
               url: true,
               mime: true,
+              blurredBase64: true,
               provider: true,
               createdAt: true,
               updatedAt: true
@@ -212,6 +216,7 @@ export class FurnitureService {
                       size: userAvatar.size,
                       url: userAvatar.url,
                       mime: userAvatar.mime,
+                      blurredBase64: userAvatar.blurredBase64,
                       provider: userAvatar.provider,
                       createdAt: userAvatar.createdAt,
                       updatedAt: userAvatar.updatedAt,
@@ -257,6 +262,7 @@ export class FurnitureService {
             size: image.size,
             url: image.url,
             mime: image.mime,
+            blurredBase64: image.blurredBase64,
             provider: image.provider,
             createdAt: image.createdAt,
             updatedAt: image.updatedAt
@@ -265,7 +271,6 @@ export class FurnitureService {
       dimensions,
       leftInStock: furnitureItem.leftInStock,
       reviews: processedReviews
-      // reviews: []
     }
   }
 
