@@ -54,26 +54,25 @@ export const Layout = ({ children }: IProps) => {
   React.useEffect(() => {
     const fetchAndSetFurnitureDataForSearch = async () => {
       const furniture = await PublicApiClient.getFurniture('')
-      if (isDataOfFurniture(furniture)) {
-        dispatch(setItemsActionCreator(furniture.all.map(sanitizeFurnitureItem)))
-        const searchData = furniture.all.map(sanitizeFurnitureItem).map((p) => ({
-          title: p.name ?? '',
-          link: `/products/${p.id}`,
-          imageUrl: p.image?.url,
-          texts: [] as string[]
-        }))
-
-        setSearchData((prev) => ({
-          ...prev,
-          searchEngine: new Fuse(searchData, { keys: ['title', 'texts'] })
-        }))
+      if (!isDataOfFurniture(furniture)) {
+        return
       }
+      dispatch(setItemsActionCreator(furniture.all.map(sanitizeFurnitureItem)))
+      const searchData = furniture.all.map(sanitizeFurnitureItem).map((p) => ({
+        title: p.name ?? '',
+        link: `/products/${p.id}`,
+        imageUrl: p.image?.url,
+        texts: [] as string[]
+      }))
+
+      setSearchData((prev) => ({
+        ...prev,
+        searchEngine: new Fuse(searchData, { keys: ['title', 'texts'] })
+      }))
     }
 
     fetchAndSetFurnitureDataForSearch()
   }, [])
-
-  // useAuth()
 
   return (
     <div className='wrapper'>

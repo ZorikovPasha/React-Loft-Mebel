@@ -45,7 +45,9 @@ export class FurnitureController {
     @Query('room') room: string | undefined,
     @Query('material') material: string | undefined,
     @Query('brand') brand: string | undefined,
-    @Query('sort') sort: string | undefined
+    @Query('sort') sort: string | undefined,
+    @Query('price_from') priceFrom: string | undefined,
+    @Query('price_to') priceTo: string | undefined
   ): Promise<IGetFurnitureRes> {
     const collectedBrands = brand ? brand.split(',') : null
     const criteria = {
@@ -85,16 +87,34 @@ export class FurnitureController {
     })
 
     const { filtered, all } = await this.furnitureService.findMany(isThereAnyCriteria ? criteria : undefined)
+    let filteredByPrice = filtered
+
+    // at least one of them
+    if (typeof priceFrom === 'string' || typeof priceTo === 'string') {
+      filteredByPrice = filtered.filter((product) => {
+        const formattedProductPrice = product.priceNew ? parseFloat(product.priceNew) : NaN
+        if (isNaN(formattedProductPrice)) {
+          return false
+        }
+        // both of them
+        if (typeof priceFrom === 'string' && typeof priceTo === 'string') {
+          return parseFloat(priceFrom) <= formattedProductPrice && parseFloat(priceTo) >= formattedProductPrice
+        }
+
+        if (typeof priceFrom === 'string' && typeof priceTo !== 'string') {
+          return parseFloat(priceFrom) <= formattedProductPrice
+        }
+
+        if (typeof priceFrom !== 'string' && typeof priceTo === 'string') {
+          return parseFloat(priceTo) >= formattedProductPrice
+        }
+
+        return false
+      })
+    }
 
     if (sort === 'asc') {
-      filtered.sort((a, b) => {
-        if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
-          return parseFloat(a.priceNew) - parseFloat(b.priceNew)
-        } else {
-          return 0
-        }
-      })
-      all.sort((a, b) => {
+      filteredByPrice.sort((a, b) => {
         if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
           return parseFloat(a.priceNew) - parseFloat(b.priceNew)
         } else {
@@ -103,14 +123,7 @@ export class FurnitureController {
       })
     }
     if (sort === 'desc') {
-      filtered.sort((a, b) => {
-        if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
-          return parseFloat(b.priceNew) - parseFloat(a.priceNew)
-        } else {
-          return 0
-        }
-      })
-      all.sort((a, b) => {
+      filteredByPrice.sort((a, b) => {
         if (typeof a.priceNew === 'string' && typeof b.priceNew === 'string') {
           return parseFloat(b.priceNew) - parseFloat(a.priceNew)
         } else {
@@ -118,7 +131,7 @@ export class FurnitureController {
         }
       })
     }
-    return { filtered: filtered, all: all }
+    return { filtered: filteredByPrice, all: all }
   }
 
   @ApiOkResponse({

@@ -341,3 +341,95 @@ export const makeFieldsError = (fields: Record<string, IField>) => {
 
   return newFields
 }
+
+export const getMinAndMaxPrice = (products: IProcessedFurniture[]) => {
+  let minPrice = 0
+  let maxPrice = 0
+
+  products.forEach((p) => {
+    // if both are null
+    if (typeof p.priceNew !== 'string' && typeof p.priceOld !== 'string') {
+      return
+    }
+
+    let productPrice: number | undefined
+
+    // if both are strings
+    if (typeof p.priceNew === 'string' && typeof p.priceOld === 'string') {
+      productPrice = parseFloat(p.priceNew) > parseFloat(p.priceOld) ? parseFloat(p.priceNew) : parseFloat(p.priceOld)
+    }
+
+    if (typeof p.priceNew === 'string') {
+      productPrice = parseFloat(p.priceNew)
+    }
+
+    if (typeof p.priceOld === 'string') {
+      productPrice = parseFloat(p.priceOld)
+    }
+
+    if (typeof productPrice !== 'number') {
+      return
+    }
+
+    if (productPrice < minPrice) {
+      minPrice = productPrice
+    }
+
+    if (productPrice > maxPrice) {
+      maxPrice = productPrice
+    }
+  })
+
+  return { minPrice, maxPrice }
+}
+
+export const isNullOrUndefined = (value: unknown) => {
+  return typeof value === 'undefined' || value === null
+}
+
+export const collectCatalogQueryFromPieces = (
+  furnitureType: string | undefined,
+  furnitureRoom: string | undefined,
+  furnitureMaterial: string | undefined,
+  furnitureBrand: string | undefined,
+  sortBy: string | undefined,
+  priceFrom: string | undefined,
+  priceTo: string | undefined
+): string => {
+  const assembleQueries: string[] = []
+  if (typeof furnitureType !== 'undefined') {
+    assembleQueries.push(`type=${furnitureType}`)
+  }
+  if (typeof furnitureRoom !== 'undefined') {
+    assembleQueries.push(`room=${furnitureRoom}`)
+  }
+  if (typeof furnitureMaterial !== 'undefined') {
+    assembleQueries.push(`material=${furnitureMaterial}`)
+  }
+  if (typeof furnitureBrand !== 'undefined') {
+    assembleQueries.push(`brand=${furnitureBrand}`)
+  }
+  if (sortBy === 'asc' || sortBy === 'desc' || sortBy === 'pop') {
+    assembleQueries.push(`sort=${sortBy}`)
+  }
+  if (typeof priceFrom !== 'undefined') {
+    assembleQueries.push(`price_from=${priceFrom}`)
+  }
+  if (typeof priceTo !== 'undefined') {
+    assembleQueries.push(`price_to=${priceTo}`)
+  }
+
+  let query = ''
+  if (assembleQueries.length) {
+    query = '?' + query
+    assembleQueries.forEach((queryItem, index) => {
+      if (index > 0) {
+        query = query + '&' + queryItem
+      } else {
+        query = query + queryItem
+      }
+    })
+  }
+
+  return query
+}

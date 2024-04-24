@@ -1,4 +1,5 @@
 import React from 'react'
+import Range from 'rc-slider'
 
 import { Button } from '../common/Button'
 import { IRadiosField, ISelectField, ISelectOption } from '../../pages/catalog'
@@ -11,6 +12,10 @@ interface IAsideProps {
   rooms: ISelectField
   materials: ISelectField
   types: ISelectField
+  minPrice: number
+  maxPrice: number
+  priceTo: number
+  priceFrom: number
   onSelectRoom: (value: ISelectOption | null) => void
   onSelectType: (value: ISelectOption | null) => void
   onSelectMaterial: (value: ISelectOption | null) => void
@@ -18,23 +23,50 @@ interface IAsideProps {
   onSelectColor: (color: string) => () => void
   onAsideCloseClick: React.MouseEventHandler<HTMLButtonElement>
   handleFiltersSubmit: React.FormEventHandler<HTMLFormElement>
+  handleChangeRange: (values: number | number[]) => void
 }
 
-export const Aside: React.FC<IAsideProps> = ({
+export const Aside = ({
   isAsideVisible,
   colors,
   brands,
   rooms,
   types,
   materials,
+  minPrice,
+  maxPrice,
+  priceFrom,
+  priceTo,
   onSelectRoom,
   onSelectType,
   onSelectBrand,
   onSelectMaterial,
   onSelectColor,
   onAsideCloseClick,
-  handleFiltersSubmit
-}) => {
+  handleFiltersSubmit,
+  handleChangeRange
+}: IAsideProps) => {
+  const trackStyle = {
+    backgroundColor: '#209cee',
+    height: '2px'
+  }
+
+  const railStyle = {
+    backgroundColor: '#535554',
+    height: '2px'
+  }
+
+  const handleStyle = {
+    top: '6px',
+    width: '16px',
+    height: '10px',
+    backgroundColor: '#209cee',
+    border: 'none',
+    borderRadius: 0,
+    opacity: 1,
+    boxShadow: 'none'
+  }
+
   return (
     <aside className={`catalog__aside aside ${isAsideVisible ? 'opened' : ''}`}>
       <div className={`aside__box ${isAsideVisible ? 'opened' : ''}`}>
@@ -72,6 +104,26 @@ export const Aside: React.FC<IAsideProps> = ({
               options={types.options}
               onChange={onSelectType}
             />
+
+            <h6 className='filter__title mt-30'>Price</h6>
+
+            <Range
+              range
+              step={20}
+              min={minPrice}
+              max={maxPrice}
+              value={[priceFrom, priceTo]}
+              allowCross={false}
+              trackStyle={trackStyle}
+              railStyle={railStyle}
+              handleStyle={handleStyle}
+              onChange={handleChangeRange}
+            />
+
+            <div className='flex justify-between'>
+              <span>{priceFrom}$</span>
+              <span>{priceTo}$</span>
+            </div>
           </div>
 
           <div className='aside__filter filter'>

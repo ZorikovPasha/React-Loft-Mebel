@@ -13,7 +13,15 @@ import { getUserData } from '../redux/getters'
 import { PublicApiClient } from '../api'
 import { isDataOfFurniture } from '../api/types'
 import { Button } from '../components/common/Button'
-import { IProcessedFurniture, capitalizeFirstLetter, getQueryParams, sanitizeFurnitureItem } from '../utils'
+import {
+  IProcessedFurniture,
+  capitalizeFirstLetter,
+  collectCatalogQueryFromPieces,
+  getMinAndMaxPrice,
+  getQueryParams,
+  isNullOrUndefined,
+  sanitizeFurnitureItem
+} from '../utils'
 import { setItemsActionCreator } from '../redux/actions/items'
 import { IGetFurnitureSuccessRes } from '../../../server/src/furniture/types'
 import { Pagination } from '../components/pagination'
@@ -88,11 +96,23 @@ interface IProps {
     initialColorsProps: IRadiosField
     initialBrandProps: IRadiosField
     initialSortOption: SortOptions
+    initialPriceFrom: number | null
+    initialPriceTo: number | null
     resolvedUrlFromBuildTime: string
   }
 }
 
 const Catalog: NextPage<IProps> = ({ pageData }) => {
+  const productsPerPage = 20
+
+  const breadcrumbs = [
+    {
+      name: 'Catalog',
+      isLink: false,
+      href: ''
+    }
+  ]
+
   const {
     furniture,
     initialBrandProps,
@@ -101,6 +121,8 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
     initialRoomProps,
     initialSortOption,
     initialTypeProps,
+    initialPriceFrom,
+    initialPriceTo,
     resolvedUrlFromBuildTime
   } = pageData
 
@@ -119,16 +141,27 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
   const [colors, setColors] = React.useState(initialColorsProps)
   const [activeSortOption, setActiveSortOption] = React.useState<SortOptions>(initialSortOption)
   const [currentChunk, setCurrentChunk] = React.useState(1)
+  const { minPrice, maxPrice } = getMinAndMaxPrice(furniture.all)
+  const [priceFrom, setPriceFrom] = React.useState(initialPriceFrom ?? minPrice)
+  const [priceTo, setPriceTo] = React.useState(initialPriceTo ?? maxPrice)
+
+  const { favorites } = useSelector(getUserData)
 
   const topSales = furniture.all.filter((item) =>
     typeof item.rating === 'string' ? parseFloat(item.rating) > 4.5 : false
+  )
+
+  // 0, 19
+  // 1, 39
+  const currentBunchOfProducts = filteredProducts.slice(
+    (currentChunk - 1) * productsPerPage,
+    currentChunk * productsPerPage
   )
 
   const dispatch = useDispatch()
   const router = useRouter()
 
   React.useEffect(() => {
-    // console.log('resolvedUrlFromBuildTime', resolvedUrlFromBuildTime)
     if (!initialQuery.current) {
       initialQuery.current = resolvedUrlFromBuildTime
     }
@@ -138,44 +171,28 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
       return
     }
 
-    refetchesNumber.current = refetchesNumber.current + 1
-
-    // console.log('__further')
-
     const furnitureType = getQueryParams('type')
     const furnitureRoom = getQueryParams('room')
+    console.log('furnitureRoom', furnitureRoom)
+
     const furnitureMaterial = getQueryParams('material')
     const furnitureBrand = getQueryParams('brand')
     const showOnlyDiscountedProducts = getQueryParams('sale')
     const sortBy = getQueryParams('sort')
-    const assembleQueries: string[] = []
-    if (furnitureType) {
-      assembleQueries.push(`type=${furnitureType}`)
-    }
-    if (furnitureRoom) {
-      assembleQueries.push(`room=${furnitureRoom}`)
-    }
-    if (furnitureMaterial) {
-      assembleQueries.push(`material=${furnitureMaterial}`)
-    }
-    if (furnitureBrand) {
-      assembleQueries.push(`brand=${furnitureBrand}`)
-    }
-    if (sortBy === 'asc' || sortBy === 'desc' || sortBy === 'pop') {
-      assembleQueries.push(`sort=${sortBy}`)
-    }
+    const priceFrom = getQueryParams('price_from')
+    const priceTo = getQueryParams('price_to')
 
-    let query = ''
-    if (assembleQueries.length) {
-      query = '?' + query
-      assembleQueries.forEach((queryItem, index) => {
-        if (index > 0) {
-          query = query + '&' + queryItem
-        } else {
-          query = query + queryItem
-        }
-      })
-    }
+    const query = collectCatalogQueryFromPieces(
+      furnitureType,
+      furnitureRoom,
+      furnitureMaterial,
+      furnitureBrand,
+      sortBy,
+      priceFrom,
+      priceTo
+    )
+
+    refetchesNumber.current = refetchesNumber.current + 1
     const controller = new AbortController()
     setLoading(true)
     PublicApiClient.getFurniture(query, controller.signal)
@@ -233,25 +250,19 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
 
           return prev
         })
+
+        if (typeof priceFrom === 'string' && !isNaN(parseFloat(priceFrom))) {
+          setPriceFrom(parseFloat(priceFrom))
+        }
+
+        if (typeof priceTo === 'string' && !isNaN(parseFloat(priceTo))) {
+          setPriceTo(parseFloat(priceTo))
+        }
         setLoading(false)
       })
       .catch(() => setLoading(false))
     return () => controller.abort()
   }, [router.asPath])
-
-  const { favorites } = useSelector(getUserData)
-
-  const breadcrumbs = [
-    {
-      name: 'Catalog',
-      isLink: false,
-      href: ''
-    }
-  ]
-
-  const isNullOrUndefined = (value: unknown) => {
-    return typeof value === 'undefined' || value === null
-  }
 
   const handleFiltersSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
@@ -264,8 +275,11 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
     const brandsQuery = `${brands.value.length ? '&brand=' + brands.value.join(',') : ''}`
     const colorsQuery = `${colors.value.length ? 'colors=' + colors.value.join(',') : ''}`
     const sortQuery = activeSortOption ? '&sort=' + activeSortOption : ''
+    const priceFromQuery = `&price_from=${priceFrom}`
+    const priceToQuery = `&price_to=${priceTo}`
 
-    let searchQuery = roomQuery + materialQuery + typeQuery + brandsQuery + colorsQuery + sortQuery
+    let searchQuery =
+      roomQuery + materialQuery + typeQuery + brandsQuery + colorsQuery + sortQuery + priceFromQuery + priceToQuery
 
     if (searchQuery[0] === '&') {
       searchQuery = '?' + searchQuery.substring(1)
@@ -275,46 +289,7 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
       pathname: '',
       search: searchQuery
     })
-    // useeffect pointing on router.aspath gets invoked and performs refetch
 
-    // const controller = new AbortController()
-    // setLoading(true)
-
-    // try {
-    //   const data = await PublicApiClient.getFurniture(searchQuery, controller.signal)
-    //   if (!isDataOfFurniture(data)) {
-    //     return setLoading(false)
-    //   }
-    //   const { allFurniture, filteredFurniture, allTypes, allBrands, allColors, allMaterials, allRoomsOptions } =
-    //     processResponse(data)
-
-    //   setFilteredProducts(filteredFurniture)
-    //   dispatch(setItemsActionCreator(allFurniture))
-
-    //   setRoom((prev) => ({
-    //     ...prev,
-    //     options: allRoomsOptions.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption)
-    //   }))
-    //   setType((prev) => ({
-    //     ...prev,
-    //     options: allTypes.map((t) => ({ label: capitalizeFirstLetter(t), value: t })).concat(defaultOption)
-    //   }))
-    //   setMaterials((prev) => ({
-    //     ...prev,
-    //     options: allMaterials.map((c) => ({ label: capitalizeFirstLetter(c), value: c })).concat(defaultOption)
-    //   }))
-    //   setBrands((prev) => ({
-    //     ...prev,
-    //     options: allBrands.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-    //   }))
-    //   setColors((prev) => ({
-    //     ...prev,
-    //     options: allColors.map((c) => ({ label: capitalizeFirstLetter(c), value: c }))
-    //   }))
-    //   setLoading(false)
-    // } catch (error) {
-    //   setLoading(false)
-    // }
     toggleAsideVisibility(false)
     document.body.classList.remove('lock')
   }
@@ -351,13 +326,6 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
     }))
   }
 
-  const productsPerPage = 20
-  const currentBunchOfProducts = filteredProducts.slice(
-    (currentChunk - 1) * productsPerPage,
-    currentChunk * productsPerPage
-  )
-  // 0, 19
-  // 1, 39
   const onChangeChunk = () => {
     if (typeof scrollToTopTimeout.current === 'number') {
       window.clearTimeout(scrollToTopTimeout.current)
@@ -365,6 +333,20 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
     scrollToTopTimeout.current = window.setTimeout(() => {
       document.querySelector('.breadcrumbs')?.scrollIntoView()
     }, 1000)
+  }
+
+  const handleChangeRange = (values: number | number[]) => {
+    if (Array.isArray(values)) {
+      if (typeof values[0] === 'number') {
+        setPriceFrom(values[0])
+      }
+
+      if (typeof values[1] === 'number') {
+        setPriceTo(values[1])
+      }
+    } else {
+      setPriceFrom(values)
+    }
   }
 
   return (
@@ -387,6 +369,10 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
               brands={brands}
               rooms={room}
               types={type}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              priceFrom={priceFrom}
+              priceTo={priceTo}
               materials={materials}
               onSelectType={onSelect(setType)}
               onSelectRoom={onSelect(setRoom)}
@@ -395,6 +381,7 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
               onSelectColor={onSelectColor}
               onAsideCloseClick={onAsideCloseClick}
               handleFiltersSubmit={handleFiltersSubmit}
+              handleChangeRange={handleChangeRange}
             />
             <div className='catalog__body'>
               <div className='catalog__controls controls flex'>
@@ -537,46 +524,31 @@ export const getServerSideProps: GetServerSideProps<IProps> = async (context) =>
         initialColorsProps: colorsProps,
         initialBrandProps: brandProps,
         initialSortOption: defaultSortOption as SortOptions,
+        initialPriceFrom: null,
+        initialPriceTo: null,
         resolvedUrlFromBuildTime: context.resolvedUrl
       }
     }
   }
 
-  const furnitureType = context.query.type
-  const furnitureRoom = context.query.room
-  const furnitureMaterial = context.query.material
-  const furnitureBrand = context.query.brand
+  const furnitureType = Array.isArray(context.query.type) ? context.query.type[0] : context.query.type
+  const furnitureRoom = Array.isArray(context.query.room) ? context.query.room[0] : context.query.room
+  const furnitureMaterial = Array.isArray(context.query.material) ? context.query.material[0] : context.query.material
+  const furnitureBrand = Array.isArray(context.query.brand) ? context.query.brand[0] : context.query.brand
   const showOnlyDiscountedProducts = context.query.sale
-  const sortBy = context.query.sort
+  const sortBy = Array.isArray(context.query.sort) ? context.query.sort[0] : context.query.sort
+  const priceFrom = Array.isArray(context.query.price_from) ? context.query.price_from[0] : context.query.price_from
+  const priceTo = Array.isArray(context.query.price_to) ? context.query.price_to[0] : context.query.price_to
 
-  const assembleQueries: string[] = []
-  if (typeof furnitureType !== 'undefined') {
-    assembleQueries.push(`type=${furnitureType}`)
-  }
-  if (typeof furnitureRoom !== 'undefined') {
-    assembleQueries.push(`room=${furnitureRoom}`)
-  }
-  if (typeof furnitureMaterial !== 'undefined') {
-    assembleQueries.push(`material=${furnitureMaterial}`)
-  }
-  if (typeof furnitureBrand !== 'undefined') {
-    assembleQueries.push(`brand=${furnitureBrand}`)
-  }
-  if (sortBy === 'asc' || sortBy === 'desc' || sortBy === 'pop') {
-    assembleQueries.push(`sort=${sortBy}`)
-  }
-
-  let query = ''
-  if (assembleQueries.length) {
-    query = '?' + query
-    assembleQueries.forEach((queryItem, index) => {
-      if (index > 0) {
-        query = query + '&' + queryItem
-      } else {
-        query = query + queryItem
-      }
-    })
-  }
+  const query = collectCatalogQueryFromPieces(
+    furnitureType,
+    furnitureRoom,
+    furnitureMaterial,
+    furnitureBrand,
+    sortBy,
+    priceFrom,
+    priceTo
+  )
 
   try {
     const res = await PublicApiClient.getFurniture(query)
@@ -658,6 +630,8 @@ export const getServerSideProps: GetServerSideProps<IProps> = async (context) =>
             initialColorsProps,
             initialBrandProps,
             initialSortOption,
+            initialPriceFrom: priceFrom ? parseFloat(priceFrom) : null,
+            initialPriceTo: priceTo ? parseFloat(priceTo) : null,
             resolvedUrlFromBuildTime: context.resolvedUrl
           }
         }
