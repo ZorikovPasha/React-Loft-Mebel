@@ -12,18 +12,3 @@
     padding-bottom: 40px;
   }
 }
-
-.label-sales__body {
-  padding-left: 25px;
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: 0;
-    width: 18px;
-    height: 19px;
-    background-image: url('/images/icons/sale.svg');
-  }
-}

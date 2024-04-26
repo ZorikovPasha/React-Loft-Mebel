@@ -174,4 +174,4 @@ TODO!:
 - [x] items in orders are not equal by size
 - [x] implement ui when product is sold out
 - [x] remove buy button if product is 0
-- [ ] `Did this review was helpful` is not working
+- [x] `Did this review was helpful` is not working

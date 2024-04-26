@@ -25,15 +25,26 @@ export const itemsReducer = (
         ...action.payload
       }
     case Actions.BUMP_REVIEW_HELP_COUNT: {
-      const newItems = state.items.slice()
-      const reviewedProduct = newItems.find((item) => item.id === action.payload.productId)
-      const review = reviewedProduct?.reviews.find((r) => r.id === action.payload.reviewId)
+      const newItems = state.items.map((product) => {
+        if (product.id === action.payload.productId) {
+          return {
+            ...product,
+            reviews: product.reviews.map((r) => {
+              if (r.id === action.payload.reviewId) {
+                return {
+                  ...r,
+                  usersFoundThisHelpful: r.usersFoundThisHelpful + 1
+                }
+              } else {
+                return r
+              }
+            })
+          }
+        } else {
+          return product
+        }
+      })
 
-      if (!review) {
-        return state
-      }
-
-      review.usersFoundThisHelpful = review.usersFoundThisHelpful + 1
       return {
         ...state,
         items: newItems
@@ -41,18 +52,25 @@ export const itemsReducer = (
     }
     // -1 to reviews count
     case Actions.DUMP_REVIEW_HELP_COUNT: {
-      const newItems = state.items.slice()
-      const reviewedProduct = newItems.find((item) => item.id === action.payload.productId)
-      const review = reviewedProduct?.reviews.find((r) => r.id === action.payload.reviewId)
-
-      if (!review) {
-        return state
-      }
-
-      if (review.usersFoundThisHelpful === 0) {
-        return state
-      }
-      review.usersFoundThisHelpful = review.usersFoundThisHelpful - 1
+      const newItems = state.items.map((product) => {
+        if (product.id === action.payload.productId) {
+          return {
+            ...product,
+            reviews: product.reviews.map((r) => {
+              if (r.id === action.payload.reviewId) {
+                return {
+                  ...r,
+                  usersFoundThisHelpful: r.usersFoundThisHelpful <= 0 ? 0 : r.usersFoundThisHelpful - 1
+                }
+              } else {
+                return r
+              }
+            })
+          }
+        } else {
+          return product
+        }
+      })
       return {
         ...state,
         items: newItems
