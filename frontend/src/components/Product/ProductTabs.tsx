@@ -11,7 +11,7 @@ import { UserApiClient } from '../../api'
 import { isReviewWasHelpfullSuccess } from '../../api/types'
 import { toggleSnackbarOpen } from '../../redux/actions/errors'
 import { bumpReviewHelpCount, dumpReviewHelpCount } from '../../redux/actions/items'
-import { getUserData } from '../../redux/getters'
+import { getProductById, getUserData } from '../../redux/getters'
 
 type NewReviewsType = Omit<IProcessedReview, 'attachedPictures'> & {
   attachedPictures: IImage[]
@@ -21,7 +21,7 @@ interface IProps {
   product: IProcessedFurniture
 }
 
-export const ProductTabs = ({ product }: IProps) => {
+export const ProductTabs = ({ product: initialProduct }: IProps) => {
   const tabsContents = {
     features: {
       name: 'Specs'
@@ -31,6 +31,8 @@ export const ProductTabs = ({ product }: IProps) => {
     }
   }
 
+  const product = useSelector(getProductById(initialProduct.id)) ?? initialProduct
+
   const specsToRender: string[][] = []
   product.specs?.split(';').forEach((string) => {
     if (string.trim().length > 0) {
@@ -38,6 +40,23 @@ export const ProductTabs = ({ product }: IProps) => {
     }
   })
 
+  const reviewsToRender: NewReviewsType[] = []
+  product.reviews?.forEach((r) => {
+    if (!r) {
+      return
+    }
+
+    const filteredAttachedPictures: IImage[] = []
+    r.attachedPictures?.forEach((pic) => {
+      if (!pic) {
+        return
+      }
+
+      filteredAttachedPictures.push(pic)
+    })
+    r.attachedPictures = filteredAttachedPictures
+    reviewsToRender.push(r as NewReviewsType)
+  })
   const attachmentsInModal = React.useRef<IImage[]>([])
 
   const userState = useSelector(getUserData)
@@ -72,24 +91,6 @@ export const ProductTabs = ({ product }: IProps) => {
     setActiveTab(idx)
   }
 
-  const reviewsToRender: NewReviewsType[] = []
-  product.reviews?.forEach((r) => {
-    if (!r) {
-      return
-    }
-
-    const filteredAttachedPictures: IImage[] = []
-    r.attachedPictures?.forEach((pic) => {
-      if (!pic) {
-        return
-      }
-
-      filteredAttachedPictures.push(pic)
-    })
-    r.attachedPictures = filteredAttachedPictures
-    reviewsToRender.push(r as NewReviewsType)
-  })
-
   const onAttachmentsodalClose = () => {
     setShowAttachmentsModel(false)
     document.body.classList.remove('locked')
@@ -110,7 +111,6 @@ export const ProductTabs = ({ product }: IProps) => {
           setHelpfulReviews((prev) => prev.filter((number) => number !== reviewId))
           dispatch(dumpReviewHelpCount(product.id, reviewId))
         }
-        ;[]
       } else if (res?.statusCode === 401) {
         // means user has not logged in
         dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))

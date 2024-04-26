@@ -25,15 +25,44 @@
     left: 18px;
     display: flex;
     align-items: center;
-    font-size: 12px;
-    line-height: 14px;
-    color: #000;
 
     img {
       display: inline-block;
       margin-right: 7px;
     }
   }
+
+  &__label-body {
+    position: relative;
+    font-size: 12px;
+    line-height: 14px;
+    color: #000;
+    padding-left: 25px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 0;
+      width: 18px;
+      height: 19px;
+      background-image: url('/images/icons/sale.svg');
+    }
+  }
+
+  &__label-sold {
+    font-size: 13px;
+    line-height: 15px;
+    background: #d74444;
+    color: white;
+    border-radius: 4px;
+    padding: 4px 6px;
+  }
+
+  &__label-body + &__label-sold {
+    margin-left: 5px;
+  }
+
 
   &__like {
     position: absolute;

@@ -87,6 +87,12 @@ const Login = () => {
   const login: React.MouseEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
+    document.querySelectorAll('.login__form input').forEach((element) => {
+      if (element === document.activeElement && element instanceof HTMLInputElement) {
+        return element.blur()
+      }
+    })
+
     if (isLoading) {
       return
     }

@@ -26,11 +26,10 @@ export const Card = React.memo(({ product, isFavorite }: IProps) => {
 
   return (
     <div className='sales__item item-sales'>
-      {sale && discount ? (
-        <div className='item-sales__label label-sales'>
-          <p className='label-sales__body'>-{discount}%</p>
-        </div>
-      ) : null}
+      <div className='item-sales__label'>
+        {sale && discount ? <p className='item-sales__label-body'>-{discount}%</p> : null}
+        {leftInStock === 0 ? <p className='item-sales__label-sold'>Sold out</p> : null}
+      </div>
       <Button
         title={isFavorite ? 'Unlike product' : 'Like product'}
         type='button'
