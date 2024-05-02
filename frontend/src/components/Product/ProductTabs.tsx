@@ -32,6 +32,7 @@ export const ProductTabs = ({ product: initialProduct }: IProps) => {
   }
 
   const product = useSelector(getProductById(initialProduct.id)) ?? initialProduct
+  const { isLoggedIn } = useSelector(getUserData)
 
   const specsToRender: string[][] = []
   product.specs?.split(';').forEach((string) => {
@@ -97,6 +98,10 @@ export const ProductTabs = ({ product: initialProduct }: IProps) => {
   }
 
   const thisReviewIsHelpful = (reviewId: number | null) => async () => {
+    if (!isLoggedIn) {
+      return dispatch(toggleSnackbarOpen('You are not logged in. Please login.', 'warning'))
+    }
+
     if (reviewId === null) {
       return
     }

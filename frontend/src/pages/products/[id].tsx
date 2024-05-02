@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import Head from 'next/head'
 
 import { ProductCard } from '../../components/Product/ProductCard'
 import { Breadcrumbs } from '../../components/common/Breadcrumbs'
@@ -11,7 +12,6 @@ import { IProcessedFurniture, sanitizeFurnitureItem } from '../../utils'
 import { PublicApiClient } from '../../api'
 import { isDataOfFurniture } from '../../api/types'
 import { revalidate } from '../../utils/const'
-import Head from 'next/head'
 
 interface IProps {
   pageData: {

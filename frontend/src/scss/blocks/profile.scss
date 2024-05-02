@@ -148,7 +148,16 @@
     color: #414141;
     text-transform: capitalize;
     background-color: white;
-    border-radius: 10px 10px 0 0;
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(#209cee, 0.1);
+    }
+
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
 
     &--active {
       position: relative;
