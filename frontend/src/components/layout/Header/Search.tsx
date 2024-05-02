@@ -90,7 +90,12 @@ const MobileSearch = ({ state, clearSearch, onChange }: IMobileSearchProps) => {
   }, [query])
 
   React.useEffect(() => {
-    inputRef.current?.focus()
+    if (showSearch) {
+      document.body.classList.add('lock')
+      inputRef.current?.focus()
+    } else {
+      document.body.classList.remove('lock')
+    }
   }, [showSearch])
 
   React.useEffect(() => {

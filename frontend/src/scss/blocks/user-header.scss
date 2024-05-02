@@ -14,12 +14,22 @@
 
     &--mright {
       margin-right: 25px;
+
+      &:active {
+        animation: button-click;
+        animation-duration: 0.6s;
+      }
     }
 
     &--profile {
       position: relative;
       width: 24px;
       height: 24px;
+
+      &:active {
+        animation: button-click;
+        animation-duration: 0.6s;
+      }
     }
   }
 
