@@ -196,9 +196,9 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
                 <>
                   <div className=''>
                     <p className='cart__bottom-total'>Items: {quintity}</p>
-                    <p className='cart__bottom-total'>
-                      Total cost:
-                      <span className='fw-500'> {totalToRender}$</span>
+                    <p className='cart__bottom-total flex'>
+                      <span>Total cost:</span>
+                      <span className='fw-500'>${totalToRender}</span>
                     </p>
                   </div>
                   <div className='mt-20'>
@@ -210,9 +210,9 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
                     ))}
                   </div>
                   <div className='cart__bottom flex items-center mt-40'>
-                    <p className='cart__bottom-total'>
-                      Total cost:
-                      <span className='fw-500'> {totalToRender}$</span>
+                    <p className='cart__bottom-total flex'>
+                      <span>Total cost:</span>
+                      <span className='fw-500'>${totalToRender}</span>
                     </p>
                     <Button
                       title='Submit order'
@@ -233,7 +233,7 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
             <section className='sales mt-30'>
               <div className='container'>
                 <h6 className='sales__title'>You may also like:</h6>
-                <div className='sales__items sales__items--cart'>
+                <div className='sales__items'>
                   {youMayAlsoLikeThese.map((product) => (
                     <Card
                       key={product.id}
@@ -249,7 +249,7 @@ const Cart: NextPage<IProps> = ({ pageData }) => {
             <section className='sales mt-30'>
               <div className='container'>
                 <h6 className='sales__title'>These products under sale wont last long without you!</h6>
-                <div className='sales__items sales__items--cart'>
+                <div className='sales__items mt-30'>
                   {discountedProducts.map((product) => (
                     <Card
                       key={product.id}

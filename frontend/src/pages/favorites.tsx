@@ -57,7 +57,7 @@ const Favorites: NextPage<IProps> = ({ pageData }) => {
           {favorites.length ? (
             <section className='mt-40'>
               <div className='container'>
-                <div className='sales__items sales__items--cart'>
+                <div className='sales__items'>
                   {favoriteItems?.map((item) => (
                     <Card
                       key={item.id}

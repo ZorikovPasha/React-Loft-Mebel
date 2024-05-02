@@ -1,5 +1,5 @@
 @import 'slick-carousel/slick/slick.css';
-@import '~rc-slider/assets/index.css';
+@import 'rc-slider/assets/index.css';
 @import 'vars';
 @import 'reset';
 @import 'global';
@@ -40,7 +40,6 @@
 @import './blocks/product-content';
 
 // pages
-@import './blocks/main';
 @import './blocks/home';
 @import './blocks/cart';
 @import './blocks/catalog';

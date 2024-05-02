@@ -13,7 +13,8 @@
   &__bottom-total {
     font-size: 18px;
     line-height: 24px;
-    margin-right: 15px;
+    margin-right: 20px;
+    grid-gap: 5px;
 
     @media #{$mobile} {
       margin-right: 0;

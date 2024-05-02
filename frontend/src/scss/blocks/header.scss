@@ -6,11 +6,19 @@
   }
 
   &__logo {
-    display: inline-block;
+    display: flex;
     margin-right: 38px;
 
     @media #{$tablet} {
       margin-right: auto;
+    }
+
+    @media #{$mobile-mini} {
+      max-width: 45px;
+    }
+
+    img {
+      max-width: 100%;
     }
   }
 

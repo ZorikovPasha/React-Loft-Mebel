@@ -32,16 +32,27 @@
   }
 
   &__box-image {
-    max-width: 100px;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
 
-    @media #{$mobile} {
-      max-width: 100%;
+    img {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
     }
   }
 
   &__info {
     flex-grow: 1;
-    margin-left: 40px;
+    margin-left: 30px;
 
     @media #{$mobile} {
       margin-left: 0;
@@ -56,11 +67,10 @@
   }
 
   &__info-name {
-    max-width: 270px;
-    padding-right: 20px;
     font-size: 22px;
     line-height: 30px;
-    color: #209cee;
+    color: #245462;
+    margin-right: 20px;
   }
 
   &__info-price {

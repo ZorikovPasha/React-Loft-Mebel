@@ -10,6 +10,10 @@
     margin-top: 60px;
   }
 
+  @media (width <=510px) {
+    padding-bottom: 40px;
+  }
+
   &__title {
     font-size: 22px;
     line-height: 26px;
