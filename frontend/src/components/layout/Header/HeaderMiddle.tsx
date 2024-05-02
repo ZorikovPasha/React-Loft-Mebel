@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Link from 'next/link'
 
 import { Search } from './Search'
@@ -10,9 +10,6 @@ import { Const, ROUTES, SCREEN_SIZES } from '../../../utils/const'
 import { IHeaderProps } from './Header'
 import { getUserData } from '../../../redux/getters'
 import { useScreenSize } from '../../../hooks/useScreenSize'
-import { Button } from '../../common/Button'
-import { UserApiClient } from '../../../api'
-import { logoutUserActionCreator } from '../../../redux/actions/userAction'
 
 type ItemType = {
   name: string
@@ -27,7 +24,6 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
   const { isLoggedIn, image } = useSelector(getUserData)
   const menuBtnRef = React.useRef(null)
 
-  const dispatch = useDispatch()
   const router = useRouter()
   const isNotMobile = useScreenSize(SCREEN_SIZES.tablet)
 
@@ -41,12 +37,6 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
   }, [])
 
   const isLoginOrProfilePage = router.pathname === ROUTES.Login || router.pathname === ROUTES.Profile
-
-  const logUserOut = async () => {
-    await UserApiClient.logout()
-    dispatch(logoutUserActionCreator())
-    router.push('/')
-  }
 
   const onMobMenuBtnClick = () => {
     setMobMenuOpen(true)
@@ -87,8 +77,8 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
         </a>
       </div>
       <div className='flex justify-between items-center'>
-        {isNotMobile && isLoggedIn && <HeaderWishListIcon />}
-        {isNotMobile && isLoggedIn && <HeaderBagIcon />}
+        {isLoggedIn && <HeaderWishListIcon />}
+        {isLoggedIn && <HeaderBagIcon />}
 
         <div className={`flex items-center justify-center ${isLoggedIn ? 'header__mobile-list-wrap' : ''}`}>
           <Link
@@ -110,75 +100,6 @@ export const HeaderMiddle: React.FC<IHeaderMiddleProps> = ({ isMobMenuOpen, setM
               )}
             </a>
           </Link>
-
-          <div className='header__mobile-list'>
-            <ul className='header__mobile-list-inner flex flex-col'>
-              <li className='header__mobile-list-item'>
-                <Link href={ROUTES.Favorites}>
-                  <a className='header__mobile-list-link'>
-                    <img
-                      src='/images/icons/wishlist.svg'
-                      alt='wishlist'
-                    />
-                    Your favorites
-                  </a>
-                </Link>
-              </li>
-              <li className='header__mobile-list-item'>
-                <Link href={ROUTES.Cart}>
-                  <a className='header__mobile-list-link'>
-                    <img
-                      src='/images/icons/bag.svg'
-                      alt='bag'
-                    />
-                    Your cart
-                  </a>
-                </Link>
-              </li>
-
-              <li>
-                <Button
-                  className='profile__logout'
-                  type='button'
-                  title='Log out'
-                  onClick={logUserOut}
-                >
-                  <>
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9'
-                        stroke='#D41367'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M16 17L21 12L16 7'
-                        stroke='#D41367'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M21 12H9'
-                        stroke='#D41367'
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                    Log out
-                  </>
-                </Button>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>

@@ -73,35 +73,36 @@ export const CartItem: React.FC<ICartItemProps> = ({ item }) => {
   return (
     <div className='item flex relative'>
       <div className='item__box flex'>
-        <img
-          className='item__box-image'
-          src={process.env.NEXT_PUBLIC_BACKEND + imageUrl}
-          alt='furniture'
-        />
+        <div className='item__box-image'>
+          <img
+            src={process.env.NEXT_PUBLIC_BACKEND + imageUrl}
+            alt='furniture'
+          />
+        </div>
         <div className='item__info'>
           <div className='item__info-top flex items-center justify-between'>
             <h6 className='item__info-name fw-500'>
               <Link href={`/products/${furnitureId}`}>{name}</Link>
             </h6>
-            <p className='item__info-price'>{typeof totalToRender === 'string' ? `${totalToRender}$` : 'N/A'}</p>
+            <p className='item__info-price'>{typeof totalToRender === 'string' ? `$${totalToRender}` : 'N/A'}</p>
           </div>
           <div className='item__info-line mt-20 flex items-center'>
             <div className='item__info-feature info-feature flex items-center'>
-              <p className='info-feature__name'>Цвет:</p>
+              <p className='info-feature__name'>Color:</p>
               <span
                 style={{ backgroundColor: color }}
                 className='info-feature__color relative'
               ></span>
             </div>
             <div className='item__info-feature info-feature  flex items-center'>
-              <p className='info-feature__name info-feature__name--total'>Количество:</p>
+              <p className='info-feature__name info-feature__name--total'>Quintity:</p>
               <p className='info-feature__val'>{quintity}</p>
             </div>
             <div className='item__info-feature info-feature flex items-center'>
-              <p className='info-feature__name'>Размер(Ш×Д×В):</p>
+              <p className='info-feature__name'>Dimensions(SM):</p>
               {dimension[0] ? (
                 <p className='info-feature__val'>
-                  {dimension[0].width} СМ × {dimension[0].length} СМ × {dimension[0].height} СМ
+                  {dimension[0].width} × {dimension[0].length} × {dimension[0].height}
                 </p>
               ) : null}
             </div>

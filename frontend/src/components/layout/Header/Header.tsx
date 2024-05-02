@@ -2,8 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 
 import { HeaderMiddle } from './HeaderMiddle'
-import { ROUTES, SCREEN_SIZES } from '../../../utils/const'
-import { useScreenSize } from '../../../hooks/useScreenSize'
+import { ROUTES } from '../../../utils/const'
 import { ISearchState } from '../../../layout'
 
 export interface IHeaderProps {
@@ -103,8 +102,6 @@ export const Header = ({ isMobMenuOpen, setMobMenuOpen, search, setSearch }: IHe
     ]
   ])
 
-  const isMobile = !useScreenSize(SCREEN_SIZES.tablet)
-
   return (
     <header className='header'>
       <div className='container'>
@@ -118,28 +115,6 @@ export const Header = ({ isMobMenuOpen, setMobMenuOpen, search, setSearch }: IHe
         <div className='header__bottom'>
           <div className='header__categories categories'>
             <ul className='categories__list'>
-              {isMobile ? (
-                <li className='categories__item'>
-                  <Link href='/catalog?sale=1'>
-                    <a className='categories__item-a'>
-                      <svg
-                        width='19'
-                        height='19'
-                        viewBox='0 0 19 19'
-                        fill='none'
-                        className='categories__item-img'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M6.46429 7.07143H7.67857M11.3214 11.9286H12.5357M12.5357 6.46429L6.46429 12.5357M8.65177 1.35135L7.28081 2.7223C7.05585 2.94727 6.75073 3.07365 6.43258 3.07365H4.27324C3.61073 3.07365 3.07365 3.61073 3.07365 4.27324V6.43258C3.07365 6.75073 2.94727 7.05585 2.7223 7.28081L1.35135 8.65177C0.882883 9.12023 0.882883 9.87977 1.35135 10.3482L2.7223 11.7192C2.94727 11.9442 3.07365 12.2493 3.07365 12.5674V14.7268C3.07365 15.3893 3.61073 15.9263 4.27324 15.9263H6.43258C6.75073 15.9263 7.05585 16.0527 7.28081 16.2777L8.65177 17.6486C9.12023 18.1171 9.87977 18.1171 10.3482 17.6486L11.7192 16.2777C11.9442 16.0527 12.2493 15.9263 12.5674 15.9263H14.7268C15.3893 15.9263 15.9263 15.3893 15.9263 14.7268V12.5674C15.9263 12.2493 16.0527 11.9442 16.2777 11.7192L17.6486 10.3482C18.1171 9.87977 18.1171 9.12023 17.6486 8.65177L16.2777 7.28081C16.0527 7.05585 15.9263 6.75073 15.9263 6.43258V4.27324C15.9263 3.61073 15.3893 3.07365 14.7268 3.07365H12.5674C12.2493 3.07365 11.9442 2.94727 11.7192 2.7223L10.3482 1.35135C9.87977 0.882883 9.12023 0.882883 8.65177 1.35135Z'
-                          stroke='#414141'
-                        />
-                      </svg>
-                      <span className='categories__link'>Sale</span>
-                    </a>
-                  </Link>
-                </li>
-              ) : null}
               <li className='categories__item'>
                 <Link href='/catalog?room=kitchen'>
                   <a className='categories__item-a'>

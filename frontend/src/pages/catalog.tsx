@@ -173,8 +173,6 @@ const Catalog: NextPage<IProps> = ({ pageData }) => {
 
     const furnitureType = getQueryParams('type')
     const furnitureRoom = getQueryParams('room')
-    console.log('furnitureRoom', furnitureRoom)
-
     const furnitureMaterial = getQueryParams('material')
     const furnitureBrand = getQueryParams('brand')
     const showOnlyDiscountedProducts = getQueryParams('sale')
