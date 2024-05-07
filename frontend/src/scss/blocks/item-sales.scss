@@ -10,7 +10,8 @@
     background: #fff;
   }
 
-  &:hover &__bottom {
+  &:hover &__bottom,
+  &:focus-within &__bottom{
     @media (width >=510px) {
       z-index: 2;
       transform: translate(0, 0);

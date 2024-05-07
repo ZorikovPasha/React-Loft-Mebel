@@ -50,4 +50,8 @@
     border-radius: 50%;
     content: '';
   }
+
+  &__checkbox-real:focus + .colors__checkbox-fake {
+    outline: 2px solid black;
+  }
 }
