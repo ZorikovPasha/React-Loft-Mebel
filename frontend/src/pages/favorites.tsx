@@ -25,12 +25,25 @@ const Favorites: NextPage<IProps> = ({ pageData }) => {
 
   const { favorites, isLoggedIn } = useSelector(getUserData)
 
+  const youMayAlsoLike: IProcessedFurniture[] = []
   const favoriteItems: IProcessedFurniture[] = []
   favorites.forEach((id) => {
     const item = furniture.find((item) => item.id === id)
-    if (item) {
-      favoriteItems.push(item)
+    if (!item) {
+      return
     }
+    favoriteItems.push(item)
+    const productsOfSimilarType = furniture.filter((f) => f.type === item.type && f.id !== item.id)
+    if (productsOfSimilarType.length <= 0) {
+      return
+    }
+    productsOfSimilarType.forEach((product) => {
+      const isProductAlreadyFound = youMayAlsoLike.find((f) => f.id === product.id)
+      if (isProductAlreadyFound) {
+        return
+      }
+      youMayAlsoLike.push(product)
+    })
   })
 
   return (
@@ -81,6 +94,23 @@ const Favorites: NextPage<IProps> = ({ pageData }) => {
           </Empty>
         </div>
       )}
+
+      {isLoggedIn && youMayAlsoLike.length ? (
+        <section className='mt-60'>
+          <div className='container'>
+            <h3 className='sales__title'>You may also like</h3>
+            <div className='sales__items sales__items--product mt-30'>
+              {youMayAlsoLike.map((product) => (
+                <Card
+                  key={product.id}
+                  product={product}
+                  isFavorite={typeof product.id === 'number' ? favorites.includes(product.id) : false}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
     </>
   )
 }
