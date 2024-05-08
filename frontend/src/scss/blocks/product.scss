@@ -4,7 +4,7 @@
 
     @media #{$mobile} {
       padding-top: 40px;
-    }  
+    }
   }
 
   &__soldout-img {
@@ -154,6 +154,31 @@
     padding: 10px;
     border: 1px dashed #209cee;
     border-radius: 4px;
+  }
+
+  &__make-review-textarea {
+    min-height: 140px;
+  }
+
+  &__make-review-label {
+    font-size: 18px;
+    line-height: 24px;
+    color: #245462;
+  }
+
+  &__make-review-star {
+    width: 30px;
+    height: 30px;
+
+    &:active {
+      animation: button-click;
+      animation-duration: 0.6s;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 

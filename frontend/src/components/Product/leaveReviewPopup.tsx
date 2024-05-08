@@ -24,31 +24,18 @@ interface IModalContentProps {
 }
 
 export const ModalContent = ({ furnitureId, onModalClose }: IModalContentProps) => {
-  const scoreProps: IField = {
-    value: '',
-    customPlaceholder: 'Score',
-    isValid: false,
-    required: true,
-    type: 'text',
-    className: 'relative mt-40',
-    inputClassName: 'signup__form-input form-input',
-    tag: 'input',
-    showErrors: false,
-    errorMessage: getTextInputErrorMessage(''),
-    getErrorMessage: (str: string) => (validateTextInput(str) ? '' : 'Пожалуйста, заполните имя'),
-    validateFn: validateTextInput
-  }
+  const ratingLadder = [1, 2, 3, 4, 5]
 
   const textProps: IField = {
     tag: 'textarea',
     value: '',
     type: 'text',
-    isValid: true,
-    required: false,
+    isValid: false,
+    required: true,
     customPlaceholder: 'Review',
     showErrors: false,
     className: 'relative mt-40',
-    inputClassName: 'form-input',
+    inputClassName: 'product__make-review-textarea form-input',
     errorMessage: '',
     getErrorMessage: getTextInputErrorMessage,
     validateFn: validateTextInput
@@ -60,7 +47,7 @@ export const ModalContent = ({ furnitureId, onModalClose }: IModalContentProps) 
 
   const dispatch = useDispatch()
 
-  const [score, setScore] = React.useState(scoreProps)
+  const [score, setScore] = React.useState<null | number>(null)
   const [text, setText] = React.useState(textProps)
   const [pictures, setPictures] = React.useState(fileProps)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -108,18 +95,26 @@ export const ModalContent = ({ furnitureId, onModalClose }: IModalContentProps) 
     })
   }
 
+  const chooseRating = (score: number) => () => {
+    setScore(score)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (![score, text].every(({ isValid, required }) => (required ? isValid : true))) {
-      return
+    if (score === null) {
+      return dispatch(toggleSnackbarOpen('Please add your score!', 'error'))
+    }
+
+    if (!text.isValid) {
+      return dispatch(toggleSnackbarOpen('Please add your review!', 'error'))
     }
 
     const formData = new FormData()
 
     formData.append('text', text.value)
     formData.append('furnitureId', furnitureId.toString())
-    formData.append('score', score.value)
+    formData.append('score', score.toString())
     pictures.files.forEach((image) => {
       formData.append('attachments', image.file)
     })
@@ -132,7 +127,7 @@ export const ModalContent = ({ furnitureId, onModalClose }: IModalContentProps) 
 
       if (isSuccessfullResponse(response)) {
         setText(textProps)
-        setScore(scoreProps)
+        setScore(null)
         setPictures({ files: [] })
         onModalClose()
         dispatch(toggleSnackbarOpen('Your review was added!', 'success'))
@@ -157,21 +152,29 @@ export const ModalContent = ({ furnitureId, onModalClose }: IModalContentProps) 
         className='flex flex-col'
         onSubmit={handleSubmit}
       >
-        <AppTextField
-          elementType={score.tag}
-          placeholder={score.placeholder}
-          name='score'
-          type={score.type}
-          value={score.value}
-          required={score.required}
-          rootElclass={score.className}
-          customPlaceholder={score.customPlaceholder}
-          inputWrapClass={score.inputWrapClass}
-          inputClassName={score.inputClassName}
-          showErrors={!score.isValid && score.showErrors}
-          errorMessage={score.getErrorMessage(score.value)}
-          onChange={onChange(setScore)}
-        />
+        <p className='product__make-review-label'>Score</p>
+        <div className='flex items-center'>
+          {ratingLadder.map((num) => (
+            <button
+              className='product__make-review-star flex'
+              type='button'
+              key={num}
+              onClick={chooseRating(num)}
+            >
+              {score !== null && score >= num ? (
+                <img
+                  src='/images/icons/star-blue.svg'
+                  alt='star'
+                />
+              ) : (
+                <img
+                  src='/images/icons/star.svg'
+                  alt='star'
+                />
+              )}
+            </button>
+          ))}
+        </div>
 
         <AppTextField
           elementType={text.tag}

@@ -21,6 +21,14 @@
     top: 15px;
     right: 15px;
 
+    &:focus {
+      outline: none;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px black;
+      outline-color: transparent; /* for high contrast modes */
+    }
+
     &:active {
       animation: button-click;
       animation-duration: 0.6s;

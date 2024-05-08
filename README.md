@@ -175,5 +175,8 @@ TODO!:
 - [x] implement ui when product is sold out
 - [x] remove buy button if product is 0
 - [x] `Did this review was helpful` is not working
-- [ ] catalog tab getting lost
+- [x] catalog tab getting lost
 - [x] common card make button not tabbale when not hovered
+- [x] review add star to rating
+- [ ] slick slider on tab gets broken
+- [x] header nav is not tabable

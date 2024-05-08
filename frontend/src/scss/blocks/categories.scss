@@ -16,19 +16,6 @@
     position: relative;
     flex-grow: 1;
     height: inherit;
-
-    &:hover {
-      background: #245462;
-      color: #fff;
-
-      path {
-        fill: white;
-      }
-
-      .header__sub-list {
-        display: block;
-      }
-    }
   }
 
   &__item-a {
@@ -37,6 +24,20 @@
     padding: 24px;
     background-color: transparent;
     height: 100%;
+
+    &.opened,
+    &:hover {
+      background: #245462;
+      color: #fff;
+
+      path {
+        fill: white;
+      }
+
+      & ~ .header__sub-list {
+        display: block;
+      }
+    }
 
     &:active {
       animation: button-click;

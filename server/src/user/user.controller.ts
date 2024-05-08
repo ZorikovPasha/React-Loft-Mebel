@@ -217,6 +217,9 @@ export class UserController {
     @UploadedFile() attachments: Express.Multer.File | null,
     @User() user: IUserPayload
   ): Promise<IMakeReviewRes> {
+    if (Number.isNaN(dto.score) || parseFloat(dto.score) > 5 || parseFloat(dto.score) < 1) {
+      throw new BadRequestException({ message: 'score is not a valid number between 1 and 5' })
+    }
     await Promise.all([
       this.userService.makeReview({
         userId: user.sub,
