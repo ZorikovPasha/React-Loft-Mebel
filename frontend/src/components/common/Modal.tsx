@@ -9,6 +9,17 @@ interface IModalProps {
 }
 
 export const Modal: React.FC<IModalProps> = ({ bodyClass = '', onModalClose, content, showClose = true }) => {
+  const closePopupByEscape = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      onModalClose()
+    }
+  }
+  React.useEffect(() => {
+    window.addEventListener('keydown', closePopupByEscape)
+
+    return () => window.removeEventListener('keydown', closePopupByEscape)
+  }, [])
+
   return (
     <div className='popup shown'>
       <div className={`popup__body ${bodyClass}`}>

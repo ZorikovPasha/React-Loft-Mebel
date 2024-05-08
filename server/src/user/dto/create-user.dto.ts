@@ -111,6 +111,7 @@ export class UserRequestDto {
 
 export class MakeReviewDto {
   @IsString()
+  @IsNotEmpty()
   score: string
 
   @IsString()
@@ -118,5 +119,6 @@ export class MakeReviewDto {
   text: string
 
   @IsString()
+  @IsNotEmpty()
   furnitureId: string
 }

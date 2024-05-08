@@ -39,7 +39,8 @@
       transition: 0.4s ease-out;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       &::before {
         transform: scaleY(1);
       }

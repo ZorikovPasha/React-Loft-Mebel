@@ -102,6 +102,24 @@ export const Header = ({ isMobMenuOpen, setMobMenuOpen, search, setSearch }: IHe
     ]
   ])
 
+  React.useEffect(() => {
+    const toggleMenu = (event: KeyboardEvent) => {
+      if (event.code === 'Space' && event.target instanceof HTMLElement) {
+        event.preventDefault()
+        event.target.classList.toggle('opened')
+      }
+    }
+    const toggles = document.querySelectorAll<HTMLElement>('a.categories__item-a')
+    toggles.forEach((t) => {
+      t.addEventListener('keydown', toggleMenu)
+    })
+
+    return () =>
+      toggles.forEach((t) => {
+        t.removeEventListener('keydown', toggleMenu)
+      })
+  }, [])
+
   return (
     <header className='header'>
       <div className='container'>

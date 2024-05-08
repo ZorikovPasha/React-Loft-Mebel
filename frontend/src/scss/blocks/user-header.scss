@@ -23,13 +23,17 @@
 
     &--profile {
       position: relative;
-      width: 24px;
-      height: 24px;
+      display: flex;
+      padding: 0 5px;
 
       &:active {
         animation: button-click;
         animation-duration: 0.6s;
       }
+    }
+
+    img {
+      max-width: 100%;
     }
   }
 
